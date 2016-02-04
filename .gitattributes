@@ -1,4 +1,14 @@
 * text=auto !eol
+C8oSDKTestApp/AppDelegate.swift -text
+C8oSDKTestApp/Assets.xcassets/AppIcon.appiconset/Contents.json -text
+C8oSDKTestApp/Base.lproj/LaunchScreen.storyboard -text
+C8oSDKTestApp/Base.lproj/Main.storyboard -text
+C8oSDKTestApp/Info.plist -text
+C8oSDKTestApp/ViewController.swift -text
+C8oSDKTestAppTests/C8oSDKTestAppTests.swift -text
+C8oSDKTestAppTests/Info.plist -text
+C8oSDKTestAppUITests/C8oSDKTestAppUITests.swift -text
+C8oSDKTestAppUITests/Info.plist -text
 C8oSDKiOS.xcodeproj/project.pbxproj -text
 C8oSDKiOS.xcodeproj/project.xcworkspace/contents.xcworkspacedata -text
 C8oSDKiOS.xcodeproj/project.xcworkspace/xcshareddata/C8oSDKiOS.xcscmblueprint -text
@@ -6,3 +16,12 @@ C8oSDKiOS.xcodeproj/project.xcworkspace/xcuserdata/charlesgMac.xcuserdatad/UserI
 C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/C8oSDKTestApp.xcscheme -text
 C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/C8oSDKiOS.xcscheme -text
 C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/xcschememanagement.plist -text
+C8oSDKiOS/C8o.swift -text
+C8oSDKiOS/C8oSDKiOS.h -text
+C8oSDKiOS/Info.plist -text
+C8oSDKiOS/module.modulemap -text
+C8oSDKiOSTests/C8oSDKiOSTests.swift -text
+C8oSDKiOSTests/Info.plist -text
+/PodFile -text
+Pods/Target[!!-~]Support[!!-~]Files/Pods/Pods.debug.xcconfig -text
+Pods/Target[!!-~]Support[!!-~]Files/Pods/Pods.release.xcconfig -text
