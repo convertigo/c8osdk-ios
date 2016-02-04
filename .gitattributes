@@ -1,1 +1,8 @@
 * text=auto !eol
+C8oSDKiOS.xcodeproj/project.pbxproj -text
+C8oSDKiOS.xcodeproj/project.xcworkspace/contents.xcworkspacedata -text
+C8oSDKiOS.xcodeproj/project.xcworkspace/xcshareddata/C8oSDKiOS.xcscmblueprint -text
+C8oSDKiOS.xcodeproj/project.xcworkspace/xcuserdata/charlesgMac.xcuserdatad/UserInterfaceState.xcuserstate -text
+C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/C8oSDKTestApp.xcscheme -text
+C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/C8oSDKiOS.xcscheme -text
+C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/xcschememanagement.plist -text
