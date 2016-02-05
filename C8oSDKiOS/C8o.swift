@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import SwiftyJSON
 
 import CouchbaseLite
 
@@ -16,7 +17,7 @@ public class C8o {
     public init() {
         
         
-        
+        var data = JSON("{id:0}")
         print("Hello C8o SDK!");
         
         let manager = CBLManager();
