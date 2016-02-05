@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		253A2E348CA6ECA6AFC3A7E0 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FA94D99C293DAD611D925AE /* Pods.framework */; };
+		620613111C63A5850028065F /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2BF71C635D02009E9F7E /* Alamofire.framework */; };
+		620613131C63BA810028065F /* C8oBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620613121C63BA810028065F /* C8oBase.swift */; };
+		620613171C64DF5D0028065F /* C8oLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620613161C64DF5D0028065F /* C8oLogger.swift */; };
+		625C56DE1C64F06200720D2A /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 625C56DD1C64F06200720D2A /* Queue.swift */; };
 		62CD2A4B1C6207AD009E9F7E /* C8oSDKiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 62CD2A4A1C6207AD009E9F7E /* C8oSDKiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		62CD2A521C6207AD009E9F7E /* C8oSDKiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2A471C6207AD009E9F7E /* C8oSDKiOS.framework */; };
 		62CD2A571C6207AD009E9F7E /* C8oSDKiOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CD2A561C6207AD009E9F7E /* C8oSDKiOSTests.swift */; };
@@ -32,6 +37,7 @@
 		62CD2C0A1C63864A009E9F7E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2A9F1C6217DA009E9F7E /* Security.framework */; };
 		62CD2C0B1C63877C009E9F7E /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2B571C634F9A009E9F7E /* libz.1.dylib */; };
 		62CD2C0C1C63879F009E9F7E /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2B591C634FBA009E9F7E /* libsqlite3.dylib */; };
+		FF7F496186E3925E683B11CC /* Pods_C8oSDKiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 661BB53A401A46D0C011BCBC /* Pods_C8oSDKiOS.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +87,9 @@
 
 /* Begin PBXFileReference section */
 		42B9DC69ACC0025BE81380A0 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		620613121C63BA810028065F /* C8oBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oBase.swift; sourceTree = "<group>"; };
+		620613161C64DF5D0028065F /* C8oLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oLogger.swift; sourceTree = "<group>"; };
+		625C56DD1C64F06200720D2A /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		62CD2A471C6207AD009E9F7E /* C8oSDKiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = C8oSDKiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		62CD2A4A1C6207AD009E9F7E /* C8oSDKiOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = C8oSDKiOS.h; sourceTree = "<group>"; };
 		62CD2A4C1C6207AD009E9F7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -190,12 +199,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				620613111C63A5850028065F /* Alamofire.framework in Frameworks */,
 				62CD2C0C1C63879F009E9F7E /* libsqlite3.dylib in Frameworks */,
 				62CD2C0B1C63877C009E9F7E /* libz.1.dylib in Frameworks */,
 				62CD2C0A1C63864A009E9F7E /* Security.framework in Frameworks */,
 				62CD2C091C638633009E9F7E /* CFNetwork.framework in Frameworks */,
 				62CD2C081C638628009E9F7E /* SystemConfiguration.framework in Frameworks */,
 				62CD2C071C636F93009E9F7E /* CouchbaseLite.framework in Frameworks */,
+				253A2E348CA6ECA6AFC3A7E0 /* Pods.framework in Frameworks */,
+				FF7F496186E3925E683B11CC /* Pods_C8oSDKiOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,6 +297,9 @@
 				62CD2A4A1C6207AD009E9F7E /* C8oSDKiOS.h */,
 				62CD2A4C1C6207AD009E9F7E /* Info.plist */,
 				62CD2A941C620ACE009E9F7E /* C8o.swift */,
+				620613121C63BA810028065F /* C8oBase.swift */,
+				620613161C64DF5D0028065F /* C8oLogger.swift */,
+				625C56DD1C64F06200720D2A /* Queue.swift */,
 			);
 			path = C8oSDKiOS;
 			sourceTree = "<group>";
@@ -792,6 +807,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				62CD2A951C620ACE009E9F7E /* C8o.swift in Sources */,
+				620613171C64DF5D0028065F /* C8oLogger.swift in Sources */,
+				620613131C63BA810028065F /* C8oBase.swift in Sources */,
+				625C56DE1C64F06200720D2A /* Queue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
