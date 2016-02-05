@@ -17,6 +17,7 @@ C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/C8oSDKTestApp.x
 C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/C8oSDKiOS.xcscheme -text
 C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/xcschememanagement.plist -text
 C8oSDKiOS/C8o.swift -text
+C8oSDKiOS/C8oBase.swift -text
 C8oSDKiOS/C8oSDKiOS.h -text
 C8oSDKiOS/Info.plist -text
 C8oSDKiOS/module.modulemap -text
