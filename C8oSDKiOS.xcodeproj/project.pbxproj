@@ -7,12 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		253A2E348CA6ECA6AFC3A7E0 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FA94D99C293DAD611D925AE /* Pods.framework */; };
-		620613111C63A5850028065F /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2BF71C635D02009E9F7E /* Alamofire.framework */; };
-		620613131C63BA810028065F /* C8oBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620613121C63BA810028065F /* C8oBase.swift */; };
-		620613171C64DF5D0028065F /* C8oLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620613161C64DF5D0028065F /* C8oLogger.swift */; };
-		6222327C1C651257001D2EA1 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6222327B1C651257001D2EA1 /* SwiftyJSON.framework */; };
-		625C56DE1C64F06200720D2A /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 625C56DD1C64F06200720D2A /* Queue.swift */; };
 		62CD2A4B1C6207AD009E9F7E /* C8oSDKiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 62CD2A4A1C6207AD009E9F7E /* C8oSDKiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		62CD2A521C6207AD009E9F7E /* C8oSDKiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2A471C6207AD009E9F7E /* C8oSDKiOS.framework */; };
 		62CD2A571C6207AD009E9F7E /* C8oSDKiOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CD2A561C6207AD009E9F7E /* C8oSDKiOSTests.swift */; };
@@ -32,7 +26,6 @@
 		62CD2B261C625556009E9F7E /* Security.framework in Headers */ = {isa = PBXBuildFile; fileRef = 62CD2A9F1C6217DA009E9F7E /* Security.framework */; settings = {ATTRIBUTES = (Public, ); }; };
 		62CD2B5B1C63504D009E9F7E /* libz.1.dylib in Headers */ = {isa = PBXBuildFile; fileRef = 62CD2B571C634F9A009E9F7E /* libz.1.dylib */; settings = {ATTRIBUTES = (Public, ); }; };
 		62CD2B5C1C63505E009E9F7E /* libsqlite3.dylib in Headers */ = {isa = PBXBuildFile; fileRef = 62CD2B591C634FBA009E9F7E /* libsqlite3.dylib */; settings = {ATTRIBUTES = (Public, ); }; };
-		62CD2C071C636F93009E9F7E /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2BB41C635D02009E9F7E /* CouchbaseLite.framework */; };
 		62CD2C081C638628009E9F7E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2AA11C6217E7009E9F7E /* SystemConfiguration.framework */; };
 		62CD2C091C638633009E9F7E /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2A9D1C6217D0009E9F7E /* CFNetwork.framework */; };
 		62CD2C0A1C63864A009E9F7E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2A9F1C6217DA009E9F7E /* Security.framework */; };
@@ -87,10 +80,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		42B9DC69ACC0025BE81380A0 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		620613121C63BA810028065F /* C8oBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oBase.swift; sourceTree = "<group>"; };
-		620613161C64DF5D0028065F /* C8oLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oLogger.swift; sourceTree = "<group>"; };
-		625C56DD1C64F06200720D2A /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		62CD2A471C6207AD009E9F7E /* C8oSDKiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = C8oSDKiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		62CD2A4A1C6207AD009E9F7E /* C8oSDKiOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = C8oSDKiOS.h; sourceTree = "<group>"; };
 		62CD2A4C1C6207AD009E9F7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -191,8 +180,9 @@
 		62CD2BF21C635D02009E9F7E /* Pods-C8oSDKiOS.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Pods-C8oSDKiOS.release.xcconfig"; sourceTree = "<group>"; };
 		62CD2C061C63623F009E9F7E /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		661BB53A401A46D0C011BCBC /* Pods_C8oSDKiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_C8oSDKiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8EEE875EB5BCF444386D3289 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		7CE1A3C0E60462F140575CFB /* Pods-C8oSDKiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-C8oSDKiOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-C8oSDKiOS/Pods-C8oSDKiOS.debug.xcconfig"; sourceTree = "<group>"; };
 		9FA94D99C293DAD611D925AE /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1F795A1F44565BEA6556CA1 /* Pods-C8oSDKiOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-C8oSDKiOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-C8oSDKiOS/Pods-C8oSDKiOS.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,15 +190,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6222327C1C651257001D2EA1 /* SwiftyJSON.framework in Frameworks */,
-				620613111C63A5850028065F /* Alamofire.framework in Frameworks */,
 				62CD2C0C1C63879F009E9F7E /* libsqlite3.dylib in Frameworks */,
 				62CD2C0B1C63877C009E9F7E /* libz.1.dylib in Frameworks */,
 				62CD2C0A1C63864A009E9F7E /* Security.framework in Frameworks */,
 				62CD2C091C638633009E9F7E /* CFNetwork.framework in Frameworks */,
 				62CD2C081C638628009E9F7E /* SystemConfiguration.framework in Frameworks */,
-				62CD2C071C636F93009E9F7E /* CouchbaseLite.framework in Frameworks */,
-				253A2E348CA6ECA6AFC3A7E0 /* Pods.framework in Frameworks */,
 				FF7F496186E3925E683B11CC /* Pods_C8oSDKiOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -299,9 +285,6 @@
 				62CD2A4A1C6207AD009E9F7E /* C8oSDKiOS.h */,
 				62CD2A4C1C6207AD009E9F7E /* Info.plist */,
 				62CD2A941C620ACE009E9F7E /* C8o.swift */,
-				620613121C63BA810028065F /* C8oBase.swift */,
-				620613161C64DF5D0028065F /* C8oLogger.swift */,
-				625C56DD1C64F06200720D2A /* Queue.swift */,
 			);
 			path = C8oSDKiOS;
 			sourceTree = "<group>";
@@ -530,8 +513,8 @@
 		E6DF9BBC5E8E811396C19469 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				42B9DC69ACC0025BE81380A0 /* Pods.debug.xcconfig */,
-				8EEE875EB5BCF444386D3289 /* Pods.release.xcconfig */,
+				7CE1A3C0E60462F140575CFB /* Pods-C8oSDKiOS.debug.xcconfig */,
+				F1F795A1F44565BEA6556CA1 /* Pods-C8oSDKiOS.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -809,9 +792,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				62CD2A951C620ACE009E9F7E /* C8o.swift in Sources */,
-				620613171C64DF5D0028065F /* C8oLogger.swift in Sources */,
-				620613131C63BA810028065F /* C8oBase.swift in Sources */,
-				625C56DE1C64F06200720D2A /* Queue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -979,7 +959,7 @@
 		};
 		62CD2A5C1C6207AD009E9F7E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 42B9DC69ACC0025BE81380A0 /* Pods.debug.xcconfig */;
+			baseConfigurationReference = 7CE1A3C0E60462F140575CFB /* Pods-C8oSDKiOS.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ENABLE_MODULES = YES;
@@ -1014,7 +994,7 @@
 		};
 		62CD2A5D1C6207AD009E9F7E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8EEE875EB5BCF444386D3289 /* Pods.release.xcconfig */;
+			baseConfigurationReference = F1F795A1F44565BEA6556CA1 /* Pods-C8oSDKiOS.release.xcconfig */;
 			buildSettings = {
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ENABLE_MODULES = YES;
