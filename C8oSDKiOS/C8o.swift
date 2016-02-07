@@ -16,8 +16,10 @@ public class C8o {
     
     public init() {
         
-        
-        var data = JSON("{id:0}")
+    }
+    
+    public func createDB() {
+       
         print("Hello C8o SDK!");
         
         
@@ -44,23 +46,24 @@ public class C8o {
         }
         
         print("Manager initialized");
-        
-        
-
-       
+    }
+    
+    public func makeRequest()  {
+    
+    
         Alamofire.request(.GET, "https://httpbin.org/get", parameters: ["foo": "bar"])
             .responseJSON { response in
                 print(response.request)  // original URL request
                 print(response.response) // URL response
                 print(response.data)     // server data
                 print(response.result)   // result of response serialization
-                
-                if let JSON = response.result.value {
-                    print("JSON: \(JSON)")
+    
+                if let JSon = response.result.value {
+                    print("JSON: \(JSon)")
+                    var data = JSON(JSon)
                 }
-        }
-        
-
+                
+            }
     }
     
     
