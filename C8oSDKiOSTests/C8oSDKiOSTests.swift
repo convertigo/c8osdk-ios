@@ -11,9 +11,12 @@ import XCTest
 
 class C8oSDKiOSTests: XCTestCase {
     
+    var myC8o : C8o!
+    
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
+        myC8o = C8o();
     }
     
     override func tearDown() {
@@ -21,9 +24,18 @@ class C8oSDKiOSTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
+    func testCreateDB() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
+        myC8o.createDB()
+        XCTAssert(true,"Database Created")
+    }
+    
+    func testMakeRequest() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        myC8o.makeRequest()
+        XCTAssert(true,"Request done")
     }
     
     func testPerformanceExample() {
