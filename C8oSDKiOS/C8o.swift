@@ -19,10 +19,7 @@ public class C8o : C8oBase {
     
     // TEST
     
-    
-    public func createDB() {
-        
-    }
+
     
     public func createDB() {
        
