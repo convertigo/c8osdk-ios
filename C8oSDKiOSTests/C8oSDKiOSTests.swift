@@ -44,5 +44,23 @@ class C8oSDKiOSTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
+    func testCg_C8oUtilis_IsValidUrl() {
+        
+        var c8oUtil : Bool = C8oUtils.IsValidUrl("ftp://www.google.fr/");
+        if(c8oUtil == true){
+            XCTAssert(false,"c8oUtil is supposed to be false, but it's true")
+        }
+        c8oUtil = C8oUtils.IsValidUrl("http://www.google.fr/");
+        if(c8oUtil == false){
+            XCTAssert(false,"c8oUtil is supposed to be true, but it's false")
+        }
+        c8oUtil = C8oUtils.IsValidUrl("https://www.google.fr/");
+        if(c8oUtil == false){
+            XCTAssert(false,"c8oUtil is supposed to be true, but it's false")
+        }
+      
+    }
+    
+    
     
 }

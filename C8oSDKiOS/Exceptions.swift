@@ -92,3 +92,8 @@ public class C8oUnavailableLocalCacheException : NSException
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+public enum Error : ErrorType {
+    case InvalidArgument
+    
+}

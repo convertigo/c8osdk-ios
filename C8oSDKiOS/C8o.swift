@@ -17,7 +17,7 @@ public class C8o : C8oBase {
     
     
     
-    // TEST
+    /*************** Tests ***************/
     
 
     
@@ -78,7 +78,7 @@ public class C8o : C8oBase {
     
     
     
-    // FTEST
+    /*************** Fin de tests ***************/
     
     
     //*** Regular Expression ***//
@@ -181,23 +181,30 @@ public class C8o : C8oBase {
     public override init() {
         super.init()
     }
-    public init(endpoint :String, c8oSettings : C8oSettings?) throws
+    
+    
+    
+    public init(endpoint :String) throws
     {
-        self.c8oLogger = nil
-        self.httpInterface = nil 
-        
         // Checks the URL validity
-        if ((C8oUtils.IsValidUrl(endpoint) == nil))
+        if (!C8oUtils.IsValidUrl(endpoint))
         {
-            //throw System.ArgumentException(C8oExceptionMessage.InvalidArgumentInvalidURL(endpoint));
+            
+            //throw Error.InvalidArgument
+            //System.ArgumentException(C8oExceptionMessage.InvalidArgumentInvalidURL(endpoint));
         }
     
         // Checks the endpoint validty
-        
+        /*
         let matches : NSArray? = C8o.RE_ENDPOINT.matchesInString(endpoint, options :[], range: NSMakeRange(0, endpoint.characters.count ));
         if (matches == nil){
+            print("matches nil")
             //throw Exception(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint));
         }
+        else{
+            print("matches ok")
+        }/*
+*/
         self.endpoint = endpoint;
         
         var matchRange = matches![0].rangeAtIndex(1)
@@ -257,6 +264,7 @@ public class C8o : C8oBase {
         {
             //throw  C8oException(C8oExceptionMessage.FullSyncInterfaceInstance(), e);
         }*/
+        */
     }
     
     //*** C8o calls ***//

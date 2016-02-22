@@ -153,18 +153,24 @@ internal class C8oUtils
         return nil;
     }
     
-    //*** Others ***//
+    /**
+    Checks if the specified string is an valid URL by checking for http or https prefix.
     
-    /// <summary>
-    /// Checks if the specified string is an valid URL.
-    /// </summary>
-    /// <param name="url"></param>
-    /// <returns></returns>
-    public static func IsValidUrl(url : String)->Bool?
+    @param url String.
+    
+    @return Bool value.
+    */
+    internal static func IsValidUrl(url : String)->Bool
     {
-        /*var uriResult : Uri? = nil;
-        return (Uri.TryCreate(url, UriKind.Absolute, out uriResult) && (uriResult.Scheme == "http" || uriResult.Scheme == "https"));*/
-        return nil;
+        let uriResult : NSURL? = NSURL(string: url)
+
+        if(uriResult?.scheme == "http" || uriResult?.scheme == "https"){
+            return true
+        }
+        else{
+            return false;
+        }
+        
     }
     
     /// <summary>
