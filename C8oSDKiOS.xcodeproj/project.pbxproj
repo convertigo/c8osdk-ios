@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		620F6D0F1C7763B600683D0F /* FullSyncUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620F6D0E1C7763B600683D0F /* FullSyncUtils.swift */; };
+		620F6D141C77666800683D0F /* C8oHttpInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620F6D131C77666800683D0F /* C8oHttpInterface.swift */; };
+		620F6D161C776E0500683D0F /* C8OTranslator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620F6D151C776E0500683D0F /* C8OTranslator.swift */; };
+		620F6D181C7771B300683D0F /* C8oUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620F6D171C7771B300683D0F /* C8oUtils.swift */; };
+		622232801C6B29E2001D2EA1 /* C8oBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6222327E1C6B29E2001D2EA1 /* C8oBase.swift */; };
+		622232811C6B29E2001D2EA1 /* C8oLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6222327F1C6B29E2001D2EA1 /* C8oLogger.swift */; };
+		622232861C6B2A00001D2EA1 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622232851C6B2A00001D2EA1 /* Queue.swift */; };
 		62CD2A4B1C6207AD009E9F7E /* C8oSDKiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 62CD2A4A1C6207AD009E9F7E /* C8oSDKiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		62CD2A521C6207AD009E9F7E /* C8oSDKiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2A471C6207AD009E9F7E /* C8oSDKiOS.framework */; };
 		62CD2A571C6207AD009E9F7E /* C8oSDKiOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CD2A561C6207AD009E9F7E /* C8oSDKiOSTests.swift */; };
@@ -31,6 +38,28 @@
 		62CD2C0A1C63864A009E9F7E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2A9F1C6217DA009E9F7E /* Security.framework */; };
 		62CD2C0B1C63877C009E9F7E /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2B571C634F9A009E9F7E /* libz.1.dylib */; };
 		62CD2C0C1C63879F009E9F7E /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2B591C634FBA009E9F7E /* libsqlite3.dylib */; };
+		62EDE9041C7481ED00D9213F /* C8oExceptionListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9031C7481ED00D9213F /* C8oExceptionListener.swift */; };
+		62EDE9091C7482B300D9213F /* C8oFileTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9081C7482B300D9213F /* C8oFileTransfer.swift */; };
+		62EDE90B1C74D3AB00D9213F /* C8oFileTransferStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE90A1C74D3AB00D9213F /* C8oFileTransferStatus.swift */; };
+		62EDE90D1C74D88000D9213F /* C8oFullSyncTranslator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE90C1C74D88000D9213F /* C8oFullSyncTranslator.swift */; };
+		62EDE90F1C75C5BD00D9213F /* C8oLocalCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE90E1C75C5BD00D9213F /* C8oLocalCache.swift */; };
+		62EDE9111C75DA0200D9213F /* C8oProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9101C75DA0200D9213F /* C8oProgress.swift */; };
+		62EDE9131C75F99800D9213F /* C8oPromise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9121C75F99800D9213F /* C8oPromise.swift */; };
+		62EDE9171C75FF3700D9213F /* C8oPromiseSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9161C75FF3700D9213F /* C8oPromiseSync.swift */; };
+		62EDE9191C75FF5100D9213F /* C8oPromiseFailSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9181C75FF5100D9213F /* C8oPromiseFailSync.swift */; };
+		62EDE91B1C76114B00D9213F /* C8oResponseJsonListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE91A1C76114B00D9213F /* C8oResponseJsonListener.swift */; };
+		62EDE91D1C7613E500D9213F /* C8oResponseListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE91C1C7613E500D9213F /* C8oResponseListener.swift */; };
+		62EDE91F1C76141500D9213F /* C8oResponseProgressListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE91E1C76141500D9213F /* C8oResponseProgressListener.swift */; };
+		62EDE9211C76149A00D9213F /* C8oResponseXmlListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9201C76149A00D9213F /* C8oResponseXmlListener.swift */; };
+		62EDE9231C76153000D9213F /* C8oSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9221C76153000D9213F /* C8oSettings.swift */; };
+		62EDE9251C761BF700D9213F /* Delegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9241C761BF700D9213F /* Delegates.swift */; };
+		62EDE9271C761D7500D9213F /* Exceptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9261C761D7500D9213F /* Exceptions.swift */; };
+		62EDE92A1C76239000D9213F /* C8oCallTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9291C76239000D9213F /* C8oCallTask.swift */; };
+		62EDE92D1C762EE500D9213F /* C8oExceptionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE92C1C762EE500D9213F /* C8oExceptionMessage.swift */; };
+		62EDE9311C762FFE00D9213F /* C8oFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9301C762FFE00D9213F /* C8oFileManager.swift */; };
+		62EDE9331C76314200D9213F /* C8oFullSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9321C76314200D9213F /* C8oFullSync.swift */; };
+		62EDE9361C771F6200D9213F /* C8oFullSyncEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9351C771F6200D9213F /* C8oFullSyncEnum.swift */; };
+		62EDE9381C77202F00D9213F /* C8oFullSyncHttp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9371C77202F00D9213F /* C8oFullSyncHttp.swift */; };
 		FF7F496186E3925E683B11CC /* Pods_C8oSDKiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 661BB53A401A46D0C011BCBC /* Pods_C8oSDKiOS.framework */; };
 /* End PBXBuildFile section */
 
@@ -80,6 +109,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		620F6D0E1C7763B600683D0F /* FullSyncUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullSyncUtils.swift; sourceTree = "<group>"; };
+		620F6D131C77666800683D0F /* C8oHttpInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oHttpInterface.swift; sourceTree = "<group>"; };
+		620F6D151C776E0500683D0F /* C8OTranslator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8OTranslator.swift; sourceTree = "<group>"; };
+		620F6D171C7771B300683D0F /* C8oUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oUtils.swift; sourceTree = "<group>"; };
+		6222327E1C6B29E2001D2EA1 /* C8oBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oBase.swift; sourceTree = "<group>"; };
+		6222327F1C6B29E2001D2EA1 /* C8oLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oLogger.swift; sourceTree = "<group>"; };
+		622232851C6B2A00001D2EA1 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		62CD2A471C6207AD009E9F7E /* C8oSDKiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = C8oSDKiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		62CD2A4A1C6207AD009E9F7E /* C8oSDKiOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = C8oSDKiOS.h; sourceTree = "<group>"; };
 		62CD2A4C1C6207AD009E9F7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -179,6 +215,28 @@
 		62CD2BF11C635D02009E9F7E /* Pods-C8oSDKiOS.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = "Pods-C8oSDKiOS.modulemap"; sourceTree = "<group>"; };
 		62CD2BF21C635D02009E9F7E /* Pods-C8oSDKiOS.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Pods-C8oSDKiOS.release.xcconfig"; sourceTree = "<group>"; };
 		62CD2C061C63623F009E9F7E /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		62EDE9031C7481ED00D9213F /* C8oExceptionListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oExceptionListener.swift; sourceTree = "<group>"; };
+		62EDE9081C7482B300D9213F /* C8oFileTransfer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFileTransfer.swift; sourceTree = "<group>"; };
+		62EDE90A1C74D3AB00D9213F /* C8oFileTransferStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFileTransferStatus.swift; sourceTree = "<group>"; };
+		62EDE90C1C74D88000D9213F /* C8oFullSyncTranslator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFullSyncTranslator.swift; sourceTree = "<group>"; };
+		62EDE90E1C75C5BD00D9213F /* C8oLocalCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oLocalCache.swift; sourceTree = "<group>"; };
+		62EDE9101C75DA0200D9213F /* C8oProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oProgress.swift; sourceTree = "<group>"; };
+		62EDE9121C75F99800D9213F /* C8oPromise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oPromise.swift; sourceTree = "<group>"; };
+		62EDE9161C75FF3700D9213F /* C8oPromiseSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oPromiseSync.swift; sourceTree = "<group>"; };
+		62EDE9181C75FF5100D9213F /* C8oPromiseFailSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oPromiseFailSync.swift; sourceTree = "<group>"; };
+		62EDE91A1C76114B00D9213F /* C8oResponseJsonListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oResponseJsonListener.swift; sourceTree = "<group>"; };
+		62EDE91C1C7613E500D9213F /* C8oResponseListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oResponseListener.swift; sourceTree = "<group>"; };
+		62EDE91E1C76141500D9213F /* C8oResponseProgressListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oResponseProgressListener.swift; sourceTree = "<group>"; };
+		62EDE9201C76149A00D9213F /* C8oResponseXmlListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oResponseXmlListener.swift; sourceTree = "<group>"; };
+		62EDE9221C76153000D9213F /* C8oSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oSettings.swift; sourceTree = "<group>"; };
+		62EDE9241C761BF700D9213F /* Delegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Delegates.swift; sourceTree = "<group>"; };
+		62EDE9261C761D7500D9213F /* Exceptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Exceptions.swift; sourceTree = "<group>"; };
+		62EDE9291C76239000D9213F /* C8oCallTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oCallTask.swift; sourceTree = "<group>"; };
+		62EDE92C1C762EE500D9213F /* C8oExceptionMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oExceptionMessage.swift; sourceTree = "<group>"; };
+		62EDE9301C762FFE00D9213F /* C8oFileManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFileManager.swift; sourceTree = "<group>"; };
+		62EDE9321C76314200D9213F /* C8oFullSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFullSync.swift; sourceTree = "<group>"; };
+		62EDE9351C771F6200D9213F /* C8oFullSyncEnum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFullSyncEnum.swift; sourceTree = "<group>"; };
+		62EDE9371C77202F00D9213F /* C8oFullSyncHttp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFullSyncHttp.swift; sourceTree = "<group>"; };
 		661BB53A401A46D0C011BCBC /* Pods_C8oSDKiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_C8oSDKiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7CE1A3C0E60462F140575CFB /* Pods-C8oSDKiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-C8oSDKiOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-C8oSDKiOS/Pods-C8oSDKiOS.debug.xcconfig"; sourceTree = "<group>"; };
 		9FA94D99C293DAD611D925AE /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -281,10 +339,30 @@
 		62CD2A491C6207AD009E9F7E /* C8oSDKiOS */ = {
 			isa = PBXGroup;
 			children = (
+				62EDE92B1C762CEE00D9213F /* Internal */,
 				62CD2C061C63623F009E9F7E /* module.modulemap */,
+				6222327E1C6B29E2001D2EA1 /* C8oBase.swift */,
+				6222327F1C6B29E2001D2EA1 /* C8oLogger.swift */,
 				62CD2A4A1C6207AD009E9F7E /* C8oSDKiOS.h */,
+				622232851C6B2A00001D2EA1 /* Queue.swift */,
 				62CD2A4C1C6207AD009E9F7E /* Info.plist */,
 				62CD2A941C620ACE009E9F7E /* C8o.swift */,
+				62EDE90E1C75C5BD00D9213F /* C8oLocalCache.swift */,
+				62EDE9101C75DA0200D9213F /* C8oProgress.swift */,
+				62EDE9121C75F99800D9213F /* C8oPromise.swift */,
+				62EDE91A1C76114B00D9213F /* C8oResponseJsonListener.swift */,
+				62EDE91C1C7613E500D9213F /* C8oResponseListener.swift */,
+				62EDE91E1C76141500D9213F /* C8oResponseProgressListener.swift */,
+				62EDE9201C76149A00D9213F /* C8oResponseXmlListener.swift */,
+				62EDE9221C76153000D9213F /* C8oSettings.swift */,
+				62EDE9241C761BF700D9213F /* Delegates.swift */,
+				62EDE9261C761D7500D9213F /* Exceptions.swift */,
+				62EDE9161C75FF3700D9213F /* C8oPromiseSync.swift */,
+				62EDE9181C75FF5100D9213F /* C8oPromiseFailSync.swift */,
+				62EDE9031C7481ED00D9213F /* C8oExceptionListener.swift */,
+				62EDE9081C7482B300D9213F /* C8oFileTransfer.swift */,
+				62EDE90A1C74D3AB00D9213F /* C8oFileTransferStatus.swift */,
+				62EDE90C1C74D88000D9213F /* C8oFullSyncTranslator.swift */,
 			);
 			path = C8oSDKiOS;
 			sourceTree = "<group>";
@@ -508,6 +586,23 @@
 				62CD2BF21C635D02009E9F7E /* Pods-C8oSDKiOS.release.xcconfig */,
 			);
 			path = "Pods-C8oSDKiOS";
+			sourceTree = "<group>";
+		};
+		62EDE92B1C762CEE00D9213F /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				62EDE92C1C762EE500D9213F /* C8oExceptionMessage.swift */,
+				62EDE9291C76239000D9213F /* C8oCallTask.swift */,
+				62EDE9301C762FFE00D9213F /* C8oFileManager.swift */,
+				62EDE9321C76314200D9213F /* C8oFullSync.swift */,
+				62EDE9351C771F6200D9213F /* C8oFullSyncEnum.swift */,
+				62EDE9371C77202F00D9213F /* C8oFullSyncHttp.swift */,
+				620F6D0E1C7763B600683D0F /* FullSyncUtils.swift */,
+				620F6D131C77666800683D0F /* C8oHttpInterface.swift */,
+				620F6D151C776E0500683D0F /* C8OTranslator.swift */,
+				620F6D171C7771B300683D0F /* C8oUtils.swift */,
+			);
+			name = Internal;
 			sourceTree = "<group>";
 		};
 		E6DF9BBC5E8E811396C19469 /* Pods */ = {
@@ -791,7 +886,36 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				620F6D181C7771B300683D0F /* C8oUtils.swift in Sources */,
+				62EDE91F1C76141500D9213F /* C8oResponseProgressListener.swift in Sources */,
+				62EDE9271C761D7500D9213F /* Exceptions.swift in Sources */,
+				62EDE9231C76153000D9213F /* C8oSettings.swift in Sources */,
+				62EDE92A1C76239000D9213F /* C8oCallTask.swift in Sources */,
+				62EDE9041C7481ED00D9213F /* C8oExceptionListener.swift in Sources */,
+				62EDE9381C77202F00D9213F /* C8oFullSyncHttp.swift in Sources */,
+				62EDE9171C75FF3700D9213F /* C8oPromiseSync.swift in Sources */,
+				62EDE9331C76314200D9213F /* C8oFullSync.swift in Sources */,
+				620F6D141C77666800683D0F /* C8oHttpInterface.swift in Sources */,
+				62EDE91D1C7613E500D9213F /* C8oResponseListener.swift in Sources */,
+				62EDE9131C75F99800D9213F /* C8oPromise.swift in Sources */,
+				62EDE92D1C762EE500D9213F /* C8oExceptionMessage.swift in Sources */,
 				62CD2A951C620ACE009E9F7E /* C8o.swift in Sources */,
+				62EDE9251C761BF700D9213F /* Delegates.swift in Sources */,
+				62EDE9191C75FF5100D9213F /* C8oPromiseFailSync.swift in Sources */,
+				62EDE91B1C76114B00D9213F /* C8oResponseJsonListener.swift in Sources */,
+				620F6D161C776E0500683D0F /* C8OTranslator.swift in Sources */,
+				62EDE90D1C74D88000D9213F /* C8oFullSyncTranslator.swift in Sources */,
+				62EDE9211C76149A00D9213F /* C8oResponseXmlListener.swift in Sources */,
+				622232811C6B29E2001D2EA1 /* C8oLogger.swift in Sources */,
+				62EDE90F1C75C5BD00D9213F /* C8oLocalCache.swift in Sources */,
+				62EDE9111C75DA0200D9213F /* C8oProgress.swift in Sources */,
+				620F6D0F1C7763B600683D0F /* FullSyncUtils.swift in Sources */,
+				622232801C6B29E2001D2EA1 /* C8oBase.swift in Sources */,
+				622232861C6B2A00001D2EA1 /* Queue.swift in Sources */,
+				62EDE9091C7482B300D9213F /* C8oFileTransfer.swift in Sources */,
+				62EDE9361C771F6200D9213F /* C8oFullSyncEnum.swift in Sources */,
+				62EDE90B1C74D3AB00D9213F /* C8oFileTransferStatus.swift in Sources */,
+				62EDE9311C762FFE00D9213F /* C8oFileManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

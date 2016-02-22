@@ -12,37 +12,38 @@ public class C8oBase
 {
     public init(){
         
+        
     }
 
     //*** HTTP ***//
     
     
-    internal var  timeout : Int  = -1;
-    internal var trustAllCetificates :Bool = false;
+    internal var  timeout : Int?  = -1;
+    internal var trustAllCetificates :Bool? = false;
     internal var cookies :Dictionary<String, String>?
-    typealias Byte = UInt8
+    public typealias Byte = UInt8?
     //internal var clientCertificateBinaries : [Byte: String]? = [:];
     //internal var  clientCertificateFiles :[String: String]? = [:];
-    internal var clientCertificateBinaries : Dictionary<Byte,String>?
+    internal var clientCertificateBinaries : Dictionary<NSObject,String>?
     internal var clientCertificateFiles : Dictionary<String,String>?
 
     
     //*** Log ***//
     
-    internal var logRemote : Bool  = true;
+    internal var logRemote : Bool?  = true;
     internal var logLevelLocal : C8oLogLevel = C8oLogLevel.NONE;
-    internal var logC8o :Bool = true;
-    internal var logOnFail :C8oOnFail;
+    internal var logC8o :Bool? = true;
+    internal var logOnFail : NSObject? //C8oOnFail;
     
     //*** FullSync ***//
     
-    internal var  defaultDatabaseName : String;
-    internal var authenticationCookieValue: String;
-    internal var fullSyncLocalSuffix: String;
+    internal var  defaultDatabaseName : String?;
+    internal var authenticationCookieValue: String?;
+    internal var fullSyncLocalSuffix: String?;
     
     internal var fullSyncServerUrl :String = "http://localhost:5984";
-    internal var fullSyncUsername :String;
-    internal var fullSyncPassword :String;
+    internal var fullSyncUsername :String?;
+    internal var fullSyncPassword :String?;
     
 
     //*** Getter ***//
@@ -56,7 +57,7 @@ public class C8oBase
     /// </value>
     public var Timeout :Int
     {
-        get { return timeout; }
+        get { return timeout!; }
     }
     /// <summary>
     /// Gets a value indicating whether https calls trust all certificates or not.
@@ -67,7 +68,7 @@ public class C8oBase
     /// </value>
     public var TrustAllCetificates: Bool
     {
-        get { return trustAllCetificates; }
+        get { return trustAllCetificates!; }
     }
     
     /// <summary>
@@ -82,9 +83,9 @@ public class C8oBase
         get { return cookies; }
     }
     
-    public var ClientCertificateBinaries :[UInt8:String]?
+    public var ClientCertificateBinaries :[NSObject:String]?
     {
-        get { return clientCertificateBinaries; }
+        get { return clientCertificateBinaries!; }
     }
     
     public var ClientCertificateFiles : [String:String]?
@@ -100,7 +101,7 @@ public class C8oBase
     /// </value>
     public var LogRemote : Bool
     {
-        get { return logRemote; }
+        get { return logRemote!; }
     }
     
     /// <summary>
@@ -116,27 +117,27 @@ public class C8oBase
     
     public var LogC8o: Bool
     {
-        get { return logC8o; }
+        get { return logC8o!; }
     }
     
-    public var LogOnFail : C8oOnFail
+    public var LogOnFail : NSObject//C8oOnFail
     {
-        get { return logOnFail; }
+        get { return logOnFail!; }
     }
     
     public var DefaultDatabaseName:String
     {
-        get { return defaultDatabaseName; }
+        get { return defaultDatabaseName!; }
     }
     
     public var AuthenticationCookieValue :String
     {
-        get { return authenticationCookieValue; }
+        get { return authenticationCookieValue!; }
     }
     
     public var FullSyncLocalSuffix:String
     {
-        get { return fullSyncLocalSuffix; }
+        get { return fullSyncLocalSuffix!; }
     }
     
     public var FullSyncServerUrl:String
@@ -146,17 +147,17 @@ public class C8oBase
     
     public var FullSyncUsername:String
     {
-        get { return fullSyncUsername; }
+        get { return fullSyncUsername!; }
     }
     
     public var FullSyncPassword:String
     {
-        get { return fullSyncPassword; }
+        get { return fullSyncPassword!; }
     }
     
-    public var UiDispatcher: process
+    public var UiDispatcher: NSObject?//process
     {
-        get { return uiDispatcher; }
+        get { return nil/*uiDispatcher;*/ }
     }
     
     internal func Copy (c8oBase : C8oBase) ->Void
@@ -170,9 +171,9 @@ public class C8oBase
     {
         if (cookies == nil)
         {
-            cookies = CookieCollection();
+            cookies = NSObject() as? Dictionary<String, String>//CookieCollection();
         }
-        cookies.Add(c8oBase.cookies);
+        //cookies.Add(c8oBase.cookies);
     }
     
     if (c8oBase.clientCertificateBinaries != nil)
@@ -223,7 +224,7 @@ public class C8oBase
     fullSyncUsername = c8oBase.fullSyncUsername;
     fullSyncPassword = c8oBase.fullSyncPassword;
     
-    uiDispatcher = c8oBase.uiDispatcher;
+    //uiDispatcher = c8oBase.uiDispatcher;
     }
     
     
