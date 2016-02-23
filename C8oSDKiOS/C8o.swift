@@ -12,7 +12,7 @@ import SwiftyJSON
 
 import CouchbaseLite
 
-public class C8o : C8oBase {
+@objc public class C8o : C8oBase {
     
     
     
@@ -90,7 +90,7 @@ public class C8o : C8oBase {
     /// <summary>
     /// The regex used to get the part of the endpoint before '/projects/'
     /// </summary>
-    private static let RE_ENDPOINT : NSRegularExpression =  try! NSRegularExpression(pattern: "^(http(s)?://([^:]+)(:[0-9]+)?/?.*?)/projects/[^/]+$", options: []);
+    public static let RE_ENDPOINT : NSRegularExpression =  try! NSRegularExpression(pattern: "^(http(s)?://([^:]+)(:[0-9]+)?/?.*?)/projects/[^/]+$", options: []);
     
     //*** Engine reserved parameters ***//
     
@@ -132,7 +132,7 @@ public class C8o : C8oBase {
     
     public static func GetSdkVersion()-> String
     {
-        return "2.0.2";
+        return "2.0.0";
     }
     
     //*** Attributes ***//
@@ -184,55 +184,53 @@ public class C8o : C8oBase {
     
     
     
-    public init(endpoint :String) throws
+    public init(endpoint :String, c8oSettings : C8oSettings?) throws
     {
+        super.init()
+        
         // Checks the URL validity
         if (!C8oUtils.IsValidUrl(endpoint))
         {
-            
-            //throw Error.InvalidArgument
-            //System.ArgumentException(C8oExceptionMessage.InvalidArgumentInvalidURL(endpoint));
+            throw Error.InvalidArgument
+            //print(endpoint + "is not a valid Url")
         }
     
         // Checks the endpoint validty
-        /*
-        let matches : NSArray? = C8o.RE_ENDPOINT.matchesInString(endpoint, options :[], range: NSMakeRange(0, endpoint.characters.count ));
-        if (matches == nil){
-            print("matches nil")
-            //throw Exception(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint));
+
+        let regex : NSRegularExpression = C8o.RE_ENDPOINT
+        let regexV  = regex.matchesInString(endpoint, options: [], range: NSMakeRange(0, endpoint.characters.count ))
+        
+        if(regexV.first == nil){
+            throw Error.InvalidArgument
         }
-        else{
-            print("matches ok")
-        }/*
-*/
+
         self.endpoint = endpoint;
         
-        var matchRange = matches![0].rangeAtIndex(1)
-        self.endpointConvertigo = (endpoint as NSString).substringWithRange(matchRange)
-        matchRange = matches![0].rangeAtIndex(2)
-        self.endpointIsSecure  = !((endpoint as NSString).substringWithRange(matchRange)).isEmpty
-        matchRange = matches![0].rangeAtIndex(3)
-        self.endpointHost = (endpoint as NSString).substringWithRange(matchRange)
-        matchRange = matches![0].rangeAtIndex(4)
-        self.endpointPort = (endpoint as NSString).substringWithRange(matchRange)
+        //var matchRange = matches![0].rangeAtIndex(1)
+        self.endpointConvertigo = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(1))
+        //matchRange = matches![0].rangeAtIndex(2)
+        self.endpointIsSecure  = !(endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(2)).isEmpty
+        //matchRange = matches![0].rangeAtIndex(3)
+        self.endpointHost = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(3))
+        //matchRange = matches![0].rangeAtIndex(4)
+        self.endpointPort = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(4))
         
-        super.init()
         if (c8oSettings != nil)
         {
             
             self.Copy(c8oSettings!);
         }
     
-        /*if (uiDispatcher == nil)
-        {
-            uiDispatcher = defaultUiDispatcher;
-        }
-    
-        do
+        self.httpInterface  =  C8oHttpInterface(c8o: self)
+        self.c8oLogger = C8oLogger(c8o: self)
+        self.c8oLogger!.LogMethodCall("C8o constructor")
+        self.c8oFullSync = C8oFullSyncCbl(c8o: self)
+        
+        /*do
             {
-                if (C8oHttpInterfaceUsed != nil)
+                if (self.httpInterface != nil)
                 {
-                    httpInterface = try! C8oHttpInterfaceUsed.GetTypeInfo().DeclaredConstructors.ElementAt(1).Invoke([NSObject] { self }) as C8oHttpInterface;
+                    httpInterface = try! httpInterface.GetTypeInfo().DeclaredConstructors.ElementAt(1).Invoke([NSObject] { self }) as C8oHttpInterface;
                 }
                 else
                 {
@@ -244,9 +242,6 @@ public class C8o : C8oBase {
             //throw C8oException(C8oExceptionMessage.InitHttpInterface(), e);
         }
     
-        c8oLogger = C8oLogger(c8o: self);
-    
-        c8oLogger.LogMethodCall("C8o constructor");
     
         do
             {
@@ -258,13 +253,13 @@ public class C8o : C8oBase {
                 {
                     c8oFullSync = try! C8oFullSyncHttp(FullSyncServerUrl, FullSyncUsername, FullSyncPassword);
                 }
-                c8oFullSync.Init(self);
+                c8oFullSync.self);
         }
         catch
         {
             //throw  C8oException(C8oExceptionMessage.FullSyncInterfaceInstance(), e);
         }*/
-        */
+        
     }
     
     //*** C8o calls ***//
@@ -670,7 +665,7 @@ public class C8o : C8oBase {
         }*/
     }
     
-    public func description()->String
+    public func toString()->String
     {
         return "C8o[" + endpoint! + "] " //+ super.description();
     }

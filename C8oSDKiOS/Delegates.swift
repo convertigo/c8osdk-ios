@@ -7,4 +7,11 @@
 //
 
 import Foundation
+/*typealias G = NSObject
+public protocol C8oOnResponse<NSObject>{
+    //(response : T,)  ->C8oPromise
+}*/
 
+/*public protocol ccc<T>
+{
+}*/

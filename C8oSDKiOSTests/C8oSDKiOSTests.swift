@@ -7,6 +7,9 @@
 //
 
 import XCTest
+import Foundation
+import SwiftyJSON
+
 @testable import C8oSDKiOS
 
 class C8oSDKiOSTests: XCTestCase {
@@ -16,7 +19,8 @@ class C8oSDKiOSTests: XCTestCase {
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
-        myC8o = C8o();
+        //myC8o = C8o();
+        myC8o = try! C8o(endpoint: "https://192.168.100.95:18080/convertigo/projects/Sample05", c8oSettings: C8oSettings().SetDefaultDatabaseName("sample05").SetLogC8o(true))
     }
     
     override func tearDown() {
@@ -61,6 +65,81 @@ class C8oSDKiOSTests: XCTestCase {
       
     }
     
+    func testCg_C8oUtilis_IsValidEndpoint()
+    {
+        var endpoint : String = "https://192.168.100.95:18080/convertigo/projects/Sample05"
+        let regex : NSRegularExpression = C8o.RE_ENDPOINT
+        var regexV  = regex.matchesInString(endpoint, options: [], range: NSMakeRange(0, endpoint.characters.count ))
+        if(regexV.first == nil){
+            XCTAssert(false,"regex is supposed to be ok")
+        }
+        print((endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(0)))
+        print((endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(1)))
+        print((endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(2)))
+        print((endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(3)))
+        print((endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(4)))
+        
+        endpoint = "htp://192.168.100.95:18080/convertigo/projects/Sample05"
+        regexV = regex.matchesInString(endpoint, options: [], range: NSMakeRange(0, endpoint.characters.count ))
+        if( regexV.first != nil){
+            XCTAssert(false,"regex is not supposed to be ok")
+        }
+    }
+    func test01()
+    {
+        myC8o.Log.Trace("Test 01 trace");
+        myC8o.Log.Debug("Test 01 debug");
+        myC8o.Log.Info("Test 01 info");
+        myC8o.Log.Warn("Test 01 warn");
+        myC8o.Log.Error("Test 01 error");
+        myC8o.Log.Fatal("Test 01 fatal");
+        
+        if (myC8o.Log.IsTrace) {
+            myC8o.Log.Fatal("Test 01.bis trace");
+            myC8o.Log.Trace("Test 01 bis trace");
+        }
+        if (myC8o.Log.IsDebug) {
+            myC8o.Log.Fatal("Test 01.bis debug");
+            myC8o.Log.Debug("Test 01 bis debug");
+        }
+        if (myC8o.Log.IsInfo) {
+            myC8o.Log.Fatal("Test 01.bis info");
+            myC8o.Log.Info("Test 01 bis info");
+        }
+        if (myC8o.Log.IsWarn) {
+            myC8o.Log.Fatal("Test 01.bis warn");
+            myC8o.Log.Warn("Test 01 bis warn");
+        }
+        if (myC8o.Log.IsError) {
+            myC8o.Log.Fatal("Test 01.bis error");
+            myC8o.Log.Error("Test 01 bis error");
+        }
+        if (myC8o.Log.IsFatal) {
+            myC8o.Log.Fatal("Test 01.bis fatal");
+            myC8o.Log.Fatal("Test 01 bis fatal");
+        }
+
+        myC8o.Log.Info("Test 01")
+        print("Test 01\n")
+        print("==========\n")
+        myC8o.CallXml(".sample05.GetServerInfo")?.ThenUI(){
+            (response : NSObject?, parameters : Dictionary<String, NSObject>?)->() in
+            
+                print(C8oTranslator.XmlToString(response!))
+                print("\n==========\n")
+            
+                self.myC8o.CallJson(("\n==========\n"))?.ThenUI(){
+                    (response : NSObject?, parameters : Dictionary<String, NSObject>?)->() in
+                    print(String(JSON(response!).rawString()))
+                    print("\n==========\n")
+                    
+                }
+            
+            }
+            
+        }
     
     
 }
+    
+

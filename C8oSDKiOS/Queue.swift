@@ -45,6 +45,21 @@ public class Queue<T>
     }
         
 }*/
+/*
+typealias Key = NSObject
+typealias Value = NSObject*/
+public class Pair<K , V> {
+    
+    var key : K
+    var value : V
+    public init(key : K, value : V ){
+        self.key = key
+        self.value = value
+    }
+    
+}
+
+
 
 extension String {
     static func IsNullOrEmpty(value: String?) -> Bool

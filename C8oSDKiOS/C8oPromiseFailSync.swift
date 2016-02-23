@@ -8,11 +8,15 @@
 
 import Foundation
 import SwiftyJSON
-public class
-    C8oPromiseFailSync<T> : C8oPromiseSync<T>
+
+public class C8oPromiseFailSync<T> : C8oPromiseSync<T>
 {
-    /*C8oPromiseSync<T> Fail(C8oOnFail c8oOnFail);
-    C8oPromiseSync<T> FailUI(C8oOnFail c8oOnFail);*/
+    /*public override init() {
+        super.init()
+    }*/
+
     
+    /* C8oPromiseSync<T> Fail(C8oOnFail c8oOnFail);
+    C8oPromiseSync<T> FailUI(C8oOnFail c8oOnFail);*/
     
 }

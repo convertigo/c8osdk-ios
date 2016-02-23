@@ -32,20 +32,23 @@ import SwiftyJSON
 /// </summary>
 public class C8oPromise<T> : C8oPromiseFailSync<T>
 {
+   
+    private var c8o : C8o;
     
-    /*private var c8o : C8o;
-    private var c8oOnResponses : NSObject//Array<Dictionary<C8oOnResponse<T>, bool>> = Array<Dictionary<C8oOnResponse<T>, bool>>();
-    private var c8oProgress : NSObject //Dictionary<C8oOnProgress, bool>;
-    private var c8oFail : NSObject //Dictionary<C8oOnFail, bool>;
+    private var c8oOnResponses : Array<Pair<(T?, Dictionary<String, NSObject>?)->(), Bool>> = Array<Pair<(T?, Dictionary<String, NSObject>?)->(), Bool>>()
+    //= Array<Dictionary<NSObject, Bool>>();
+    private var c8oProgress : NSObject? //Dictionary<C8oOnProgress, bool>;
+    private var c8oFail : NSObject? //Dictionary<C8oOnFail, bool>;
     private var syncMutex : NSObject = NSObject();
     
-    private var lastResult : T;
-    private var lastException : NSException;*/
+    private var lastResult : T?;
+    private var lastException : NSException?;
     
-    internal override init(/*c8o : C8o*/)
+    public init(c8o : C8o)
     {
-        super.init()
-        //self.c8o = c8o
+        self.c8o = c8o
+        //super.init();
+        
     }
     
     /// <summary>
@@ -67,13 +70,15 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
     /// </summary>
     /// <param name="c8oOnResponse">A C8oOnResponse lambda function</param>
     /// <returns>the same C8oPromise object to chain for other calls</returns>
-    public func ThenUI(c8oOnResponse : NSObject/*C8oOnResponse<T>*/)-> C8oPromise<T>
+    public func ThenUI(c8oOnResponse : (response : T?, parameters : Dictionary<String, NSObject>?)->())-> C8oPromise<T>
     {
-        /*var condition : NSCondition
+        let condition : NSCondition = NSCondition()
         condition.lock()
-        c8oOnResponses.Add(Dictionary<C8oOnResponse<T>, bool>(c8oOnResponse, true));*/
-        
+            let keyValue : Pair = Pair<(T?, Dictionary<String, NSObject>?)->(), Bool>(key: c8oOnResponse, value: true)
+            self.c8oOnResponses.append(keyValue)
+        condition.unlock()
         return self;
+        
     }
     
     /// <summary>

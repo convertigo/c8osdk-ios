@@ -94,6 +94,8 @@ public class C8oUnavailableLocalCacheException : NSException
 }
 
 public enum Error : ErrorType {
-    case InvalidArgument
+        case InvalidArgument
+    }
+
     
-}
+         
