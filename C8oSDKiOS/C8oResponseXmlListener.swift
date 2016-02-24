@@ -10,14 +10,10 @@ import Foundation
 
 public class C8oResponseXmlListener : C8oResponseListener
 {
-    public var OnXmlResponse : Dictionary<NSObject, Dictionary<String, NSObject>>? ;
+    public var OnXmlResponse : (Dictionary<NSObject, Dictionary<String, NSObject>>?)->();
     
-    public func C8oResponseXmlListener(onXmlResponse : Dictionary<NSObject, Dictionary<String, NSObject>>)
+    public init(onXmlResponse : (params : Dictionary<NSObject, Dictionary<String, NSObject>>?)->())
     {
-        OnXmlResponse = onXmlResponse;
-    }
-    public init()
-    {
-        OnXmlResponse =  nil
+        OnXmlResponse = onXmlResponse
     }
 }

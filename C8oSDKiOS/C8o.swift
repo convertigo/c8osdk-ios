@@ -86,7 +86,7 @@ import CouchbaseLite
     /// <summary>
     /// The regex used to handle the c8o requestable syntax ("<project>.<sequence>" or "<project>.<connector>.<transaction>")
     /// </summary>
-    private static let RE_REQUESTABLE : NSRegularExpression =  try! NSRegularExpression(pattern: "^([^.]*)\\.(?:([^.]+)|([^.]+)\\.([^.]+))$", options: []);
+    private static let RE_REQUESTABLE : NSRegularExpression =  try! NSRegularExpression(pattern: "^([^.]*)\\.(?:([^.]+)|(?:([^.]+)\\.([^.]+)))$", options: []);
     /// <summary>
     /// The regex used to get the part of the endpoint before '/projects/'
     /// </summary>
@@ -225,51 +225,16 @@ import CouchbaseLite
         self.c8oLogger = C8oLogger(c8o: self)
         self.c8oLogger!.LogMethodCall("C8o constructor")
         self.c8oFullSync = C8oFullSyncCbl(c8o: self)
-        
-        /*do
-            {
-                if (self.httpInterface != nil)
-                {
-                    httpInterface = try! httpInterface.GetTypeInfo().DeclaredConstructors.ElementAt(1).Invoke([NSObject] { self }) as C8oHttpInterface;
-                }
-                else
-                {
-                    httpInterface = try! C8oHttpInterface(self);
-                }
-        }
-        catch
-        {
-            //throw C8oException(C8oExceptionMessage.InitHttpInterface(), e);
-        }
-    
-    
-        do
-            {
-                if (C8oFullSyncUsed != nil)
-                {
-                    c8oFullSync = try! C8oFullSyncUsed.GetTypeInfo().DeclaredConstructors.ElementAt(0).Invoke(object[0]) as C8oFullSync;
-                }
-                else
-                {
-                    c8oFullSync = try! C8oFullSyncHttp(FullSyncServerUrl, FullSyncUsername, FullSyncPassword);
-                }
-                c8oFullSync.self);
-        }
-        catch
-        {
-            //throw  C8oException(C8oExceptionMessage.FullSyncInterfaceInstance(), e);
-        }*/
-        
     }
     
     //*** C8o calls ***//
-    public func Call(requestable :String?, var parameters : Dictionary<String, NSObject>? = nil , c8oResponseListener : C8oResponseListener? = nil, c8oExceptionListener  : C8oExceptionListener? = nil)-> Void
+    public func Call(requestable :String?, var parameters : Dictionary<String, NSObject>? = nil , c8oResponseListener : C8oResponseXmlListener , c8oExceptionListener  : C8oExceptionListener )-> Void
     {
         do
         {
             if(requestable == nil)
             {
-                //throw System.ArgumentNullException(C8oExceptionMessage.InvalidArgumentNullParameter("requestable"));*/
+                throw Error.InvalidArgument //System.ArgumentNullException(C8oExceptionMessage.InvalidArgumentNullParameter("requestable"));*/
             }
     
             // Checks parameters validity
@@ -280,41 +245,40 @@ import CouchbaseLite
             else
             {
                 // Clone parameters in order to modify them
-                //parameters = Dictionary<String, NSObject>?(parameters);
+                parameters = Dictionary<String, NSObject>?(parameters!);
             }
     
             // Use the requestable string to add parameters corresponding to the c8o project, sequence, connector and transaction (<project>.<sequence> or <project>.<connector>.<transaction>)
-            let matches : NSArray? = C8o.RE_REQUESTABLE.matchesInString(requestable!, options :[], range: NSMakeRange(0, endpoint!.characters.count ));
-            if (matches == nil){
-                //throw Exception(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint));
+            let regex : NSRegularExpression = C8o.RE_REQUESTABLE
+            let regexV  = regex.matchesInString(requestable!, options: [], range: NSMakeRange(0, requestable!.characters.count ))
+            
+            if(regexV.first == nil){
+                throw Error.InvalidArgument //Exception(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint));
             }
             
-            var matchRange = matches![1].rangeAtIndex(1)
-
+            
             // If the project name is specified
-            if ((endpoint! as NSString).substringWithRange(matchRange) != "")
+            if ((requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(1)) != "")
             {
-                parameters = ["ENGINE_PARAMETER_PROJECT" :(endpoint! as NSString).substringWithRange(matchRange)];
+                parameters!["ENGINE_PARAMETER_PROJECT"] =  (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(1));
             }
             
-            matchRange = matches![1].rangeAtIndex(2)
             
             // If the C8o call use a sequence
-            if ((endpoint! as NSString).substringWithRange(matchRange) != "")
+            
+            if (((requestable! as NSString?)!.substringWithRange(regexV[0].rangeAtIndex(1)) as String?) !=  "")
             {
-                parameters = ["ENGINE_PARAMETER_SEQUENCE" :(endpoint! as NSString).substringWithRange(matchRange)];
+                parameters!["ENGINE_PARAMETER_SEQUENCE"] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(2));
             }
             else
             {
-                matchRange = matches![1].rangeAtIndex(3)
-                parameters = ["ENGINE_PARAMETER_CONNECTOR" :(endpoint! as NSString).substringWithRange(matchRange)];
+                parameters!["ENGINE_PARAMETER_CONNECTOR"] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(3));
                 
-                matchRange = matches![1].rangeAtIndex(4)
-                parameters = ["ENGINE_PARAMETER_TRANSACTION" :(endpoint! as NSString).substringWithRange(matchRange)];
+                parameters!["ENGINE_PARAMETER_TRANSACTION"] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(4));
 
             }
     
-            //Call(parameters, c8oResponseListener, c8oExceptionListener);
+            Call(parameters, c8oResponseListener: c8oResponseListener, c8oExceptionListener: c8oExceptionListener);
         }
         catch
         {
@@ -327,7 +291,7 @@ import CouchbaseLite
         // IMPORTANT : all c8o calls have to end here !
         do
         {
-            //c8oLogger.LogMethodCall("Call", var parameters: parameters!);
+            c8oLogger!.LogMethodCall("Call", parameters: parameters!);
     
             // Checks parameters validity
             if (parameters == nil)
@@ -337,13 +301,13 @@ import CouchbaseLite
             else
             {
                 // Clones parameters in order to modify them
-            //    parameters = Dictionary<String, NSObject>(parameters);
+                //parameters = parameters;
             }
     
             // Creates a async task running on another thread
             // Exceptions have to be handled by the C8oExceptionListener
-            //var task = C8oCallTask(this, parameters, c8oResponseListener, c8oExceptionListener);
-           // task.Execute();
+            let task = C8oCallTask(c8o: self, parameters: parameters!, c8oResponseListener: c8oResponseListener!, c8oExceptionListener: c8oExceptionListener!);
+            task.Execute();
         }
         catch
         {
@@ -530,27 +494,49 @@ import CouchbaseLite
     /// use the Async() to wait for the server response without blocking the request thread. You can also use the .Fail() and
     /// FailUI() methods to handle errors.
     /// </returns>
-    public func CallXml(requestable : String, parameters :Dictionary<String, NSObject>)->C8oPromise<NSObject>?//C8oPromise<XDocument>
+    
+    
+    
+    
+    /************* example      ***************************
+    public func ThenUI(c8oOnResponse : (response : T?, parameters : Dictionary<String, NSObject>?)->())-> C8oPromise<T>
     {
-        /*var promise = C8oPromise<XDocument>(self);
+    let condition : NSCondition = NSCondition()
+    condition.lock()
+    let keyValue : Pair = Pair<(T?, Dictionary<String, NSObject>?)->(), Bool>(key: c8oOnResponse, value: true)
+    self.c8oOnResponses.append(keyValue)
+    condition.unlock()
+    return self;
     
-        Call(requestable, parameters, C8oResponseXmlListener((response, requestParameters) =>
-            {
-                if (response == null && requestParameters.ContainsKey(ENGINE_PARAMETER_PROGRESS))
-                {
-                    promise.OnProgress(requestParameters[ENGINE_PARAMETER_PROGRESS] as C8oProgress);
-                }
-                else
-                {
-                    promise.OnResponse(response, requestParameters);
-                }
-            }), C8oExceptionListener((NSException, requestParameters) =>
-                {
-                    promise.OnFailure(NSException, requestParameters);
-                }));
+    }
     
-        return promise;*/
-        return nil
+    ************* example      ***************************/
+    public func CallXml(requestable : String, parameters :Dictionary<String, NSObject>)->C8oPromise<NSXMLParser>?//C8oPromise<XDocument>
+    {
+        
+        let promise = C8oPromise<NSXMLParser>(c8o: self);
+        
+        Call(requestable,
+            parameters: parameters,
+            c8oResponseListener : C8oResponseXmlListener(onXmlResponse:{
+                (params : Dictionary<NSObject, Dictionary<String, NSObject>>?)->() in
+                
+                if((params!.keys.first) == nil ){
+                    if((params!.values.first)?.keys.contains(C8o.ENGINE_PARAMETER_PROGRESS) == true){
+                        
+                        promise.OnProgress(((((params!.values.first)! as Dictionary<String, NSObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
+                    }
+                }
+            
+            })
+            , c8oExceptionListener : C8oExceptionListener(OnException:{
+                (params : Dictionary<NSException, Dictionary<String, NSObject>>?)->() in
+                
+                    promise.OnFailure(((params?.keys.first) as NSException?)!, parameters: (params?.values.first)!)
+                
+            }))
+        return promise
+        
     }
     
     
@@ -580,10 +566,16 @@ import CouchbaseLite
     /// use the Async() to wait for the server response without blocking the request thread. You can also use the .Fail() and
     /// FailUI() methods to handle errors.
     /// </returns>
-    public func CallXml(requestable : String, parameters : [NSObject] ...)->C8oPromise<NSObject>?//C8oPromise<XDocument>
+    public func CallXml(requestable : String, parameters : [NSObject] ...)->C8oPromise<NSXMLParser>?//C8oPromise<XDocument>
     {
-        //return CallXml(requestable, ToParameters(parameters));
-        return nil
+        do{
+            
+            return try! CallXml(requestable, parameters: C8o.ToParameters(parameters));
+        }
+        catch{
+            
+        }
+        //return nil
     }
     
     /// <summary>
@@ -727,11 +719,11 @@ import CouchbaseLite
         get { return httpInterface!.CookieStore!; }
     }
     
-    private static func ToParameters(parameters : [NSObject])->Dictionary<String, NSObject>
+    private static func ToParameters(parameters : [NSObject])throws ->Dictionary<String, NSObject>
     {
         if (parameters.count % 2 != 0)
         {
-            //throw System.ArgumentException(C8oExceptionMessage.InvalidParameterValue("parameters", "needs pairs of values"));
+            print("laaaaa")//throw Error.InvalidArgument //throw System.ArgumentException(C8oExceptionMessage.InvalidParameterValue("parameters", "needs pairs of values"));
         }
     
         var newParameters = Dictionary<String, NSObject>();

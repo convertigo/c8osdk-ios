@@ -20,7 +20,7 @@ class C8oSDKiOSTests: XCTestCase {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
         //myC8o = C8o();
-        myC8o = try! C8o(endpoint: "https://192.168.100.95:18080/convertigo/projects/Sample05", c8oSettings: C8oSettings().SetDefaultDatabaseName("sample05").SetLogC8o(true))
+        myC8o = try! C8o(endpoint: "https://192.168.100.95:18080/convertigo/projects/Sample05", c8oSettings: C8oSettings().SetDefaultDatabaseName("sample05").SetLogLevelLocal(C8oLogLevel.ERROR))
     }
     
     override func tearDown() {
@@ -119,23 +119,27 @@ class C8oSDKiOSTests: XCTestCase {
             myC8o.Log.Fatal("Test 01 bis fatal");
         }
 
-        myC8o.Log.Info("Test 01")
+        
+        
         print("Test 01\n")
         print("==========\n")
-        myC8o.CallXml(".sample05.GetServerInfo")?.ThenUI(){
-            (response : NSObject?, parameters : Dictionary<String, NSObject>?)->() in
+        myC8o.CallXml(".sample05.GetServerInfo")?.ThenUI({
+            (response : NSXMLParser?, parameters : Dictionary<String, NSObject>?)->() in
             
+                //return C8oPromise<NSXMLParser>
                 print(C8oTranslator.XmlToString(response!))
                 print("\n==========\n")
-            
-                self.myC8o.CallJson(("\n==========\n"))?.ThenUI(){
+
+                self.myC8o.CallJson(("\n==========\n"))?.ThenUI({
                     (response : NSObject?, parameters : Dictionary<String, NSObject>?)->() in
                     print(String(JSON(response!).rawString()))
                     print("\n==========\n")
+                   
                     
-                }
+                })
             
-            }
+            })
+        
             
         }
     

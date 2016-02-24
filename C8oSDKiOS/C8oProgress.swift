@@ -11,7 +11,7 @@ import Foundation
 /// <summary>
 /// This class gives dome information about a running replication
 /// </summary>
-public class C8oProgress
+public class C8oProgress : NSObject
 {
     private var changed :Bool? = false;
     private var continuous :Bool? = false;
@@ -23,8 +23,9 @@ public class C8oProgress
     private var taskInfo : String? = "";
     private var raw : NSObject? ;
     
-    internal init()
+    internal override init()
     {
+        super.init()
         self.changed = nil
         self.continuous = nil
         self.finished = nil
@@ -39,6 +40,7 @@ public class C8oProgress
     
     internal init(progress : C8oProgress)
     {
+        super.init()
         continuous = progress.continuous;
         finished = progress.finished;
         pull = progress.pull;
