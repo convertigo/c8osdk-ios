@@ -65,11 +65,11 @@ internal class C8oUtils
     
     public static func GetParameterObjectValue(parameters :  Dictionary<String, NSObject>, name : String, useName : Bool = false)->NSObject?
     {
-        /*KeyValuePair<string, object> parameter = GetParameter(parameters, name, useName);
-        if (parameter.Key != null)
+        let parameter : Dictionary<String, NSObject> = GetParameter(parameters, name: name, useName: useName);
+        if (parameter.keys.first != nil)
         {
-        return parameter.Value;
-        }*/
+            return parameter.values.first;
+        }
         return nil;
     }
     

@@ -18,51 +18,26 @@ import Foundation
 ///  * be able to display data when the device is not connected to the network.
 /// The Local Cache feature allows to store locally on the device the responses to a C8O call, using the variables and their values as cache key.
 /// </summary>
-public class C8oLocalCache
+public class C8oLocalCache : NSObject
 {
     public static var PARAM : String = "__localCache";
     
-    public enum Priority {
-        
-        case SERVER, LOCAL
-        
-        
-        
+    
+   public class Priority{
+    
+        var IsAviable: (c8o : C8o)->(Bool)
+    
+    /*public static var SERVER : Priority = Priority(c8o : C8o->(Bool));
+        public static var LOCAL : Priority = Priority(isAviable: (c8o: C8o(), bool: true));
+*/
+        public init (isAviable : (c8o : C8o)->(Bool))
+        {
+            IsAviable = isAviable
+        }
         
     }
-    /*public class Priority
-    {
-        init()
-        {
-            
-        }
-        
-        public static var SERVER : C8oLocalCache.Priority = Priority(c8o : C8o) -> Bool{return true};
-        /*{
-            return true;
-        });*/
-        
-        public static func LOCAL(c8o: C8o)->Bool
-            {
-                return true;
-            };
-        
-        /*
-        public static var LOCAL : Priority = Priority(c8o =>
-        {
-        return true;
-        });*/
-        
-        var IsAvailable: (C8o) ->Bool;
-        
-        private func Priority(isAvailable : (C8o) ->Bool)
-        {
-            IsAvailable = isAvailable;
-            
-        }
-    }*/
     
-    internal var  priority : Priority?;
+    internal var  priority : C8oLocalCache.Priority?;
     internal var ttl : Int;
     internal var enabled : Bool;
     
@@ -91,3 +66,60 @@ public class C8oLocalCache
         self.enabled = enabled;
     }
 }
+
+
+/*public class Priority
+{
+private init()
+{
+
+}
+func IsAvailable() ->(C8o -> Bool){}
+
+public static var SERVER : C8oLocalCache.Priority = Priority(c8o : C8o) -> Bool{return true};
+/*{
+return true;
+});*/
+
+public static func LOCAL(c8o: C8o)->Bool
+{
+return true;
+};
+
+/*
+public static var LOCAL : Priority = Priority(c8o =>
+{
+return true;
+});*/
+
+/*var IsAvailable: (C8o) ->Bool;
+
+private func Priority(isAvailable : (C8o) ->Bool)
+{
+IsAvailable = isAvailable;
+
+}*/
+}*/
+
+/*public enum Priority  {
+
+case SERVER, LOCAL
+
+var abc :
+func isAviable(c8o : C8o)->Bool
+{
+switch(self)
+{
+case .SERVER :
+return true
+break
+
+case .LOCAL :
+return true
+break
+}
+}
+
+
+
+}*/

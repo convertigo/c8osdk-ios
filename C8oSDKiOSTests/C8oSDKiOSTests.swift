@@ -9,6 +9,7 @@
 import XCTest
 import Foundation
 import SwiftyJSON
+import Alamofire
 
 @testable import C8oSDKiOS
 
@@ -85,7 +86,7 @@ class C8oSDKiOSTests: XCTestCase {
             XCTAssert(false,"regex is not supposed to be ok")
         }
     }
-    func test01()
+    func atest01()
     {
         myC8o.Log.Trace("Test 01 trace");
         myC8o.Log.Debug("Test 01 debug");
@@ -143,7 +144,31 @@ class C8oSDKiOSTests: XCTestCase {
             
         }
     
-    
+    func testCgAlamo(){
+        /*Alamofire.request(.GET, "", parameters: ["consumer_key": "MKfScrf1JOGPilOkrTifJVutkyYOFskZtVeKqk6z"]).responseJSON(){
+            (data) in
+            print(data)
+            print("aaaaaaa")
+        }*/
+        
+        //let semaphore = dispatch_semaphore_create(0)
+        print("1")
+        Alamofire.request(.GET, "https://api.500px.com/v1/photos", parameters: ["consumer_key": "MKfScrf1JOGPilOkrTifJVutkyYOFskZtVeKqk6z"])
+            .responseJSON { response in
+                
+                if let JSON = response.result.value {
+                    print("JSON: \(JSON)")
+                    
+                }
+                print(response)
+                print("2")
+                 //dispatch_semaphore_signal(semaphore);
+                print("3")
+            }
+        print("4")
+        //dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        
+            }
 }
     
 
