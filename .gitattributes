@@ -35,6 +35,7 @@ C8oSDKiOS/C8oFullSyncHttp.swift -text
 C8oSDKiOS/C8oFullSyncTranslator.swift -text
 C8oSDKiOS/C8oHttpInterface.swift -text
 C8oSDKiOS/C8oLocalCache.swift -text
+C8oSDKiOS/C8oLogger.swift -text
 C8oSDKiOS/C8oProgress.swift -text
 C8oSDKiOS/C8oPromise.swift -text
 C8oSDKiOS/C8oPromiseFailSync.swift -text
