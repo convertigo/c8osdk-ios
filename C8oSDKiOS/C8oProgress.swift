@@ -8,9 +8,7 @@
 
 import Foundation
 
-/// <summary>
-/// This class gives dome information about a running replication
-/// </summary>
+
 public class C8oProgress : NSObject
 {
     private var changed :Bool? = false;
@@ -64,19 +62,11 @@ public class C8oProgress : NSObject
         }
     }
     
-    /// <summary>
-    /// A built in replication status indicator.
-    /// </summary>
-    /// <returns>A String in the form "Direction : current / total (running)"</returns>
     public func Description()->String
     {
         return "" // Direction + ": " + current + "/" + total + " (" + (finished ? (continuous ? "live" : "done") : "running") + ")";
     }
     
-    /// <summary>
-    /// true if in continuous mode, false otherwise. In continuous mode, replications are done continuously as long as
-    /// the network is present. Otherwise replication stops when all the documents have been replicated
-    /// </summary>
     public var Continuous : Bool
     {
         get
@@ -94,12 +84,7 @@ public class C8oProgress : NSObject
         }
     }
     
-    /// <summary>
-    /// For a normal repliacation will be true when the replication has finished. For a continuous replication, will be true during phase 1
-    /// when all documents are being replicate to a stable state, then false during the continuous replication process. As design documents
-    /// are also replicated during a database sync, never use a view before the progress.finished == true to be sure the design document holding
-    /// this view is replicated locally.
-    /// </summary>
+
     public var Finished: Bool
     {
         get
@@ -117,9 +102,7 @@ public class C8oProgress : NSObject
         }
     }
     
-    /// <summary>
-    /// True is the replication is in pull mode (From server to device) false in push mode (Mobile to server)
-    /// </summary>
+
     public var Pull : Bool
     {
         get
@@ -137,9 +120,7 @@ public class C8oProgress : NSObject
         }
     }
     
-    /// <summary>
-    /// True is the replication is in push mode (From mobile to device) false in pull  mode (Server to mobile)
-    /// </summary>
+
     public var Push : Bool
     {
         get
@@ -148,9 +129,7 @@ public class C8oProgress : NSObject
         }
     }
     
-    /// <summary>
-    /// The current number of revisions repliacted. can be used as a progress indicator.
-    /// </summary>
+
     public var Current : Int
     {
         get
@@ -168,9 +147,7 @@ public class C8oProgress : NSObject
         }
     }
     
-    /// <summary>
-    /// The total number of revisions to be repliacted so far.
-    /// </summary>
+
     public var Total : Int
     {
         get
@@ -188,9 +165,7 @@ public class C8oProgress : NSObject
         }
     }
     
-    /// <summary>
-    /// A Direction (Pull or push) information
-    /// </summary>
+
     public var Direction : String
     {
         get
@@ -201,9 +176,7 @@ public class C8oProgress : NSObject
         }
     }
     
-    /// <summary>
-    /// A Status information
-    /// </summary>
+
     public var Status : String
     {
         get
@@ -221,9 +194,7 @@ public class C8oProgress : NSObject
         }
     }
     
-    /// <summary>
-    /// A task information status from the underlying replication engine.
-    /// </summary>
+
     public var TaskInfo : String
     {
         get
@@ -241,9 +212,7 @@ public class C8oProgress : NSObject
         }
     }
     
-    /// <summary>
-    /// The underlying replication engine replication object.
-    /// </summary>
+
     public var Raw : NSObject
     {
         get

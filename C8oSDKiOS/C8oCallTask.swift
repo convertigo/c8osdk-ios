@@ -93,7 +93,7 @@ internal class C8oCallTask
                 //return C8oException("wrong listener");
             }
             
-            //*** Local cache ***//
+            /** Local cache */
             
             var c8oCallRequestIdentifier : String? = nil;
             
@@ -137,7 +137,7 @@ internal class C8oCallTask
                 }*/
             }
             
-            //*** Get response ***//
+            /** Get response */
             
             parameters[C8o.ENGINE_PARAMETER_DEVICE_UUID] = c8o.DeviceUUID;
             

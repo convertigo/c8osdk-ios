@@ -56,6 +56,15 @@ C8oSDKiOS/Queue.swift -text
 C8oSDKiOS/module.modulemap -text
 C8oSDKiOSTests/C8oSDKiOSTests.swift -text
 C8oSDKiOSTests/Info.plist -text
+ObjC/AppDelegate.h -text
+ObjC/AppDelegate.m -text
+ObjC/Assets.xcassets/AppIcon.appiconset/Contents.json -text
+ObjC/Base.lproj/LaunchScreen.storyboard -text
+ObjC/Base.lproj/Main.storyboard -text
+ObjC/Info.plist -text
+ObjC/ViewController.h -text
+ObjC/ViewController.m -text
+ObjC/main.m -text
 /PodFile -text
 Pods/Target[!!-~]Support[!!-~]Files/Pods/Pods.debug.xcconfig -text
 Pods/Target[!!-~]Support[!!-~]Files/Pods/Pods.release.xcconfig -text

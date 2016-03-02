@@ -37,8 +37,7 @@ internal class C8oFullSync
         fullSyncDatabaseUrlBase = c8o.EndpointConvertigo + C8oFullSync.FULL_SYNC_URL_PATH;*/
         //localSuffix = (c8o.FullSyncLocalSuffix != nil) ? c8o.FullSyncLocalSuffix : "_device";
     }
-    
-    //*** Request handlers ***//
+
     
     public func HandleFullSyncRequest(parameters : Dictionary<String, NSObject>, listener : C8oResponseListener)->NSObject?//Task<object>
     {
@@ -90,12 +89,6 @@ internal class C8oFullSync
         return nil
     }
     
-    /// <summary>
-    /// Handles the fullSync response depending to the C8oResponseListener.
-    /// </summary>
-    /// <param name="response"></param>
-    /// <param name="parameters"></param>
-    /// <param name="c8oResponseListener"></param>
     public func HandleFullSyncResponse(var response : NSObject, listener : C8oResponseListener)->NSObject
     {
         if (response is JSON)
@@ -109,52 +102,38 @@ internal class C8oFullSync
         return response;
     }
     
-    /// <summary>
-    /// Returns the requested document.
-    /// </summary>
-    /// <param name="fullSyncDatatbase"></param>
-    /// <param name="parameters"></param>
-    /// <returns></returns>
+
     public func HandleGetDocumentRequest(fullSyncDatatbaseName : String, docid : String, parameters : Dictionary<String, NSObject>)->String
     {
         fatalError("Must Override")
     }
-    
-    //*** DeleteDocument ***//
-    
-    /// <summary>
-    /// Deletes an existing document from the local database.
-    /// </summary>
-    /// <param name="fullSyncDatabase"></param>
-    /// <param name="parameters"></param>
-    /// <returns></returns>
+
     public func HandleDeleteDocumentRequest(fullSyncDatatbaseName : String, docid :  String, parameters : Dictionary<String, NSObject>)->NSObject?//Task<object>
     {
         fatalError("Must Override")
     }
     
-    //*** PostDocument ***//
+
     
     public func HandlePostDocumentRequest(fullSyncDatatbaseName : String, fullSyncPolicy : NSObject? /*FullSyncPolicy*/, parameters : Dictionary<String, NSObject>)->NSObject?//Task<object>
     {
         fatalError("Must Override")
     }
     
-    //*** GetAllDocuments ***//
+
     
     public func HandleAllDocumentsRequest(fullSyncDatatbaseName : String, parameters : Dictionary<String, NSObject>)->NSObject?//->Task<object>
     {
         fatalError("Must Override")
     }
-    
-    //*** GetView ***//
+
     
     public func HandleGetViewRequest(fullSyncDatatbaseName : String, ddoc : String, view : String, parameters : Dictionary<String, NSObject>)->NSObject?//->Task<object>
     {
         fatalError("Must Override")
     }
     
-    //*** Sync, ReplicatePull, ReplicatePush ***//
+
     
     public func HandleSyncRequest(fullSyncDatatbaseName : String, parameters : Dictionary<String, NSObject>, c8oResponseListener : C8oResponseListener)->NSObject?//->Task<object>
     {
@@ -171,52 +150,39 @@ internal class C8oFullSync
         fatalError("Must Override")
     }
     
-    //*** Reset ***//
+
     
     public func HandleResetDatabaseRequest(fullSyncDatatbaseName : String)->NSObject?//->Task<object>
     {
         fatalError("Must Override")
     }
-    
-    //*** Create ***//
+
     public func HandleCreateDatabaseRequest(fullSyncDatatbaseName : String)->NSObject?//->Task<object>
     {
         fatalError("Must Override")
     }
     
-    //*** Destroy ***//
+
     public func HandleDestroyDatabaseRequest(fullSyncDatatbaseName : String)->NSObject?//->Task<object>
     {
         fatalError("Must Override")
     }
     
-    //*** Local cache ***//
+
     
-    /// <summary>
-    /// Gets the c8o call response stored into the local cache thanks to the c8o call request identifier.
-    /// </summary>
-    /// <param name="c8oCallRequestIdentifier"></param>
-    /// <returns></returns>
+
     public func GetResponseFromLocalCache(c8oCallRequestIdentifier : String)->NSObject?//->Task<C8oLocalCacheResponse>
     {
         fatalError("Must Override")
     }
     
-    /// <summary>
-    /// Saves the c8o call response into the local cache.
-    /// </summary>
-    /// <param name="c8oCallRequestIdentifier"></param>
-    /// <param name="responseString"></param>
-    /// <param name="responseType"></param>
-    /// <param name="localCacheTimeToLive"></param>
+
     public func SaveResponseToLocalCache(c8oCallRequestIdentifier : String, localCacheResponse : NSObject?/*C8oLocalCacheResponse*/)->NSObject?//->Task
     {
         fatalError("Must Override")
     }
     
-    /// <summary>
-    /// Checks if request parameters correspond to a fullSync request.
-    /// </summary>
+
     public static func IsFullSyncRequest(requestParameters : Dictionary<String, NSObject>)->Bool
     {
         // Check if there is one parameter named "__project" and if its value starts with "fs://"

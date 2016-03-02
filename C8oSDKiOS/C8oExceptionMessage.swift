@@ -56,7 +56,7 @@ internal class C8oExceptionMessage
     
     
     
-    //*** TAG Illegal argument ***//
+    /** TAG Illegal argument */
     
     public static func illegalArgumentInvalidFullSyncDatabaseUrl(fullSyncDatabaseUrlStr : String)->String
     {
@@ -120,7 +120,7 @@ internal class C8oExceptionMessage
     return parameterName + " must be not null";
     }
     
-    //*** TAG Initialization ***//
+    /** TAG Initialization */
     
     // TODO
     public static func InitError()->String
@@ -148,7 +148,7 @@ internal class C8oExceptionMessage
     return "Unable to initialize the XML document builder";
     }
     
-    //*** TAG Parse ***//
+    /** TAG Parse */
     
     public static func ParseStreamToJson()->String
     {
@@ -225,7 +225,7 @@ internal class C8oExceptionMessage
         return "" //return "Unable to translate the string value '" + parameter.values + "' of the key + '" + parameter.keys + "' to a JSON value";
     }
     
-    //*** TAG HTTP ***//
+    /** TAG HTTP */
     
     public static func retrieveRsaPublicKey()->String
     {
@@ -237,7 +237,7 @@ internal class C8oExceptionMessage
     return "Error during http request to send logs to the Convertigo server";
     }
     
-    //*** TAG Couch ***//
+    /** TAG Couch */
     
     public static func couchRequestGetView()->String
     {
@@ -309,7 +309,7 @@ internal class C8oExceptionMessage
     return "Error while handling the fullSync response";
     }
     
-    //*** TAG Certificate ***//
+    /** TAG Certificate */
     
     public static func loadKeyStore()->String
     {
@@ -331,14 +331,14 @@ internal class C8oExceptionMessage
     return "Unable to load the server key store";
     }
     
-    //*** TAG Not found ***//
+    /** TAG Not found */
     
     public static func illegalArgumentNotFoundFullSyncView(viewName : String, databaseName : String)->String
     {
     return "Cannot found the view '" + viewName + "' in database '" + databaseName + "'";
     }
     
-    //*** TAG Other ***//
+    /** TAG Other */
     
     public static func unhandledResponseType(responseType : String)->String
     {

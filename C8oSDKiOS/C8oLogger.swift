@@ -17,22 +17,15 @@ public class C8oLogger
     private let RE_FORMAT_TIME : NSRegularExpression =  try! NSRegularExpression(pattern: "(\\d*?)(?:,|.)(\\d{3}).*", options: [])
     //*** Constants ***//
     
-    /// <summary>
-    /// The log tag used by the SDK.
-    /// </summary>
+
     
     private static var LOG_TAG :String  = "c8o";
     private static var LOG_INTERNAL_PREFIX :String = "[c8o] ";
     
     
-    /// <summary>
-    /// The maximum number of logs sent to the Convertigo server in one time.
-    /// </summary>
+
     static let  REMOTE_LOG_LIMIT : Int = 100;
-    /// <summary>
-    /// Convertigo log levels.
-    /// </summary>
-    // private static String[] REMOTE_LOG_LEVELS = { "", "none", "trace", "debug", "info", "warn", "error", "fatal" };
+
     
     private static var JSON_KEY_REMOTE_LOG_LEVEL  : String = "remoteLogLevel";
     private static var JSON_KEY_TIME  : String = "time";
@@ -41,31 +34,13 @@ public class C8oLogger
     private static var JSON_KEY_LOGS  : String = "logs";
     private static var JSON_KEY_ENV  : String = "env";
     
-    //*** Attributes ***//
-    
-    /// <summary>
-    /// The URL used to send logs.
-    /// </summary>
+    /** Attributes */
+
     private var remoteLogUrl : String?;
-    /// <summary>
-    /// Contains logs to be sent to the Convertigo server.
-    /// </summary>
     private var remoteLogs : Queue<JSON>?
-    /// <summary>
-    /// Indicates if a thread is sending logs.
-    /// </summary>
     private var alreadyRemoteLogging : [Bool]?;
-    /// <summary>
-    /// The log level returned by the Convertigo server.
-    /// </summary>
     private var remoteLogLevel : C8oLogLevel?;
-    /// <summary>
-    /// The UID sent to the Convertigo server.
-    /// </summary>
     private var uidRemoteLogs :String?;
-    /// <summary>
-    /// The date in milliseconds at the creation of the C8o instance.
-    /// </summary>
     private var startTimeRemoteLog : NSDate?;
     
     private var c8o : C8o;
@@ -95,7 +70,7 @@ public class C8oLogger
         return logLevel != nil && C8oLogLevel.TRACE.priority <= c8o.LogLevelLocal.priority && c8o.LogLevelLocal.priority <= logLevel!.priority;
     }
     
-    //*** Basics log ***//
+    /** Basics log */
     public func CanLog(logLevel : C8oLogLevel) ->Bool
     {
         return IsLoggableConsole(logLevel) || IsLoggableRemote(logLevel);
@@ -316,13 +291,8 @@ public class C8oLogger
         };
         }*/
     }
-    //*** Others log ***//
+    /** Others log */
     
-    /// <summary>
-    /// Log the method call in DEBUG log level and log method parameters in VERBOSE log level.
-    /// </summary>
-    /// <param name="methodName">The method name</param>
-    /// <param name="parameters">Array containing method parameters</param>
     
     internal func LogMethodCall(methodName : String, parameters : NSObject...)-> Void
     {
@@ -342,11 +312,7 @@ public class C8oLogger
         }
     }
     
-    /// <summary>
-    /// Log the c8o call in DEBUG log level.
-    /// </summary>
-    /// <param name="url">The c8o call URL</param>
-    /// <param name="parameters">c8o call parameters</param>
+
     internal func LogC8oCall(url : String, parameters : Dictionary<String, NSObject>)->Void
     {
         if (c8o.LogC8o && IsDebug)
@@ -362,24 +328,13 @@ public class C8oLogger
         }
     }
     
-    /// <summary>
-    /// Log the c8o call XML response in TRACE level.
-    /// </summary>
-    /// <param name="response"></param>
-    /// <param name="url"></param>
-    /// <param name="parameters"></param>
+
     internal func LogC8oCallXMLResponse(response : NSXMLParser, url: String, parameters : Dictionary<String, NSObject>)-> Void
     {
         LogC8oCallResponse(C8oTranslator.XmlToString(response)!, responseType: "XML", url: url, parameters: parameters);
     }
     
     
-    /// <summary>
-    /// Log the c8o call JSON response in TRACE level.
-    /// </summary>
-    /// <param name="response"></param>
-    /// <param name="url"></param>
-    /// <param name="parameters"></param>
     internal func LogC8oCallJSONResponse(response : JSON, url : String, parameters : Dictionary<String, NSObject>)-> Void
     {
         //LogC8oCallResponse(C8oTranslator.JsonToString(response), "JSON", url, parameters);

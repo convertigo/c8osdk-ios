@@ -9,14 +9,7 @@
 import Foundation
 
 
-/// <summary>
-/// This class manages big file transfers from and to Convertigo Server. To transfer a file you need to install in the
-/// Convertigo server the lib_FileTransfer.car project handling the backend part.
-///
-/// File transfers are using FullSync technology to transfer files in chunk mode. When a transfer is requested, the server
-/// will cut the file in chunks, then will insert the chunks in a FullSync database, the Database will replicate and the file will be reassembled
-/// on the client side.
-/// </summary>
+
 /*
 public class C8oFileTransfer
 {

@@ -16,13 +16,11 @@ import CouchbaseLite
 internal class C8oUtils
 {
     
-    /// <summary>
-    /// FullSync parameters prefix.
-    /// </summary>
+
     private static var USE_PARAMETER_IDENTIFIER : String = "_use_";
     
     
-    //*** Class ***//
+
     
     public static func GetObjectClassName(obj : NSObject)->String
     {
@@ -37,15 +35,7 @@ internal class C8oUtils
         return "str";
     }
     
-    //*** Parameters ***//
-    
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="parameters"></param>
-    /// <param name="name"></param>
-    /// <param name="useName"></param>
-    /// <returns></returns>
+
     public static func GetParameter(parameters : Dictionary<String, NSObject>, name : String, useName : Bool = false)->Dictionary<String, NSObject>
     {
         /*
@@ -73,14 +63,7 @@ internal class C8oUtils
         return nil;
     }
     
-    /// <summary>
-    /// Searches in the list the parameter with this specific name (or the same name with the prefix '_use_') and returns it.
-    /// Returns null if the parameter is not found.
-    /// </summary>
-    /// <param name="parameters"></param>
-    /// <param name="name"></param>
-    /// <param name="useName"></param>
-    /// <returns></returns>
+
     public static func GetParameterStringValue(parameters : Dictionary<String, NSObject> , name : String, useName : Bool = false)->String?
     {
         /*var parameter = GetParameter(parameters, name, useName);
@@ -173,11 +156,7 @@ internal class C8oUtils
         
     }
     
-    /// <summary>
-    /// Get the UNIX epoch time of the specified date (number of milliseconds elapsed since 01/01/1970 00:00:00).
-    /// </summary>
-    /// <param name="date"></param>
-    /// <returns></returns>
+
     public static func GetUnixEpochTime(date : NSDate)->Int?
     {
         /*

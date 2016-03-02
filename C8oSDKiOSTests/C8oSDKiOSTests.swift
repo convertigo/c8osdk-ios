@@ -88,6 +88,7 @@ class C8oSDKiOSTests: XCTestCase {
     }
     func atest01()
     {
+        
         myC8o.Log.Trace("Test 01 trace");
         myC8o.Log.Debug("Test 01 debug");
         myC8o.Log.Info("Test 01 info");

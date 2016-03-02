@@ -9,14 +9,34 @@
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
+		<key>C8oSDKTestApp.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
 		<key>C8oSDKiOS.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>C8oSDKiOS.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>ObjC.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>7</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>623C74381C86DBB600E691B0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>62CD2A461C6207AC009E9F7E</key>
 		<dict>
 			<key>primary</key>
