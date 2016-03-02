@@ -15,7 +15,7 @@ internal class C8oHttpInterface
     var cookieContainer : NSObject?//CookieContainer;
     private var timeout : Int;
     
-    public init(c8o : C8o)
+    internal init(c8o : C8o)
     {
         self.c8o = c8o;
         
@@ -34,7 +34,7 @@ internal class C8oHttpInterface
         
     }
     
-    public func HandleRequest(url : String, parameters : Dictionary<String, NSObject>)->NSObject?//Task<HttpWebResponse>
+    internal func HandleRequest(url : String, parameters : Dictionary<String, NSObject>)->NSObject?//Task<HttpWebResponse>
     {
         /*var request = (HttpWebRequest) HttpWebRequest.Create(url);
         OnRequestCreate(request);
@@ -62,7 +62,7 @@ internal class C8oHttpInterface
         return nil
     }
     
-    public func HandleC8oCallRequest(url : String, parameters : Dictionary<String, NSObject>)->NSObject?//Task<HttpWebResponse>
+  internal func HandleC8oCallRequest(url : String, parameters : Dictionary<String, NSObject>)->NSObject?//Task<HttpWebResponse>
     {
         c8o.c8oLogger!.LogC8oCall(url, parameters: parameters);
         return HandleRequest(url, parameters: parameters);
@@ -75,13 +75,13 @@ internal class C8oHttpInterface
     /// <param name="name">The name.</param>
     /// <param name="value">The value.</param>
     
-    public func AddCookie(name : String, value : String)->NSObject?//->Void
+    internal func AddCookie(name : String, value : String)->NSObject?//->Void
     {
         //cookieContainer.Add(Uri(c8o.Endpoint), Cookie(name, value));
         return nil
     }
     
-    public var CookieStore : NSObject?//CookieContainer
+  internal var CookieStore : NSObject?//CookieContainer
         {
         get { return nil;  }
     }

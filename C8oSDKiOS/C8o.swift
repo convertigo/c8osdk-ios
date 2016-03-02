@@ -47,12 +47,12 @@ import CouchbaseLite
                 
                 if let JSon = response.result.value {
                     print("JSON: \(JSon)")
-                    var data = JSON(JSon)
+                    _ = JSON(JSon)
                 }
                 
                 if let JSon = response.result.value {
                     print("JSON: \(JSon)")
-                    var data = JSON(JSon)
+                    _ = JSON(JSon)
                 }
                 
         }
@@ -282,7 +282,7 @@ import CouchbaseLite
                 
             }
             
-            Call(parameters, c8oResponseListener: c8oResponseListener, c8oExceptionListener: c8oExceptionListener);
+            try! Call(parameters, c8oResponseListener: c8oResponseListener, c8oExceptionListener: c8oExceptionListener);
         }
         catch
         {
@@ -290,11 +290,11 @@ import CouchbaseLite
         }
     }
     
-    public func Call(var parameters : Dictionary<String, NSObject>?  = nil, c8oResponseListener :  C8oResponseListener? = nil, c8oExceptionListener : C8oExceptionListener? = nil)
+    public func Call(var parameters : Dictionary<String, NSObject>?  = nil, c8oResponseListener :  C8oResponseListener? = nil, c8oExceptionListener : C8oExceptionListener? = nil) throws
     {
         // IMPORTANT : all c8o calls have to end here !
-        do
-        {
+        /*do
+        {*/
             c8oLogger!.LogMethodCall("Call", parameters: parameters!);
             
             // Checks parameters validity
@@ -312,11 +312,11 @@ import CouchbaseLite
             // Exceptions have to be handled by the C8oExceptionListener
             let task = C8oCallTask(c8o: self, parameters: parameters!, c8oResponseListener: c8oResponseListener!, c8oExceptionListener: c8oExceptionListener!);
             task.Execute();
-        }
+        /*}
         catch
         {
-            //HandleCallException(c8oExceptionListener, parameters, e);
-        }
+            throw Error.InvalidArgument //HandleCallException(c8oExceptionListener, parameters, e);
+        }*/
     }
     
     /**
@@ -413,13 +413,13 @@ import CouchbaseLite
     
     public func CallXml(requestable : String, parameters : [NSObject] ...)->C8oPromise<NSXMLParser>?//C8oPromise<XDocument>
     {
-        do{
+        //do{
             
             return try! CallXml(requestable, parameters: C8o.ToParameters(parameters));
-        }
+        /*}
         catch{
             
-        }
+        }*/
         //return nil
     }
     

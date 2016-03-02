@@ -22,7 +22,7 @@ internal class C8oUtils
     
 
     
-    public static func GetObjectClassName(obj : NSObject)->String
+    internal static func GetObjectClassName(obj : NSObject)->String
     {
         
         /*string className = "null";
@@ -36,7 +36,7 @@ internal class C8oUtils
     }
     
 
-    public static func GetParameter(parameters : Dictionary<String, NSObject>, name : String, useName : Bool = false)->Dictionary<String, NSObject>
+    internal static func GetParameter(parameters : Dictionary<String, NSObject>, name : String, useName : Bool = false)->Dictionary<String, NSObject>
     {
         /*
         for parameter in parameters
@@ -53,7 +53,7 @@ internal class C8oUtils
         return a ;
     }
     
-    public static func GetParameterObjectValue(parameters :  Dictionary<String, NSObject>, name : String, useName : Bool = false)->NSObject?
+    internal static func GetParameterObjectValue(parameters :  Dictionary<String, NSObject>, name : String, useName : Bool = false)->NSObject?
     {
         let parameter : Dictionary<String, NSObject> = GetParameter(parameters, name: name, useName: useName);
         if (parameter.keys.first != nil)
@@ -64,7 +64,7 @@ internal class C8oUtils
     }
     
 
-    public static func GetParameterStringValue(parameters : Dictionary<String, NSObject> , name : String, useName : Bool = false)->String?
+  internal static func GetParameterStringValue(parameters : Dictionary<String, NSObject> , name : String, useName : Bool = false)->String?
     {
         /*var parameter = GetParameter(parameters, name, useName);
         if (parameter.Key != nil)
@@ -74,7 +74,7 @@ internal class C8oUtils
         return nil;
     }
     
-    public static func PeekParameterStringValue(parameters : Dictionary<String, NSObject> , name : String, exceptionIfMissing : Bool = false)->String?
+  internal static func PeekParameterStringValue(parameters : Dictionary<String, NSObject> , name : String, exceptionIfMissing : Bool = false)->String?
     {
         /*
         string value = GetParameterStringValue(parameters, name, false);
@@ -93,7 +93,7 @@ internal class C8oUtils
         return nil;
     }
     
-    public static func GetParameterJsonValue( parameters : Dictionary<String, NSObject>, name : Bool, useName : Bool = false)-> NSObject?
+    internal static func GetParameterJsonValue( parameters : Dictionary<String, NSObject>, name : Bool, useName : Bool = false)-> NSObject?
     {
         /*
         var parameter = GetParameter(parameters, name, useName);
@@ -106,7 +106,7 @@ internal class C8oUtils
         return nil;
     }
     
-    public static func GetParameterJsonValue(parameter : Dictionary<String, NSObject> )->NSObject?
+    internal static func GetParameterJsonValue(parameter : Dictionary<String, NSObject> )->NSObject?
     {
         /* if (parameter.Value is string)
         {
@@ -116,7 +116,7 @@ internal class C8oUtils
         return nil;
     }
     
-    public static func TryGetParameterObjectValue<T>(parameters : Dictionary<String, NSObject>, name : String, value : T, useName : Bool = false,  defaultValue : T )->Bool?
+    internal static func TryGetParameterObjectValue<T>(parameters : Dictionary<String, NSObject>, name : String, value : T, useName : Bool = false,  defaultValue : T )->Bool?
     {
         /*KeyValuePair<string, object> parameter = GetParameter(parameters, name, useName);
         if (parameter.Key != null && parameter.Value != null)
@@ -157,7 +157,7 @@ internal class C8oUtils
     }
     
 
-    public static func GetUnixEpochTime(date : NSDate)->Int?
+    internal static func GetUnixEpochTime(date : NSDate)->Int?
     {
         /*
         TimeSpan timeSpan = date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, 0));
@@ -189,7 +189,7 @@ internal class C8oUtils
     //    return defaultValue;
     //}
     
-    public static func TryGetValueAndCheckType<T>(jObject : JSON, key : String, value : T)->Bool?
+    internal static func TryGetValueAndCheckType<T>(jObject : JSON, key : String, value : T)->Bool?
     {
         /*
         JToken foundValue;
@@ -211,7 +211,7 @@ internal class C8oUtils
         return nil;
     }
     
-    public static func IdentifyC8oCallRequest(parameters : Dictionary<String, NSObject>, responseType : String)->String?
+    internal static func IdentifyC8oCallRequest(parameters : Dictionary<String, NSObject>, responseType : String)->String?
     {
         /*
         JObject json = new JObject();

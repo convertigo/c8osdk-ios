@@ -318,7 +318,7 @@ public class C8oBase : NSObject
             }
             else
             {
-                for var entry in c8oBase.clientCertificateBinaries!
+                for entry in c8oBase.clientCertificateBinaries!
                 {
                     
                     clientCertificateBinaries?.updateValue(entry.1,  forKey :entry.0);
@@ -334,7 +334,7 @@ public class C8oBase : NSObject
             }
             else
             {
-                for var entry in c8oBase.clientCertificateFiles!
+                for entry in c8oBase.clientCertificateFiles!
                 {
                     clientCertificateFiles?.updateValue(entry.1, forKey : entry.0);
                 }
