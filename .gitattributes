@@ -18,6 +18,7 @@ C8oSDKiOS.xcodeproj/xcshareddata/xcschemes/C8oSDKiOS.xcscheme -text
 C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/C8oSDKTestApp.xcscheme -text
 C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/C8oSDKiOS.xcscheme -text
 C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/xcschememanagement.plist -text
+C8oSDKiOS/AlamofireSync.swift -text
 C8oSDKiOS/C8OTranslator.swift -text
 C8oSDKiOS/C8o.swift -text
 C8oSDKiOS/C8oBase.swift -text

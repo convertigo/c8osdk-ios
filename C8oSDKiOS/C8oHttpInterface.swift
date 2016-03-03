@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Alamofire
 
 
 internal class C8oHttpInterface
@@ -34,38 +35,44 @@ internal class C8oHttpInterface
         
     }
     
-    internal func HandleRequest(url : String, parameters : Dictionary<String, NSObject>)->NSObject?//Task<HttpWebResponse>
+    internal func HandleRequest(url : String, parameters : Dictionary<String, AnyObject>)->NSData?//(NSURLRequest?, NSHTTPURLResponse?, NSData?, NSError?)?
     {
-        /*var request = (HttpWebRequest) HttpWebRequest.Create(url);
-        OnRequestCreate(request);
+        var myResponse : NSData?
+        let URL = NSURL(string: url)
         
-        request.Method = "POST";
-        request.Headers["x-convertigo-sdk"] = C8o.GetSdkVersion();
-        request.CookieContainer = cookieContainer;
+        //NSHTTPCookieStorage
+        let jar = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+        let cookieHeaderField = ["Set-Cookie": "x-convertigo-sdk=" + C8o.GetSdkVersion()]
+        let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(cookieHeaderField, forURL: URL!)
+        jar.setCookies(cookies, forURL: URL, mainDocumentURL: nil)
+        let mutableUrlRequest = NSMutableURLRequest(URL: URL!)
+        mutableUrlRequest.HTTPMethod = "POST"
+        mutableUrlRequest.setValue(String(cookieContainer), forHTTPHeaderField : "Cookie")
         
-        SetRequestEntity(request, parameters);
         
-        var task = Task<WebResponse>.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, request);
-        if (timeout > -1)
-        {
-            var taskWithTimeout = await Task.WhenAny(task, Task.Delay(timeout)).ConfigureAwait(false);
-            if (taskWithTimeout is Task<WebResponse>)
-            {
-                return task.Result as HttpWebResponse;
-            }
-            throw new Exception("Timeout exception");
-        }
-        else
-        {
-            return await task as HttpWebResponse;
-        }*/
-        return nil
+        let semaphore = dispatch_semaphore_create(0)
+        let queue = dispatch_queue_create("com.convertigo.co8.queue", DISPATCH_QUEUE_CONCURRENT)
+        
+        let request = Alamofire.request(mutableUrlRequest)
+        request.response (
+            queue: queue,
+            completionHandler :{ request, response, data, error in
+                
+                print(request)
+                print(response)
+                myResponse = data
+                dispatch_semaphore_signal(semaphore);
+        })
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        return myResponse
+    
+      
     }
     
-  internal func HandleC8oCallRequest(url : String, parameters : Dictionary<String, NSObject>)->NSObject?//Task<HttpWebResponse>
+  internal func HandleC8oCallRequest(url : String, parameters : Dictionary<String, NSObject>)->NSData//(NSURLRequest?, NSHTTPURLResponse?, NSData?, NSError?)?//Task<HttpWebResponse>
     {
         c8o.c8oLogger!.LogC8oCall(url, parameters: parameters);
-        return HandleRequest(url, parameters: parameters);
+        return HandleRequest(url, parameters: parameters)!;
     }
     
     /// <summary>

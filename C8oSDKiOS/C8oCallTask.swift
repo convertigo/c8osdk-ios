@@ -144,17 +144,20 @@ internal class C8oCallTask
             
             // Build the c8o call URL
             c8oCallUrl = c8o.Endpoint + "/." + responseType;
-            /*
-            var httpResponse : HttpWebResponse;
             
+            let httpResponse : NSData = (c8o.httpInterface?.HandleRequest(c8oCallUrl!, parameters: parameters)!)!
+            C8oTranslator.DataToXml(httpResponse)
+            
+            /*
             
             do
             {
-                httpResponse = await c8o.httpInterface.HandleC8oCallRequest(c8oCallUrl, parameters);
+                httpResponse = (c8o.httpInterface?.HandleRequest(c8oCallUrl!, parameters: parameters)!)!
+                
             }
             catch //(Exception e)
             {
-                if (localCacheEnabled)
+               /* if (localCacheEnabled)
                 {
                     do
                     {
@@ -176,16 +179,21 @@ internal class C8oCallTask
                         // no entry
                     }
                 }
-                return C8oException(C8oExceptionMessage.handleC8oCallRequest(), e);
+                return C8oException(C8oExceptionMessage.handleC8oCallRequest(), e);*/
             }
             
             var responseStream = httpResponse.GetResponseStream();
+            G
             
             var response : NSObject;
             var responseString : String? = nil;
             if (c8oResponseListener is C8oResponseXmlListener)
             {
                 response = C8oTranslator.StreamToXml(responseStream);
+                var parser = NSXMLParser(data: httpResponse)
+                parser.delegate = self;
+                parser.parse();
+               
             }
             else if (c8oResponseListener is C8oResponseJsonListener)
             {
@@ -210,7 +218,7 @@ internal class C8oCallTask
             
             //return response;
             
-            //}*/
+            }*/
             return nil
 
         }

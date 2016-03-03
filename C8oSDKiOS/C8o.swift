@@ -186,7 +186,6 @@ import CouchbaseLite
      @param c8oSettings : C8oSettings?
             A C8oSettings object describing the endpoint configuration parameters such as authorizations credentials,
             cookies, client certificates and various other settings.
-
      */
     public init(endpoint :String, c8oSettings : C8oSettings?) throws
     {
@@ -208,7 +207,21 @@ import CouchbaseLite
         
         self.endpoint = endpoint;
         self.endpointConvertigo = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(1))
-        self.endpointIsSecure  = !(endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(2)).isEmpty
+        //
+        
+        
+        print(regexV[0].numberOfRanges)
+        
+        if(regexV[0].rangeAtIndex(2).location != NSNotFound)
+        {
+            self.endpointIsSecure  = !(endpoint as NSString?)!.substringWithRange(regexV[0].rangeAtIndex(2)).isEmpty
+        }
+        else {
+            self.endpointIsSecure  = false
+        }
+        
+        
+        //
         self.endpointHost = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(3))
         self.endpointPort = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(4))
         

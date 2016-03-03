@@ -10,18 +10,25 @@ import XCTest
 import Foundation
 import SwiftyJSON
 import Alamofire
+//import Fuzi
+
 
 @testable import C8oSDKiOS
 
 class C8oSDKiOSTests: XCTestCase {
     
     var myC8o : C8o!
+    let HOST = "buildus.twinsoft.fr"
+    let PROJECT_PATH = "/convertigo/projects/ClientSDKtesting"
+    let PORT = ":28080"
+    let PREFIX = "http://"
+    let PREFIXS = "https://"
     
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
         //myC8o = C8o();
-        myC8o = try! C8o(endpoint: "https://192.168.100.95:18080/convertigo/projects/Sample05", c8oSettings: C8oSettings().SetDefaultDatabaseName("sample05").SetLogLevelLocal(C8oLogLevel.ERROR))
+        myC8o = try! C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: C8oSettings().SetDefaultDatabaseName("sample05").SetLogLevelLocal(C8oLogLevel.ERROR))
     }
     
     override func tearDown() {
@@ -68,7 +75,7 @@ class C8oSDKiOSTests: XCTestCase {
     
     func testCg_C8oUtilis_IsValidEndpoint()
     {
-        var endpoint : String = "https://192.168.100.95:18080/convertigo/projects/Sample05"
+        var endpoint : String = "http://192.168.100.95:18080/convertigo/projects/Sample05"
         let regex : NSRegularExpression = C8o.RE_ENDPOINT
         var regexV  = regex.matchesInString(endpoint, options: [], range: NSMakeRange(0, endpoint.characters.count ))
         if(regexV.first == nil){
@@ -76,9 +83,12 @@ class C8oSDKiOSTests: XCTestCase {
         }
         print((endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(0)))
         print((endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(1)))
-        print((endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(2)))
+        if(regexV[0].rangeAtIndex(2).location != NSNotFound)
+        {
+            print((endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(2)))
+        }
         print((endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(3)))
-        print((endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(4)))
+        //print((endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(4)))
         
         endpoint = "htp://192.168.100.95:18080/convertigo/projects/Sample05"
         regexV = regex.matchesInString(endpoint, options: [], range: NSMakeRange(0, endpoint.characters.count ))
@@ -86,7 +96,7 @@ class C8oSDKiOSTests: XCTestCase {
             XCTAssert(false,"regex is not supposed to be ok")
         }
     }
-    func atest01()
+    func test01()
     {
         
         myC8o.Log.Trace("Test 01 trace");
@@ -121,7 +131,7 @@ class C8oSDKiOSTests: XCTestCase {
             myC8o.Log.Fatal("Test 01 bis fatal");
         }
 
-        
+        let expectation = expectationWithDescription("Alamofire")
         
         print("Test 01\n")
         print("==========\n")
@@ -131,45 +141,70 @@ class C8oSDKiOSTests: XCTestCase {
                 //return C8oPromise<NSXMLParser>
                 print(C8oTranslator.XmlToString(response!))
                 print("\n==========\n")
+                expectation.fulfill()
 
                 self.myC8o.CallJson(("\n==========\n"))?.ThenUI({
                     (response : NSObject?, parameters : Dictionary<String, NSObject>?)->() in
                     print(String(JSON(response!).rawString()))
                     print("\n==========\n")
+                    expectation.fulfill()
                    
                     
                 })
             
             })
         
-            
+             waitForExpectationsWithTimeout(100.0, handler: nil)
         }
     
-    func testCgAlamo(){
-        /*Alamofire.request(.GET, "", parameters: ["consumer_key": "MKfScrf1JOGPilOkrTifJVutkyYOFskZtVeKqk6z"]).responseJSON(){
-            (data) in
-            print(data)
-            print("aaaaaaa")
-        }*/
+    func testCgAlamoRequestJsonSampleExpetation(){
+
+        let expectation = expectationWithDescription("Alamofire")
         
-        //let semaphore = dispatch_semaphore_create(0)
-        print("1")
+        print("1) : Before Alamofire request")
         Alamofire.request(.GET, "https://api.500px.com/v1/photos", parameters: ["consumer_key": "MKfScrf1JOGPilOkrTifJVutkyYOFskZtVeKqk6z"])
             .responseJSON { response in
                 
                 if let JSON = response.result.value {
+                    expectation.fulfill()
+                    print("2) Request must be print just after this")
                     print("JSON: \(JSON)")
                     
                 }
-                print(response)
-                print("2")
-                 //dispatch_semaphore_signal(semaphore);
-                print("3")
+                //print(response)
+                print("3) Request must has been printed")
             }
-        print("4")
-        //dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+        
+        print("4) Waiting for Alamofire request's response with a time out set to 10 seconds")
+        waitForExpectationsWithTimeout(10.0, handler: nil)
+        print("5) All must be done")
         
             }
+    
+    func testCgAlamoRequestJsonSample()
+    {
+        let semaphore = dispatch_semaphore_create(0)
+        let queue = dispatch_queue_create("com.convertigo.co8.queue", DISPATCH_QUEUE_CONCURRENT)
+        
+        let request = Alamofire.request(.GET, "http://httpbin.org/get", parameters: ["foo": "bar"])
+        
+        request.response(
+            queue: queue,
+            responseSerializer: Request.JSONResponseSerializer(options: .AllowFragments),
+            completionHandler: { response in
+                    print("Parsing JSON on thread: \(NSThread.currentThread()) is main thread: \(NSThread.isMainThread())")
+                
+                    print(response.result.value)
+                
+                    dispatch_async(dispatch_get_main_queue()) {
+                        print("Am I back on the main thread: \(NSThread.isMainThread())")
+                    }
+                dispatch_semaphore_signal(semaphore);
+            })
+                
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+
+    }
 }
     
 
