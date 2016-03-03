@@ -10,6 +10,7 @@ import Foundation
 import ObjectiveC
 import Alamofire
 import SwiftyJSON
+import Fuzi
 
 import CouchbaseLite
 
@@ -48,7 +49,7 @@ internal class C8oCallTask
         do
         {
             let response =  HandleRequest();
-            HandleResponse(response!);
+           // HandleResponse(response!);
         }
         catch
         {
@@ -57,7 +58,7 @@ internal class C8oCallTask
     }
     
     
-    private func HandleRequest()->NSObject? //Task<object>
+    private func HandleRequest()->AnyObject? //Task<object>
     {
         let isFullSyncRequest : Bool = C8oFullSync.IsFullSyncRequest(parameters);
         var responseType : String = ""
@@ -138,17 +139,13 @@ internal class C8oCallTask
             }
             
             /** Get response */
-            
+        
             parameters[C8o.ENGINE_PARAMETER_DEVICE_UUID] = c8o.DeviceUUID;
-            
             
             // Build the c8o call URL
             c8oCallUrl = c8o.Endpoint + "/." + responseType;
             
-            let httpResponse : NSData = (c8o.httpInterface?.HandleRequest(c8oCallUrl!, parameters: parameters)!)!
-            C8oTranslator.DataToXml(httpResponse)
-            
-            /*
+            let httpResponse : NSData
             
             do
             {
@@ -182,27 +179,28 @@ internal class C8oCallTask
                 return C8oException(C8oExceptionMessage.handleC8oCallRequest(), e);*/
             }
             
-            var responseStream = httpResponse.GetResponseStream();
-            G
             
-            var response : NSObject;
+            var response : AnyObject? = nil;
             var responseString : String? = nil;
             if (c8oResponseListener is C8oResponseXmlListener)
             {
-                response = C8oTranslator.StreamToXml(responseStream);
-                var parser = NSXMLParser(data: httpResponse)
-                parser.delegate = self;
-                parser.parse();
+                
+                response = C8oTranslator.DataToXml(httpResponse)!
+                print(response)
+                if(localCacheEnabled)
+                {
+                    responseString = (response as! XMLDocument).description
+                }
                
             }
             else if (c8oResponseListener is C8oResponseJsonListener)
             {
-                responseString = C8oTranslator.StreamToString(responseStream);
-                response = C8oTranslator.StringToJson(responseString);
+                //responseString = C8oTranslator.StreamToString(responseStream);
+                 C8oTranslator.DataToJson(httpResponse)!;
             }
             else
             {
-                return C8oException("wrong listener");
+                //return C8oException("wrong listener");
             }
             
             if (localCacheEnabled)
@@ -210,23 +208,23 @@ internal class C8oCallTask
                 // String responseString = C8oTranslator.StreamToString(responseStream);
                 var expirationDate : Int = -1;
                 if (localCache!.ttl > 0) {
-                    expirationDate = localCache.ttl + C8oUtils.GetUnixEpochTime(NSDate.Now);
+                //    expirationDate = localCache.ttl + C8oUtils.GetUnixEpochTime(NSDate.Now);
                 }
-                var localCacheResponse = C8oLocalCacheResponse(responseString, responseType, expirationDate);
-                c8o.c8oFullSync.SaveResponseToLocalCache(c8oCallRequestIdentifier, localCacheResponse);
+               // var localCacheResponse = C8oLocalCacheResponse(responseString, responseType, expirationDate);
+               // c8o.c8oFullSync.SaveResponseToLocalCache(c8oCallRequestIdentifier, localCacheResponse);
             }
             
-            //return response;
+            return response;
             
-            }*/
+            }
             return nil
 
         }
-    }
+    
     
     internal func HandleResponse(result :AnyObject?)->Void {
-        do
-        {
+        /*do
+        {/*
             if (result == nil)
             {
                 return;
@@ -271,6 +269,7 @@ internal class C8oCallTask
         catch //(Exception e)
         {
             //c8o.HandleCallException(c8oExceptionListener, parameters, e);
-        }
+        }*/
+    }*/
     }
 }

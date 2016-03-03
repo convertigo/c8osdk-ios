@@ -10,7 +10,7 @@ import XCTest
 import Foundation
 import SwiftyJSON
 import Alamofire
-//import Fuzi
+import Fuzi
 
 
 @testable import C8oSDKiOS
@@ -137,23 +137,24 @@ class C8oSDKiOSTests: XCTestCase {
         print("==========\n")
         myC8o.CallXml(".sample05.GetServerInfo")?.ThenUI({
             (response : NSXMLParser?, parameters : Dictionary<String, NSObject>?)->() in
-            
+                
                 //return C8oPromise<NSXMLParser>
                 print(C8oTranslator.XmlToString(response!))
                 print("\n==========\n")
-                expectation.fulfill()
+                           })
+            
 
                 self.myC8o.CallJson(("\n==========\n"))?.ThenUI({
                     (response : NSObject?, parameters : Dictionary<String, NSObject>?)->() in
                     print(String(JSON(response!).rawString()))
                     print("\n==========\n")
-                    expectation.fulfill()
+                    
                    
                     
                 })
             
-            })
-        
+        expectation.fulfill()
+
              waitForExpectationsWithTimeout(100.0, handler: nil)
         }
     
