@@ -52,7 +52,7 @@ public class Pair<K , V> {
     
     var key : K
     var value : V
-    public init(key : K, value : V ){
+    public init(key : K, value : V){
         self.key = key
         self.value = value
     }
@@ -133,4 +133,10 @@ public class Queue<T> {
     public func Count() -> Int{
         return count
     }
+}
+
+public class CustomErrors{
+
+   
+
 }

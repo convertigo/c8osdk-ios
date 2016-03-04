@@ -9,6 +9,7 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
+import Fuzi
 
 import CouchbaseLite
 
@@ -193,8 +194,8 @@ import CouchbaseLite
         // Checks the URL validity
         if (!C8oUtils.IsValidUrl(endpoint))
         {
-            throw Error.InvalidArgument
-            //print(endpoint + "is not a valid Url")
+            //throw NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotOpenFile, userInfo: nil)
+            throw Error.ArgumentException(C8oExceptionMessage.InvalidArgumentInvalidURL(endpoint))
         }
         
         // Checks the endpoint validty
@@ -202,7 +203,7 @@ import CouchbaseLite
         let regexV  = regex.matchesInString(endpoint, options: [], range: NSMakeRange(0, endpoint.characters.count ))
         
         if(regexV.first == nil){
-            throw Error.InvalidArgument
+            throw Error.ArgumentException(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint))
         }
         
         self.endpoint = endpoint;
@@ -283,7 +284,7 @@ import CouchbaseLite
             
             // If the C8o call use a sequence
             
-            if (((requestable! as NSString?)!.substringWithRange(regexV[0].rangeAtIndex(1)) as String?) !=  "")
+            if (((requestable! as NSString?)!.substringWithRange(regexV[0].rangeAtIndex(2)) as String?) !=  "")
             {
                 parameters!["ENGINE_PARAMETER_SEQUENCE"] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(2));
             }
@@ -396,21 +397,24 @@ import CouchbaseLite
     }
     
     
-    public func CallXml(requestable : String, parameters :Dictionary<String, NSObject>)->C8oPromise<NSXMLParser>?//C8oPromise<XDocument>
+    public func CallXml(requestable : String, parameters :Dictionary<String, NSObject>)->C8oPromise<XMLDocument>?//C8oPromise<XDocument>
     {
         
-        let promise = C8oPromise<NSXMLParser>(c8o: self);
+        let promise = C8oPromise<XMLDocument>(c8o: self);
         
         Call(requestable,
             parameters: parameters,
             c8oResponseListener : C8oResponseXmlListener(onXmlResponse:{
-                (params : Dictionary<NSObject, Dictionary<String, NSObject>>?)->() in
+                (params : Pair<AnyObject?, Dictionary<String, NSObject>?>?)->() in
                 
-                if((params!.keys.first) == nil ){
-                    if((params!.values.first)?.keys.contains(C8o.ENGINE_PARAMETER_PROGRESS) == true){
+                if((params!.key) == nil ){
+                    if((params!.value)!.keys.contains(C8o.ENGINE_PARAMETER_PROGRESS) == true){
                         
-                        promise.OnProgress(((((params!.values.first)! as Dictionary<String, NSObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
+                        promise.OnProgress(((((params!.value)! as Dictionary<String, NSObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
                     }
+                }
+                else{
+                    promise.OnResponse((params?.key)! as! XMLDocument, parameters: (params?.value)!)
                 }
                 
             })
@@ -424,7 +428,7 @@ import CouchbaseLite
         
     }
     
-    public func CallXml(requestable : String, parameters : [NSObject] ...)->C8oPromise<NSXMLParser>?//C8oPromise<XDocument>
+    public func CallXml(requestable : String, parameters : [NSObject] ...)->C8oPromise<XMLDocument>?//C8oPromise<XDocument>
     {
         //do{
             
@@ -472,16 +476,16 @@ import CouchbaseLite
     }
     
 
-    public func RunUI(code : NSObject/*Action*/)->Void
+    public func RunUI(dispatch : dispatch_queue_t?)->Void
     {
-        /*if (UiDispatcher != nil)
+        if (dispatch != nil)
         {
-        UiDispatcher.Invoke(code);
+            //myQueue = dispatch_main
         }
         else
         {
-        code.Invoke();
-        }*/
+            //code.Invoke();
+        }
     }
     
     public func toString()->String
@@ -548,7 +552,7 @@ import CouchbaseLite
         return newParameters;
     }
     
-    internal func HandleCallException(c8oExceptionListener: C8oExceptionListener?, requestParameters : Dictionary<String, NSObject>, exception : NSException)
+    internal func HandleCallException(c8oExceptionListener: C8oExceptionListener?, requestParameters : Dictionary<String, NSObject>, exception : C8oSDKiOS.Error)
     {
         c8oLogger!._Warn("Handle a call exception", exceptions: exception);
         

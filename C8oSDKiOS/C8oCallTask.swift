@@ -48,8 +48,8 @@ internal class C8oCallTask
     {
         do
         {
-            let response =  HandleRequest();
-           // HandleResponse(response!);
+            let response =  try HandleRequest();
+            HandleResponse(response!);
         }
         catch
         {
@@ -58,7 +58,7 @@ internal class C8oCallTask
     }
     
     
-    private func HandleRequest()->AnyObject? //Task<object>
+    private func HandleRequest() throws ->AnyObject? //Task<object>
     {
         let isFullSyncRequest : Bool = C8oFullSync.IsFullSyncRequest(parameters);
         var responseType : String = ""
@@ -91,7 +91,7 @@ internal class C8oCallTask
             }
             else
             {
-                //return C8oException("wrong listener");
+                throw C8oSDKiOS.Error.C8oException("Wrong listener")
             }
             
             /** Local cache */
@@ -217,14 +217,14 @@ internal class C8oCallTask
             return response;
             
             }
-            return nil
+            //return nil
 
         }
     
     
     internal func HandleResponse(result :AnyObject?)->Void {
-        /*do
-        {/*
+        do{
+        
             if (result == nil)
             {
                 return;
@@ -235,11 +235,13 @@ internal class C8oCallTask
                 return;
             }
             
-            if (result is NSXMLParser)
+            if (result is XMLDocument)
             {
-                c8o.c8oLogger!.LogC8oCallXMLResponse(result as! NSXMLParser, url: c8oCallUrl!,  parameters : self.parameters);
-                let onXmlReponseVar : (Dictionary<NSObject, Dictionary<String, NSObject>>?) = [result as! NSObject : parameters]
-                (c8oResponseListener as! C8oResponseXmlListener).OnXmlResponse(onXmlReponseVar)
+                
+                c8o.c8oLogger!.LogC8oCallXMLResponse(result as! XMLDocument, url: c8oCallUrl!,  parameters : self.parameters);
+                //let onXmlReponseVar  = (Pair<XMLDocument?, Dictionary<String, NSObject>?>?((result as! XMLDocument) ,  parameters as Dictionary<String, NSObject>))
+                //let onXmlReponseVar : (Pair<AnyObject?, Dictionary<String, NSObject>?>?) =
+                (c8oResponseListener as! C8oResponseXmlListener).OnXmlResponse(Pair(key: result!, value: parameters))
             }
             else if (result is JSON)
             {
@@ -247,29 +249,18 @@ internal class C8oCallTask
                 let onJsonReponseVar : (Dictionary<NSObject, Dictionary<String, NSObject>>?) = [result as! NSObject : parameters]
                 (c8oResponseListener as! C8oResponseJsonListener).OnJsonResponse(onJsonReponseVar);
             }
-            /*
-            else if (result instanceof com.couchbase.lite.Document) {
-            // TODO log
+            else if ( result is ErrorType || result is NSException){
+                c8o.HandleCallException(c8oExceptionListener, requestParameters: parameters, exception: (result as! C8oSDKiOS.Error))
+            }
+            else {
+                c8o.HandleCallException(c8oExceptionListener, requestParameters: parameters, exception: C8oSDKiOS.Error.C8oException(C8oExceptionMessage.wrongResult(result!)))
+            }
             
-            // The result is a fillSync query response
-            ((C8oFullSyncResponseListener) this.c8oResponseListener).onDocumentResponse(this.parameters, (com.couchbase.lite.Document) result);
-            } else if (result instanceof QueryEnumerator) {
-            // TODO log
-            
-            // The result is a fillSync query response
-            ((C8oFullSyncResponseListener) this.c8oResponseListener).onQueryEnumeratorResponse(this.parameters, (QueryEnumerator) result);
-            } else if (result instanceof Exception){
-            // The result is an Exception
-            C8o.handleCallException(this.c8oExceptionListener, this.parameters, (Exception) result);
-            } else {
-            // The result type is unknown
-            C8o.handleCallException(this.c8oExceptionListener, this.parameters, new C8oException(C8oExceptionMessage.WrongResult(result)));
-            }*/
         }
         catch //(Exception e)
         {
             //c8o.HandleCallException(c8oExceptionListener, parameters, e);
-        }*/
-    }*/
+        }
     }
+    
 }

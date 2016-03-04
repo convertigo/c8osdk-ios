@@ -7,12 +7,13 @@
 //
 
 import Foundation
+import Fuzi
 
 public class C8oResponseXmlListener : C8oResponseListener
 {
-    public var OnXmlResponse : (Dictionary<NSObject, Dictionary<String, NSObject>>?)->();
+    public var OnXmlResponse : (Pair<AnyObject?, Dictionary<String, NSObject>?>?)->();
     
-    public init(onXmlResponse : (params : Dictionary<NSObject, Dictionary<String, NSObject>>?)->())
+    public init(onXmlResponse : (params : Pair<AnyObject?, Dictionary<String, NSObject>?>?)->())
     {
         OnXmlResponse = onXmlResponse
     }

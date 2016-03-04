@@ -22,17 +22,18 @@ internal class C8oUtils
     
 
     
-    internal static func GetObjectClassName(obj : NSObject)->String
+    internal static func GetObjectClassName(obj : AnyObject?)->String
     {
         
-        /*string className = "null";
-        if (obj != null)
+        var className  = "nil";
+        if (obj != nil)
         {
-        className = obj.GetType().Name;
+            className = String(obj.dynamicType)
+            
         }
-        return className;*/
+            return className;
         
-        return "str";
+        
     }
     
 

@@ -355,10 +355,10 @@ internal class C8oExceptionMessage
     return "" //"The C8oListener class " + C8oUtils.GetObjectClassName(c8oListener) + " is not handled";
     }
     
-    //internal static func wrongResult(Object result)->String
-    //{
-    //    return "The response class " + C8oUtils.getObjectClassName(result)->String + " is not handled";
-    //}
+    internal static func wrongResult(result :AnyObject)->String
+    {
+        return "The response class " + C8oUtils.GetObjectClassName(result) + " is not handled";
+    }
     
     internal static func toDo()->String
     {
