@@ -9,6 +9,7 @@
 import Foundation
 import CoreFoundation
 import SwiftyJSON
+import Fuzi
 
 
 
@@ -106,7 +107,7 @@ public class C8oLogger
         get { return CanLog(C8oLogLevel.TRACE); }
     }
     
-    internal func Log(logLevel: C8oLogLevel, var message:String , exception: NSException! = nil) ->Void
+    internal func Log(logLevel: C8oLogLevel, var message:String , exception: C8oSDKiOS.Error?! = nil) ->Void
     {
         let isLogConsole : Bool = IsLoggableConsole(logLevel);
         let isLogRemote : Bool = IsLoggableRemote(logLevel);
@@ -138,37 +139,37 @@ public class C8oLogger
         }
     }
     
-    public func Fatal(message: String, exceptions: NSException? = nil) ->Void
+    public func Fatal(message: String, exceptions: C8oSDKiOS.Error? = nil) ->Void
     {
         Log(C8oLogLevel.FATAL, message: message, exception: exceptions);
     }
     
-    public func Error(message: String, exceptions: NSException?  = nil) -> Void
+    public func Error(message: String, exceptions: C8oSDKiOS.Error?  = nil) -> Void
     {
         Log(C8oLogLevel.ERROR, message: message, exception: exceptions);
     }
     
-    public func Warn(message: String, exceptions: NSException?  = nil) -> Void
+    public func Warn(message: String, exceptions: C8oSDKiOS.Error?  = nil) -> Void
     {
         Log(C8oLogLevel.WARN, message: message, exception: exceptions);
     }
     
-    public func Info(message: String, exceptions: NSException? = nil) -> Void
+    public func Info(message: String, exceptions: C8oSDKiOS.Error? = nil) -> Void
     {
         Log(C8oLogLevel.INFO, message: message, exception: exceptions);
     }
     
-    public func Debug(message: String, exceptions: NSException?  = nil) -> Void
+    public func Debug(message: String, exceptions: C8oSDKiOS.Error?  = nil) -> Void
     {
         Log(C8oLogLevel.DEBUG, message: message, exception: exceptions);
     }
     
-    public func Trace(message: String, exceptions: NSException?  = nil) -> Void
+    public func Trace(message: String, exceptions: C8oSDKiOS.Error?  = nil) -> Void
     {
         Log(C8oLogLevel.TRACE, message: message, exception: exceptions);
     }
     
-    internal func _Log(logLevel : C8oLogLevel, messages : String, exceptions : NSException?)->Void
+    internal func _Log(logLevel : C8oLogLevel, messages : String, exceptions : C8oSDKiOS.Error?)->Void
     {
         if (c8o.LogC8o)
         {
@@ -176,32 +177,32 @@ public class C8oLogger
         }
     }
     
-    internal func _Fatal(message: String, exceptions: NSException?) -> Void
+    internal func _Fatal(message: String, exceptions: C8oSDKiOS.Error?) -> Void
     {
         _Log(C8oLogLevel.FATAL, messages: message, exceptions: exceptions);
     }
     
-    internal func _Error(message: String, exceptions: NSException?) -> Void
+    internal func _Error(message: String, exceptions:C8oSDKiOS.Error?) -> Void
     {
         _Log(C8oLogLevel.ERROR, messages: message, exceptions: exceptions);
     }
     
-    internal func _Warn(message: String, exceptions: NSException?) -> Void
+    internal func _Warn(message: String, exceptions: C8oSDKiOS.Error?) -> Void
     {
         _Log(C8oLogLevel.WARN, messages: message, exceptions: exceptions);
     }
     
-    internal func _Info(message: String, exceptions: NSException?) -> Void
+    internal func _Info(message: String, exceptions: C8oSDKiOS.Error?) -> Void
     {
         _Log(C8oLogLevel.INFO, messages: message, exceptions: exceptions);
     }
     
-    internal func _Debug(message: String, exceptions: NSException?) -> Void
+    internal func _Debug(message: String, exceptions: C8oSDKiOS.Error?) -> Void
     {
         _Log(C8oLogLevel.DEBUG, messages: message, exceptions: exceptions);
     }
     
-    internal func _Trace(message: String, exceptions: NSException?) -> Void
+    internal func _Trace(message: String, exceptions: C8oSDKiOS.Error?) -> Void
     {
         _Log(C8oLogLevel.TRACE, messages: message, exceptions: exceptions);
     }
@@ -329,7 +330,7 @@ public class C8oLogger
     }
     
 
-    internal func LogC8oCallXMLResponse(response : NSXMLParser, url: String, parameters : Dictionary<String, NSObject>)-> Void
+    internal func LogC8oCallXMLResponse(response : XMLDocument, url: String, parameters : Dictionary<String, NSObject>)-> Void
     {
         LogC8oCallResponse(C8oTranslator.XmlToString(response)!, responseType: "XML", url: url, parameters: parameters);
     }
