@@ -16,11 +16,11 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
     
     private var c8o : C8o;
     
-    private var c8oOnResponses : Array<Pair<(T?, Dictionary<String, NSObject>?)->(), Bool>> = Array<Pair<(T?, Dictionary<String, NSObject>?)->(), Bool>>()
-    //= Array<Dictionary<NSObject, Bool>>();
-    private var c8oProgress : NSObject? //Dictionary<C8oOnProgress, bool>;
-    private var c8oFail : NSObject? //Dictionary<C8oOnFail, bool>;
-    private var syncMutex : NSObject = NSObject();
+    private var c8oOnResponses : Array<Pair<(T, Dictionary<String, NSObject>)throws ->(C8oPromise<T>?), Bool>> = Array<Pair<(T, Dictionary<String, NSObject>)throws ->(C8oPromise<T>?), Bool>>()
+    
+    private var c8oProgress : Pair<(C8oProgress)throws ->(),Bool>?
+    private var c8oFail : Pair<(NSException, Dictionary<String, NSObject>)throws ->(),Bool>?;
+    private var syncMutex : NSCondition = NSCondition();
     
     private var lastResult : T?;
     private var lastException : ErrorType?;
@@ -33,22 +33,22 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
     }
     
     
-    public func Then(c8oOnResponse : (response : T?, parameters : Dictionary<String, NSObject>?)->())-> C8oPromise<T>?
+    public func Then(c8oOnResponse : (response : T, parameters : Dictionary<String, NSObject>)->(C8oPromise<T>?))-> C8oPromise<T>?
     {
         let condition : NSCondition = NSCondition()
         condition.lock()
-        let keyValue : Pair = Pair<(T?, Dictionary<String, NSObject>?)->(), Bool>(key: c8oOnResponse, value: true)
+        let keyValue : Pair = Pair<(T, Dictionary<String, NSObject>) throws ->(C8oPromise<T>?), Bool>(key: c8oOnResponse, value: false)
         self.c8oOnResponses.append(keyValue)
         condition.unlock()
         return self;
     }
     
     
-    public func ThenUI(c8oOnResponse : (response : T?, parameters : Dictionary<String, NSObject>?)->())-> C8oPromise<T>
+    public func ThenUI(c8oOnResponse : (response : T, parameters : Dictionary<String, NSObject>)->(C8oPromise<T>?))-> C8oPromise<T>?
     {
         let condition : NSCondition = NSCondition()
         condition.lock()
-        let keyValue : Pair = Pair<(T?, Dictionary<String, NSObject>?)->(), Bool>(key: c8oOnResponse, value: true)
+        let keyValue : Pair = Pair<(T, Dictionary<String, NSObject>) throws ->(C8oPromise<T>?), Bool>(key: c8oOnResponse, value: true)
         self.c8oOnResponses.append(keyValue)
         condition.unlock()
         return self;
@@ -84,23 +84,25 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
     }
     
     
-    public func Sync() throws-> T?
+    public func Sync() throws -> T?
     {
         
-        let condition : NSCondition = NSCondition()
-        condition.lock()
+        
+        syncMutex.lock()
         
         self.Then { response , parameters in
             
-            NSCondition().lock()
-            self.lastResult = response
-            condition.signal()
-            NSCondition().unlock()
             
+            self.syncMutex.lock()
+            self.lastResult = response
+            self.syncMutex.signal()
+            self.syncMutex.unlock()
+            //let ret : C8oPromise? = nil
+            return nil as C8oPromise<T>?
             
         }
-        //condition.wait()
-        condition.unlock()
+        self.syncMutex.wait()
+        self.syncMutex.unlock()
         if(lastException != nil){
             throw lastException!
         }
@@ -128,68 +130,70 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
     
     internal func OnResponse(response :T, parameters : Dictionary<String, NSObject>)->Void
     {
-        var condition : NSCondition
-        /*
+        let condition : NSCondition = NSCondition()
+        
         do
         {
             condition.lock()
             
             if (c8oOnResponses.count > 0)
             {
-                var handler = c8oOnResponses[0];
+                let handler = c8oOnResponses[0];
                 c8oOnResponses.removeAtIndex(0)
                 
-                var promise = [C8oPromise<T>]()
+                var promise : [C8oPromise<T>?] = [C8oPromise<T>?](count: 1, repeatedValue: C8oPromise<T>?())
                 
+                promise[0] = nil
                 if (handler.value)
                 {
                     var exception : NSException? = nil;
+                    let condition2 : NSCondition = NSCondition()
+                    condition2.lock()
                     
-                    condition.lock()
-                    
-                    c8o.RunUI(() =>
+                    c8o.RunUI { block in
+                        //let conditionUI : NSCondition = NSCondition()
+                        condition2.lock()
+                        do
                         {
-                            condition.lock()
-                            
-                            do
-                            {
-                                promise[0] = handler.Key.Invoke(response, parameters);
-                            }
-                            catch
-                            {
-                                exception = e;
-                            }
-                            //Monitor.Pulse(promise);
-                            
-                        });
-                    condition.wait();
+                            promise[0] = try! handler.key(response, parameters)!
+                        }
+                        catch let e as NSException
+                        {
+                            exception = e
+                        }
+                        
+                        condition2.signal()
+                        condition2.unlock()
+                    }
+                    condition2.wait();
                     if (exception != nil)
                     {
                         //throw exception;
                     }
-                    condition.unlock()
+                    condition2.unlock()
                     
                 }
                 else
                 {
-                    promise[0] = handler.Key.Invoke(response, parameters);
+                    promise[0] = try! handler.key(response, parameters)
                 }
                 
                 if (promise[0] != nil)
                 {
-                    if (promise[0].c8oFail = default(Dictionary<C8oOnFail, bool>))
+                    if (promise[0]!.c8oFail == nil)
                     {
-                        promise[0].c8oFail = c8oFail;
+                        promise[0]!.c8oFail = c8oFail
                     }
-                    if (promise[0].c8oProgress.Equals(default(Dictionary<C8oOnProgress, bool>)))
+                    if (promise[0]!.c8oProgress == nil)
                     {
-                        promise[0].c8oProgress = c8oProgress;
+                        promise[0]!.c8oProgress = c8oProgress
                     }
-                    promise[0].Then((resp, param) =>
-                        {
-                            OnResponse(resp, param);
-                            return nil;
-                        });
+                    promise[0]!.Then { resp, param in
+                        self.OnResponse(resp, parameters: param)
+                        let a : C8oPromise? = nil
+                        return a!
+                    }
+                    
                 }
             }
             else
@@ -202,99 +206,93 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
         {
             //OnFailure(exception, parameters);
             
-        }*/
+        }
     }
     
     internal func OnProgress(progress : C8oProgress) ->Void
     {
-        var condition : NSCondition
+        let condition : NSCondition = NSCondition()
         
-        
-        /* if (!c8oProgress.Equals(default(KeyValuePair<C8oOnProgress, bool>)))
+        if (c8oProgress != nil)
         {
-        if (c8oProgress.Value)
-        {
-        var locker = new object();
-        condition.lock()
-        
-        c8o.RunUI(() =>
-        {
-        condition.lock()
-        
-        do
-        {
-        c8oProgress.Key.Invoke(progress);
+            if (c8oProgress!.value)
+            {
+                condition.lock()
+                
+                c8o.RunUI {
+                    let conditionUI : NSCondition = NSCondition()
+                    conditionUI.lock()
+                    
+                    do
+                    {
+                        try! self.c8oProgress?.key(progress)
+                    }
+                    catch let e as NSException
+                    {
+                        self.OnFailure(e, parameters: [C8o.ENGINE_PARAMETER_PROGRESS : progress ])
+                    }
+                    /*finally
+                    {
+                    //Monitor.Pulse(locker);
+                    }*/
+                    condition.signal()
+                    conditionUI.unlock()
+                    
+                }
+                condition.wait()
+                condition.unlock()
+                //Monitor.Wait(locker);
+                
+            }
+            else
+            {
+                try! c8oProgress?.key(progress);
+            }
         }
-        catch NSException
-        {
-        OnFailure(e, Dictionary<string, object>() { { C8o.ENGINE_PARAMETER_PROGRESS, progress } });
-        }
-        finally
-        {
-        //Monitor.Pulse(locker);
-        }
-        condition.unlock()
-        
-        });
-        condition.wait()
-        condition.unlock()
-        //Monitor.Wait(locker);
-        
-        }
-        else
-        {
-        c8oProgress.Key.Invoke(progress);
-        }
-        }*/
     }
     
     
     
-    internal func OnFailure(exception : NSException, parameters : Dictionary<String, NSObject>)-> Void
+    internal func OnFailure(var exception : NSException, parameters : Dictionary<String, NSObject>)-> Void
     {
-        /*lastException = exception;
-        var condition : NSCondition*/
-        
-        /*if (c8oFail != default(Dictionary<C8oOnFail, bool>))
+        let lastException = exception
+        if (c8oFail != nil)
         {
-        if (c8oFail.Value)
-        {
-        
-        condition.lock()
-        
-        c8o.RunUI(() =>
-        {
-        condition.lock()
-        
-        try
-        {
-        c8oFail.Key.Invoke(exception, parameters);
-        }
-        catch (Exception e)
-        {
-        exception = e;
-        }
-        finally
-        {
-        //Monitor.Pulse(locker);
-        }
-        condition.unlock()
-        });
-        
-        condition.wait()
-        condition.unlock()
-        
-        }
-        else
-        {
-        c8oFail.Key.Invoke(exception, parameters);
-        }
+            if (c8oFail!.value)
+            {
+                let condition : NSCondition = NSCondition()
+                condition.lock()
+                
+                c8o.RunUI {
+                    let conditionUI : NSCondition = NSCondition()
+                    conditionUI.lock()
+                    
+                    do
+                    {
+                        try! self.c8oFail?.key(exception, parameters);
+                    }
+                    catch let e as NSException
+                    {
+                        exception = e
+                    }
+                    conditionUI.unlock()
+                    condition.signal()
+                }
+                
+                condition.wait()
+                condition.unlock()
+                
+            }
+            else
+            {
+                try! self.c8oFail?.key(exception, parameters);
+            }
         }
         
-        condition.lock()
+        /*condition.lock()
         
         //Monitor.Pulse(syncMutex);
-        condition.unlock()
-        */
+        condition.unlock()*/
+        
     }
 }

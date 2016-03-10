@@ -38,38 +38,39 @@ internal class C8oHttpInterface
     internal func HandleRequest(url : String, parameters : Dictionary<String, AnyObject>)->NSData?//(NSURLRequest?, NSHTTPURLResponse?, NSData?, NSError?)?
     {
         var myResponse : NSData?
-        let URL = NSURL(string: url)
+        print(parameters)
+        //let URL = NSURL(string: url)
         
-        //NSHTTPCookieStorage
-        let jar = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-        let cookieHeaderField = ["Set-Cookie": "x-convertigo-sdk=" + C8o.GetSdkVersion()]
-        let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(cookieHeaderField, forURL: URL!)
+        //Cookies
+        //let jar = NSHTTPCookieStorage.sharedHTTPCookieStorage()
+        //
+        /*let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(cookieHeaderField, forURL: URL!)
         jar.setCookies(cookies, forURL: URL, mainDocumentURL: nil)
+        
+        //
         let mutableUrlRequest = NSMutableURLRequest(URL: URL!)
-        mutableUrlRequest.HTTPMethod = "POST"
-        mutableUrlRequest.setValue(String(cookieContainer), forHTTPHeaderField : "Cookie")
+        mutableUrlRequest.setValue(String(cookieContainer), forHTTPHeaderField : "Cookie")*/
         
-        
+        let data : NSData? = SetRequestEntity(url, parameters: parameters)
+        let cookieHeaderField = ["Set-Cookie": "x-convertigo-sdk=" + C8o.GetSdkVersion()]
         let semaphore = dispatch_semaphore_create(0)
         let queue = dispatch_queue_create("com.convertigo.co8.queue", DISPATCH_QUEUE_CONCURRENT)
         
-        let request = Alamofire.request(mutableUrlRequest)
+        let request = Alamofire.upload(.POST, url, headers: cookieHeaderField, data: data!)//(.POST, mutableUrlRequest)
         request.response (
             queue: queue,
             completionHandler :{ request, response, data, error in
                 
-                print(request)
-                print(response)
                 myResponse = data
                 dispatch_semaphore_signal(semaphore);
         })
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
         return myResponse
-    
-      
+        
+        
     }
     
-  internal func HandleC8oCallRequest(url : String, parameters : Dictionary<String, NSObject>)->NSData//(NSURLRequest?, NSHTTPURLResponse?, NSData?, NSError?)?//Task<HttpWebResponse>
+    internal func HandleC8oCallRequest(url : String, parameters : Dictionary<String, NSObject>)->NSData//(NSURLRequest?, NSHTTPURLResponse?, NSData?, NSError?)?//Task<HttpWebResponse>
     {
         c8o.c8oLogger!.LogC8oCall(url, parameters: parameters);
         return HandleRequest(url, parameters: parameters)!;
@@ -88,39 +89,40 @@ internal class C8oHttpInterface
         return nil
     }
     
-  internal var CookieStore : NSObject?//CookieContainer
-        {
+    internal var CookieStore : NSObject?/*CookieContainer*/{
         get { return nil;  }
     }
     
-    private func SetRequestEntity(request : NSObject?/*HttpWebRequest*/, parameters: Dictionary<String, NSObject>)->Void
-    {
-        /*request.ContentType = "application/x-www-form-urlencoded";
+    private func SetRequestEntity(request : NSObject?, parameters: Dictionary<String, AnyObject>?)->NSData?{
+        
+        //request.ContentType = "application/x-www-form-urlencoded";
         
         // And adds to it parameters
-        if (parameters != nil && parameters.count > 0)
+        
+        if (parameters != nil && parameters!.count > 0)
         {
             var postData : String = "";
             
-            for parameter in parameters
+            for parameter in parameters!
             {
-                postData += Uri.EscapeDataString(parameter.Key) + "=" + Uri.EscapeDataString("" + parameter.Value) + "&";
+                print(parameter)
+                if let downcastStrings = parameter.1 as? [String] {
+                    for item in downcastStrings {
+                        postData += String(parameter.0) + "=" + String(item) + "&";
+                    }
+                }
+                else{
+                    postData += String(parameter.0) + "=" + String(parameter.1) + "&";
+                }
+                
             }
+            postData = String(postData.characters.dropLast(1))
+            print(postData)
             
-            postData = postData.Substring(0, postData.Length - 1);
+            return postData.dataUsingEncoding(NSUTF8StringEncoding)
             
-            // postData = "__connector=HTTP_connector&__transaction=transac1&testVariable=TEST 01";
-            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
             
-            // First get the request stream before send it (don't use async because of a .net bug for the request)
-            var task = Task<Stream>.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, request);
-            task.Wait();
-            
-            using (var entity = task.Result)
-            {
-                // Add the post data to the web request
-                entity.Write(byteArray, 0, byteArray.Length);
-            }
-        }*/
+        }
+        return nil
     }
 }

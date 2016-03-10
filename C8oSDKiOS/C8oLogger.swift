@@ -107,7 +107,7 @@ public class C8oLogger
         get { return CanLog(C8oLogLevel.TRACE); }
     }
     
-    internal func Log(logLevel: C8oLogLevel, var message:String , exception: C8oSDKiOS.Error?! = nil) ->Void
+    internal func Log(logLevel: C8oLogLevel, var message:String , exception: C8oSDKiOS.Errs?! = nil) ->Void
     {
         let isLogConsole : Bool = IsLoggableConsole(logLevel);
         let isLogRemote : Bool = IsLoggableRemote(logLevel);
@@ -139,37 +139,37 @@ public class C8oLogger
         }
     }
     
-    public func Fatal(message: String, exceptions: C8oSDKiOS.Error? = nil) ->Void
+    public func Fatal(message: String, exceptions: C8oSDKiOS.Errs? = nil) ->Void
     {
         Log(C8oLogLevel.FATAL, message: message, exception: exceptions);
     }
     
-    public func Error(message: String, exceptions: C8oSDKiOS.Error?  = nil) -> Void
+    public func Error(message: String, exceptions: C8oSDKiOS.Errs?  = nil) -> Void
     {
         Log(C8oLogLevel.ERROR, message: message, exception: exceptions);
     }
     
-    public func Warn(message: String, exceptions: C8oSDKiOS.Error?  = nil) -> Void
+    public func Warn(message: String, exceptions: C8oSDKiOS.Errs?  = nil) -> Void
     {
         Log(C8oLogLevel.WARN, message: message, exception: exceptions);
     }
     
-    public func Info(message: String, exceptions: C8oSDKiOS.Error? = nil) -> Void
+    public func Info(message: String, exceptions: C8oSDKiOS.Errs? = nil) -> Void
     {
         Log(C8oLogLevel.INFO, message: message, exception: exceptions);
     }
     
-    public func Debug(message: String, exceptions: C8oSDKiOS.Error?  = nil) -> Void
+    public func Debug(message: String, exceptions: C8oSDKiOS.Errs?  = nil) -> Void
     {
         Log(C8oLogLevel.DEBUG, message: message, exception: exceptions);
     }
     
-    public func Trace(message: String, exceptions: C8oSDKiOS.Error?  = nil) -> Void
+    public func Trace(message: String, exceptions: C8oSDKiOS.Errs?  = nil) -> Void
     {
         Log(C8oLogLevel.TRACE, message: message, exception: exceptions);
     }
     
-    internal func _Log(logLevel : C8oLogLevel, messages : String, exceptions : C8oSDKiOS.Error?)->Void
+    internal func _Log(logLevel : C8oLogLevel, messages : String, exceptions : C8oSDKiOS.Errs?)->Void
     {
         if (c8o.LogC8o)
         {
@@ -177,32 +177,32 @@ public class C8oLogger
         }
     }
     
-    internal func _Fatal(message: String, exceptions: C8oSDKiOS.Error?) -> Void
+    internal func _Fatal(message: String, exceptions: C8oSDKiOS.Errs?) -> Void
     {
         _Log(C8oLogLevel.FATAL, messages: message, exceptions: exceptions);
     }
     
-    internal func _Error(message: String, exceptions:C8oSDKiOS.Error?) -> Void
+    internal func _Errs(message: String, exceptions:C8oSDKiOS.Errs?) -> Void
     {
         _Log(C8oLogLevel.ERROR, messages: message, exceptions: exceptions);
     }
     
-    internal func _Warn(message: String, exceptions: C8oSDKiOS.Error?) -> Void
+    internal func _Warn(message: String, exceptions: C8oSDKiOS.Errs?) -> Void
     {
         _Log(C8oLogLevel.WARN, messages: message, exceptions: exceptions);
     }
     
-    internal func _Info(message: String, exceptions: C8oSDKiOS.Error?) -> Void
+    internal func _Info(message: String, exceptions: C8oSDKiOS.Errs?) -> Void
     {
         _Log(C8oLogLevel.INFO, messages: message, exceptions: exceptions);
     }
     
-    internal func _Debug(message: String, exceptions: C8oSDKiOS.Error?) -> Void
+    internal func _Debug(message: String, exceptions: C8oSDKiOS.Errs?) -> Void
     {
         _Log(C8oLogLevel.DEBUG, messages: message, exceptions: exceptions);
     }
     
-    internal func _Trace(message: String, exceptions: C8oSDKiOS.Error?) -> Void
+    internal func _Trace(message: String, exceptions: C8oSDKiOS.Errs?) -> Void
     {
         _Log(C8oLogLevel.TRACE, messages: message, exceptions: exceptions);
     }
@@ -371,7 +371,7 @@ public class C8oLogLevel
     public static var DEBUG : C8oLogLevel = C8oLogLevel(name: "debug", priority: 3);
     public static var INFO : C8oLogLevel = C8oLogLevel(name: "info", priority: 4);
     public static var WARN : C8oLogLevel = C8oLogLevel(name: "warn", priority: 5);
-    public static var ERROR : C8oLogLevel = C8oLogLevel(name: "error", priority: 6);
+    public static var ERROR : C8oLogLevel = C8oLogLevel(name: "Errs", priority: 6);
     public static var FATAL : C8oLogLevel = C8oLogLevel(name: "fatal", priority: 7);
     
     internal static var C8O_LOG_LEVELS : [C8oLogLevel] = [ NULL, NONE, TRACE, DEBUG, INFO, WARN, ERROR, FATAL ];

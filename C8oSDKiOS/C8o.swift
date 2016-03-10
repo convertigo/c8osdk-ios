@@ -194,8 +194,8 @@ import CouchbaseLite
         // Checks the URL validity
         if (!C8oUtils.IsValidUrl(endpoint))
         {
-            //throw NSError(domain: NSURLErrorDomain, code: NSURLErrorCannotOpenFile, userInfo: nil)
-            throw Error.ArgumentException(C8oExceptionMessage.InvalidArgumentInvalidURL(endpoint))
+            //throw NSErrs(domain: NSURLErrsDomain, code: NSURLErrsCannotOpenFile, userInfo: nil)
+            throw Errs.ArgumentException(C8oExceptionMessage.InvalidArgumentInvalidURL(endpoint))
         }
         
         // Checks the endpoint validty
@@ -203,16 +203,12 @@ import CouchbaseLite
         let regexV  = regex.matchesInString(endpoint, options: [], range: NSMakeRange(0, endpoint.characters.count ))
         
         if(regexV.first == nil){
-            throw Error.ArgumentException(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint))
+            throw Errs.ArgumentException(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint))
         }
         
         self.endpoint = endpoint;
         self.endpointConvertigo = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(1))
-        //
-        
-        
-        print(regexV[0].numberOfRanges)
-        
+
         if(regexV[0].rangeAtIndex(2).location != NSNotFound)
         {
             self.endpointIsSecure  = !(endpoint as NSString?)!.substringWithRange(regexV[0].rangeAtIndex(2)).isEmpty
@@ -252,7 +248,7 @@ import CouchbaseLite
         {
             if(requestable == nil)
             {
-                throw Error.InvalidArgument //System.ArgumentNullException(C8oExceptionMessage.InvalidArgumentNullParameter("requestable"));*/
+                throw Errs.InvalidArgument //System.ArgumentNullException(C8oExceptionMessage.InvalidArgumentNullParameter("requestable"));*/
             }
             
             // Checks parameters validity
@@ -271,14 +267,14 @@ import CouchbaseLite
             let regexV  = regex.matchesInString(requestable!, options: [], range: NSMakeRange(0, requestable!.characters.count ))
             
             if(regexV.first == nil){
-                throw Error.InvalidArgument //Exception(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint));
+                throw Errs.InvalidArgument //Exception(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint));
             }
             
             
             // If the project name is specified
             if ((requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(1)) != "")
             {
-                parameters!["ENGINE_PARAMETER_PROJECT"] =  (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(1));
+                parameters![C8o.ENGINE_PARAMETER_PROJECT] =  (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(1));
             }
             
             
@@ -286,13 +282,15 @@ import CouchbaseLite
             
             if (((requestable! as NSString?)!.substringWithRange(regexV[0].rangeAtIndex(2)) as String?) !=  "")
             {
-                parameters!["ENGINE_PARAMETER_SEQUENCE"] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(2));
+                print(C8o.ENGINE_PARAMETER_SEQUENCE)
+                print((requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(2)))
+                parameters![C8o.ENGINE_PARAMETER_SEQUENCE ] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(2))
             }
             else
             {
-                parameters!["ENGINE_PARAMETER_CONNECTOR"] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(3));
+                parameters![C8o.ENGINE_PARAMETER_CONNECTOR] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(3));
                 
-                parameters!["ENGINE_PARAMETER_TRANSACTION"] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(4));
+                parameters![C8o.ENGINE_PARAMETER_TRANSACTION] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(4));
                 
             }
             
@@ -320,6 +318,7 @@ import CouchbaseLite
             {
                 // Clones parameters in order to modify them
                 //parameters = parameters;
+                parameters = Dictionary<String, NSObject>?(parameters!);
             }
             
             // Creates a async task running on another thread
@@ -329,7 +328,7 @@ import CouchbaseLite
         /*}
         catch
         {
-            throw Error.InvalidArgument //HandleCallException(c8oExceptionListener, parameters, e);
+            throw Errs.InvalidArgument //HandleCallException(c8oExceptionListener, parameters, e);
         }*/
     }
     
@@ -356,7 +355,7 @@ import CouchbaseLite
             </list>
     @return A C8oPromise object on which you can chain other requests to get the data with the Then(), ThenUI() methods or
             use the Async() to wait for the server response without blocking the request thread. You can also use the .Fail() and
-            FailUI() methods to handle errors.
+            FailUI() methods to handle Errss.
 
     */
     public func CallJson (requestable : String, parameters : Dictionary<String, NSObject>)-> C8oPromise<JSON>?
@@ -397,7 +396,7 @@ import CouchbaseLite
     }
     
     
-    public func CallXml(requestable : String, parameters :Dictionary<String, NSObject>)->C8oPromise<XMLDocument>?//C8oPromise<XDocument>
+    public func CallXml(requestable : String, parameters :Dictionary<String, NSObject>)->C8oPromise<XMLDocument>
     {
         
         let promise = C8oPromise<XMLDocument>(c8o: self);
@@ -428,16 +427,10 @@ import CouchbaseLite
         
     }
     
-    public func CallXml(requestable : String, parameters : [NSObject] ...)->C8oPromise<XMLDocument>?//C8oPromise<XDocument>
+    public func CallXml(requestable : String, parameters : NSObject...)->C8oPromise<XMLDocument>
     {
-        //do{
-            
-            return try! CallXml(requestable, parameters: C8o.ToParameters(parameters));
-        /*}
-        catch{
-            
-        }*/
-        //return nil
+        
+        return try! CallXml(requestable, parameters: C8o.ToParameters(parameters));
     }
     
     public func AddCookie(name : String, value : String)->Void
@@ -476,18 +469,11 @@ import CouchbaseLite
     }
     
 
-    public func RunUI(dispatch : dispatch_queue_t?)->Void
-    {
-        if (dispatch != nil)
-        {
-            //myQueue = dispatch_main
-        }
-        else
-        {
-            //code.Invoke();
-        }
+    public func RunUI (block: dispatch_block_t?) {
+        
+        dispatch_async(dispatch_get_main_queue(), block!)
+        
     }
-    
     public func toString()->String
     {
         return "C8o[" + endpoint! + "] " //+ super.description();
@@ -537,22 +523,23 @@ import CouchbaseLite
     
     private static func ToParameters(parameters : [NSObject])throws ->Dictionary<String, NSObject>
     {
+        print(parameters)
         if (parameters.count % 2 != 0)
         {
-            print("laaaaa")//throw Error.InvalidArgument //throw System.ArgumentException(C8oExceptionMessage.InvalidParameterValue("parameters", "needs pairs of values"));
+            throw Errs.InvalidArgument //throw System.ArgumentException(C8oExceptionMessage.InvalidParameterValue("parameters", "needs pairs of values"));
         }
         
         var newParameters = Dictionary<String, NSObject>();
         
         for (var i = 0; i < parameters.count; i += 2)
         {
-            newParameters["" + String(parameters[i])] = parameters[i + 1];
+            newParameters[String(parameters[i])] = parameters[i + 1];
         }
-        
+        print(newParameters)
         return newParameters;
     }
     
-    internal func HandleCallException(c8oExceptionListener: C8oExceptionListener?, requestParameters : Dictionary<String, NSObject>, exception : C8oSDKiOS.Error)
+    internal func HandleCallException(c8oExceptionListener: C8oExceptionListener?, requestParameters : Dictionary<String, NSObject>, exception : C8oSDKiOS.Errs)
     {
         c8oLogger!._Warn("Handle a call exception", exceptions: exception);
         

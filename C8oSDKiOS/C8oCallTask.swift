@@ -27,6 +27,7 @@ internal class C8oCallTask
     {
         self.c8o = c8o;
         self.parameters = parameters;
+        print(parameters.keys)
         self.c8oResponseListener = c8oResponseListener;
         self.c8oExceptionListener = c8oExceptionListener;
         self.c8oCallUrl = nil
@@ -91,7 +92,7 @@ internal class C8oCallTask
             }
             else
             {
-                throw C8oSDKiOS.Error.C8oException("Wrong listener")
+                throw C8oSDKiOS.Errs.C8oException("Wrong listener")
             }
             
             /** Local cache */
@@ -186,7 +187,6 @@ internal class C8oCallTask
             {
                 
                 response = C8oTranslator.DataToXml(httpResponse)!
-                print(response)
                 if(localCacheEnabled)
                 {
                     responseString = (response as! XMLDocument).description
@@ -249,11 +249,11 @@ internal class C8oCallTask
                 let onJsonReponseVar : (Dictionary<NSObject, Dictionary<String, NSObject>>?) = [result as! NSObject : parameters]
                 (c8oResponseListener as! C8oResponseJsonListener).OnJsonResponse(onJsonReponseVar);
             }
-            else if ( result is ErrorType || result is NSException){
-                c8o.HandleCallException(c8oExceptionListener, requestParameters: parameters, exception: (result as! C8oSDKiOS.Error))
+            else if ( result is Errs.Type || result is NSException){
+                c8o.HandleCallException(c8oExceptionListener, requestParameters: parameters, exception: (result as! C8oSDKiOS.Errs))
             }
             else {
-                c8o.HandleCallException(c8oExceptionListener, requestParameters: parameters, exception: C8oSDKiOS.Error.C8oException(C8oExceptionMessage.wrongResult(result!)))
+                c8o.HandleCallException(c8oExceptionListener, requestParameters: parameters, exception: C8oSDKiOS.Errs.C8oException(C8oExceptionMessage.wrongResult(result!)))
             }
             
         }

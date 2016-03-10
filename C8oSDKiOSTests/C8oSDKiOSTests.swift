@@ -36,29 +36,29 @@ class C8oSDKiOSTests: XCTestCase {
             c8o.LogRemote = false
             c8o.LogLevelLocal = C8oLogLevel.ERROR
             return c8o
-        break
+            break
             
         case .C8O_BIS :
             let c8o : C8o = try C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: nil)
             c8o.LogRemote = false
             c8o.LogLevelLocal = C8oLogLevel.ERROR
             return c8o
-        break
+            break
             
         case .C8O_FS :
             let c8o : C8o = try C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: C8oSettings().SetDefaultDatabaseName("clientsdktesting"))
             c8o.LogRemote = false
             c8o.LogLevelLocal = C8oLogLevel.ERROR
             return c8o
-        break
+            break
             
-        /*case .C8O_FS_PULL :
+            /*case .C8O_FS_PULL :
             let c8o : C8o = try C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: C8oSettings().SetDefaultDatabaseName("clientsdktesting"))
             c8o.LogRemote = false
             c8o.LogLevelLocal = C8oLogLevel.ERROR
             let json : JSON = c8o.callJso
             return c8o
-        break*/
+            break*/
             
         default:
             return nil
@@ -107,22 +107,55 @@ class C8oSDKiOSTests: XCTestCase {
             try _ = C8o(endpoint: PREFIX + HOST + PORT, c8oSettings: nil)
         }
         catch {
-            XCTAssert(true,"testC8oBadEndpoint succesfull")
+            XCTAssert(true)
         }
+        
     }
     
     func testC8oDefault(){
         try! _ = Get(.C8O)
-        XCTAssert(true,"testC8oDefault succesfull")
     }
     
     func testC8oDefaultPing(){
         let c8o: C8o = try! Get(.C8O)!
-        print("avant doc")
-        let doc  = try! c8o.CallXml(".Ping")?.Sync()
-        print("apres doc")
-        //let pong = (doc! as XMLDocument).xpath("/document/pong")
-        //print(pong)
+        let doc  = try! c8o.CallXml(".Ping").Sync()
+        var pong : Int
+        pong = (doc?.xpath("/document/pong").count)!
+        XCTAssertEqual(1,pong)
+    }
+    
+    func testC8oDefaultPingOneSingleValue() {
+        let c8o: C8o = try! Get(.C8O)!
+        let doc  = try! c8o.CallXml(".Ping",  parameters: "var1", "value one").Sync()
+        let pong = (doc?.xpath("/document/pong/var1/text()").count)!
+        XCTAssertEqual(1,pong)
+    }
+    
+    func testC8oDefaultPingTwoSingleValues(){
+        let c8o: C8o = try! Get(.C8O)!
+        let doc  = try! c8o.CallXml(".Ping", parameters: "var1", "value one", "var2","value two").Sync()
+        let pong = (doc?.xpath("/document/pong/var1/text()").count)!
+        let pong2 = (doc?.xpath("/document/pong/var2/text()").count)!
+        XCTAssertEqual(1,pong)
+        XCTAssertEqual(1,pong2)
+    }
+    
+    func testC8oDefaultPingTwoSingleValuesOneMulti(){
+        let c8o: C8o = try! Get(.C8O)!
+        let tab : [String] = ["mvalue one", "mvalue two", "mvalue three"]
+        let doc  = try! c8o.CallXml(".Ping", parameters: "var1", "value one", "var2","value two", "mvar1", tab).Sync()
+        let pong = (doc?.xpath("/document/pong/var1/text()").count)!
+        let pong2 = (doc?.xpath("/document/pong/var2/text()").count)!
+        let pong3 = (doc?.xpath("/document/pong/mvar1[1]/text()").count)!
+        let pong4 = (doc?.xpath("/document/pong/mvar1[2]/text()").count)!
+        let pong5 = (doc?.xpath("/document/pong/mvar1[3]/text()").count)!
+        let pong6 = (doc?.xpath("/document/pong/mvar1").count)!
+        XCTAssertEqual(1,pong)
+        XCTAssertEqual(1,pong2)
+        XCTAssertEqual(1,pong3)
+        XCTAssertEqual(1,pong4)
+        XCTAssertEqual(1,pong5)
+        XCTAssertEqual(3,pong6)
     }
     
     func testCg_C8oUtilis_IsValidUrl() {
@@ -141,7 +174,7 @@ class C8oSDKiOSTests: XCTestCase {
         }
         
         XCTAssert(true,"testCg_C8oUtilis_IsValidUrl succesfull")
-      
+        
     }
     
     func testCg_C8oUtilis_IsValidEndpoint()
@@ -204,31 +237,31 @@ class C8oSDKiOSTests: XCTestCase {
             myC8o.Log.Fatal("Test 01.bis fatal");
             myC8o.Log.Fatal("Test 01 bis fatal");
         }
-
+        
         //let expectation = expectationWithDescription("Alamofire")
         
         /*print("Test 01\n")
         print("==========\n")
         myC8o.CallXml(".sample05.GetServerInfo")?.ThenUI({
-            (response : XMLDocument?, parameters : Dictionary<String, NSObject>?)->() in
-                //return C8oPromise<NSXMLParser>
-                print(C8oTranslator.XmlToString(response!))
-                print("\n==========\n")
-            })
+        (response : XMLDocument?, parameters : Dictionary<String, NSObject>?)->() in
+        //return C8oPromise<NSXMLParser>
+        print(C8oTranslator.XmlToString(response!))
+        print("\n==========\n")
+        })
         myC8o.CallJson(("\n==========\n"))?.ThenUI({
-            (response : NSObject?, parameters : Dictionary<String, NSObject>?)->() in
-                print(String(JSON(response!).rawString()))
-                print("\n==========\n")
-            })
-            
+        (response : NSObject?, parameters : Dictionary<String, NSObject>?)->() in
+        print(String(JSON(response!).rawString()))
+        print("\n==========\n")
+        })
+        
         expectation.fulfill()
         waitForExpectationsWithTimeout(100.0, handler: nil)
         */
         XCTAssert(true,"test01 succesfull")
-        }
+    }
     
     func testCgAlamoRequestJsonSampleExpetation(){
-
+        
         let expectation = expectationWithDescription("Alamofire")
         
         print("1) : Before Alamofire request")
@@ -243,7 +276,7 @@ class C8oSDKiOSTests: XCTestCase {
                 }
                 //print(response)
                 print("3) Request must has been printed")
-            }
+        }
         
         print("4) Waiting for Alamofire request's response with a time out set to 10 seconds")
         waitForExpectationsWithTimeout(10.0, handler: nil)
@@ -264,24 +297,24 @@ class C8oSDKiOSTests: XCTestCase {
             queue: queue,
             responseSerializer: Request.JSONResponseSerializer(options: .AllowFragments),
             completionHandler: { response in
-                    print("Parsing JSON on thread: \(NSThread.currentThread()) is main thread: \(NSThread.isMainThread())")
+                print("Parsing JSON on thread: \(NSThread.currentThread()) is main thread: \(NSThread.isMainThread())")
                 
-                    print(response.result.value)
+                print(response.result.value)
                 
-                    dispatch_async(dispatch_get_main_queue()) {
-                        print("Am I back on the main thread: \(NSThread.isMainThread())")
-                    }
+                dispatch_async(dispatch_get_main_queue()) {
+                    print("Am I back on the main thread: \(NSThread.isMainThread())")
+                }
                 dispatch_semaphore_signal(semaphore);
-            })
-                
+        })
+        
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
         
         XCTAssert(true,"testCgAlamoRequestJsonSample succesfull")
-
+        
     }
     
     
     
 }
-    
+
 
