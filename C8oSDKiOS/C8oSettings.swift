@@ -106,7 +106,7 @@ public class C8oSettings : C8oBase
         return self;
     }
     
-    public func SetLogOnFail(logOnFail : NSObject/*C8oOnFail*/)->C8oSettings
+    public func SetLogOnFail(logOnFail :(NSException, Dictionary<String, NSObject>) throws ->()) ->C8oSettings
     {
         self.logOnFail = logOnFail;
         return self;

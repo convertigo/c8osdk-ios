@@ -64,7 +64,7 @@ public class C8oProgress : NSObject
     
     public func Description()->String
     {
-        return "" // Direction + ": " + current + "/" + total + " (" + (finished ? (continuous ? "live" : "done") : "running") + ")";
+        return ""// Direction + ": " + current + "/" + total + " (" + (finished ? (continuous ? "live" : "done") : "running") + ")";
     }
     
     public var Continuous : Bool

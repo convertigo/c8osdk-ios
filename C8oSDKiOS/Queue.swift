@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 /*
 class QNode<T>
 {
@@ -48,6 +49,12 @@ public class Queue<T>
 /*
 typealias Key = NSObject
 typealias Value = NSObject*/
+internal class C8oJSON : AnyObject {
+    public init(){
+        myJSON = nil
+    }
+    public var myJSON : JSON?
+}
 public class Pair<K , V> {
     
     var key : K

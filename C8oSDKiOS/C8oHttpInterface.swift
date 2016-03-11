@@ -38,19 +38,6 @@ internal class C8oHttpInterface
     internal func HandleRequest(url : String, parameters : Dictionary<String, AnyObject>)->NSData?//(NSURLRequest?, NSHTTPURLResponse?, NSData?, NSError?)?
     {
         var myResponse : NSData?
-        print(parameters)
-        //let URL = NSURL(string: url)
-        
-        //Cookies
-        //let jar = NSHTTPCookieStorage.sharedHTTPCookieStorage()
-        //
-        /*let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(cookieHeaderField, forURL: URL!)
-        jar.setCookies(cookies, forURL: URL, mainDocumentURL: nil)
-        
-        //
-        let mutableUrlRequest = NSMutableURLRequest(URL: URL!)
-        mutableUrlRequest.setValue(String(cookieContainer), forHTTPHeaderField : "Cookie")*/
-        
         let data : NSData? = SetRequestEntity(url, parameters: parameters)
         let cookieHeaderField = ["Set-Cookie": "x-convertigo-sdk=" + C8o.GetSdkVersion()]
         let semaphore = dispatch_semaphore_create(0)
@@ -105,7 +92,6 @@ internal class C8oHttpInterface
             
             for parameter in parameters!
             {
-                print(parameter)
                 if let downcastStrings = parameter.1 as? [String] {
                     for item in downcastStrings {
                         postData += String(parameter.0) + "=" + String(item) + "&";
@@ -117,7 +103,6 @@ internal class C8oHttpInterface
                 
             }
             postData = String(postData.characters.dropLast(1))
-            print(postData)
             
             return postData.dataUsingEncoding(NSUTF8StringEncoding)
             

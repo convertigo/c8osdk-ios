@@ -14,53 +14,7 @@ import Fuzi
 import CouchbaseLite
 
 @objc public class C8o : C8oBase {
-    
-    /** Tests */
-    public func createDB() {
-        
-        print("Hello C8o SDK!");
-        var options = CBLManagerOptions(readOnly: false, fileProtection:NSDataWritingOptions.AtomicWrite )
-        do {
-            let manager = try CBLManager(directory: CBLManager.defaultDirectory(), options: &options)
-            let database = try manager.databaseNamed("testdatabase")
-            database.maxRevTreeDepth = 10
-            let properties = [
-                "test" : "data",
-                "test2": "data"
-            ]
-            let document = database.createDocument()
-            try document.putProperties(properties)
-            print(document)
-        } catch _ {
-            print("manager Creation failed")
-        }
-        
-        print("Manager initialized");
-    }
-    
-    public func makeRequest()  {
-        Alamofire.request(.GET, "https://httpbin.org/get", parameters: ["foo": "bar"])
-            .responseJSON { response in
-                print(response.request)  // original URL request
-                print(response.response) // URL response
-                print(response.data)     // server data
-                print(response.result)   // result of response serialization
-                
-                if let JSon = response.result.value {
-                    print("JSON: \(JSon)")
-                    _ = JSON(JSon)
-                }
-                
-                if let JSon = response.result.value {
-                    print("JSON: \(JSon)")
-                    _ = JSON(JSon)
-                }
-                
-        }
-    }
-    /** Fin de tests */
-     
-     
+         
     /** Regular Expression */
 
     /**
@@ -242,7 +196,7 @@ import CouchbaseLite
      @endcode
      @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
     */
-    public func Call(requestable :String?, var parameters : Dictionary<String, NSObject>? = nil , c8oResponseListener : C8oResponseXmlListener , c8oExceptionListener  : C8oExceptionListener )-> Void
+    public func Call(requestable :String?, var parameters : Dictionary<String, NSObject>? = nil , c8oResponseListener : C8oResponseListener , c8oExceptionListener  : C8oExceptionListener )-> Void
     {
         do
         {
@@ -296,9 +250,12 @@ import CouchbaseLite
             
             try! Call(parameters, c8oResponseListener: c8oResponseListener, c8oExceptionListener: c8oExceptionListener);
         }
-        catch
+        catch let e as Errs
         {
-            //HandleCallException(c8oExceptionListener, parameters, e);
+            HandleCallException(c8oExceptionListener, requestParameters: parameters!, exception: e);
+        }
+        catch {
+            
         }
     }
     
@@ -358,41 +315,46 @@ import CouchbaseLite
             FailUI() methods to handle Errss.
 
     */
-    public func CallJson (requestable : String, parameters : Dictionary<String, NSObject>)-> C8oPromise<JSON>?
+    public func CallJson (requestable : String, parameters : Dictionary<String, NSObject>?)-> C8oPromise<JSON>?
     {
-        /*var promise = C8oPromise<JSON>(self);
+        let promise = C8oPromise<JSON>(c8o: self);
         
-        Call(requestable, parameters, C8oResponseJsonListener((response, requestParameters) =>
-        {
-        if (response == nil && requestParameters.ContainsKey(ENGINE_PARAMETER_PROGRESS))
-        {
-        promise.OnProgress(requestParameters[ENGINE_PARAMETER_PROGRESS] as C8oProgress);
-        }
-        else
-        {
-        promise.OnResponse(response, requestParameters);
-        }
-        }), C8oExceptionListener((exception, requestParameters) =>
-        {
-        promise.OnFailure(exception, requestParameters);
-        }));
-        
-        return promise;*/
-        return nil
+        Call(requestable,
+            parameters: parameters,
+            c8oResponseListener : C8oResponseJsonListener(onJsonResponse:{
+                (params: Pair<JSON?, Dictionary<String, NSObject>?>?)->() in
+                
+                if((params!.key) == nil ){
+                    if((params!.value)!.keys.contains(C8o.ENGINE_PARAMETER_PROGRESS) == true){
+                        
+                        promise.OnProgress(((((params!.value)! as Dictionary<String, NSObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
+                    }
+                }
+                else{
+                    promise.OnResponse((params?.key)! , parameters: (params?.value)!)
+                }
+                
+                })
+            , c8oExceptionListener : C8oExceptionListener(OnException:{
+                (params : Pair<Errs, Dictionary<String, NSObject>>?)->() in
+                
+                promise.OnFailure(((params?.key) as Errs?)!, parameters: (params?.value)!)
+                
+            }))
+        return promise
     }
     
     
-    public func CallJson(requestable : String, parameters : [NSObject]...)->C8oPromise<NSObject>? //C8oPromise<JObject>
-    {
-        //return CallJson(requestable, ToParameters(parameters));
-        return nil
+    public func CallJson(requestable : String, parameters : NSObject...)->C8oPromise<JSON>?{
+        
+        return try! CallJson(requestable, parameters: C8o.ToParameters(parameters));
+        
     }
     
     
-    public func CallJson(requestable : String, parameters : JSON)-> C8oPromise<NSObject>?//C8oPromise<JObject>
-    {
-        //return CallJson(requestable, parameters.ToObject<Dictionary<String, NSObject>>());
-        return nil
+    public func CallJson(requestable : String, parameters : JSON)-> C8oPromise<JSON>?{
+        
+            return CallJson(requestable, parameters: (parameters.object as! Dictionary<String, NSObject>))
     }
     
     
@@ -418,9 +380,9 @@ import CouchbaseLite
                 
             })
             , c8oExceptionListener : C8oExceptionListener(OnException:{
-                (params : Dictionary<NSException, Dictionary<String, NSObject>>?)->() in
+                (params : Pair<Errs, Dictionary<String, NSObject>>?)->() in
                 
-                promise.OnFailure(((params?.keys.first) as NSException?)!, parameters: (params?.values.first)!)
+                promise.OnFailure(((params?.key) as Errs?)!, parameters: (params?.value)!)
                 
             }))
         return promise
@@ -432,6 +394,11 @@ import CouchbaseLite
         
         return try! CallXml(requestable, parameters: C8o.ToParameters(parameters));
     }
+    /*public func CallXml(requestable : String)->C8oPromise<XMLDocument>
+    {
+        
+        return CallXml(requestable, parameters: Dictionary<String, NSObject>());
+    }*/
     
     public func AddCookie(name : String, value : String)->Void
     {
@@ -521,31 +488,29 @@ import CouchbaseLite
         get { return httpInterface!.CookieStore!; }
     }
     
-    private static func ToParameters(parameters : [NSObject])throws ->Dictionary<String, NSObject>
+    private static func ToParameters(parameters : [NSObject]?)throws ->Dictionary<String, NSObject>
     {
-        print(parameters)
-        if (parameters.count % 2 != 0)
+        if (parameters!.count % 2 != 0)
         {
             throw Errs.InvalidArgument //throw System.ArgumentException(C8oExceptionMessage.InvalidParameterValue("parameters", "needs pairs of values"));
         }
         
         var newParameters = Dictionary<String, NSObject>();
         
-        for (var i = 0; i < parameters.count; i += 2)
+        for (var i = 0; i < parameters!.count; i += 2)
         {
-            newParameters[String(parameters[i])] = parameters[i + 1];
+            newParameters[String(parameters![i])] = parameters![i + 1];
         }
-        print(newParameters)
         return newParameters;
     }
     
-    internal func HandleCallException(c8oExceptionListener: C8oExceptionListener?, requestParameters : Dictionary<String, NSObject>, exception : C8oSDKiOS.Errs)
+    internal func HandleCallException(c8oExceptionListener: C8oExceptionListener?, requestParameters : Dictionary<String, NSObject>, exception : Errs)
     {
         c8oLogger!._Warn("Handle a call exception", exceptions: exception);
         
         if (c8oExceptionListener != nil)
         {
-            //c8oExceptionListener.OnException(exception, requestParameters);
+            c8oExceptionListener!.OnException(Pair<Errs, Dictionary<String, NSObject>>(key: exception, value: requestParameters));
         }
     }
 }

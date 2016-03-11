@@ -27,7 +27,6 @@ internal class C8oCallTask
     {
         self.c8o = c8o;
         self.parameters = parameters;
-        print(parameters.keys)
         self.c8oResponseListener = c8oResponseListener;
         self.c8oExceptionListener = c8oExceptionListener;
         self.c8oCallUrl = nil
@@ -190,13 +189,18 @@ internal class C8oCallTask
                 if(localCacheEnabled)
                 {
                     responseString = (response as! XMLDocument).description
+                    
                 }
                
             }
             else if (c8oResponseListener is C8oResponseJsonListener)
             {
                 //responseString = C8oTranslator.StreamToString(responseStream);
-                 C8oTranslator.DataToJson(httpResponse)!;
+                var myc8 = C8oJSON()
+                myc8.myJSON = C8oTranslator.DataToJson(httpResponse)!
+                response = myc8
+
+                
             }
             else
             {
@@ -229,7 +233,6 @@ internal class C8oCallTask
             {
                 return;
             }
-            
             if (c8oResponseListener == nil)
             {
                 return;
@@ -239,21 +242,21 @@ internal class C8oCallTask
             {
                 
                 c8o.c8oLogger!.LogC8oCallXMLResponse(result as! XMLDocument, url: c8oCallUrl!,  parameters : self.parameters);
-                //let onXmlReponseVar  = (Pair<XMLDocument?, Dictionary<String, NSObject>?>?((result as! XMLDocument) ,  parameters as Dictionary<String, NSObject>))
-                //let onXmlReponseVar : (Pair<AnyObject?, Dictionary<String, NSObject>?>?) =
                 (c8oResponseListener as! C8oResponseXmlListener).OnXmlResponse(Pair(key: result!, value: parameters))
             }
-            else if (result is JSON)
-            {
-                c8o.c8oLogger!.LogC8oCallJSONResponse(result as! JSON, url: c8oCallUrl!, parameters: parameters);
-                let onJsonReponseVar : (Dictionary<NSObject, Dictionary<String, NSObject>>?) = [result as! NSObject : parameters]
-                (c8oResponseListener as! C8oResponseJsonListener).OnJsonResponse(onJsonReponseVar);
-            }
-            else if ( result is Errs.Type || result is NSException){
-                c8o.HandleCallException(c8oExceptionListener, requestParameters: parameters, exception: (result as! C8oSDKiOS.Errs))
-            }
             else {
-                c8o.HandleCallException(c8oExceptionListener, requestParameters: parameters, exception: C8oSDKiOS.Errs.C8oException(C8oExceptionMessage.wrongResult(result!)))
+                if (result is C8oJSON) {
+                c8o.c8oLogger!.LogC8oCallJSONResponse((result as!C8oJSON).myJSON! , url: c8oCallUrl!, parameters: parameters);
+                (c8oResponseListener as! C8oResponseJsonListener).OnJsonResponse(Pair(key: (result as!C8oJSON).myJSON!, value: parameters));
+                }
+                else{
+                    if( result is Errs.Type || result is NSException){
+                        c8o.HandleCallException(c8oExceptionListener, requestParameters: self.parameters, exception: (result as! C8oSDKiOS.Errs))
+                    }
+                    else{
+                        c8o.HandleCallException(c8oExceptionListener, requestParameters: parameters, exception: C8oSDKiOS.Errs.C8oException(C8oExceptionMessage.wrongResult(result!)))
+                    }
+                }
             }
             
         }
