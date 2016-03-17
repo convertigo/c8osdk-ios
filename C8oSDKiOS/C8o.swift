@@ -180,7 +180,7 @@ import CouchbaseLite
         {
             self.Copy(c8oSettings!);
         }
-        
+
         self.httpInterface  =  C8oHttpInterface(c8o: self)
         self.c8oLogger = C8oLogger(c8o: self)
         self.c8oLogger!.LogMethodCall("C8o constructor")
@@ -255,15 +255,15 @@ import CouchbaseLite
             HandleCallException(c8oExceptionListener, requestParameters: parameters!, exception: e);
         }
         catch {
-            
+            let e : String
         }
     }
     
     public func Call(var parameters : Dictionary<String, NSObject>?  = nil, c8oResponseListener :  C8oResponseListener? = nil, c8oExceptionListener : C8oExceptionListener? = nil) throws
     {
         // IMPORTANT : all c8o calls have to end here !
-        /*do
-        {*/
+        do
+        {
             c8oLogger!.LogMethodCall("Call", parameters: parameters!);
             
             // Checks parameters validity
@@ -282,11 +282,11 @@ import CouchbaseLite
             // Exceptions have to be handled by the C8oExceptionListener
             let task = C8oCallTask(c8o: self, parameters: parameters!, c8oResponseListener: c8oResponseListener!, c8oExceptionListener: c8oExceptionListener!);
             task.Execute();
-        /*}
+        }
         catch
         {
             throw Errs.InvalidArgument //HandleCallException(c8oExceptionListener, parameters, e);
-        }*/
+        }
     }
     
     /**
@@ -402,7 +402,7 @@ import CouchbaseLite
     
     public func AddCookie(name : String, value : String)->Void
     {
-        //httpInterface.AddCookie(name, value);
+        httpInterface!.AddCookie(name, value: value);
     }
     
     public override var LogC8o : Bool

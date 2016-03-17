@@ -74,12 +74,12 @@ public class C8oSettings : C8oBase
 
     public func AddCookie(name : String, Value : String)-> C8oSettings
     {
-        /*
+        
         if (cookies == nil)
         {
-            cookies = CookieCollection();
+            cookies = Dictionary<String, String>();
         }
-        cookies.Add(Cookie(name, value));*/
+        cookies = [name : Value]
         
         return self;
     }
@@ -106,7 +106,7 @@ public class C8oSettings : C8oBase
         return self;
     }
     
-    public func SetLogOnFail(logOnFail :(NSException, Dictionary<String, NSObject>) throws ->()) ->C8oSettings
+    public func SetLogOnFail(logOnFail :(Errs, Dictionary<String, NSObject>) throws ->()) ->C8oSettings
     {
         self.logOnFail = logOnFail;
         return self;

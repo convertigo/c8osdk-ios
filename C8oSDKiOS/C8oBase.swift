@@ -28,7 +28,7 @@ public class C8oBase : NSObject
     internal var logRemote : Bool?  = true;
     internal var logLevelLocal : C8oLogLevel = C8oLogLevel.NONE;
     internal var logC8o :Bool? = true;
-    internal var logOnFail : ((NSException, Dictionary<String, NSObject>)throws ->())? = nil
+    internal var logOnFail : ((Errs, Dictionary<String, NSObject>)throws ->())? = nil
     
     //*** FullSync ***//
     internal var  defaultDatabaseName : String?;
@@ -171,7 +171,7 @@ public class C8oBase : NSObject
      @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
      @return NSObject.
      */
-    public var LogOnFail : (NSException, Dictionary<String, NSObject>)throws ->()//C8oOnFail
+    public var LogOnFail : (Errs, Dictionary<String, NSObject>)throws ->()//C8oOnFail
         {
         get { return logOnFail!; }
     }

@@ -129,35 +129,45 @@ class C8oSDKiOSTests: XCTestCase {
         XCTAssertEqual(1,pong)
     }
     
-    func testC8oDefaultPingOneSingleValue() {
+    func testC8oDefaultPingWait(){
         let c8o: C8o = try! Get(.C8O)!
-        let doc  = try! c8o.CallXml(".Ping",  parameters: "var1", "value one").Sync()
-        let pong = (doc?.xpath("/document/pong/var1/text()").count)!
+        let promise : C8oPromise<XMLDocument> = c8o.CallXml(".Ping")
+        NSThread.sleepForTimeInterval(1)
+        let doc : XMLDocument = try! promise.Sync()!
+        let pong : Int = (doc.xpath("/document/pong").count)
         XCTAssertEqual(1,pong)
     }
     
+    
     func testC8oUnknownHostCallAndLog() {
         
-        /*var exception : NSException? = nil
         let exceptionLog : NSException? = nil
-        var exceptio : Errs? = nil
+        var exception : Errs? = nil
         let c8o : C8o = try! C8o(endpoint: PREFIX + HOST + "ee:28080" + PROJECT_PATH, c8oSettings: C8oSettings().SetLogOnFail{ logOnFail in
             (exceptionLog, Dictionary<String, NSObject>())
             })
         do {
             try c8o.CallXml("Ping").Sync()
         }
-        catch let ex as NSException {
+        catch let ex as Errs{
             exception = ex
         }
-        catch let ex as Errs{
-            exceptio = ex
-        }
         catch{
+            XCTAssertTrue(false)
         }
-        XCTAssertNotNil(exceptio)*/
+        XCTAssertNotNil(exception)
+        XCTAssertEqual(exception?._code , Errs.InvalidArgument._code)
+    }
+    
+    func testC8oUnknownHostCallWait(){
         
-        
+    }
+    
+    func testC8oDefaultPingOneSingleValue() {
+        let c8o: C8o = try! Get(.C8O)!
+        let doc  = try! c8o.CallXml(".Ping",  parameters: "var1", "value one").Sync()
+        let pong = (doc?.xpath("/document/pong/var1/text()").count)!
+        XCTAssertEqual(1,pong)
     }
     
     func testC8oDefaultPingTwoSingleValues(){
