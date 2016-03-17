@@ -36,21 +36,18 @@ class C8oSDKiOSTests: XCTestCase {
             c8o.LogRemote = false
             c8o.LogLevelLocal = C8oLogLevel.ERROR
             return c8o
-            break
             
         case .C8O_BIS :
             let c8o : C8o = try C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: nil)
             c8o.LogRemote = false
             c8o.LogLevelLocal = C8oLogLevel.ERROR
             return c8o
-            break
             
         case .C8O_FS :
             let c8o : C8o = try C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: C8oSettings().SetDefaultDatabaseName("clientsdktesting"))
             c8o.LogRemote = false
             c8o.LogLevelLocal = C8oLogLevel.ERROR
             return c8o
-            break
             
         case .C8O_FS_PULL :
             let c8o : C8o = try C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: C8oSettings().SetDefaultDatabaseName("qa_fs_pull"))
@@ -59,7 +56,6 @@ class C8oSDKiOSTests: XCTestCase {
             let json = try! c8o.CallJson(".InitFsPull")!.Sync()
             XCTAssertTrue(json!["document"]["ok"].boolValue)
             return c8o
-            break
             
         case .C8O_FS_PUSH :
             let c8o : C8o = try C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: C8oSettings().SetDefaultDatabaseName("qa_fs_push"))
@@ -68,38 +64,32 @@ class C8oSDKiOSTests: XCTestCase {
             let json = try! c8o.CallJson(".InitFsPush")!.Sync()
             XCTAssertTrue(json!["document"]["ok"].boolValue)
             return c8o
-            break
             
         case .C8O_LC :
             let c8o : C8o = try C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: nil)
             c8o.LogRemote = false
             c8o.LogLevelLocal = C8oLogLevel.ERROR
             return c8o
-            break
             
         case .SetGetInSession :
             let c8o : C8o = try Get(.C8O_BIS)!
             let ts : String = String(NSTimeIntervalSince1970 * 1000)
             var doc = try c8o.CallXml(".SetInSession", parameters: "ts", ts).Sync()
-            var newTs : String = (doc?.xpath("/document/pong/ts/text()").first)!.rawXML
+            var newTs = doc?.xpath("/document/pong/ts").first!.stringValue
             XCTAssertEqual(ts, newTs)
             doc = try c8o.CallXml(".GetFromSession").Sync();
-            newTs = (doc?.xpath("/document/session/expression/text()").first)!.rawXML
+            newTs = doc?.xpath("/document/session/expression").first!.stringValue
             XCTAssertEqual(ts, newTs)
             return c8o
-            break
             
         default:
             return nil
-            break
         }
     }
     
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
-        //myC8o = C8o();
-        myC8o = try! C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: C8oSettings().SetDefaultDatabaseName("sample05").SetLogLevelLocal(C8oLogLevel.ERROR))
     }
     
     override func tearDown() {
@@ -132,7 +122,7 @@ class C8oSDKiOSTests: XCTestCase {
     func testC8oDefaultPingWait(){
         let c8o: C8o = try! Get(.C8O)!
         let promise : C8oPromise<XMLDocument> = c8o.CallXml(".Ping")
-        NSThread.sleepForTimeInterval(1)
+        NSThread.sleepForTimeInterval(0.5)
         let doc : XMLDocument = try! promise.Sync()!
         let pong : Int = (doc.xpath("/document/pong").count)
         XCTAssertEqual(1,pong)
@@ -166,17 +156,17 @@ class C8oSDKiOSTests: XCTestCase {
     func testC8oDefaultPingOneSingleValue() {
         let c8o: C8o = try! Get(.C8O)!
         let doc  = try! c8o.CallXml(".Ping",  parameters: "var1", "value one").Sync()
-        let pong = (doc?.xpath("/document/pong/var1/text()").count)!
-        XCTAssertEqual(1,pong)
+        let value = doc?.xpath("/document/pong/var1").first?.stringValue
+        XCTAssertEqual("value one", value)
     }
     
     func testC8oDefaultPingTwoSingleValues(){
         let c8o: C8o = try! Get(.C8O)!
         let doc  = try! c8o.CallXml(".Ping", parameters: "var1", "value one", "var2","value two").Sync()
-        let pong = (doc?.xpath("/document/pong/var1/text()").count)!
-        let pong2 = (doc?.xpath("/document/pong/var2/text()").count)!
-        XCTAssertEqual(1,pong)
-        XCTAssertEqual(1,pong2)
+        var value = doc?.xpath("/document/pong/var1").first?.stringValue
+        XCTAssertEqual("value one", value)
+        value = doc?.xpath("/document/pong/var2").first?.stringValue
+        XCTAssertEqual("value two", value)
     }
     
     func testC8oDefaultPingTwoSingleValuesOneMulti(){
@@ -185,19 +175,19 @@ class C8oSDKiOSTests: XCTestCase {
             parameters: "var1", "value one",
             "var2","value two",
             "mvar1", ["mvalue one", "mvalue two", "mvalue three"]
-            ).Sync()
-        let pong = (doc?.xpath("/document/pong/var1/text()").count)!
-        let pong2 = (doc?.xpath("/document/pong/var2/text()").count)!
-        let pong3 = (doc?.xpath("/document/pong/mvar1[1]/text()").count)!
-        let pong4 = (doc?.xpath("/document/pong/mvar1[2]/text()").count)!
-        let pong5 = (doc?.xpath("/document/pong/mvar1[3]/text()").count)!
-        let pong6 = (doc?.xpath("/document/pong/mvar1").count)!
-        XCTAssertEqual(1,pong)
-        XCTAssertEqual(1,pong2)
-        XCTAssertEqual(1,pong3)
-        XCTAssertEqual(1,pong4)
-        XCTAssertEqual(1,pong5)
-        XCTAssertEqual(3,pong6)
+        ).Sync()
+        var value = doc?.xpath("/document/pong/var1").first?.stringValue
+        XCTAssertEqual("value one", value)
+        value = doc?.xpath("/document/pong/var2").first?.stringValue
+        XCTAssertEqual("value two", value)
+        value = doc?.xpath("/document/pong/mvar1[1]").first?.stringValue
+        XCTAssertEqual("mvalue one", value)
+        value = doc?.xpath("/document/pong/mvar1[2]").first?.stringValue
+        XCTAssertEqual("mvalue two", value)
+        value = doc?.xpath("/document/pong/mvar1[3]").first?.stringValue
+        XCTAssertEqual("mvalue three", value)
+        let count = doc?.xpath("/document/pong/mvar1").count
+        XCTAssertEqual(3,count)
     }
     
     func testC8oDefaultPingTwoSingleValuesTwoMulti(){
@@ -208,23 +198,23 @@ class C8oSDKiOSTests: XCTestCase {
             "var2","value two",
             "mvar1", ["mvalue one", "mvalue two", "mvalue three"],
             "mvar2", ["mvalue2 one"]
-            ).Sync()
-        let pong = (doc?.xpath("/document/pong/var1/text()").count)!
-        let pong2 = (doc?.xpath("/document/pong/var2/text()").count)!
-        let pong3 = (doc?.xpath("/document/pong/mvar1[1]/text()").count)!
-        let pong4 = (doc?.xpath("/document/pong/mvar1[2]/text()").count)!
-        let pong5 = (doc?.xpath("/document/pong/mvar1[3]/text()").count)!
-        let pong6 = (doc?.xpath("/document/pong/mvar1").count)!
-        let pong7 = (doc?.xpath("/document/pong/mvar2[1]").count)!
-        let pong8 = (doc?.xpath("/document/pong/mvar2").count)!
-        XCTAssertEqual(1,pong)
-        XCTAssertEqual(1,pong2)
-        XCTAssertEqual(1,pong3)
-        XCTAssertEqual(1,pong4)
-        XCTAssertEqual(1,pong5)
-        XCTAssertEqual(3,pong6)
-        XCTAssertEqual(1,pong7)
-        XCTAssertEqual(1,pong8)
+        ).Sync()
+        var value = doc?.xpath("/document/pong/var1").first?.stringValue
+        XCTAssertEqual("value one", value)
+        value = doc?.xpath("/document/pong/var2").first?.stringValue
+        XCTAssertEqual("value two", value)
+        value = doc?.xpath("/document/pong/mvar1[1]").first?.stringValue
+        XCTAssertEqual("mvalue one", value)
+        value = doc?.xpath("/document/pong/mvar1[2]").first?.stringValue
+        XCTAssertEqual("mvalue two", value)
+        value = doc?.xpath("/document/pong/mvar1[3]").first?.stringValue
+        XCTAssertEqual("mvalue three", value)
+        var count = doc?.xpath("/document/pong/mvar1").count
+        XCTAssertEqual(3,count)
+        value = doc?.xpath("/document/pong/mvar2[1]").first?.stringValue
+        XCTAssertEqual("mvalue2 one", value)
+        count = doc?.xpath("/document/pong/mvar2").count
+        XCTAssertEqual(1,count)
         
     }
     
@@ -273,10 +263,9 @@ class C8oSDKiOSTests: XCTestCase {
         try! Get(.SetGetInSession)
         let c8o : C8o = try! Get(.C8O)!
         let doc = try! c8o.CallXml(".GetFromSession").Sync()
-        let expression : String? = doc?.xpath("/document/session/expression").first?.rawXML
-        //XCTAssertNil(expression)
+        let expression = doc?.xpath("/document/session/expression").count
+        XCTAssertEqual(0, expression)
     }
-    
 }
 
 

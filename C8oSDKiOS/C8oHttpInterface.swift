@@ -12,7 +12,8 @@ import Alamofire
 internal class C8oHttpInterface
 {
     internal var  c8o : C8o
-    var cookieContainer : [Pair<String, Dictionary<String, String>>]
+    var cookieContainer : C8oCookieStorage
+    var alamofire : Manager
     private var timeout : Int
     
     internal init(c8o : C8o)
@@ -20,12 +21,15 @@ internal class C8oHttpInterface
         self.c8o = c8o
         
         timeout = c8o.Timeout
+        let cfg = NSURLSessionConfiguration.defaultSessionConfiguration()
+        cookieContainer = C8oCookieStorage()
+        cfg.HTTPCookieStorage = cookieContainer
+        alamofire = Alamofire.Manager(configuration: cfg)
         
-        cookieContainer = [Pair<String, Dictionary<String, String>>]()
-        
+        // TODO : add cookies in the cookie container
         if (c8o.Cookies != nil)
         {
-            cookieContainer.append(Pair<String, Dictionary<String, String>>(key: c8o.Endpoint, value: c8o.Cookies!));
+            //cookieContainer.append(Pair<String, Dictionary<String, String>>(key: c8o.Endpoint, value: c8o.Cookies!));
         }
     }
     
@@ -38,18 +42,17 @@ internal class C8oHttpInterface
     {
         var myResponse : NSData?
         let data : NSData? = SetRequestEntity(url, parameters: parameters)
-        let cookieHeaderField = ["Set-Cookie": "x-convertigo-sdk=" + C8o.GetSdkVersion()]
-        //+"&User-Agent=Convertigo Client SDK " + C8o.GetSdkVersion()]
+        let headers = [
+            "x-convertigo-sdk" : C8o.GetSdkVersion(),
+            "User-Agent" : "Convertigo Client SDK " + C8o.GetSdkVersion()
+        ]
         let semaphore = dispatch_semaphore_create(0)
-        let queue = dispatch_queue_create("com.convertigo.co8.queue", DISPATCH_QUEUE_CONCURRENT)
+        let queue = dispatch_queue_create("com.convertigo.c8o.queue", DISPATCH_QUEUE_CONCURRENT)
 
-        let request = Alamofire.upload(.POST, url, headers: cookieHeaderField, data: data!)
+        let request = alamofire.upload(.POST, url, headers: headers, data: data!)
         request.response (
             queue: queue,
             completionHandler :{ request, response, data, error in
-                
-                /*let cookies = NSHTTPCookie.cookiesWithResponseHeaderFields(response!.allHeaderFields as! [String: String], forURL: response!.URL!)
-                Alamofire.Manager.sharedInstance.session.configuration.HTTPCookieStorage?.setCookies(cookies, forURL: response!.URL!, mainDocumentURL: nil)*/
                 myResponse = data
                 dispatch_semaphore_signal(semaphore);
         })

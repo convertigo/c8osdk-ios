@@ -23,6 +23,7 @@ C8oSDKiOS/C8OTranslator.swift -text
 C8oSDKiOS/C8o.swift -text
 C8oSDKiOS/C8oBase.swift -text
 C8oSDKiOS/C8oCallTask.swift -text
+C8oSDKiOS/C8oCookieStorage.swift -text
 C8oSDKiOS/C8oExceptionListener.swift -text
 C8oSDKiOS/C8oExceptionMessage.swift -text
 C8oSDKiOS/C8oFileManager.swift -text
