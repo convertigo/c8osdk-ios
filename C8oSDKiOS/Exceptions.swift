@@ -9,28 +9,23 @@
 import Foundation
 
 
-public class C8oException : NSException
+public class C8oException : NSError
 {
-    required public init?(coder aDecoder: NSCoder, message: String) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    public static let NSC8oErrorDomain : String = "com.convertigo.clientsdk.exception.C8oException"
     
-    required public init?(coder aDecoder: NSCoder, message: String, exception: NSException) {
-        fatalError("init(coder:) has not been implemented")
+    public init( message : String, exception : NSError?){
+        
+       super.init(domain: C8oException.NSC8oErrorDomain, code: exception!.code, userInfo: [NSLocalizedFailureReasonErrorKey: message])
+        
     }
-    
+
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public init (message : String, exception : NSException)
+    private static func FilterMessage(var message : String, exception : NSError)->String
     {
-      super.init(name: "", reason: nil, userInfo: nil)
         
-    }
-    
-    private static func FilterMessage(var message : String, exception : NSException)->String
-    {
         if (exception is C8oException)
         {
             message = String(exception) + " | " + message;
@@ -38,7 +33,7 @@ public class C8oException : NSException
         return message;
     }
     
-    private static func FilterException(exception : NSException)->NSException
+    private static func FilterException(exception : NSError)->NSError
     {
     /*if (exception is C8oException)
     {
@@ -48,11 +43,11 @@ public class C8oException : NSException
     }
 }
 
-public class C8oHttpException : NSException
+public class C8oHttpException : NSError
 {
-    public init(message : String, innerException : NSException)
+    public init(message : String, innerException : NSError)
     {
-        super.init(name: "", reason: nil, userInfo: nil)
+        super.init(domain: "com.convertigo.C8o.Error", code: C8oCode.C8oHttpException.rawValue as Int, userInfo: [NSLocalizedFailureReasonErrorKey: message])
     }
 
     required public init?(coder aDecoder: NSCoder) {
@@ -60,45 +55,48 @@ public class C8oHttpException : NSException
     }
 }
 
-public class C8oRessourceNotFoundException : NSException
+public class C8oRessourceNotFoundException : NSError
 {
-    public init(message : String)  {
-        
-        super.init(name: "", reason: nil, userInfo: nil)    }
-    
-    public init(message : String, innerException : NSException) {
-        
-        super.init(name: "", reason: nil, userInfo: nil)
+    public init(message : String, innerException : NSError)
+    {
+        super.init(domain: "com.convertigo.C8o.Error", code: C8oCode.C8oRessourceNotFoundException.rawValue as Int, userInfo: [NSLocalizedFailureReasonErrorKey: message])
     }
-
+    
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
-public class C8oUnavailableLocalCacheException : NSException
+public class C8oUnavailableLocalCacheException : NSError
 {
     
-    public init(message : String) {
-        
-        super.init(name: "", reason: nil, userInfo: nil)
+    public init(message : String, innerException : NSError)
+    {
+        super.init(domain: "com.convertigo.C8o.Error", code: C8oCode.C8oUnavailableLocalCacheException.rawValue as Int, userInfo: [NSLocalizedFailureReasonErrorKey: message])
     }
-    public init(message : String, innerException : NSException) {
     
-        super.init(name: "", reason: nil, userInfo: nil)
-    }
-
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
+    }}
 
-public enum Errs : ErrorType {
-    case InvalidArgument
+public enum C8oError : ErrorType {
+    
+    case InvalidArgument(String)
     case ArgumentException(String)
     case C8oException(String)
+    case ArgumentNilException(String)
     
     }
 
+public enum C8oCode: Int {
+    case C8oUnavailableLocalCacheException  = -6000
+    case C8oRessourceNotFoundException      = -6001
+    case C8oHttpException                   = -6002
+    case InvalidArgument                    = -6003
+    case ArgumentException                  = -6004
+    case C8oException                       = -6005
     
+}
+
+
          

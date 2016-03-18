@@ -51,10 +51,18 @@ internal class C8oCallTask
             let response =  try HandleRequest();
             HandleResponse(response!);
         }
-        catch
+        catch let e as C8oException
         {
-            //c8oExceptionListener.OnException(e, null);
+            c8oExceptionListener.OnException(Pair<C8oException, Dictionary<String, NSObject>?>(key: e, value: nil));
         }
+        catch let e as AnyObject{
+            let a = e
+        }
+        catch{
+            var a = "salut"
+            a = a + "eee"
+        }
+        
     }
     
     
@@ -91,7 +99,7 @@ internal class C8oCallTask
             }
             else
             {
-                throw C8oSDKiOS.Errs.C8oException("Wrong listener")
+                throw C8oSDKiOS.C8oError.C8oException("Wrong listener")
             }
             
             /** Local cache */
@@ -145,18 +153,27 @@ internal class C8oCallTask
             // Build the c8o call URL
             c8oCallUrl = c8o.Endpoint + "/." + responseType;
             
-            let httpResponse : NSData
+            let httpResponse : NSData?
+            var httpResponseDataError : (data : NSData?, error : NSError?)
             
             do
             {
-                httpResponse = (c8o.httpInterface?.HandleRequest(c8oCallUrl!, parameters: parameters)!)!
+                httpResponseDataError = (c8o.httpInterface?.HandleRequest(c8oCallUrl!, parameters: parameters))!
+                if(httpResponseDataError.error != nil){
+                    httpResponse = httpResponseDataError.data
+                    return C8oException(message: C8oExceptionMessage.handleC8oCallRequest(), exception: httpResponseDataError.error! );
+                    
+                }
+                else{
+                    httpResponse = httpResponseDataError.data
+                }
                 
             }
-            catch //(Exception e)
+            catch let e as NSError
             {
-               /* if (localCacheEnabled)
+               if (localCacheEnabled)
                 {
-                    do
+                    /*do
                     {
                         var localCacheResponse : C8oLocalCacheResponse = c8o.c8oFullSync.GetResponseFromLocalCache(c8oCallRequestIdentifier);
                         if (!localCacheResponse.Expired)
@@ -174,9 +191,9 @@ internal class C8oCallTask
                     catch //(C8oUnavailableLocalCacheException)
                     {
                         // no entry
-                    }
+                    }*/
                 }
-                return C8oException(C8oExceptionMessage.handleC8oCallRequest(), e);*/
+                return C8oException(message: C8oExceptionMessage.handleC8oCallRequest(), exception: e );
             }
             
             
@@ -185,7 +202,7 @@ internal class C8oCallTask
             if (c8oResponseListener is C8oResponseXmlListener)
             {
                 
-                response = C8oTranslator.DataToXml(httpResponse)!
+                response = C8oTranslator.DataToXml(httpResponse!)!
                 if(localCacheEnabled)
                 {
                     responseString = (response as! XMLDocument).description
@@ -197,7 +214,7 @@ internal class C8oCallTask
             {
                 //responseString = C8oTranslator.StreamToString(responseStream);
                 var myc8 = C8oJSON()
-                myc8.myJSON = C8oTranslator.DataToJson(httpResponse)!
+                myc8.myJSON = C8oTranslator.DataToJson(httpResponse!)!
                 response = myc8
 
                 
@@ -250,11 +267,11 @@ internal class C8oCallTask
                 (c8oResponseListener as! C8oResponseJsonListener).OnJsonResponse(Pair(key: (result as!C8oJSON).myJSON!, value: parameters));
                 }
                 else{
-                    if( result is Errs.Type || result is NSException){
-                        c8o.HandleCallException(c8oExceptionListener, requestParameters: self.parameters, exception: (result as! C8oSDKiOS.Errs))
+                    if result is C8oException{
+                        c8o.HandleCallException(c8oExceptionListener, requestParameters: self.parameters, exception: result as! C8oException)
                     }
                     else{
-                        c8o.HandleCallException(c8oExceptionListener, requestParameters: parameters, exception: C8oSDKiOS.Errs.C8oException(C8oExceptionMessage.wrongResult(result!)))
+                        /*c8o.HandleCallException(c8oExceptionListener, requestParameters: parameters, exception: C8oSDKiOS.C8oError.C8oException(C8oExceptionMessage.wrongResult(result!)))*/
                     }
                 }
             }

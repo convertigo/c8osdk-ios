@@ -77,7 +77,7 @@ class C8oSDKiOSTests: XCTestCase {
             var doc = try c8o.CallXml(".SetInSession", parameters: "ts", ts).Sync()
             var newTs = doc?.xpath("/document/pong/ts").first!.stringValue
             XCTAssertEqual(ts, newTs)
-            doc = try c8o.CallXml(".GetFromSession").Sync();
+            doc = try c8o.CallXml(".GetFromSession").Sync()
             newTs = doc?.xpath("/document/session/expression").first!.stringValue
             XCTAssertEqual(ts, newTs)
             return c8o
@@ -101,8 +101,8 @@ class C8oSDKiOSTests: XCTestCase {
         do {
             try _ = C8o(endpoint: PREFIX + HOST + PORT, c8oSettings: nil)
         }
-        catch {
-            XCTAssert(true)
+        catch let e as ErrorType{
+            XCTAssertEqual(e._code, C8oError.ArgumentException("")._code)
         }
         
     }
@@ -114,9 +114,11 @@ class C8oSDKiOSTests: XCTestCase {
     func testC8oDefaultPing(){
         let c8o: C8o = try! Get(.C8O)!
         let doc  = try! c8o.CallXml(".Ping").Sync()
-        var pong : Int
-        pong = (doc?.xpath("/document/pong").count)!
+        var pong : NSObject = (doc?.xpath("/document/pong").count)!
         XCTAssertEqual(1,pong)
+        pong = (doc?.xpath("/document/pong").first?.tag)!
+        XCTAssertEqual(pong, "pong")
+
     }
     
     func testC8oDefaultPingWait(){
@@ -124,32 +126,59 @@ class C8oSDKiOSTests: XCTestCase {
         let promise : C8oPromise<XMLDocument> = c8o.CallXml(".Ping")
         NSThread.sleepForTimeInterval(0.5)
         let doc : XMLDocument = try! promise.Sync()!
-        let pong : Int = (doc.xpath("/document/pong").count)
+        var pong : NSObject = (doc.xpath("/document/pong").count)
         XCTAssertEqual(1,pong)
+        pong = (doc.xpath("/document/pong").first?.tag)!
+        XCTAssertEqual(pong, "pong")
     }
     
     
     func testC8oUnknownHostCallAndLog() {
-        
-        let exceptionLog : NSException? = nil
-        var exception : Errs? = nil
-        let c8o : C8o = try! C8o(endpoint: PREFIX + HOST + "ee:28080" + PROJECT_PATH, c8oSettings: C8oSettings().SetLogOnFail{ logOnFail in
-            (exceptionLog, Dictionary<String, NSObject>())
-            })
+        var exceptionLog : C8oException? = nil
+        var exception : C8oException? = nil
         do {
-            try c8o.CallXml("Ping").Sync()
+            let c8o : C8o = try C8o(endpoint: PREFIX + HOST + "ee:28080" + PROJECT_PATH,
+                                    c8oSettings: C8oSettings().SetLogOnFail{
+                                        clos in
+                                            exceptionLog = clos.exception
+                                        
+                                            
+                                    })
+            let C8oP : C8oPromise<XMLDocument> = c8o.CallXml(".Ping")
+            NSThread.sleepForTimeInterval(3)
+            try C8oP.Sync()
         }
-        catch let ex as Errs{
+        catch let ex as C8oException{
             exception = ex
         }
         catch{
             XCTAssertTrue(false)
         }
         XCTAssertNotNil(exception)
-        XCTAssertEqual(exception?._code , Errs.InvalidArgument._code)
+        XCTAssertTrue(exception! is C8oException)
+        XCTAssertNotNil(exceptionLog)
+        XCTAssertTrue(exceptionLog! is C8oException)
+        //TODO finish tests...
+
     }
     
     func testC8oUnknownHostCallWait(){
+        var exception : C8oException? = nil
+        do {
+            let c8o : C8o = try C8o(endpoint : PREFIX + HOST + "ee:28080" + PROJECT_PATH, c8oSettings: nil)
+            let promise : C8oPromise = c8o.CallXml(".Ping")
+            NSThread.sleepForTimeInterval(0.5)
+            try promise.Sync()
+        }
+        catch let ex as C8oException{
+            exception = ex
+        }
+        catch {
+            
+        }
+        XCTAssertNotNil(exception)
+        XCTAssertTrue(exception! is C8oException)
+        //TODO finish tests...
         
     }
     
@@ -266,6 +295,29 @@ class C8oSDKiOSTests: XCTestCase {
         let expression = doc?.xpath("/document/session/expression").count
         XCTAssertEqual(0, expression)
     }
+    
+    func CheckLogRemoteHelper(c8o : C8o, lvl : String, msg : String) throws ->() {
+        /*let doc : XMLDocument = try! c8o.CallXml(".GetLogs").Sync()!
+        print(doc)
+        print((doc.xpath("/document/line/text()").first?.rawXML))
+        let line : JSON = JSON((doc.xpath("/document/line/text()")))
+        XCTAssertEqual(lvl, line[2].stringValue)
+        var newMsg = line[4].stringValue
+        newMsg  = newMsg[newMsg.rangeOfString("logID=")!]
+        XCTAssertEqual(msg,newMsg)*/
+    }
+    
+    func testCheckLogRemote() {
+        /*let c8o : C8o = try! C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH , c8oSettings: nil)
+        c8o.LogC8o = false
+        let id : String = "logID=" + String(NSTimeIntervalSince1970 * 1000)
+        try! c8o.CallXml(".GetLogs", parameters: "init", id).Sync()
+        c8o.Log.Error(id)
+        try! CheckLogRemoteHelper(c8o, lvl: "ERROR", msg: id)
+        c8o.Log.Error(id, exceptions: C8oException(message: "for test", exception: nil))
+        c8o.Log.Error(id)*/
+    }
+    
 }
 
 

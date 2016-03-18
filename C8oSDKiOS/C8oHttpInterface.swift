@@ -38,9 +38,9 @@ internal class C8oHttpInterface
         
     }
     
-    internal func HandleRequest(url : String, parameters : Dictionary<String, AnyObject>)->NSData?
+    internal func HandleRequest(url : String, parameters : Dictionary<String, AnyObject>)->(NSData?, NSError?)
     {
-        var myResponse : NSData?
+        var myResponse : (NSData?, NSError?)
         let data : NSData? = SetRequestEntity(url, parameters: parameters)
         let headers = [
             "x-convertigo-sdk" : C8o.GetSdkVersion(),
@@ -50,11 +50,11 @@ internal class C8oHttpInterface
         let queue = dispatch_queue_create("com.convertigo.c8o.queue", DISPATCH_QUEUE_CONCURRENT)
 
         let request = alamofire.upload(.POST, url, headers: headers, data: data!)
-        request.response (
+        request.response(
             queue: queue,
             completionHandler :{ request, response, data, error in
-                myResponse = data
-                dispatch_semaphore_signal(semaphore);
+                myResponse = (data , error)
+                dispatch_semaphore_signal(semaphore)
         })
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
         return myResponse
@@ -62,10 +62,10 @@ internal class C8oHttpInterface
         
     }
     
-    internal func HandleC8oCallRequest(url : String, parameters : Dictionary<String, NSObject>)->NSData
+    internal func HandleC8oCallRequest(url : String, parameters : Dictionary<String, NSObject>)->(NSData?, NSError?)
     {
         c8o.c8oLogger!.LogC8oCall(url, parameters: parameters);
-        return HandleRequest(url, parameters: parameters)!;
+        return HandleRequest(url, parameters: parameters);
     }
     
     /// <summary>

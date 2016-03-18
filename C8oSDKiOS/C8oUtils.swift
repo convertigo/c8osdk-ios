@@ -158,12 +158,11 @@ internal class C8oUtils
     }
     
 
-    internal static func GetUnixEpochTime(date : NSDate)->Int?
+    internal static func GetUnixEpochTime(date : NSDate)->Double?
     {
-        /*
-        TimeSpan timeSpan = date.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, 0));
-        return timeSpan.TotalMilliseconds as Int;*/
-        return nil;
+        
+        let timeSpan = date.timeIntervalSince1970
+        return timeSpan * 1000
     }
     
     //public static T GetParameterAndCheckType<T>(IDictionary<string, object> parameters, String name, T defaultValue = default(T))
