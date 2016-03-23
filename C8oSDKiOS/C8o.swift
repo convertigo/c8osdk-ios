@@ -420,15 +420,14 @@ import CouchbaseLite
         set(value) { logLevelLocal = value }
     }
 
-    /*
-    public void Log(C8oLogLevel c8oLogLevel, string message)
+    
+    /*public func Log(C8oLogLevel c8oLogLevel, string message)
     {
     c8oLogger.Log(c8oLogLevel, message)
-    }
-    */
+    }*/
     
-    public var Log : C8oLogger
-        {
+    
+    public var Log : C8oLogger{
         get { return c8oLogger! }
     }
     

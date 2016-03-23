@@ -32,14 +32,12 @@ class C8oSDKiOSTests: XCTestCase {
     {
         switch (enu){
         case .C8O :
-            let c8o : C8o = try C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: nil)
-            c8o.LogRemote = false
+            let c8o : C8o = try C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: C8oSettings().SetLogRemote(false))
             c8o.LogLevelLocal = C8oLogLevel.ERROR
             return c8o
             
         case .C8O_BIS :
-            let c8o : C8o = try C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: nil)
-            c8o.LogRemote = false
+            let c8o : C8o = try C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: C8oSettings().SetLogRemote(false))
             c8o.LogLevelLocal = C8oLogLevel.ERROR
             return c8o
             
@@ -77,8 +75,8 @@ class C8oSDKiOSTests: XCTestCase {
             var doc = try c8o.CallXml(".SetInSession", parameters: "ts", ts).Sync()
             var newTs = doc?.xpath("/document/pong/ts").first!.stringValue
             XCTAssertEqual(ts, newTs)
-            doc = try c8o.CallXml(".GetFromSession").Sync()
-            newTs = doc?.xpath("/document/session/expression").first!.stringValue
+            var doc2 = try c8o.CallXml(".GetFromSession").Sync()
+            newTs = doc2?.xpath("/document/session/expression").first?.stringValue
             XCTAssertEqual(ts, newTs)
             return c8o
             
@@ -267,11 +265,10 @@ class C8oSDKiOSTests: XCTestCase {
         let count = mvar1.count
         XCTAssertEqual(3,count)
         let complex = json!["complex"]
-        let aa : AnyObject? = complex["isNull"].string
+        let isnil : AnyObject? = complex["isNull"].string
         let exist = complex["isNull"].isExists()
-        XCTAssertNil(aa)
+        XCTAssertNil(isnil)
         XCTAssertTrue(exist)
-        //XCTAssertEqual(NSNull(), value)
         value = complex["isInt3615"].numberValue
         XCTAssertEqual(3615, value)
         value = complex["isStringWhere"].stringValue
@@ -297,25 +294,114 @@ class C8oSDKiOSTests: XCTestCase {
     }
     
     func CheckLogRemoteHelper(c8o : C8o, lvl : String, msg : String) throws ->() {
-        /*let doc : XMLDocument = try! c8o.CallXml(".GetLogs").Sync()!
-        print(doc)
-        print((doc.xpath("/document/line/text()").first?.rawXML))
-        let line : JSON = JSON((doc.xpath("/document/line/text()")))
-        XCTAssertEqual(lvl, line[2].stringValue)
-        var newMsg = line[4].stringValue
-        newMsg  = newMsg[newMsg.rangeOfString("logID=")!]
-        XCTAssertEqual(msg,newMsg)*/
+        let doc : XMLDocument = try! c8o.CallXml(".GetLogs").Sync()!
+        let jsonString : String = (doc.xpath("/document/line").first?.stringValue)!
+        if let dataFromString = jsonString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
+            let line = JSON(data: dataFromString)
+            XCTAssertEqual(lvl, line[2].string)
+            var newMsg = line[4].stringValue
+            newMsg  = newMsg.substringWithRange(Range<String.Index>(start: newMsg.rangeOfString("logID=")!.startIndex, end: newMsg.endIndex))
+            print(newMsg)
+            XCTAssertEqual(msg,newMsg)
+        }
+
+        
     }
     
     func testCheckLogRemote() {
-        /*let c8o : C8o = try! C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH , c8oSettings: nil)
-        c8o.LogC8o = false
+        let c8o : C8o = try! C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH , c8oSettings: C8oSettings().SetLogC8o(false))
         let id : String = "logID=" + String(NSTimeIntervalSince1970 * 1000)
         try! c8o.CallXml(".GetLogs", parameters: "init", id).Sync()
         c8o.Log.Error(id)
         try! CheckLogRemoteHelper(c8o, lvl: "ERROR", msg: id)
-        c8o.Log.Error(id, exceptions: C8oException(message: "for test", exception: nil))
-        c8o.Log.Error(id)*/
+        c8o.Log.Error(id, exceptions: C8oException(message: "for test"))
+        try! CheckLogRemoteHelper(c8o, lvl: "ERROR", msg: (id + "\nOptional(Error Domain=com.convertigo.clientsdk.exception.C8oException Code=1 \"for test\" UserInfo={NSLocalizedFailureReason=for test})"))
+        c8o.Log.Warn(id)
+        try! CheckLogRemoteHelper(c8o, lvl: "WARN", msg: id)
+        c8o.Log.Info(id)
+        try! CheckLogRemoteHelper(c8o, lvl: "INFO", msg: id)
+        c8o.Log.Debug(id)
+        try! CheckLogRemoteHelper(c8o, lvl: "DEBUG", msg: id)
+        c8o.Log.Trace(id)
+        try! CheckLogRemoteHelper(c8o, lvl: "TRACE", msg: id)
+        c8o.Log.Fatal(id)
+        try! CheckLogRemoteHelper(c8o, lvl: "FATAL", msg: id)
+        c8o.LogRemote = false
+        c8o.Log.Info(id)
+        NSThread.sleepForTimeInterval(0.05)
+        let doc = try! c8o.CallXml(".GetLogs").Sync()
+        let value = doc?.xpath("/document/line").first?.stringValue
+        XCTAssertNil(value);
+        
+    }
+    
+    func testC8oDefaultPromiseXmlOne() {
+        let c8o : C8o = try! Get(.C8O)!
+        var xdoc : [XMLDocument] = [XMLDocument]()
+        var xthread : [NSThread] = [NSThread]()
+        var xparam : [Dictionary<String, NSObject>] = [Dictionary<String, NSObject>]()
+        
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+            c8o.CallXml(".Ping", parameters: "var1", "step 1").Then { (doc, param) -> (C8oPromise<XMLDocument>?) in
+                xdoc.append(doc)
+                xthread.append(NSThread.currentThread())
+                xparam.append(param)
+                condition.lock()
+                    condition.signal()
+                condition.unlock()
+                return nil
+        }
+        condition.wait()
+        condition.unlock()
+        let value = xdoc[0].xpath("/document/pong/var1").first?.stringValue
+        XCTAssertEqual("step 1", value)
+        XCTAssertNotEqual(NSThread.currentThread(), xthread[0])
+        XCTAssertEqual("step 1", xparam[0]["var1"])
+    }
+    
+    func testC8oDefaultPromiseJsonThree(){
+        /*let c8o : C8o = try! Get(.C8O)!
+        var xjson : [JSON] = [JSON]()
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        c8o.CallJson(".Ping", parameters: "var1", "step 1")!
+            .Then{ (json, param) -> (C8oPromise<JSON>?) in
+                xjson.append(json)
+                return c8o.CallJson(".Ping", parameters: "var1", "step 2")!
+            }!.Then{(json, param) -> (C8oPromise<JSON>?) in
+                xjson.append(json)
+                return c8o.CallJson(".Ping", parameters: "var1", "step 3")!
+            }!.Then{(json, param) -> (C8oPromise<JSON>?) in
+                xjson.append(json)
+                condition.lock()
+                    condition.signal()
+                condition.unlock()
+                return nil
+            }
+        
+        //condition.waitUntilDate(NSDate(timeIntervalSinceNow: 5.0))
+        condition.wait()
+        condition.unlock()
+        var value = xjson[0]["document"]["pong"]["var1"].stringValue
+        XCTAssertEqual("step 1", value)
+        value = xjson[1]["document"]["pong"]["var1"].stringValue
+        XCTAssertEqual("step 2", value)
+        value = xjson[2]["document"]["pong"]["var1"].stringValue
+        XCTAssertEqual("step 3", value)*/
+
+
+    }
+    
+    func testC8oDefaultPromiseUI(){
+       /* let c8o : C8o = try! Get(.C8O)!
+         var xjson : [JSON] = [JSON]()
+        var xthread : [NSThread] = [NSThread]()
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        //c8o.CallJson(<#T##requestable: String##String#>, parameters: <#T##Dictionary<String, NSObject>?#>)
+        condition.unlock()*/
+        
     }
     
 }

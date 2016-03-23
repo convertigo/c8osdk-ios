@@ -125,6 +125,7 @@ public class C8oLogger
             }
             
             let time : String = String(NSDate().timeIntervalSinceDate(startTimeRemoteLog!))
+            //let stringLevel : String = remoteLogLevel[logLevel]
             
             if (isLogRemote)
             {
@@ -220,9 +221,6 @@ public class C8oLogger
         condition.lock()
         
         // If there is no another thread already logging AND there is at least one log
-        let a : Bool = remoteLogs!.Count() > 0
-        let b : Bool = !alreadyRemoteLogging![0]
-        
         canLog = !alreadyRemoteLogging![0] && remoteLogs!.Count() > 0;
         if (canLog)
         {
@@ -297,12 +295,13 @@ public class C8oLogger
                     self.alreadyRemoteLogging![0] = false;
                     condition.unlock()
                     self.LogRemote();
+                    
                 }
             };
                 
-                //dispatch_async(dispatch_get_main_queue()){
-                    
-                //};
+                /*dispatch_async(dispatch_get_main_queue()){
+                   
+                };*/
         }
     }
     /** Others log */
@@ -384,7 +383,7 @@ public class C8oLogLevel
     public static var DEBUG : C8oLogLevel = C8oLogLevel(name: "debug", priority: 3);
     public static var INFO : C8oLogLevel = C8oLogLevel(name: "info", priority: 4);
     public static var WARN : C8oLogLevel = C8oLogLevel(name: "warn", priority: 5);
-    public static var ERROR : C8oLogLevel = C8oLogLevel(name: "C8oException", priority: 6);
+    public static var ERROR : C8oLogLevel = C8oLogLevel(name: "error", priority: 6);
     public static var FATAL : C8oLogLevel = C8oLogLevel(name: "fatal", priority: 7);
     
     internal static var C8O_LOG_LEVELS : [C8oLogLevel] = [ NULL, NONE, TRACE, DEBUG, INFO, WARN, ERROR, FATAL ];

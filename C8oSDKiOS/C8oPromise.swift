@@ -146,9 +146,10 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
                     }
                  
             }
-            if(!syncMutex[0]){
-                condition.wait()
-            }
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        
         condition.unlock()
         if(lastFailure != nil){
             throw lastFailure!
@@ -194,7 +195,7 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
                         {
                             lastPromise = lastPromise!.nextPromise
                         }
-                        lastPromise!.nextPromise = nextPromise
+                        lastPromise?.nextPromise = nextPromise
                     }
                     nextPromise = promise![0]
                 }

@@ -18,6 +18,12 @@ public class C8oException : NSError
        super.init(domain: C8oException.NSC8oErrorDomain, code: exception!.code, userInfo: [NSLocalizedFailureReasonErrorKey: message])
         
     }
+    
+    public init( message : String){
+        
+        super.init(domain: C8oException.NSC8oErrorDomain, code: 1, userInfo: [NSLocalizedFailureReasonErrorKey: message])
+        
+    }
 
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
