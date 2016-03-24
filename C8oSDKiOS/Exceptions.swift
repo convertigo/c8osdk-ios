@@ -12,16 +12,17 @@ import Foundation
 public class C8oException : NSError
 {
     public static let NSC8oErrorDomain : String = "com.convertigo.clientsdk.exception.C8oException"
+    public var message : String?
     
     public init( message : String, exception : NSError?){
-        
-       super.init(domain: C8oException.NSC8oErrorDomain, code: exception!.code, userInfo: [NSLocalizedFailureReasonErrorKey: message])
+        self.message = message
+        super.init(domain: C8oException.NSC8oErrorDomain, code: exception!.code, userInfo: [NSLocalizedFailureReasonErrorKey: message])
         
     }
     
     public init( message : String){
-        
-        super.init(domain: C8oException.NSC8oErrorDomain, code: 1, userInfo: [NSLocalizedFailureReasonErrorKey: message])
+        self.message = message
+        super.init(domain: C8oException.NSC8oErrorDomain, code: 1, userInfo: [NSLocalizedFailureReasonErrorKey : message])
         
     }
 

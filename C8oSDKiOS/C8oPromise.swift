@@ -27,12 +27,10 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
     internal init(c8o : C8o)
     {
         self.c8o = c8o
-        //super.init()
-        
     }
     
     
-    public func Then(c8oOnResponse : (response : T, parameters : Dictionary<String, NSObject>)->(C8oPromise<T>?), ui : Bool)-> C8oPromise<T>?
+    public func Then(c8oOnResponse : (response : T, parameters : Dictionary<String, NSObject>)throws->(C8oPromise<T>?), ui : Bool)-> C8oPromise<T>?
     {
         if(nextPromise != nil){
             return nextPromise!.Then(c8oOnResponse, ui: ui)
@@ -51,11 +49,11 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
         }
     }
     
-    public func Then(c8oOnResponse : (response : T, parameters : Dictionary<String, NSObject>)->(C8oPromise<T>?))-> C8oPromise<T>?{
+    public func Then(c8oOnResponse : (response : T, parameters : Dictionary<String, NSObject>)throws->(C8oPromise<T>?))-> C8oPromise<T>?{
         return Then(c8oOnResponse, ui: false)
     }
     
-    public func ThenUI(c8oOnResponse : (response : T, parameters : Dictionary<String, NSObject>)->(C8oPromise<T>?))-> C8oPromise<T>?{
+    public func ThenUI(c8oOnResponse : (response : T, parameters : Dictionary<String, NSObject>)throws->(C8oPromise<T>?))-> C8oPromise<T>?{
         return Then(c8oOnResponse, ui: true)
     }
     
@@ -76,7 +74,7 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
     {
         return Progress(c8oOnProgress, ui: false)
     }
-
+    
     
     public func ProgressUI(c8oOnProgress : (C8oProgress)throws ->())->C8oPromiseFailSync<T>
     {
@@ -110,42 +108,42 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
     }
     
     
-    public func Sync() throws -> T?
+    public override func Sync() throws -> T?
     {
         let thread = NSThread.currentThread()
         var syncMutex : [Bool] = [Bool]()
         syncMutex.append(false)
         let condition : NSCondition = NSCondition()
         condition.lock()
-            self.Then { response , parameters in
+        self.Then { response , parameters in
+            if(thread == NSThread.currentThread()){
+                syncMutex[0] = true
+                self.lastResponse = response
+                
+            }
+            else{
+                condition.lock()
+                syncMutex[0] = true
+                self.lastResponse = response
+                condition.signal()
+                condition.unlock()
+            }
+            return nil as C8oPromise<T>?
+            }?.Fail { exception , parameters in
                 if(thread == NSThread.currentThread()){
                     syncMutex[0] = true
-                    self.lastResponse = response
+                    self.lastFailure = exception
                     
                 }
                 else{
                     condition.lock()
                     syncMutex[0] = true
-                    self.lastResponse = response
+                    self.lastFailure = exception
                     condition.signal()
                     condition.unlock()
                 }
-                return nil as C8oPromise<T>?
-                }?.Fail { exception , parameters in
-                    if(thread == NSThread.currentThread()){
-                        syncMutex[0] = true
-                        self.lastFailure = exception
-
-                    }
-                    else{
-                        condition.lock()
-                        syncMutex[0] = true
-                        self.lastFailure = exception
-                        condition.signal()
-                        condition.unlock()
-                    }
-                 
-            }
+                
+        }
         if(!syncMutex[0]){
             condition.wait()
         }
@@ -165,20 +163,25 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
                     var failure : C8oError? = nil
                     let condition = NSCondition()
                     condition.lock()
-                    c8o.RunUI {block in
+                    let block = dispatch_block_create(DISPATCH_BLOCK_INHERIT_QOS_CLASS) {
+                        
                         condition.lock()
-                            do{
-                                promise!.append(try! self.c8oResponse!.key(self.lastResponse!, self.lastParameters!)!)
-                            }
-                            catch let e as C8oError{
-                                failure = e
-                            }
-                            catch let e as NSException{
-                                print("exception....")
-                            }
-                            condition.signal()
+                        do{
+                            promise?.append(try self.c8oResponse?.key(self.lastResponse!, self.lastParameters!))
+                        }
+                        catch let e as C8oError{
+                            failure = e
+                        }
+                        catch let e as NSException{
+                            print("exception....")
+                        }
+                        catch{
+                            let e = "hhhh"
+                        }
+                        condition.signal()
                         condition.unlock()
                     }
+                    c8o.RunUI(block)
                     condition.wait()
                     if(failure != nil){
                         throw failure!
@@ -186,28 +189,35 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
                     condition.unlock()
                 }
                 else{
-                    promise!.append(try! c8oResponse!.key(lastResponse!, lastParameters!))
-                }
-                if(promise![0] != nil){
-                    if(nextPromise != nil){
-                        var lastPromise = promise![0]
-                        while(lastPromise != nil)
-                        {
-                            lastPromise = lastPromise!.nextPromise
-                        }
-                        lastPromise?.nextPromise = nextPromise
+                    do{
+                       promise?.append(try c8oResponse?.key(self.lastResponse!, self.lastParameters!))
                     }
-                    nextPromise = promise![0]
+                    
                 }
-                else if (nextPromise != nil){
-                    nextPromise?.OnResponse(lastResponse!, parameters: lastParameters!)
+                if(promise?.count > 0)
+                {
+                    if(promise?[0] != nil){
+                        if(nextPromise != nil){
+                            var lastPromise = promise![0]
+                            while(lastPromise?.nextPromise != nil)
+                            {
+                                lastPromise = lastPromise!.nextPromise
+                            }
+                            lastPromise?.nextPromise = nextPromise
+                        }
+                        nextPromise = promise![0]
+                    }
+                    else if (nextPromise != nil){
+                        nextPromise?.OnResponse(lastResponse!, parameters: lastParameters!)
+                    }
                 }
+                
             }
             else if (nextPromise != nil){
                 nextPromise?.OnResponse(lastResponse!, parameters: lastParameters!)
             }
             else{
-                 // Response received and no handler.
+                // Response received and no handler.
             }
             
         }

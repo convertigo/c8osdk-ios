@@ -432,9 +432,17 @@ import CouchbaseLite
     }
     
 
-    public func RunUI (block: dispatch_block_t?) {
+    public func RunUI (block: dispatch_block_t) {
+        if(NSThread.isMainThread())
+        {
+            block()
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue(), {
+                 block()
+            })
+        }
         
-        dispatch_async(dispatch_get_main_queue(), block!)
         
     }
     public func toString()->String
