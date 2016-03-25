@@ -612,12 +612,11 @@ class C8oSDKiOSTests: XCTestCase {
     
     func testC8oDefaultPromiseNestedFail(){
         
-        /*let c8o : C8o = try! self.Get(.C8O)!
-        var xjson : [JSON] = [JSON]()
+        let c8o : C8o = try! self.Get(.C8O)!
+        var xjson : [JSON?] = [JSON?](count: 6, repeatedValue: nil)
         var xfail : [C8oException?] = [C8oException?](count: 2, repeatedValue: nil)
-        var ed : C8oException
         do{
-            xjson[5] = try! c8o.CallJson(".Ping", parameters: "var1", "step 1")?.Then({ (json, param) -> (C8oPromise<JSON>?) in
+            xjson[5] = try c8o.CallJson(".Ping", parameters: "var1", "step 1")?.Then({ (json, param) -> (C8oPromise<JSON>?) in
                 xjson[0] = json
                 return c8o.CallJson(".Ping", parameters: "var1", "step 2")?.Then({ (json2, param2) -> (C8oPromise<JSON>?) in
                     xjson[1] = json2
@@ -634,27 +633,93 @@ class C8oSDKiOSTests: XCTestCase {
                 })
             })?.Fail({ (C8oException, param) -> () in
                 xfail[0] = C8oException
-            }).Sync()!!
+            }).Sync()
         }
         catch let e as C8oException{
             xfail[1] = e
-            var value = xjson[0]["document"]["pong"]["var1"].stringValue
+        }
+        catch{
+            XCTFail()
+        }
+            var value = xjson[0]!["document"]["pong"]["var1"].stringValue
             XCTAssertEqual("step 1", value)
-            value = xjson[1]["document"]["pong"]["var1"].stringValue
+            value = xjson[1]!["document"]["pong"]["var1"].stringValue
             XCTAssertEqual("step 2", value)
-            value = xjson[2]["document"]["pong"]["var1"].stringValue
+            value = xjson[2]!["document"]["pong"]["var1"].stringValue
             XCTAssertEqual("step 3", value)
-            value = xjson[3]["document"]["pong"]["var1"].stringValue
-            XCTAssertNil(value)
-            value = xjson[4]["document"]["pong"]["var1"].stringValue
-            XCTAssertNil(value)
-            value = xjson[5]["document"]["pong"]["var1"].stringValue
-            XCTAssertNil(value)
+            var valueNil : String? = xjson[3]?["document"]["pong"]["var1"].string
+            XCTAssertNil(valueNil)
+            valueNil = xjson[4]?["document"]["pong"]["var1"].string
+            XCTAssertNil(valueNil)
+            valueNil = xjson[5]?["document"]["pong"]["var1"].string
+            XCTAssertNil(valueNil)
             XCTAssertEqual("random failure", xfail[0]?.message)
             XCTAssertEqual(xfail[0], xfail[1])
-        }
-        */
     }
+    
+    func testC8oDefaultPromiseInVar(){
+        let c8o : C8o = try! self.Get(.C8O)!
+        var xjson : [JSON?] = [JSON?](count: 3, repeatedValue: nil)
+        let promise = c8o.CallJson(".Ping", parameters: "var1", "step 1")
+        promise?.Then({ (json, param) -> (C8oPromise<JSON>?) in
+            xjson[0] = json
+            return c8o.CallJson(".Ping", parameters: "var1", "step 2")
+        })
+        promise?.Then({ (json, param) -> (C8oPromise<JSON>?) in
+            xjson[1] = json
+            return c8o.CallJson(".Ping", parameters: "var1", "step 3")
+        })
+        xjson[2] = try! promise?.Sync()
+        var value = xjson[0]!["document"]["pong"]["var1"].stringValue
+        XCTAssertEqual("step 1", value)
+        value = xjson[1]!["document"]["pong"]["var1"].stringValue
+        XCTAssertEqual("step 2", value)
+        value = xjson[2]!["document"]["pong"]["var1"].stringValue
+        XCTAssertEqual("step 3", value)
+    }
+    
+    func testC8oDefaultPromiseInVarSleep(){
+        let c8o : C8o = try! self.Get(.C8O)!
+        var xjson : [JSON?] = [JSON?](count: 3, repeatedValue: nil)
+        let promise = c8o.CallJson(".Ping", parameters: "var1", "step 1")
+        NSThread.sleepForTimeInterval(0.5)
+        promise?.Then({ (json, param) -> (C8oPromise<JSON>?) in
+            xjson[0] = json
+            return c8o.CallJson(".Ping", parameters: "var1", "step 2")
+        })
+        NSThread.sleepForTimeInterval(0.5)
+        promise?.Then({ (json, param) -> (C8oPromise<JSON>?) in
+            xjson[1] = json
+            return c8o.CallJson(".Ping", parameters: "var1", "step 3")
+        })
+        NSThread.sleepForTimeInterval(0.5)
+        xjson[2] = try! promise?.Sync()
+        var value = xjson[0]!["document"]["pong"]["var1"].stringValue
+        XCTAssertEqual("step 1", value)
+        value = xjson[1]!["document"]["pong"]["var1"].stringValue
+        XCTAssertEqual("step 2", value)
+        value = xjson[2]!["document"]["pong"]["var1"].stringValue
+        XCTAssertEqual("step 3", value)
+    }
+    
+    /*func testC8o0Ssl1TrustFail(){
+        var exception : C8oException? = nil
+        do{
+            let c8o = try! C8o(endpoint: PREFIX + HOST + ":443" + PROJECT_PATH, c8oSettings: nil)
+            let doc = try! c8o.CallXml(".Ping", parameters: "var1", "value one").Sync()
+            let value = doc?.xpath("/document/pong/var1").first?.stringValue
+            //XCTFail("not possible")
+        }
+        catch let e as C8oException{
+            exception = e
+        }
+        catch{
+            XCTFail("not possible")
+        }
+        
+        XCTAssertNotNil(exception)
+        XCTAssertTrue(exception! is C8oException)
+    }*/
     
 }
 
