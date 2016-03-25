@@ -309,13 +309,13 @@ class C8oSDKiOSTests: XCTestCase {
     }
     
     func testCheckLogRemote() {
-        /*let c8o : C8o = try! C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH , c8oSettings: C8oSettings().SetLogC8o(false))
+        let c8o : C8o = try! C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH , c8oSettings: C8oSettings().SetLogC8o(false))
         let id : String = "logID=" + String(NSTimeIntervalSince1970 * 1000)
         try! c8o.CallXml(".GetLogs", parameters: "init", id).Sync()
         c8o.Log.Error(id)
         try! CheckLogRemoteHelper(c8o, lvl: "ERROR", msg: id)
         c8o.Log.Error(id, exceptions: C8oException(message: "for test"))
-        try! CheckLogRemoteHelper(c8o, lvl: "ERROR", msg: (id + "\nOptional(Error Domain=com.convertigo.clientsdk.exception.C8oException Code=1 \"(null)\" UserInfo={for test=for test})"))
+        try! CheckLogRemoteHelper(c8o, lvl: "ERROR", msg: (id + "\nOptional(Error Domain=com.convertigo.clientsdk.exception.C8oException Code=1 \"for test\" UserInfo={NSLocalizedFailureReason=for test})"))
         c8o.Log.Warn(id)
         try! CheckLogRemoteHelper(c8o, lvl: "WARN", msg: id)
         c8o.Log.Info(id)
@@ -331,7 +331,7 @@ class C8oSDKiOSTests: XCTestCase {
         NSThread.sleepForTimeInterval(0.05)
         let doc = try! c8o.CallXml(".GetLogs").Sync()
         let value = doc?.xpath("/document/line").first?.stringValue
-        XCTAssertNil(value);*/
+        XCTAssertNil(value);
         
     }
     
