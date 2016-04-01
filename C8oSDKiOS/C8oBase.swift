@@ -215,9 +215,9 @@ public class C8oBase : NSObject
      @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
      @return A string containing the fullSync local suffix.
      */
-    public var FullSyncLocalSuffix:String
+    public var FullSyncLocalSuffix:String?
         {
-        get { return fullSyncLocalSuffix!; }
+        get { return fullSyncLocalSuffix; }
     }
     
     /**

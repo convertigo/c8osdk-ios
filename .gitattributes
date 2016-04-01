@@ -37,11 +37,13 @@ C8oSDKiOS/C8oFullSyncHttp.swift -text
 C8oSDKiOS/C8oFullSyncTranslator.swift -text
 C8oSDKiOS/C8oHttpInterface.swift -text
 C8oSDKiOS/C8oLocalCache.swift -text
+C8oSDKiOS/C8oLocalCacheResponse.swift -text
 C8oSDKiOS/C8oLogger.swift -text
 C8oSDKiOS/C8oProgress.swift -text
 C8oSDKiOS/C8oPromise.swift -text
 C8oSDKiOS/C8oPromiseFailSync.swift -text
 C8oSDKiOS/C8oPromiseSync.swift -text
+C8oSDKiOS/C8oResponseCblListener.swift -text
 C8oSDKiOS/C8oResponseJsonListener.swift -text
 C8oSDKiOS/C8oResponseListener.swift -text
 C8oSDKiOS/C8oResponseProgressListener.swift -text
@@ -52,6 +54,7 @@ C8oSDKiOS/C8oUtils.swift -text
 C8oSDKiOS/Delegates.swift -text
 C8oSDKiOS/Exceptions.swift -text
 C8oSDKiOS/FullSyncRequestable.swift -text
+C8oSDKiOS/FullSyncResponse.swift -text
 C8oSDKiOS/FullSyncUtils.swift -text
 C8oSDKiOS/Info.plist -text
 C8oSDKiOS/Queue.swift -text

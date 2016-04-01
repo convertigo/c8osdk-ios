@@ -10,15 +10,12 @@ import Foundation
 
 internal class C8oResponseProgressListener : C8oResponseListener
 {
-    private var OnProgressResponse : NSObject?//<C8oProgress, Dictionary<String, NSObject>>;
+    internal var OnProgressResponse : (C8oProgress, Dictionary<String, NSObject>)->()
     
-    internal func C8oResponseProgressListener(onProgressResponse : NSObject )
+    internal init(onProgressResponse : (C8oProgress, Dictionary<String, NSObject>)->())
     {
         OnProgressResponse = onProgressResponse;
     }
-    //uiDispatcher//Action<C8oProgress, Dictionary<String, NSObject>>)
-    internal init()
-    {
-        OnProgressResponse = nil
-    }
+
+
 }

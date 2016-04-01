@@ -9,6 +9,7 @@ target 'C8oSDKiOS' do
   pod 'SwiftyJSON', '2.3.2'
   pod 'Alamofire', '3.1.5'
   pod 'Fuzi', '0.3.0'
+  pod 'AEXML'
 end
 
 

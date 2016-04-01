@@ -33,7 +33,7 @@ internal class C8oHttpInterface
         }
     }
     
-    internal func OnRequestCreate(request : NSObject/*HttpWebRequest*/)->Void
+    internal func OnRequestCreate(request : NSObject)->Void
     {
         
     }
@@ -81,8 +81,8 @@ internal class C8oHttpInterface
         return nil
     }
     
-    internal var CookieStore : NSObject?/*CookieContainer*/{
-        get { return nil;  }
+    internal var CookieStore : C8oCookieStorage?/*CookieContainer*/{
+        get { return cookieContainer  }
     }
     
     private func SetRequestEntity(request : NSObject?, parameters: Dictionary<String, AnyObject>?)->NSData?{

@@ -42,8 +42,8 @@ class C8oSDKiOSTests: XCTestCase {
             return c8o
             
         case .C8O_FS :
-            let c8o : C8o = try C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: C8oSettings().SetDefaultDatabaseName("clientsdktesting"))
-            c8o.LogRemote = false
+            let c8o : C8o = try C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: C8oSettings().SetDefaultDatabaseName("clientsdktesting").SetLogRemote(false))
+            //c8o.LogRemote = false
             c8o.LogLevelLocal = C8oLogLevel.ERROR
             return c8o
             
@@ -701,7 +701,7 @@ class C8oSDKiOSTests: XCTestCase {
         value = xjson[2]!["document"]["pong"]["var1"].stringValue
         XCTAssertEqual("step 3", value)
     }
-    
+    //TODO...
     /*func testC8o0Ssl1TrustFail(){
         var exception : C8oException? = nil
         do{
@@ -719,6 +719,23 @@ class C8oSDKiOSTests: XCTestCase {
         
         XCTAssertNotNil(exception)
         XCTAssertTrue(exception! is C8oException)
+    }*/
+    
+    //TODO...
+    /*func testC8o0Ssl2TrustAll(){
+        
+    }*/
+    
+    /*func testC8oFsPostGetDelete(){
+        let c8o : C8o = try! self.Get(.C8O_FS)!
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        var json : JSON? = try! c8o.CallJson("fs://.reset")?.Sync()
+        XCTAssertTrue(json!["ok"].boolValue)
+        let myId =  "C8oFsPostGetDelete-" + String(NSTimeIntervalSince1970 * 1000)
+        json = try! c8o.CallJson("fs://.post", parameters: "_id", myId)?.Sync()
+        print(json!["ok"].stringValue)
+        XCTAssertTrue(json!["ok"].boolValue)
     }*/
     
 }

@@ -10,6 +10,7 @@ import Foundation
 import CoreFoundation
 import SwiftyJSON
 import Fuzi
+import AEXML
 
 
 
@@ -342,7 +343,7 @@ public class C8oLogger
     }
     
     
-    internal func LogC8oCallXMLResponse(response : XMLDocument, url: String, parameters : Dictionary<String, NSObject>)-> Void
+    internal func LogC8oCallXMLResponse(response : AEXMLDocument, url: String, parameters : Dictionary<String, NSObject>)-> Void
     {
         LogC8oCallResponse(C8oTranslator.XmlToString(response)!, responseType: "XML", url: url, parameters: parameters);
     }

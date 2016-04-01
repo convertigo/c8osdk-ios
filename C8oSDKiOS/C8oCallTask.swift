@@ -11,7 +11,7 @@ import ObjectiveC
 import Alamofire
 import SwiftyJSON
 import Fuzi
-
+import AEXML
 import CouchbaseLite
 
 internal class C8oCallTask
@@ -27,6 +27,7 @@ internal class C8oCallTask
     {
         self.c8o = c8o;
         self.parameters = parameters;
+
         self.c8oResponseListener = c8oResponseListener;
         self.c8oExceptionListener = c8oExceptionListener;
         self.c8oCallUrl = nil
@@ -69,7 +70,6 @@ internal class C8oCallTask
     private func HandleRequest() throws ->AnyObject? //Task<object>
     {
         let isFullSyncRequest : Bool = C8oFullSync.IsFullSyncRequest(parameters);
-        var responseType : String = ""
         
         if (isFullSyncRequest)
         {
@@ -78,17 +78,20 @@ internal class C8oCallTask
             // But it can be useful bor debug
             do
             {
-                let fullSyncResult = c8o.c8oFullSync!.HandleFullSyncRequest(parameters, listener: c8oResponseListener!);
+                let fullSyncResult = try c8o.c8oFullSync!.HandleFullSyncRequest(parameters, listener: c8oResponseListener!);
                 return fullSyncResult;
             }
-            catch //(Exception e)
+            catch let e as NSError//(Exception e)
             {
-                //throw new C8oException(C8oExceptionMessage.FullSyncRequestFail(), e);
+                throw C8oException(message: C8oExceptionMessage.FullSyncRequestFail(), exception: e);
+            }
+            catch{
+                let a = 10
             }
         }
         else
         {
-            
+            var responseType : String = ""
             if (c8oResponseListener == nil || c8oResponseListener is C8oResponseXmlListener)
             {
                 responseType = C8o.RESPONSE_TYPE_XML;
@@ -205,7 +208,7 @@ internal class C8oCallTask
                 response = C8oTranslator.DataToXml(httpResponse!)!
                 if(localCacheEnabled)
                 {
-                    responseString = (response as! XMLDocument).description
+                    responseString = (response as! AEXMLDocument).description
                     
                 }
                
@@ -238,7 +241,7 @@ internal class C8oCallTask
             return response;
             
             }
-            //return nil
+            return nil
 
         }
     
@@ -258,7 +261,7 @@ internal class C8oCallTask
             if (result is XMLDocument)
             {
                 
-                c8o.c8oLogger!.LogC8oCallXMLResponse(result as! XMLDocument, url: c8oCallUrl!,  parameters : self.parameters);
+                c8o.c8oLogger!.LogC8oCallXMLResponse(result as! AEXMLDocument, url: c8oCallUrl!,  parameters : self.parameters);
                 (c8oResponseListener as! C8oResponseXmlListener).OnXmlResponse(Pair(key: result!, value: parameters))
             }
             else {

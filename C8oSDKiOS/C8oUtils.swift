@@ -16,11 +16,11 @@ import CouchbaseLite
 internal class C8oUtils
 {
     
-
+    
     private static var USE_PARAMETER_IDENTIFIER : String = "_use_";
     
     
-
+    
     
     internal static func GetObjectClassName(obj : AnyObject?)->String
     {
@@ -31,67 +31,67 @@ internal class C8oUtils
             className = String(obj.dynamicType)
             
         }
-            return className;
+        return className;
         
         
     }
     
-
-    internal static func GetParameter(parameters : Dictionary<String, NSObject>, name : String, useName : Bool = false)->Dictionary<String, NSObject>
+    
+    internal static func GetParameter(parameters : Dictionary<String, NSObject>, name : String, useName : Bool = false)->Pair<String?, NSObject?>
     {
-        /*
+        
         for parameter in parameters
         {
-        string parameterName = parameter.Key;
-        if (name.Equals(parameterName) || (useName && name.Equals(C8oUtils.USE_PARAMETER_IDENTIFIER + parameterName)))
-        {
-        return parameter;
+            var parameterName : String = parameter.0;
+            if ((name == parameterName) || (useName && name == (C8oUtils.USE_PARAMETER_IDENTIFIER + parameterName)))
+            {
+                return Pair<String?, NSObject?>(key: parameter.0, value: parameter.1);
+            }
         }
-        }
-        return new KeyValuePair<string, object>(null, null);
-        */
-        let a : Dictionary<String, NSObject> = Dictionary<String, NSObject>();
-        return a ;
+        let stringNil : String? = nil
+        let nsobjectnil : String? = nil
+        return Pair<String?, NSObject?>(key: stringNil, value: nsobjectnil);
+        
+        
     }
     
     internal static func GetParameterObjectValue(parameters :  Dictionary<String, NSObject>, name : String, useName : Bool = false)->NSObject?
     {
-        let parameter : Dictionary<String, NSObject> = GetParameter(parameters, name: name, useName: useName);
-        if (parameter.keys.first != nil)
+        let parameter : Pair<String?, NSObject?> = GetParameter(parameters, name: name, useName: useName);
+        if (parameter.key != nil)
         {
-            return parameter.values.first;
+            return parameter.value
         }
         return nil;
     }
     
-
-  internal static func GetParameterStringValue(parameters : Dictionary<String, NSObject> , name : String, useName : Bool = false)->String?
+    
+    internal static func GetParameterStringValue(parameters : Dictionary<String, NSObject> , name : String, useName : Bool = false)->String?
     {
-        /*var parameter = GetParameter(parameters, name, useName);
-        if (parameter.Key != nil)
+        let parameter = GetParameter(parameters, name: name, useName: useName);
+        if (parameter.key != nil)
         {
-        return "" + parameter.Value;
-        }*/
+            return String(parameter.value!);
+        }
         return nil;
     }
     
-  internal static func PeekParameterStringValue(parameters : Dictionary<String, NSObject> , name : String, exceptionIfMissing : Bool = false)->String?
+    internal static func PeekParameterStringValue(var parameters : Dictionary<String, NSObject> , name : String, exceptionIfMissing : Bool = false) throws ->String?
     {
-        /*
-        string value = GetParameterStringValue(parameters, name, false);
-        if (value == null)
+        
+        let value : String? = GetParameterStringValue(parameters, name: name, useName: false)!;
+        if (value == nil)
         {
-        if (exceptionIfMissing)
-        {
-        throw new ArgumentException(C8oExceptionMessage.MissParameter(name));
-        }
+            if (exceptionIfMissing)
+            {
+                throw C8oException(message: C8oExceptionMessage.MissParameter(name));
+            }
         }
         else
         {
-        parameters.Remove(name);
+            parameters.removeValueForKey(name);
         }
-        return value;*/
-        return nil;
+        return value;
     }
     
     internal static func GetParameterJsonValue( parameters : Dictionary<String, NSObject>, name : Bool, useName : Bool = false)-> NSObject?
@@ -138,16 +138,16 @@ internal class C8oUtils
     }
     
     /**
-    Checks if the specified string is an valid URL by checking for http or https prefix.
-    
-    @param url String.
-    
-    @return Bool value.
-    */
+     Checks if the specified string is an valid URL by checking for http or https prefix.
+     
+     @param url String.
+     
+     @return Bool value.
+     */
     internal static func IsValidUrl(url : String)->Bool
     {
         let uriResult : NSURL? = NSURL(string: url)
-
+        
         if(uriResult?.scheme == "http" || uriResult?.scheme == "https"){
             return true
         }
@@ -157,7 +157,7 @@ internal class C8oUtils
         
     }
     
-
+    
     internal static func GetUnixEpochTime(date : NSDate)->Double?
     {
         

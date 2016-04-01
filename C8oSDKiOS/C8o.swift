@@ -14,17 +14,17 @@ import Fuzi
 import CouchbaseLite
 
 @objc public class C8o : C8oBase {
-         
+    
     /** Regular Expression */
-
-    /**
-    The regex used to handle the c8o requestable syntax ("<project>.<sequence>" or "<project>.<connector>.<transaction>")
-    */
+     
+     /**
+     The regex used to handle the c8o requestable syntax ("<project>.<sequence>" or "<project>.<connector>.<transaction>")
+     */
     private static let RE_REQUESTABLE : NSRegularExpression =  try! NSRegularExpression(pattern: "^([^.]*)\\.(?:([^.]+)|(?:([^.]+)\\.([^.]+)))$", options: [])
     
     /**
-    The regex used to get the part of the endpoint before '/projects/'
-    */
+     The regex used to get the part of the endpoint before '/projects/'
+     */
     public static let RE_ENDPOINT : NSRegularExpression =  try! NSRegularExpression(pattern: "^(http(s)?://([^:]+)(:[0-9]+)?/?.*?)/projects/([^/]+)$", options: [])
     
     /** Engine reserved parameters */
@@ -66,30 +66,30 @@ import CouchbaseLite
     internal static var deviceUUID : String = UIDevice.currentDevice().identifierForVendor!.UUIDString
     
     /**
-    Gets the SDK version.
-    Example usage:
-    @code
-    myc8o : C8o = C8o()
-    sdkVersion : String = myC8o.GetSdkVersion()
-    @endcode
-    @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
-    @param nil
-    @return A string containing the sdk version.
-    */
+     Gets the SDK version.
+     Example usage:
+     @code
+     myc8o : C8o = C8o()
+     sdkVersion : String = myC8o.GetSdkVersion()
+     @endcode
+     @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
+     @param nil
+     @return A string containing the sdk version.
+     */
     public static func GetSdkVersion()-> String
     {
         return "2.0.0"
     }
     
     /** Attributes */
-    
-    
-    /** The Convertigo endpoint
-     @code 
+     
+     
+     /** The Convertigo endpoint
+     @code
      <protocol>://<server>:<port>/<Convertigo web app path>/projects/<project name>
      http://127.0.0.1:18080/convertigo/projects/MyProject
      @endcode
-    */
+     */
     private var endpoint : String?
     private var endpointConvertigo: String?
     private var endpointIsSecure : Bool?
@@ -104,13 +104,13 @@ import CouchbaseLite
     internal var httpInterface : C8oHttpInterface?
     
     /** Allows to log locally and remotely to the Convertigo server.*/
-    internal var c8oLogger : C8oLogger? 
+    internal var c8oLogger : C8oLogger?
     
     /** Allows to make fullSync calls. */
     internal var c8oFullSync :C8oFullSync?
     
     /** Constructors */
-    
+     
      /**
      This is the base object representing a Convertigo Server end point. This object should be instanciated
      when the apps starts and be accessible from any class of the app. Although this is not common , you may have
@@ -136,12 +136,12 @@ import CouchbaseLite
      @endcode
      @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
      @param endpoint : String
-            The End point url to you convertigo server. Can be :
-            - http(s)://your_server_address/convertigo/projects/your_project_name (if using an on premises server)
-            - http(s)://your_cloud_server.convertigo.net/cems/projects/your_project_name (if using a Convertigo cloud server)
+     The End point url to you convertigo server. Can be :
+     - http(s)://your_server_address/convertigo/projects/your_project_name (if using an on premises server)
+     - http(s)://your_cloud_server.convertigo.net/cems/projects/your_project_name (if using a Convertigo cloud server)
      @param c8oSettings : C8oSettings?
-            A C8oSettings object describing the endpoint configuration parameters such as authorizations credentials,
-            cookies, client certificates and various other settings.
+     A C8oSettings object describing the endpoint configuration parameters such as authorizations credentials,
+     cookies, client certificates and various other settings.
      */
     public init(endpoint :String, c8oSettings : C8oSettings?) throws
     {
@@ -162,7 +162,7 @@ import CouchbaseLite
         
         self.endpoint = endpoint
         self.endpointConvertigo = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(1))
-
+        
         if(regexV[0].rangeAtIndex(2).location != NSNotFound){
             self.endpointIsSecure  = !(endpoint as NSString?)!.substringWithRange(regexV[0].rangeAtIndex(2)).isEmpty
         }
@@ -177,13 +177,15 @@ import CouchbaseLite
             self.Copy(c8oSettings!)
         }
         if (UiDispatcher == nil){
-           // uiDispatcher = self.defaultUiDispatcher
+            // uiDispatcher = self.defaultUiDispatcher
         }
-
+        
         self.httpInterface  =  C8oHttpInterface(c8o: self)
         self.c8oLogger = C8oLogger(c8o: self)
         self.c8oLogger!.LogMethodCall("C8o constructor")
-        self.c8oFullSync = C8oFullSyncCbl(c8o: self)
+        self.c8oFullSync = C8oFullSyncCbl()
+        self.c8oFullSync?.Init(self)
+        
     }
     
     /**
@@ -194,7 +196,7 @@ import CouchbaseLite
      myC8o.Call(requestable, parameters, c8oResponseXmlListener, c8oExceptionListener)
      @endcode
      @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
-    */
+     */
     public func Call(requestable :String?, var parameters : Dictionary<String, NSObject>? = nil , c8oResponseListener : C8oResponseListener , c8oExceptionListener  : C8oExceptionListener )-> Void
     {
         do
@@ -287,31 +289,31 @@ import CouchbaseLite
     }
     
     /**
-    Call a Convertigo Server backend service and return data in a JSON Object.
-    CallJSON will asynchrously call a "requestable" (Sequence, transaction or FullSync database) and return a C8oPromise object.
-    Example usage:
-    @code
-    myc8o : C8o = C8o()
-    myC8o.CallJSON(requestable, parameters)
-    @endcode
-    @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
-    @param requestable : String
-            A "requestable" object of this form :
-            <list type ="bullet">
-                <item>project.sequence to call a Sequence in the convertigo server. If project is not specified explicitly here,
-                    (.sequence) the default project specified in the enpoint will be used.</item>
-                <item>
-                project.connector.transaction to call a transaction in the convertigo server. if project is not specified explicitly here,
-                (.connector.transaction) the default project specified in the enpoint will be used. If
-                connector is not specified (..transaction) the default connector will be used.</item>
-                <item>fs://database.fullsync_verb   to call the local NoSQL database for quering, updating and syncing according to the full_sync
-                    verb used. See FullSync documentation for a list of verbs and parameters.</item>
-            </list>
-    @return A C8oPromise object on which you can chain other requests to get the data with the Then(), ThenUI() methods or
-            use the Async() to wait for the server response without blocking the request thread. You can also use the .Fail() and
-            FailUI() methods to handle C8oErrors.
-
-    */
+     Call a Convertigo Server backend service and return data in a JSON Object.
+     CallJSON will asynchrously call a "requestable" (Sequence, transaction or FullSync database) and return a C8oPromise object.
+     Example usage:
+     @code
+     myc8o : C8o = C8o()
+     myC8o.CallJSON(requestable, parameters)
+     @endcode
+     @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
+     @param requestable : String
+     A "requestable" object of this form :
+     <list type ="bullet">
+     <item>project.sequence to call a Sequence in the convertigo server. If project is not specified explicitly here,
+     (.sequence) the default project specified in the enpoint will be used.</item>
+     <item>
+     project.connector.transaction to call a transaction in the convertigo server. if project is not specified explicitly here,
+     (.connector.transaction) the default project specified in the enpoint will be used. If
+     connector is not specified (..transaction) the default connector will be used.</item>
+     <item>fs://database.fullsync_verb   to call the local NoSQL database for quering, updating and syncing according to the full_sync
+     verb used. See FullSync documentation for a list of verbs and parameters.</item>
+     </list>
+     @return A C8oPromise object on which you can chain other requests to get the data with the Then(), ThenUI() methods or
+     use the Async() to wait for the server response without blocking the request thread. You can also use the .Fail() and
+     FailUI() methods to handle C8oErrors.
+     
+     */
     public func CallJson (requestable : String, parameters : Dictionary<String, NSObject>?)-> C8oPromise<JSON>?
     {
         let promise = C8oPromise<JSON>(c8o: self)
@@ -331,7 +333,7 @@ import CouchbaseLite
                     promise.OnResponse((params?.key)! , parameters: (params?.value)!)
                 }
                 
-                })
+            })
             , c8oExceptionListener : C8oExceptionListener(OnException:{
                 (params : Pair<C8oException, Dictionary<String, NSObject>?>?)->() in
                 
@@ -351,7 +353,7 @@ import CouchbaseLite
     
     public func CallJson(requestable : String, parameters : JSON)-> C8oPromise<JSON>?{
         
-            return CallJson(requestable, parameters: (parameters.object as! Dictionary<String, NSObject>))
+        return CallJson(requestable, parameters: (parameters.object as! Dictionary<String, NSObject>))
     }
     
     
@@ -393,8 +395,8 @@ import CouchbaseLite
     }
     /*public func CallXml(requestable : String)->C8oPromise<XMLDocument>
     {
-        
-        return CallXml(requestable, parameters: Dictionary<String, NSObject>())
+    
+    return CallXml(requestable, parameters: Dictionary<String, NSObject>())
     }*/
     
     public func AddCookie(name : String, value : String)->Void
@@ -413,13 +415,13 @@ import CouchbaseLite
         get { return logRemote! }
         set(value){ logRemote = value }
     }
-
+    
     public override var LogLevelLocal : C8oLogLevel
         {
         get { return logLevelLocal }
         set(value) { logLevelLocal = value }
     }
-
+    
     
     /*public func Log(C8oLogLevel c8oLogLevel, string message)
     {
@@ -431,7 +433,7 @@ import CouchbaseLite
         get { return c8oLogger! }
     }
     
-
+    
     public func RunUI (block: dispatch_block_t) {
         if(NSThread.isMainThread())
         {
@@ -439,7 +441,7 @@ import CouchbaseLite
         }
         else {
             dispatch_async(dispatch_get_main_queue(), {
-                 block()
+                block()
             })
         }
         
@@ -450,31 +452,31 @@ import CouchbaseLite
         return "C8o[" + endpoint! + "] " //+ super.description()
     }
     
-
+    
     public var Endpoint: String
         {
         get { return endpoint! }
     }
     
-
+    
     public var EndpointConvertigo : String
         {
         get { return endpointConvertigo! }
     }
     
-
+    
     public var EndpointIsSecure :  Bool
         {
         get { return endpointIsSecure! }
     }
     
-
+    
     public var EndpointHost : String
         {
         get { return endpointHost! }
     }
     
-
+    
     public var EndpointPort :  String
         {
         get { return endpointPort! }
@@ -485,12 +487,12 @@ import CouchbaseLite
         get { return endpointProject! }
     }
     
-
+    
     public var DeviceUUID : String{
         get { return C8o.deviceUUID }
     }
     
-
+    
     public var CookieStore : NSObject//CookieContainer
         {
         get { return httpInterface!.CookieStore! }
