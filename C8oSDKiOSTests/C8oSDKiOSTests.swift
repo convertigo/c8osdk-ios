@@ -11,6 +11,7 @@ import Foundation
 import SwiftyJSON
 import Alamofire
 import Fuzi
+import AEXML
 
 
 @testable import C8oSDKiOS
@@ -72,11 +73,11 @@ class C8oSDKiOSTests: XCTestCase {
         case .SetGetInSession :
             let c8o : C8o = try Get(.C8O_BIS)!
             let ts : String = String(NSTimeIntervalSince1970 * 1000)
-            var doc = try c8o.CallXml(".SetInSession", parameters: "ts", ts).Sync()
-            var newTs = doc?.xpath("/document/pong/ts").first!.stringValue
+            let doc = try c8o.CallXml(".SetInSession", parameters: "ts", ts).Sync()
+            var newTs = doc?.root["pong"]["ts"].stringValue      //xpath("/document/pong/ts").first!.stringValue
             XCTAssertEqual(ts, newTs)
-            var doc2 = try c8o.CallXml(".GetFromSession").Sync()
-            newTs = doc2?.xpath("/document/session/expression").first?.stringValue
+            let doc2 = try c8o.CallXml(".GetFromSession").Sync()
+            newTs = doc2?.root["session"]["expression"].stringValue
             XCTAssertEqual(ts, newTs)
             return c8o
             
@@ -112,22 +113,20 @@ class C8oSDKiOSTests: XCTestCase {
     func testC8oDefaultPing(){
         let c8o: C8o = try! Get(.C8O)!
         let doc  = try! c8o.CallXml(".Ping").Sync()
-        var pong : NSObject = (doc?.xpath("/document/pong").count)!
+        let pong = doc?.root["pong"].count
+        print(doc!.xmlString)
         XCTAssertEqual(1,pong)
-        pong = (doc?.xpath("/document/pong").first?.tag)!
-        XCTAssertEqual(pong, "pong")
 
     }
     
     func testC8oDefaultPingWait(){
         let c8o: C8o = try! Get(.C8O)!
-        let promise : C8oPromise<XMLDocument> = c8o.CallXml(".Ping")
+        let promise : C8oPromise<AEXMLDocument> = c8o.CallXml(".Ping")
         NSThread.sleepForTimeInterval(0.5)
-        let doc : XMLDocument = try! promise.Sync()!
-        var pong : NSObject = (doc.xpath("/document/pong").count)
+        let doc : AEXMLDocument = try! promise.Sync()!
+        var pong : NSObject = (doc.root["pong"].count)
         XCTAssertEqual(1,pong)
-        pong = (doc.xpath("/document/pong").first?.tag)!
-        XCTAssertEqual(pong, "pong")
+
     }
     
     
@@ -142,7 +141,7 @@ class C8oSDKiOSTests: XCTestCase {
                                         
                                             
                                     })
-            let C8oP : C8oPromise<XMLDocument> = c8o.CallXml(".Ping")
+            let C8oP : C8oPromise<AEXMLDocument> = c8o.CallXml(".Ping")
             NSThread.sleepForTimeInterval(3)
             try C8oP.Sync()
         }
@@ -183,16 +182,16 @@ class C8oSDKiOSTests: XCTestCase {
     func testC8oDefaultPingOneSingleValue() {
         let c8o: C8o = try! Get(.C8O)!
         let doc  = try! c8o.CallXml(".Ping",  parameters: "var1", "value one").Sync()
-        let value = doc?.xpath("/document/pong/var1").first?.stringValue
+        let value = doc?.root["pong"]["var1"].stringValue
         XCTAssertEqual("value one", value)
     }
     
     func testC8oDefaultPingTwoSingleValues(){
         let c8o: C8o = try! Get(.C8O)!
         let doc  = try! c8o.CallXml(".Ping", parameters: "var1", "value one", "var2","value two").Sync()
-        var value = doc?.xpath("/document/pong/var1").first?.stringValue
+        var value = doc?.root["pong"]["var1"].stringValue
         XCTAssertEqual("value one", value)
-        value = doc?.xpath("/document/pong/var2").first?.stringValue
+        value = doc?.root["pong"]["var2"].stringValue
         XCTAssertEqual("value two", value)
     }
     
@@ -203,17 +202,18 @@ class C8oSDKiOSTests: XCTestCase {
             "var2","value two",
             "mvar1", ["mvalue one", "mvalue two", "mvalue three"]
         ).Sync()
-        var value = doc?.xpath("/document/pong/var1").first?.stringValue
+        print(doc?.xmlString)
+        var value = doc?.root["pong"]["var1"].stringValue
         XCTAssertEqual("value one", value)
-        value = doc?.xpath("/document/pong/var2").first?.stringValue
+        value = doc?.root["pong"]["var2"].stringValue
         XCTAssertEqual("value two", value)
-        value = doc?.xpath("/document/pong/mvar1[1]").first?.stringValue
+        value = doc?.root["pong"]["mvar1"].all![0].stringValue
         XCTAssertEqual("mvalue one", value)
-        value = doc?.xpath("/document/pong/mvar1[2]").first?.stringValue
+        value = doc?.root["pong"]["mvar1"].all![1].stringValue
         XCTAssertEqual("mvalue two", value)
-        value = doc?.xpath("/document/pong/mvar1[3]").first?.stringValue
+        value = doc?.root["pong"]["mvar1"].all![2].stringValue
         XCTAssertEqual("mvalue three", value)
-        let count = doc?.xpath("/document/pong/mvar1").count
+        let count = doc?.root["pong"]["mvar1"].all?.count
         XCTAssertEqual(3,count)
     }
     
@@ -226,21 +226,21 @@ class C8oSDKiOSTests: XCTestCase {
             "mvar1", ["mvalue one", "mvalue two", "mvalue three"],
             "mvar2", ["mvalue2 one"]
         ).Sync()
-        var value = doc?.xpath("/document/pong/var1").first?.stringValue
+        var value = doc?.root["pong"]["var1"].stringValue
         XCTAssertEqual("value one", value)
-        value = doc?.xpath("/document/pong/var2").first?.stringValue
+        value = doc?.root["pong"]["var2"].stringValue
         XCTAssertEqual("value two", value)
-        value = doc?.xpath("/document/pong/mvar1[1]").first?.stringValue
+        value = doc?.root["pong"]["mvar1"].all![0].stringValue
         XCTAssertEqual("mvalue one", value)
-        value = doc?.xpath("/document/pong/mvar1[2]").first?.stringValue
+        value = doc?.root["pong"]["mvar1"].all![1].stringValue
         XCTAssertEqual("mvalue two", value)
-        value = doc?.xpath("/document/pong/mvar1[3]").first?.stringValue
+        value = doc?.root["pong"]["mvar1"].all![2].stringValue
         XCTAssertEqual("mvalue three", value)
-        var count = doc?.xpath("/document/pong/mvar1").count
+        var count = doc?.root["pong"]["mvar1"].all!.count
         XCTAssertEqual(3,count)
-        value = doc?.xpath("/document/pong/mvar2[1]").first?.stringValue
+        value = doc?.root["pong"]["mvar2"].all![0].stringValue
         XCTAssertEqual("mvalue2 one", value)
-        count = doc?.xpath("/document/pong/mvar2").count
+        count = doc?.root["pong"]["mvar2"].all!.count
         XCTAssertEqual(1,count)
         
     }
@@ -289,13 +289,13 @@ class C8oSDKiOSTests: XCTestCase {
         try! Get(.SetGetInSession)
         let c8o : C8o = try! Get(.C8O)!
         let doc = try! c8o.CallXml(".GetFromSession").Sync()
-        let expression = doc?.xpath("/document/session/expression").count
+        let expression = doc?.root["session"]["expression"].count
         XCTAssertEqual(0, expression)
     }
     
     func CheckLogRemoteHelper(c8o : C8o, lvl : String, msg : String) throws ->() {
-        let doc : XMLDocument = try! c8o.CallXml(".GetLogs").Sync()!
-        let jsonString : String = (doc.xpath("/document/line").first?.stringValue)!
+        let doc : AEXMLDocument = try! c8o.CallXml(".GetLogs").Sync()!
+        let jsonString : String = doc.root["line"].stringValue
         if let dataFromString = jsonString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
             let line = JSON(data: dataFromString)
             XCTAssertEqual(lvl, line[2].string)
@@ -330,20 +330,21 @@ class C8oSDKiOSTests: XCTestCase {
         c8o.Log.Info(id)
         NSThread.sleepForTimeInterval(0.05)
         let doc = try! c8o.CallXml(".GetLogs").Sync()
-        let value = doc?.xpath("/document/line").first?.stringValue
-        XCTAssertNil(value);
+        let value : NSObject? = doc?.root["line"].value
+        XCTAssertEqual("element <line> not found", value)
+        //XCTAssertNil(value);
         
     }
     
     func testC8oDefaultPromiseXmlOne() {
         let c8o : C8o = try! Get(.C8O)!
-        var xdoc : [XMLDocument] = [XMLDocument]()
+        var xdoc : [AEXMLDocument] = [AEXMLDocument]()
         var xthread : [NSThread] = [NSThread]()
         var xparam : [Dictionary<String, NSObject>] = [Dictionary<String, NSObject>]()
         
         let condition : NSCondition = NSCondition()
         condition.lock()
-            c8o.CallXml(".Ping", parameters: "var1", "step 1").Then { (doc, param) -> (C8oPromise<XMLDocument>?) in
+            c8o.CallXml(".Ping", parameters: "var1", "step 1").Then { (doc, param) -> (C8oPromise<AEXMLDocument>?) in
                 xdoc.append(doc)
                 xthread.append(NSThread.currentThread())
                 xparam.append(param)
@@ -354,7 +355,7 @@ class C8oSDKiOSTests: XCTestCase {
         }
         condition.wait()
         condition.unlock()
-        let value = xdoc[0].xpath("/document/pong/var1").first?.stringValue
+        let value = xdoc[0].root["pong"]["var1"].stringValue
         XCTAssertEqual("step 1", value)
         XCTAssertNotEqual(NSThread.currentThread(), xthread[0])
         XCTAssertEqual("step 1", xparam[0]["var1"])

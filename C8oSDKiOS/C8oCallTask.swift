@@ -258,7 +258,7 @@ internal class C8oCallTask
                 return;
             }
             
-            if (result is XMLDocument)
+            if (result is AEXMLDocument)
             {
                 
                 c8o.c8oLogger!.LogC8oCallXMLResponse(result as! AEXMLDocument, url: c8oCallUrl!,  parameters : self.parameters);

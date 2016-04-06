@@ -9,7 +9,8 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
-import Fuzi
+//import Fuzi
+import AEXML
 
 import CouchbaseLite
 
@@ -357,10 +358,10 @@ import CouchbaseLite
     }
     
     
-    public func CallXml(requestable : String, parameters :Dictionary<String, NSObject>)->C8oPromise<XMLDocument>
+    public func CallXml(requestable : String, parameters :Dictionary<String, NSObject>)->C8oPromise<AEXMLDocument>
     {
         
-        let promise = C8oPromise<XMLDocument>(c8o: self)
+        let promise = C8oPromise<AEXMLDocument>(c8o: self)
         
         Call(requestable,
             parameters: parameters,
@@ -374,7 +375,7 @@ import CouchbaseLite
                     }
                 }
                 else{
-                    promise.OnResponse((params?.key)! as! XMLDocument, parameters: (params?.value)!)
+                    promise.OnResponse((params?.key)! as! AEXMLDocument, parameters: (params?.value)!)
                 }
                 
             })
@@ -388,7 +389,7 @@ import CouchbaseLite
         
     }
     
-    public func CallXml(requestable : String, parameters : NSObject...)->C8oPromise<XMLDocument>
+    public func CallXml(requestable : String, parameters : NSObject...)->C8oPromise<AEXMLDocument>
     {
         
         return try! CallXml(requestable, parameters: C8o.ToParameters(parameters))
