@@ -107,14 +107,14 @@ internal class C8oFullSync
         fatalError("Must Override")
     }
 
-  internal func HandleDeleteDocumentRequest(fullSyncDatatbaseName : String, docid :  String, parameters : Dictionary<String, NSObject>)->NSObject?//Task<object>
+  internal func HandleDeleteDocumentRequest(fullSyncDatatbaseName : String, docid :  String, parameters : Dictionary<String, NSObject>)throws ->FullSyncDocumentOperationResponse?//Task<object>
     {
         fatalError("Must Override")
     }
     
 
     
-  internal func HandlePostDocumentRequest(fullSyncDatatbaseName : String, fullSyncPolicy : FullSyncPolicy, parameters : Dictionary<String, NSObject>)->NSObject?//Task<object>
+  internal func HandlePostDocumentRequest(fullSyncDatatbaseName : String, fullSyncPolicy : FullSyncPolicy, parameters : Dictionary<String, NSObject>)throws->NSObject?//Task<object>
     {
         fatalError("Must Override")
     }
