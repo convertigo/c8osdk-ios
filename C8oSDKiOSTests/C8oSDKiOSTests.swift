@@ -726,8 +726,8 @@ class C8oSDKiOSTests: XCTestCase {
     /*func testC8o0Ssl2TrustAll(){
         
     }*/
-    
-    /*func testC8oFsPostGetDelete(){
+    /*
+    func testC8oFsPostGetDelete(){
         let c8o : C8o = try! self.Get(.C8O_FS)!
         let condition : NSCondition = NSCondition()
         condition.lock()

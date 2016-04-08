@@ -51,7 +51,7 @@ internal class C8oFullSync
 
         // Gets the sequence parameter to know which fullSync requestable to use
         var fullSyncRequestableValue : String = try! C8oUtils.PeekParameterStringValue(parameters, name: C8o.ENGINE_PARAMETER_SEQUENCE, exceptionIfMissing: true)!;
-        var fullSyncRequestable : FullSyncRequestable? = FullSyncRequestable.GetFullSyncRequestable(fullSyncRequestableValue);
+        var fullSyncRequestable : FullSyncEnum.FullSyncRequestable? = FullSyncEnum.FullSyncRequestable.getFullSyncRequestable(fullSyncRequestableValue);
         if (fullSyncRequestable == nil)
         {
             throw C8oException(message: C8oExceptionMessage.InvalidParameterValue(C8o.ENGINE_PARAMETER_PROJECT, details: C8oExceptionMessage.UnknownValue("fullSync requestable", value: fullSyncRequestableValue)));
@@ -72,7 +72,7 @@ internal class C8oFullSync
         var response : NSObject?;
         do
         {
-            response = fullSyncRequestable!.HandleFullSyncRequest(self, databaseNameName: databaseName!, parameters: parameters, c8oResponseListner: listener);
+            response = try fullSyncRequestable!.handleFullSyncRequest(self, databaseName: databaseName!, parameters: parameters, c8oResponseListener: listener);
         }
         catch let e as C8oException
         {
@@ -114,67 +114,64 @@ internal class C8oFullSync
     
 
     
-  internal func HandlePostDocumentRequest(fullSyncDatatbaseName : String, fullSyncPolicy : FullSyncPolicy, parameters : Dictionary<String, NSObject>)throws->NSObject?//Task<object>
+  internal func HandlePostDocumentRequest(fullSyncDatatbaseName : String, fullSyncPolicy : FullSyncEnum.FullSyncPolicy, parameters : Dictionary<String, NSObject>)throws->NSObject?//Task<object>
     {
         fatalError("Must Override")
     }
     
 
     
-  internal func HandleAllDocumentsRequest(fullSyncDatatbaseName : String, parameters : Dictionary<String, NSObject>)->NSObject?//->Task<object>
+  internal func HandleAllDocumentsRequest(DatatbaseName : String, parameters : Dictionary<String, NSObject>)throws ->NSObject?//->Task<object>
     {
         fatalError("Must Override")
     }
 
     
-    internal func HandleGetViewRequest(fullSyncDatatbaseName : String, ddoc : String, view : String, parameters : Dictionary<String, NSObject>)->NSObject?//->Task<object>
-    {
-        fatalError("Must Override")
-    }
-    
-
-    
-    internal func HandleSyncRequest(fullSyncDatatbaseName : String, parameters : Dictionary<String, NSObject>, c8oResponseListener : C8oResponseListener)->NSObject?//->Task<object>
-    {
-        fatalError("Must Override")
-    }
-    
-    internal func HandleReplicatePullRequest(fullSyncDatatbaseName : String, parameters : Dictionary<String, NSObject>, c8oResponseListener : C8oResponseListener)->NSObject?//->Task<object>
-    {
-        fatalError("Must Override")
-    }
-    
-    internal func HandleReplicatePushRequest(fullSyncDatatbaseName : String, parameters : Dictionary<String, NSObject>, c8oResponseListener : C8oResponseListener)->NSObject?//->Task<object>
+    internal func HandleGetViewRequest(databaseName : String, ddocName : String?, viewName : String?, parameters : Dictionary<String, NSObject>)throws->CBLQueryEnumerator?//->Task<object>
     {
         fatalError("Must Override")
     }
     
 
     
-    internal func HandleResetDatabaseRequest(fullSyncDatatbaseName : String)->NSObject?//->Task<object>
+    internal func HandleSyncRequest(databaseName : String, parameters : Dictionary<String, NSObject>, c8oResponseListener : C8oResponseListener)throws->VoidResponse?//->Task<object>
     {
         fatalError("Must Override")
     }
+    
+    internal func HandleReplicatePullRequest(databaseName : String, parameters : Dictionary<String, NSObject>, c8oResponseListener : C8oResponseListener)throws->VoidResponse?//->Task<object>
+    {
+        fatalError("Must Override")
+    }
+    
+    internal func HandleReplicatePushRequest(databaseName : String, parameters : Dictionary<String, NSObject>, c8oResponseListener : C8oResponseListener)throws->VoidResponse?//->Task<object>
+    {
+        fatalError("Must Override")
+    }
+    
+    
+    internal func HandleResetDatabaseRequest(databaseName : String)throws->FullSyncDefaultResponse?{
+        fatalError("Must Override")
+    }
 
-    internal func HandleCreateDatabaseRequest(fullSyncDatatbaseName : String)->NSObject?//->Task<object>
+    internal func HandleCreateDatabaseRequest(databaseName : String)throws->FullSyncDefaultResponse?{
+        fatalError("Must Override")
+    }
+    
+
+    internal func HandleDestroyDatabaseRequest(databaseName : String)throws->FullSyncDefaultResponse?//->Task<object>
     {
         fatalError("Must Override")
     }
     
 
-    internal func HandleDestroyDatabaseRequest(fullSyncDatatbaseName : String)->NSObject?//->Task<object>
+    internal func GetResponseFromLocalCache(c8oCallRequestIdentifier : String)throws->NSObject?//->Task<C8oLocalCacheResponse>
     {
         fatalError("Must Override")
     }
     
 
-    internal func GetResponseFromLocalCache(c8oCallRequestIdentifier : String)->NSObject?//->Task<C8oLocalCacheResponse>
-    {
-        fatalError("Must Override")
-    }
-    
-
-    internal func SaveResponseToLocalCache(c8oCallRequestIdentifier : String, localCacheResponse : NSObject?/*C8oLocalCacheResponse*/)->NSObject?//->Task
+    internal func SaveResponseToLocalCache(c8oCallRequestIdentifier : String, localCacheResponse : NSObject?/*C8oLocalCacheResponse*/)throws->NSObject?//->Task
     {
         fatalError("Must Override")
     }
