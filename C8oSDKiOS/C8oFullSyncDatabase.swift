@@ -108,8 +108,8 @@ public class C8oFullSyncDatabase : NSObject {
         let param : Dictionary<String, NSObject> = parameters
         var progress : C8oProgress = C8oProgress()
         let _progress : [C8oProgress] = [progress]
-        progress.Raw = rep!
-        progress.Pull = rep!.pull
+        progress.raw = rep!
+        progress.pull = rep!.pull
         
         let condition : NSCondition = NSCondition()
         

@@ -10,11 +10,11 @@ import Foundation
 
 internal class C8oResponseProgressListener : C8oResponseListener
 {
-    internal var OnProgressResponse : (C8oProgress, Dictionary<String, NSObject>)->()
+    internal var onProgressResponse : (C8oProgress, Dictionary<String, NSObject>)->()
     
     internal init(onProgressResponse : (C8oProgress, Dictionary<String, NSObject>)->())
     {
-        OnProgressResponse = onProgressResponse;
+        self.onProgressResponse = onProgressResponse;
     }
 
 

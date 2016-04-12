@@ -60,8 +60,6 @@ import CouchbaseLite
     internal static var RESPONSE_TYPE_JSON : String =  "json"
     
     /** Static configuration */
-    internal static var C8oHttpInterfaceUsed : Type?
-    internal static var C8oFullSyncUsed : Type?
     internal static var defaultUiDispatcher : AnyObject?//ACTION<ACTION>?
     internal static var deviceUUID : String = UIDevice.currentDevice().identifierForVendor!.UUIDString
     
@@ -76,7 +74,7 @@ import CouchbaseLite
      @param nil
      @return A string containing the sdk version.
      */
-    public static func GetSdkVersion()-> String
+    public static func getSdkVersion()-> String
     {
         return "2.0.0"
     }
@@ -90,12 +88,12 @@ import CouchbaseLite
      http://127.0.0.1:18080/convertigo/projects/MyProject
      @endcode
      */
-    private var endpoint : String?
-    private var endpointConvertigo: String?
-    private var endpointIsSecure : Bool?
-    private var endpointHost : String?
-    private var endpointPort : String?
-    private var endpointProject : String?
+    private var _endpoint : String?
+    private var _endpointConvertigo: String?
+    private var _endpointIsSecure : Bool?
+    private var _endpointHost : String?
+    private var _endpointPort : String?
+    private var _endpointProject : String?
     
     
     
@@ -147,7 +145,7 @@ import CouchbaseLite
     {
         super.init()
         // Checks the URL validity
-        if (!C8oUtils.IsValidUrl(endpoint)){
+        if (!C8oUtils.isValidUrl(endpoint)){
             //throw NSC8oError(domain: NSURLC8oErrorDomain, code: NSURLC8oErrorCannotOpenFile, userInfo: nil)
             throw C8oError.ArgumentException(C8oExceptionMessage.InvalidArgumentInvalidURL(endpoint))
         }
@@ -160,21 +158,21 @@ import CouchbaseLite
             throw C8oError.ArgumentException(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint))
         }
         
-        self.endpoint = endpoint
-        self.endpointConvertigo = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(1))
+        _endpoint = endpoint
+        _endpointConvertigo = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(1))
         
         if(regexV[0].rangeAtIndex(2).location != NSNotFound){
-            self.endpointIsSecure  = !(endpoint as NSString?)!.substringWithRange(regexV[0].rangeAtIndex(2)).isEmpty
+            _endpointIsSecure  = !(endpoint as NSString?)!.substringWithRange(regexV[0].rangeAtIndex(2)).isEmpty
         }
         else {
-            self.endpointIsSecure  = false
+            _endpointIsSecure  = false
         }
-        self.endpointHost = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(3))
-        self.endpointPort = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(4))
-        self.endpointProject = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(5))
+        _endpointHost = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(3))
+        _endpointPort = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(4))
+        _endpointProject = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(5))
         
         if (c8oSettings != nil){
-            self.Copy(c8oSettings!)
+            copyProperties(c8oSettings!)
         }
         if (UiDispatcher == nil){
             // uiDispatcher = self.defaultUiDispatcher
@@ -182,10 +180,8 @@ import CouchbaseLite
         
         self.httpInterface  =  C8oHttpInterface(c8o: self)
         self.c8oLogger = C8oLogger(c8o: self)
-        self.c8oLogger!.LogMethodCall("C8o constructor")
-        self.c8oFullSync = C8oFullSyncCbl()
-        self.c8oFullSync?.Init(self)
-        
+        self.c8oLogger!.logMethodCall("C8o constructor")
+        self.c8oFullSync = C8oFullSyncCbl(c8o: self)
     }
     
     /**
@@ -197,8 +193,9 @@ import CouchbaseLite
      @endcode
      @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
      */
-    public func Call(requestable :String?, var parameters : Dictionary<String, NSObject>? = nil , c8oResponseListener : C8oResponseListener , c8oExceptionListener  : C8oExceptionListener )-> Void
+    public func call(requestable :String?, parameters : Dictionary<String, NSObject>? = nil , c8oResponseListener : C8oResponseListener , c8oExceptionListener  : C8oExceptionListener )-> Void
     {
+        var parameters = parameters
         do
         {
             if(requestable == nil)
@@ -222,7 +219,7 @@ import CouchbaseLite
             let regexV  = regex.matchesInString(requestable!, options: [], range: NSMakeRange(0, requestable!.characters.count ))
             
             if(regexV.first == nil){
-                throw C8oError.ArgumentException(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint!)) //Exception(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint))
+                throw C8oError.ArgumentException(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(_endpoint!)) //Exception(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint))
             }
             
             
@@ -247,23 +244,24 @@ import CouchbaseLite
                 
             }
             
-            try! Call(parameters, c8oResponseListener: c8oResponseListener, c8oExceptionListener: c8oExceptionListener)
+            try! call(parameters, c8oResponseListener: c8oResponseListener, c8oExceptionListener: c8oExceptionListener)
         }
         catch let e as C8oException
         {
-            HandleCallException(c8oExceptionListener, requestParameters: parameters!, exception: e)
+            handleCallException(c8oExceptionListener, requestParameters: parameters!, exception: e)
         }
         catch {
-            let e : String
+            let _ : String
         }
     }
     
-    public func Call(var parameters : Dictionary<String, NSObject>?  = nil, c8oResponseListener :  C8oResponseListener? = nil, c8oExceptionListener : C8oExceptionListener? = nil) throws
+    public func call(parameters : Dictionary<String, NSObject>?  = nil, c8oResponseListener :  C8oResponseListener? = nil, c8oExceptionListener : C8oExceptionListener? = nil) throws
     {
+        var parameters = parameters
         // IMPORTANT : all c8o calls have to end here !
         do
         {
-            c8oLogger!.LogMethodCall("Call", parameters: parameters!)
+            c8oLogger!.logMethodCall("Call", parameters: parameters!)
             
             // Checks parameters validity
             if (parameters == nil)
@@ -284,7 +282,7 @@ import CouchbaseLite
         }
         catch let e as C8oException
         {
-            HandleCallException(c8oExceptionListener, requestParameters: parameters!, exception: e)
+            handleCallException(c8oExceptionListener, requestParameters: parameters!, exception: e)
         }
     }
     
@@ -314,11 +312,11 @@ import CouchbaseLite
      FailUI() methods to handle C8oErrors.
      
      */
-    public func CallJson (requestable : String, parameters : Dictionary<String, NSObject>?)-> C8oPromise<JSON>?
+    public func callJson (requestable : String, parameters : Dictionary<String, NSObject>?)-> C8oPromise<JSON>?
     {
         let promise = C8oPromise<JSON>(c8o: self)
         
-        Call(requestable,
+        call(requestable,
             parameters: parameters,
             c8oResponseListener : C8oResponseJsonListener(onJsonResponse:{
                 (params: Pair<JSON?, Dictionary<String, NSObject>?>?)->() in
@@ -326,43 +324,43 @@ import CouchbaseLite
                 if((params!.key) == nil ){
                     if((params!.value)!.keys.contains(C8o.ENGINE_PARAMETER_PROGRESS) == true){
                         
-                        promise.OnProgress(((((params!.value)! as Dictionary<String, NSObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
+                        promise.onProgress(((((params!.value)! as Dictionary<String, NSObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
                     }
                 }
                 else{
-                    promise.OnResponse((params?.key)! , parameters: (params?.value)!)
+                    promise.onResponse((params?.key)! , parameters: (params?.value)!)
                 }
                 
             })
-            , c8oExceptionListener : C8oExceptionListener(OnException:{
+            , c8oExceptionListener : C8oExceptionListener(onException:{
                 (params : Pair<C8oException, Dictionary<String, NSObject>?>?)->() in
                 
-                promise.OnFailure(((params?.key) as C8oException?)!, parameters: (params?.value)!)
+                promise.onFailure(((params?.key) as C8oException?)!, parameters: (params?.value)!)
                 
             }))
         return promise
     }
     
     
-    public func CallJson(requestable : String, parameters : NSObject...)->C8oPromise<JSON>?{
+    public func callJson(requestable : String, parameters : NSObject...)->C8oPromise<JSON>?{
         
-        return try! CallJson(requestable, parameters: C8o.ToParameters(parameters))
+        return try! callJson(requestable, parameters: C8o.toParameters(parameters))
         
     }
     
     
-    public func CallJson(requestable : String, parameters : JSON)-> C8oPromise<JSON>?{
+    public func callJson(requestable : String, parameters : JSON)-> C8oPromise<JSON>?{
         
-        return CallJson(requestable, parameters: (parameters.object as! Dictionary<String, NSObject>))
+        return callJson(requestable, parameters: (parameters.object as! Dictionary<String, NSObject>))
     }
     
     
-    public func CallXml(requestable : String, parameters :Dictionary<String, NSObject>)->C8oPromise<AEXMLDocument>
+    public func callXml(requestable : String, parameters :Dictionary<String, NSObject>)->C8oPromise<AEXMLDocument>
     {
         
         let promise = C8oPromise<AEXMLDocument>(c8o: self)
         
-        Call(requestable,
+        call(requestable,
             parameters: parameters,
             c8oResponseListener : C8oResponseXmlListener(onXmlResponse:{
                 (params : Pair<AnyObject?, Dictionary<String, NSObject>?>?)->() in
@@ -370,28 +368,28 @@ import CouchbaseLite
                 if((params!.key) == nil ){
                     if((params!.value)!.keys.contains(C8o.ENGINE_PARAMETER_PROGRESS) == true){
                         
-                        promise.OnProgress(((((params!.value)! as Dictionary<String, NSObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
+                        promise.onProgress(((((params!.value)! as Dictionary<String, NSObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
                     }
                 }
                 else{
-                    promise.OnResponse((params?.key)! as! AEXMLDocument, parameters: (params?.value)!)
+                    promise.onResponse((params?.key)! as! AEXMLDocument, parameters: (params?.value)!)
                 }
                 
             })
-            , c8oExceptionListener : C8oExceptionListener(OnException:{
+            , c8oExceptionListener : C8oExceptionListener(onException:{
                 (params : Pair<C8oException, Dictionary<String, NSObject>?>?)->() in
                 
-                promise.OnFailure(((params?.key) as C8oException?)!, parameters: (params?.value)!)
+                promise.onFailure(((params?.key) as C8oException?)!, parameters: (params?.value)!)
                 
             }))
         return promise
         
     }
     
-    public func CallXml(requestable : String, parameters : NSObject...)->C8oPromise<AEXMLDocument>
+    public func callXml(requestable : String, parameters : NSObject...)->C8oPromise<AEXMLDocument>
     {
         
-        return try! CallXml(requestable, parameters: C8o.ToParameters(parameters))
+        return try! callXml(requestable, parameters: C8o.toParameters(parameters))
     }
     /*public func CallXml(requestable : String)->C8oPromise<XMLDocument>
     {
@@ -399,27 +397,27 @@ import CouchbaseLite
     return CallXml(requestable, parameters: Dictionary<String, NSObject>())
     }*/
     
-    public func AddCookie(name : String, value : String)->Void
+    public func addCookie(name : String, value : String)->Void
     {
-        httpInterface!.AddCookie(name, value: value)
+        httpInterface!.addCookie(name, value: value)
     }
     
-    public override var LogC8o : Bool
+    public override var logC8o : Bool
         {
-        get { return logC8o! }
-        set(value) { logC8o = value }
+        get { return _logC8o! }
+        set(value) { _logC8o = value }
     }
     
-    public  override var LogRemote:Bool
+    public override var logRemote:Bool
         {
-        get { return logRemote! }
-        set(value){ logRemote = value }
+        get { return _logRemote! }
+        set(value){ _logRemote = value }
     }
     
-    public override var LogLevelLocal : C8oLogLevel
+    public override var logLevelLocal : C8oLogLevel
         {
-        get { return logLevelLocal }
-        set(value) { logLevelLocal = value }
+        get { return _logLevelLocal }
+        set(value) { _logLevelLocal = value }
     }
     
     
@@ -429,12 +427,12 @@ import CouchbaseLite
     }*/
     
     
-    public var Log : C8oLogger{
+    public var log : C8oLogger{
         get { return c8oLogger! }
     }
     
     
-    public func RunUI (block: dispatch_block_t) {
+    public func runUI (block: dispatch_block_t) {
         if(NSThread.isMainThread())
         {
             block()
@@ -449,78 +447,78 @@ import CouchbaseLite
     }
     public func toString()->String
     {
-        return "C8o[" + endpoint! + "] " //+ super.description()
+        return "C8o[" + _endpoint! + "] " //+ super.description()
     }
     
     
-    public var Endpoint: String
+    public var endpoint: String
         {
-        get { return endpoint! }
+        get { return _endpoint! }
     }
     
     
-    public var EndpointConvertigo : String
+    public var endpointConvertigo : String
         {
-        get { return endpointConvertigo! }
+        get { return _endpointConvertigo! }
     }
     
     
     public var EndpointIsSecure :  Bool
         {
-        get { return endpointIsSecure! }
+        get { return _endpointIsSecure! }
     }
     
     
-    public var EndpointHost : String
+    public var endpointHost : String
         {
-        get { return endpointHost! }
+        get { return _endpointHost! }
     }
     
     
-    public var EndpointPort :  String
+    public var endpointPort :  String
         {
-        get { return endpointPort! }
+        get { return _endpointPort! }
     }
     
-    public var EndpointProject :  String
+    public var endpointProject :  String
         {
-        get { return endpointProject! }
+        get { return _endpointProject! }
     }
     
     
-    public var DeviceUUID : String{
+    public var deviceUUID : String{
         get { return C8o.deviceUUID }
     }
     
     
-    public var CookieStore : NSObject//CookieContainer
+    public var cookieStore : NSObject//CookieContainer
         {
-        get { return httpInterface!.CookieStore! }
+        get { return httpInterface!.cookieStore! }
     }
     
-    private static func ToParameters(parameters : [NSObject]?)throws ->Dictionary<String, NSObject>
+    private static func toParameters(parameters : [NSObject]?)throws ->Dictionary<String, NSObject>
     {
         if (parameters!.count % 2 != 0)
         {
-            throw C8oError.InvalidArgument(C8oExceptionMessage.InvalidParameterValue("parameters", details: "needs pairs of values")) //throw System.ArgumentException(C8oExceptionMessage.InvalidParameterValue("parameters", "needs pairs of values"))
+            throw C8oError.InvalidArgument(C8oExceptionMessage.invalidParameterValue("parameters", details: "needs pairs of values")) //throw System.ArgumentException(C8oExceptionMessage.InvalidParameterValue("parameters", "needs pairs of values"))
         }
         
         var newParameters = Dictionary<String, NSObject>()
         
-        for var i = 0; i < parameters!.count; i += 2
+        for i in 0.stride(to: parameters!.count, by: 2)
         {
             newParameters[String(parameters![i])] = parameters![i + 1]
         }
         return newParameters
     }
     
-    internal func HandleCallException(c8oExceptionListener: C8oExceptionListener?, requestParameters : Dictionary<String, NSObject>, exception : C8oException)
+    internal func handleCallException(c8oExceptionListener: C8oExceptionListener?, requestParameters : Dictionary<String, NSObject>, exception : C8oException)
     {
-        c8oLogger!._Warn("Handle a call exception", exceptions: exception)
+        c8oLogger!._warn("Handle a call exception", exceptions: exception)
         
         if (c8oExceptionListener != nil)
         {
-            c8oExceptionListener!.OnException(Pair<C8oException, Dictionary<String, NSObject>?>(key: exception, value: requestParameters))
+            c8oExceptionListener!.onException(Pair<C8oException, Dictionary<String, NSObject>?>(key: exception, value: requestParameters))
         }
     }
 }

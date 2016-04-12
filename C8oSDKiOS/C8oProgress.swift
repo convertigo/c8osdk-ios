@@ -11,221 +11,221 @@ import Foundation
 
 public class C8oProgress : NSObject
 {
-    private var changed :Bool? = false;
-    private var continuous :Bool? = false;
-    private var finished :Bool? = false;
-    private var pull :Bool? = true;
-    private var current : Int? = -1;
-    private var total : Int? = -1;
-    private var status : String? = "";
-    private var taskInfo : String? = "";
-    private var raw : NSObject? ;
+    private var _changed :Bool? = false
+    private var _continuous :Bool? = false
+    private var _finished :Bool? = false
+    private var _pull :Bool? = true
+    private var _current : Int? = -1
+    private var _total : Int? = -1
+    private var _status : String? = ""
+    private var _taskInfo : String? = ""
+    private var _raw : NSObject? 
     
     internal override init()
     {
         super.init()
-        self.changed = nil
-        self.continuous = nil
-        self.finished = nil
-        self.pull = nil
-        self.current = nil
-        self.total = nil
-        self.status = nil
-        self.taskInfo = nil
-        self.raw = nil
+        self._changed = nil
+        self._continuous = nil
+        self._finished = nil
+        self._pull = nil
+        self._current = nil
+        self._total = nil
+        self._status = nil
+        self._taskInfo = nil
+        self._raw = nil
     
     }
     
     internal init(progress : C8oProgress)
     {
         super.init()
-        continuous = progress.continuous;
-        finished = progress.finished;
-        pull = progress.pull;
-        current = progress.current;
-        total = progress.total;
-        status = progress.status;
-        taskInfo = progress.taskInfo;
-        raw = progress.raw;
+        _continuous = progress._continuous
+        _finished = progress._finished
+        _pull = progress._pull
+        _current = progress._current
+        _total = progress._total
+        _status = progress._status
+        _taskInfo = progress._taskInfo
+        _raw = progress._raw
     }
     
-    internal var Changed : Bool
+    internal var changed : Bool
     {
         get
         {
-            return changed!;
+            return _changed!
         }
     
         set(value)
         {
-            changed = value;
+            _changed = value
         }
     }
     
-    public func Description()->String
+    public override var description: String
     {
-        return ""// Direction + ": " + current + "/" + total + " (" + (finished ? (continuous ? "live" : "done") : "running") + ")";
+        return ""// Direction + ": " + current + "/" + total + " (" + (finished ? (continuous ? "live" : "done") : "running") + ")"
     }
     
-    public var Continuous : Bool
+    public var continuous : Bool
     {
         get
         {
-            return continuous!;
+            return _continuous!
         }
     
         set(value)
         {
-            if (value != continuous)
+            if (value != _continuous)
             {
-                changed = true;
-                continuous = value;
+                _changed = true
+                _continuous = value
             }
         }
     }
     
 
-    public var Finished: Bool
+    public var finished: Bool
     {
         get
         {
-            return finished!;
+            return _finished!
         }
     
         set(value)
         {
-            if (value != finished)
+            if (value != _finished)
             {
-                changed = true;
-                finished = value;
+                _changed = true
+                _finished = value
             }
         }
     }
     
 
-    public var Pull : Bool
+    public var pull : Bool
     {
         get
         {
-            return pull!;
+            return _pull!
         }
     
         set(value)
         {
-            if (value != pull)
+            if (value != _pull)
             {
-                changed = true;
-                pull = value;
+                _changed = true
+                _pull = value
             }
         }
     }
     
 
-    public var Push : Bool
+    public var push : Bool
     {
         get
         {
-            return pull!;
+            return _pull!
         }
     }
     
 
-    public var Current : Int
+    public var current : Int
     {
         get
         {
-            return current!;
+            return _current!
         }
     
         set(value)
         {
-            if (value != current)
+            if (value != _current)
             {
-                changed = true;
-                current = value;
+                _changed = true
+                _current = value
             }
         }
     }
     
 
-    public var Total : Int
+    public var total : Int
     {
         get
         {
-            return total!;
+            return _total!
         }
     
         set(value)
         {
-            if (value != total)
+            if (value != _total)
             {
-                changed = true;
-                total = value;
+                _changed = true
+                _total = value
             }
         }
     }
     
 
-    public var Direction : String
+    public var direction : String
     {
         get
         {
-            return (pull != nil) ?
+            return (_pull != nil) ?
                 C8oFullSyncTranslator.FULL_SYNC_RESPONSE_VALUE_DIRECTION_PULL :
-                C8oFullSyncTranslator.FULL_SYNC_RESPONSE_VALUE_DIRECTION_PUSH;
+                C8oFullSyncTranslator.FULL_SYNC_RESPONSE_VALUE_DIRECTION_PUSH
         }
     }
     
 
-    public var Status : String
+    public var status : String
     {
         get
         {
-            return status!;
+            return _status!
         }
     
         set (value)
         {
-            if (value != status)
+            if (value != _status)
             {
-                changed = true;
-        status = value;
+                _changed = true
+                _status = value
             }
         }
     }
     
 
-    public var TaskInfo : String
+    public var taskInfo : String
     {
         get
         {
-            return taskInfo!;
+            return _taskInfo!
         }
     
         set(value)
         {
-            if (value != taskInfo)
+            if (value != _taskInfo)
             {
-                changed = true;
-                taskInfo = value;
+                _changed = true
+                _taskInfo = value
             }
         }
     }
     
 
-    public var Raw : NSObject
+    public var raw : NSObject
     {
         get
         {
-            return raw!;
+            return _raw!
         }
     
         set(value)
         {
-            if (value != raw)
+            if (value != _raw)
             {
-                changed = true;
-                raw = value;
+                _changed = true
+                _raw = value
             }
         }
     }

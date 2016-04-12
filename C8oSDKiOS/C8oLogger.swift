@@ -52,7 +52,7 @@ public class C8oLogger
     {
         self.c8o = c8o;
         
-        remoteLogUrl = self.c8o.EndpointConvertigo + "/admin/services/logs.Add";
+        remoteLogUrl = c8o.endpointConvertigo + "/admin/services/logs.Add";
         remoteLogs = Queue<JSON>();
         alreadyRemoteLogging = [Bool]()
         alreadyRemoteLogging?.append(false)
@@ -61,61 +61,62 @@ public class C8oLogger
         
         let currentTime = NSDate();
         startTimeRemoteLog = currentTime;
-        uidRemoteLogs = C8oTranslator.DoubleToHexString(C8oUtils.GetUnixEpochTime(currentTime)!);
-        let envJSON : JSON = ["uid" : uidRemoteLogs!, "uuid" : c8o.DeviceUUID, "project" : c8o.EndpointProject]
+        uidRemoteLogs = C8oTranslator.doubleToHexString(C8oUtils.getUnixEpochTime(currentTime)!);
+        let envJSON : JSON = ["uid" : uidRemoteLogs!, "uuid" : c8o.deviceUUID, "project" : c8o.endpointProject]
         env = String(envJSON)
     }
     
-    private func IsLoggableRemote(logLevel : C8oLogLevel?) ->Bool
+    private func isLoggableRemote(logLevel : C8oLogLevel?) ->Bool
     {
-        return c8o.LogRemote && logLevel != nil && C8oLogLevel.TRACE.priority <= remoteLogLevel!.priority && remoteLogLevel!.priority <= logLevel!.priority;
+        return c8o.logRemote && logLevel != nil && C8oLogLevel.TRACE.priority <= remoteLogLevel!.priority && remoteLogLevel!.priority <= logLevel!.priority;
     }
     
-    private func IsLoggableConsole(logLevel : C8oLogLevel?) ->Bool
+    private func isLoggableConsole(logLevel : C8oLogLevel?) ->Bool
     {
-        return logLevel != nil && C8oLogLevel.TRACE.priority <= c8o.LogLevelLocal.priority && c8o.LogLevelLocal.priority <= logLevel!.priority;
+        return logLevel != nil && C8oLogLevel.TRACE.priority <= c8o.logLevelLocal.priority && c8o.logLevelLocal.priority <= logLevel!.priority;
     }
     
     /** Basics log */
-    public func CanLog(logLevel : C8oLogLevel) ->Bool
+    public func canLog(logLevel : C8oLogLevel) ->Bool
     {
-        return IsLoggableConsole(logLevel) || IsLoggableRemote(logLevel);
+        return isLoggableConsole(logLevel) || isLoggableRemote(logLevel);
     }
     
-    public var IsFatal : Bool
+    public var isFatal : Bool
         {
-        get { return CanLog(C8oLogLevel.FATAL); }
+        get { return canLog(C8oLogLevel.FATAL); }
     }
     
-    public var IsError : Bool
+    public var isError : Bool
         {
-        get { return CanLog(C8oLogLevel.ERROR); }
+        get { return canLog(C8oLogLevel.ERROR); }
     }
     
-    public var IsWarn  : Bool
+    public var isWarn : Bool
         {
-        get { return CanLog(C8oLogLevel.WARN); }
+        get { return canLog(C8oLogLevel.WARN); }
     }
     
-    public var IsInfo  : Bool
+    public var isInfo : Bool
         {
-        get { return CanLog(C8oLogLevel.INFO); }
+        get { return canLog(C8oLogLevel.INFO); }
     }
     
-    public var IsDebug  : Bool
+    public var isDebug : Bool
         {
-        get { return CanLog(C8oLogLevel.DEBUG); }
+        get { return canLog(C8oLogLevel.DEBUG); }
     }
     
-    public var IsTrace  : Bool
+    public var isTrace : Bool
         {
-        get { return CanLog(C8oLogLevel.TRACE); }
+        get { return canLog(C8oLogLevel.TRACE); }
     }
     
-    internal func Log(logLevel: C8oLogLevel, var message:String , exception: C8oSDKiOS.C8oException?! = nil) ->Void
+    internal func log(logLevel: C8oLogLevel, message:String , exception: C8oSDKiOS.C8oException?! = nil) ->Void
     {
-        let isLogConsole : Bool = IsLoggableConsole(logLevel);
-        let isLogRemote : Bool = IsLoggableRemote(logLevel);
+        var message = message
+        let isLogConsole : Bool = isLoggableConsole(logLevel);
+        let isLogRemote : Bool = isLoggableRemote(logLevel);
         
         if (isLogConsole || isLogRemote)
         {
@@ -134,7 +135,7 @@ public class C8oLogger
                         C8oLogger.JSON_KEY_LEVEL : logLevel.name,
                         C8oLogger.JSON_KEY_MESSAGE : message
                     ]));
-                LogRemote();
+                logRemote();
             }
             
             if (isLogConsole)
@@ -145,75 +146,75 @@ public class C8oLogger
         }
     }
     
-    public func Fatal(message: String, exceptions: C8oSDKiOS.C8oException? = nil) ->Void
+    public func fatal(message: String, exceptions: C8oSDKiOS.C8oException? = nil) ->Void
     {
-        Log(C8oLogLevel.FATAL, message: message, exception: exceptions);
+        log(C8oLogLevel.FATAL, message: message, exception: exceptions);
     }
     
-    public func Error(message: String, exceptions: C8oSDKiOS.C8oException?  = nil) -> Void
+    public func error(message: String, exceptions: C8oSDKiOS.C8oException?  = nil) -> Void
     {
-        Log(C8oLogLevel.ERROR, message: message, exception: exceptions);
+        log(C8oLogLevel.ERROR, message: message, exception: exceptions);
     }
     
-    public func Warn(message: String, exceptions: C8oSDKiOS.C8oException?  = nil) -> Void
+    public func warn(message: String, exceptions: C8oSDKiOS.C8oException?  = nil) -> Void
     {
-        Log(C8oLogLevel.WARN, message: message, exception: exceptions);
+        log(C8oLogLevel.WARN, message: message, exception: exceptions);
     }
     
-    public func Info(message: String, exceptions: C8oSDKiOS.C8oException? = nil) -> Void
+    public func info(message: String, exceptions: C8oSDKiOS.C8oException? = nil) -> Void
     {
-        Log(C8oLogLevel.INFO, message: message, exception: exceptions);
+        log(C8oLogLevel.INFO, message: message, exception: exceptions);
     }
     
-    public func Debug(message: String, exceptions: C8oSDKiOS.C8oException?  = nil) -> Void
+    public func debug(message: String, exceptions: C8oSDKiOS.C8oException?  = nil) -> Void
     {
-        Log(C8oLogLevel.DEBUG, message: message, exception: exceptions);
+        log(C8oLogLevel.DEBUG, message: message, exception: exceptions);
     }
     
-    public func Trace(message: String, exceptions: C8oSDKiOS.C8oException?  = nil) -> Void
+    public func trace(message: String, exceptions: C8oSDKiOS.C8oException?  = nil) -> Void
     {
-        Log(C8oLogLevel.TRACE, message: message, exception: exceptions);
+        log(C8oLogLevel.TRACE, message: message, exception: exceptions);
     }
     
-    internal func _Log(logLevel : C8oLogLevel, messages : String, exceptions : C8oSDKiOS.C8oException?)->Void
+    internal func _log(logLevel : C8oLogLevel, messages : String, exceptions : C8oSDKiOS.C8oException?)->Void
     {
-        if (c8o.LogC8o)
+        if (c8o.logC8o)
         {
-            Log(logLevel, message: C8oLogger.LOG_INTERNAL_PREFIX + messages, exception: exceptions);
+            log(logLevel, message: C8oLogger.LOG_INTERNAL_PREFIX + messages, exception: exceptions);
         }
     }
     
-    internal func _Fatal(message: String, exceptions: C8oSDKiOS.C8oException?) -> Void
+    internal func _fatal(message: String, exceptions: C8oSDKiOS.C8oException?) -> Void
     {
-        _Log(C8oLogLevel.FATAL, messages: message, exceptions: exceptions);
+        _log(C8oLogLevel.FATAL, messages: message, exceptions: exceptions);
     }
     
-    internal func _C8oException(message: String, exceptions:C8oSDKiOS.C8oException?) -> Void
+    internal func _c8oException(message: String, exceptions:C8oSDKiOS.C8oException?) -> Void
     {
-        _Log(C8oLogLevel.ERROR, messages: message, exceptions: exceptions);
+        _log(C8oLogLevel.ERROR, messages: message, exceptions: exceptions);
     }
     
-    internal func _Warn(message: String, exceptions: C8oSDKiOS.C8oException?) -> Void
+    internal func _warn(message: String, exceptions: C8oSDKiOS.C8oException?) -> Void
     {
-        _Log(C8oLogLevel.WARN, messages: message, exceptions: exceptions);
+        _log(C8oLogLevel.WARN, messages: message, exceptions: exceptions);
     }
     
-    internal func _Info(message: String, exceptions: C8oSDKiOS.C8oException?) -> Void
+    internal func _info(message: String, exceptions: C8oSDKiOS.C8oException?) -> Void
     {
-        _Log(C8oLogLevel.INFO, messages: message, exceptions: exceptions);
+        _log(C8oLogLevel.INFO, messages: message, exceptions: exceptions);
     }
     
-    internal func _Debug(message: String, exceptions: C8oSDKiOS.C8oException?) -> Void
+    internal func _debug(message: String, exceptions: C8oSDKiOS.C8oException?) -> Void
     {
-        _Log(C8oLogLevel.DEBUG, messages: message, exceptions: exceptions);
+        _log(C8oLogLevel.DEBUG, messages: message, exceptions: exceptions);
     }
     
-    internal func _Trace(message: String, exceptions: C8oSDKiOS.C8oException?) -> Void
+    internal func _trace(message: String, exceptions: C8oSDKiOS.C8oException?) -> Void
     {
-        _Log(C8oLogLevel.TRACE, messages: message, exceptions: exceptions);
+        _log(C8oLogLevel.TRACE, messages: message, exceptions: exceptions);
     }
     
-    internal func LogRemote() ->Void
+    internal func logRemote() ->Void
     {
         var canLog : Bool  = false;
         let condition : NSCondition = NSCondition()
@@ -229,8 +230,7 @@ public class C8oLogger
         
         condition.unlock()
         
-        if(canLog)
-        {
+        if (canLog) {
             let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
             dispatch_async(dispatch_get_global_queue(priority, 0)){
                 
@@ -242,7 +242,7 @@ public class C8oLogger
                 while (count < listSize && count < C8oLogger.REMOTE_LOG_LIMIT)
                 {
                     logsArray.append(self.remoteLogs!.dequeue()!);
-                    count++;
+                    count = count + 1;
                 }
                 
                 // Initializes request paramters
@@ -254,27 +254,27 @@ public class C8oLogger
                     
                     [C8oLogger.JSON_KEY_LOGS: String(logsArray),
                         C8oLogger.JSON_KEY_ENV: self.env,
-                        C8o.ENGINE_PARAMETER_DEVICE_UUID: self.c8o.DeviceUUID]
+                        C8o.ENGINE_PARAMETER_DEVICE_UUID: self.c8o.deviceUUID]
                 ;
                 
                 var jsonResponse : JSON;
                 do
                 {
-                    let webResponse : (data : NSData?, error : NSError?) = self.c8o.httpInterface!.HandleRequest(self.remoteLogUrl!, parameters: parameters);
+                    let webResponse : (data : NSData?, error : NSError?) = self.c8o.httpInterface!.handleRequest(self.remoteLogUrl!, parameters: parameters);
                     if(webResponse.error != nil){
-                        self.c8o.LogRemote = false;
-                        if (self.c8o.LogOnFail != nil)
+                        self.c8o.logRemote = false;
+                        if (self.c8o.logOnFail != nil)
                         {
-                            self.c8o.LogOnFail!(exception: C8oException(message: C8oExceptionMessage.RemoteLogFail(), exception: webResponse.error!), parameters: nil);
+                            self.c8o.logOnFail!(exception: C8oException(message: C8oExceptionMessage.RemoteLogFail(), exception: webResponse.error!), parameters: nil);
                         }
                         return
                     }
                     else{
-                        jsonResponse = C8oTranslator.DataToJson(webResponse.data!)!
+                        jsonResponse = C8oTranslator.dataToJson(webResponse.data!)!
                     }
                     
                 }
-                catch let e as NSError
+                catch _ as NSError
                 {
                     
                 }
@@ -284,7 +284,7 @@ public class C8oLogger
                 if (logLevelResponse != nil)
                 {
                     var logLevelResponseStr : String = logLevelResponse.stringValue
-                    var c8oLogLevel = C8oLogLevel.GetC8oLogLevel(logLevelResponseStr);
+                    var c8oLogLevel = C8oLogLevel.getC8oLogLevel(logLevelResponseStr);
                     
                     if (c8oLogLevel != nil)
                     {
@@ -294,7 +294,7 @@ public class C8oLogger
                     condition.lock()
                     self.alreadyRemoteLogging![0] = false;
                     condition.unlock()
-                    self.LogRemote();
+                    self.logRemote();
                     
                 }
             };
@@ -307,28 +307,28 @@ public class C8oLogger
     /** Others log */
     
     
-    internal func LogMethodCall(methodName : String, parameters : NSObject...)-> Void
+    internal func logMethodCall(methodName : String, parameters : NSObject...)-> Void
     {
-        if (c8o.LogC8o && IsDebug)
+        if (c8o.logC8o && isDebug)
         {
             var methodCallLogMessage : String = "Method call : " + methodName;
-            if (IsTrace && parameters.count > 0)
+            if (isTrace && parameters.count > 0)
             {
                 methodCallLogMessage += "\n" + String(parameters);
-                _Trace(methodCallLogMessage, exceptions: nil);
+                _trace(methodCallLogMessage, exceptions: nil);
                 
             }
             else
             {
-                _Debug(methodCallLogMessage, exceptions: nil);
+                _debug(methodCallLogMessage, exceptions: nil);
             }
         }
     }
     
     
-    internal func LogC8oCall(url : String, parameters : Dictionary<String, NSObject>)->Void
+    internal func logC8oCall(url : String, parameters : Dictionary<String, NSObject>)->Void
     {
-        if (c8o.LogC8o && IsDebug)
+        if (c8o.logC8o && isDebug)
         {
             var c8oCallLogMessage : String = "C8o call : " + url;
             
@@ -337,25 +337,25 @@ public class C8oLogger
                 c8oCallLogMessage += "\n" + String(parameters);
             }
             
-            _Debug(c8oCallLogMessage, exceptions: nil);
+            _debug(c8oCallLogMessage, exceptions: nil);
         }
     }
     
     
-    internal func LogC8oCallXMLResponse(response : AEXMLDocument, url: String, parameters : Dictionary<String, NSObject>)-> Void
+    internal func logC8oCallXMLResponse(response : AEXMLDocument, url: String, parameters : Dictionary<String, NSObject>)-> Void
     {
-        LogC8oCallResponse(C8oTranslator.XmlToString(response)!, responseType: "XML", url: url, parameters: parameters);
+        logC8oCallResponse(C8oTranslator.xmlToString(response)!, responseType: "XML", url: url, parameters: parameters);
     }
     
     
-    internal func LogC8oCallJSONResponse(response : JSON, url : String, parameters : Dictionary<String, NSObject>)-> Void
+    internal func logC8oCallJSONResponse(response : JSON, url : String, parameters : Dictionary<String, NSObject>)-> Void
     {
         //LogC8oCallResponse(C8oTranslator.JsonToString(response), "JSON", url, parameters);
     }
     
-    internal func LogC8oCallResponse(responseStr : String, responseType : String, url: String, parameters : Dictionary<String, NSObject>)-> Void
+    internal func logC8oCallResponse(responseStr : String, responseType : String, url: String, parameters : Dictionary<String, NSObject>)-> Void
     {
-        if(c8o.LogC8o && IsTrace)
+        if(c8o.logC8o && isTrace)
         {
             var c8oCallResponseLogMessage : String = "C8o call " + responseType + " response : " + url;
             
@@ -366,7 +366,7 @@ public class C8oLogger
             
             c8oCallResponseLogMessage += "\n" + responseStr;
             
-            _Trace(c8oCallResponseLogMessage, exceptions: nil);
+            _trace(c8oCallResponseLogMessage, exceptions: nil);
         }
     }
 }
@@ -397,7 +397,7 @@ public class C8oLogLevel
         self.priority = priority;
     }
     
-    internal static func GetC8oLogLevel(name : String) ->C8oLogLevel?
+    internal static func getC8oLogLevel(name : String) ->C8oLogLevel?
     {
         for c8oLogLevel in C8oLogLevel.C8O_LOG_LEVELS
         {
@@ -409,4 +409,3 @@ public class C8oLogLevel
         return nil;
     }
 }
-

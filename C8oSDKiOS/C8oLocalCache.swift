@@ -16,19 +16,19 @@ public class C8oLocalCache : NSObject
     
    public class Priority{
     
-        var IsAviable: (c8o : C8o)->(Bool)
+        var isAvailable: (c8o : C8o)->(Bool)
     
     /*public static var SERVER : Priority = Priority(c8o : C8o->(Bool));
         public static var LOCAL : Priority = Priority(isAviable: (c8o: C8o(), bool: true));
 */
-        public init (isAviable : (c8o : C8o)->(Bool))
+        public init (isAvailable : (c8o : C8o)->(Bool))
         {
-            IsAviable = isAviable
+            self.isAvailable = isAvailable
         }
         
     }
     
-    internal var  priority : C8oLocalCache.Priority?;
+    internal var priority : C8oLocalCache.Priority?;
     internal var ttl : Int;
     internal var enabled : Bool;
     

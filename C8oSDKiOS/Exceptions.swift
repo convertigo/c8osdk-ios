@@ -30,9 +30,9 @@ public class C8oException : NSError
         fatalError("init(coder:) has not been implemented")
     }
     
-    private static func FilterMessage(var message : String, exception : NSError)->String
+    private static func filterMessage(message : String, exception : NSError)->String
     {
-        
+        var message = message
         if (exception is C8oException)
         {
             message = String(exception) + " | " + message;
@@ -40,7 +40,7 @@ public class C8oException : NSError
         return message;
     }
     
-    private static func FilterException(exception : NSError)->NSError
+    private static func filterException(exception : NSError)->NSError
     {
     /*if (exception is C8oException)
     {

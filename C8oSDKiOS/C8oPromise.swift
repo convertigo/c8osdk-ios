@@ -30,10 +30,10 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
     }
     
     
-    public func Then(c8oOnResponse : (response : T, parameters : Dictionary<String, NSObject>)throws->(C8oPromise<T>?), ui : Bool)-> C8oPromise<T>?
+    public func then(c8oOnResponse : (response : T, parameters : Dictionary<String, NSObject>)throws->(C8oPromise<T>?), ui : Bool)-> C8oPromise<T>?
     {
         if(nextPromise != nil){
-            return nextPromise!.Then(c8oOnResponse, ui: ui)
+            return nextPromise!.then(c8oOnResponse, ui: ui)
         }
         else{
             c8oResponse = Pair<(T, Dictionary<String, NSObject>) throws ->(C8oPromise<T>?), Bool>(key: c8oOnResponse, value: ui)
@@ -43,25 +43,25 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
                 nextPromise?.lastParameters = lastParameters
             }
             if(lastResponse != nil){
-                OnResponse()
+                onResponse()
             }
             return nextPromise
         }
     }
     
-    public func Then(c8oOnResponse : (response : T, parameters : Dictionary<String, NSObject>)throws->(C8oPromise<T>?))-> C8oPromise<T>?{
-        return Then(c8oOnResponse, ui: false)
+    public func then(c8oOnResponse : (response : T, parameters : Dictionary<String, NSObject>)throws->(C8oPromise<T>?))-> C8oPromise<T>?{
+        return then(c8oOnResponse, ui: false)
     }
     
-    public func ThenUI(c8oOnResponse : (response : T, parameters : Dictionary<String, NSObject>)throws->(C8oPromise<T>?))-> C8oPromise<T>?{
-        return Then(c8oOnResponse, ui: true)
+    public func thenUI(c8oOnResponse : (response : T, parameters : Dictionary<String, NSObject>)throws->(C8oPromise<T>?))-> C8oPromise<T>?{
+        return then(c8oOnResponse, ui: true)
     }
     
     
-    public func Progress(c8oOnProgress : (C8oProgress)throws ->(), ui : Bool)->C8oPromiseFailSync<T>
+    public func progress(c8oOnProgress : (C8oProgress)throws ->(), ui : Bool)->C8oPromiseFailSync<T>
     {
         if(nextPromise != nil){
-            return (nextPromise?.Progress(c8oOnProgress, ui: ui))!
+            return (nextPromise?.progress(c8oOnProgress, ui: ui))!
         }
         else{
             c8oProgress = Pair<(C8oProgress)throws ->(), Bool>(key: c8oOnProgress, value: ui)
@@ -70,52 +70,51 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
         }
     }
     
-    public func Progress(c8oOnProgress : (C8oProgress)throws ->())->C8oPromiseFailSync<T>
+    public func progress(c8oOnProgress : (C8oProgress)throws ->())->C8oPromiseFailSync<T>
     {
-        return Progress(c8oOnProgress, ui: false)
+        return progress(c8oOnProgress, ui: false)
     }
     
     
-    public func ProgressUI(c8oOnProgress : (C8oProgress)throws ->())->C8oPromiseFailSync<T>
+    public func progressUI(c8oOnProgress : (C8oProgress)throws ->())->C8oPromiseFailSync<T>
     {
-        return Progress(c8oOnProgress, ui: true)
+        return progress(c8oOnProgress, ui: true)
     }
     
-    public func Fail(c8oOnFail : (C8oException, Dictionary<String, NSObject>)throws ->(), ui : Bool)->C8oPromiseSync<T>
+    public func fail(c8oOnFail : (C8oException, Dictionary<String, NSObject>)throws ->(), ui : Bool)->C8oPromiseSync<T>
     {
-        if(nextPromise != nil){
-            return nextPromise!.Fail(c8oOnFail, ui: ui)
-        }
-        else{
+        if (nextPromise != nil) {
+            return nextPromise!.fail(c8oOnFail, ui: ui)
+        } else {
             c8oFail = Pair<(C8oException, Dictionary<String, NSObject>)throws ->(), Bool>(key: c8oOnFail, value: ui)
             nextPromise = C8oPromise<T>(c8o: c8o)
-            if(lastFailure !=  nil){
-                OnFailure(lastFailure!, parameters: lastParameters!)
+            if (lastFailure !=  nil) {
+                onFailure(lastFailure!, parameters: lastParameters!)
             }
             return nextPromise!
         }
     }
     
-    public func Fail(c8oOnFail : (C8oException, Dictionary<String, NSObject>)throws ->())->C8oPromiseSync<T>
+    public func fail(c8oOnFail : (C8oException, Dictionary<String, NSObject>)throws ->())->C8oPromiseSync<T>
     {
-        return Fail(c8oOnFail, ui: false)
+        return fail(c8oOnFail, ui: false)
     }
     
     
-    public func FailUI(c8oOnFail : (C8oException, Dictionary<String, NSObject>)throws ->())->C8oPromiseSync<T>
+    public func failUI(c8oOnFail : (C8oException, Dictionary<String, NSObject>)throws ->())->C8oPromiseSync<T>
     {
-        return Fail(c8oOnFail, ui: true)
+        return fail(c8oOnFail, ui: true)
     }
     
     
-    public override func Sync() throws -> T?
+    public override func sync() throws -> T?
     {
         let thread = NSThread.currentThread()
         var syncMutex : [Bool] = [Bool]()
         syncMutex.append(false)
         let condition : NSCondition = NSCondition()
         condition.lock()
-        self.Then { response , parameters in
+        then { response , parameters in
             if(thread == NSThread.currentThread()){
                 syncMutex[0] = true
                 self.lastResponse = response
@@ -129,7 +128,7 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
                 condition.unlock()
             }
             return nil as C8oPromise<T>?
-            }?.Fail { exception , parameters in
+            }?.fail { exception , parameters in
                 if(thread == NSThread.currentThread()){
                     syncMutex[0] = true
                     self.lastFailure = exception
@@ -155,7 +154,7 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
         return lastResponse
     }
     
-    private func OnResponse()->Void{
+    private func onResponse()->Void{
         do{
             if(c8oResponse != nil){
                 var promise : [C8oPromise<T>?]? = [C8oPromise<T>]()
@@ -172,80 +171,71 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
                         catch let e as C8oError{
                             failure = e
                         }
-                        catch let e as NSException{
+                        catch _ as NSException{
                             print("exception....")
                         }
-                        catch{
-                            let e = "hhhh"
+                        catch {
                         }
                         condition.signal()
                         condition.unlock()
                     }
-                    c8o.RunUI(block)
+                    c8o.runUI(block)
                     condition.wait()
-                    if(failure != nil){
+                    if (failure != nil) {
                         throw failure!
                     }
                     condition.unlock()
-                }
-                else{
-                    do{
+                } else {
+                    do {
                        promise?.append(try c8oResponse?.key(self.lastResponse!, self.lastParameters!))
                     }
                     
                 }
-                if(promise?.count > 0)
-                {
-                    if(promise?[0] != nil){
-                        if(nextPromise != nil){
+                if (promise?.count > 0) {
+                    if (promise?[0] != nil) {
+                        if (nextPromise != nil) {
                             var lastPromise = promise![0]
-                            while(lastPromise?.nextPromise != nil)
-                            {
+                            while(lastPromise?.nextPromise != nil) {
                                 lastPromise = lastPromise!.nextPromise
                             }
                             lastPromise?.nextPromise = nextPromise
                         }
                         nextPromise = promise![0]
-                    }
-                    else if (nextPromise != nil){
-                        nextPromise?.OnResponse(lastResponse!, parameters: lastParameters!)
+                    } else if (nextPromise != nil) {
+                        nextPromise?.onResponse(lastResponse!, parameters: lastParameters!)
                     }
                 }
                 
-            }
-            else if (nextPromise != nil){
-                nextPromise?.OnResponse(lastResponse!, parameters: lastParameters!)
-            }
-            else{
+            } else if (nextPromise != nil) {
+                nextPromise?.onResponse(lastResponse!, parameters: lastParameters!)
+            } else {
                 // Response received and no handler.
             }
             
-        }
-        catch let e as C8oException{
-            OnFailure(e, parameters: lastParameters!)
-        }
-        catch{
+        } catch let e as C8oException {
+            onFailure(e, parameters: lastParameters!)
+        } catch {
             
         }
     }
     
-    internal func OnResponse(response :T, parameters : Dictionary<String, NSObject>)->Void{
+    internal func onResponse(response :T, parameters : Dictionary<String, NSObject>)->Void{
         if(lastResponse != nil){
             if(nextPromise != nil){
-                nextPromise?.OnResponse(response, parameters: parameters)
+                nextPromise?.onResponse(response, parameters: parameters)
             }
             else{
-                c8o.Log._Trace("Another response received.", exceptions: nil)
+                c8o.log._trace("Another response received.", exceptions: nil)
             }
         }
         else{
             lastResponse = response
             lastParameters = parameters
-            OnResponse()
+            onResponse()
         }
     }
     
-    internal func OnProgress(progress : C8oProgress) ->Void
+    internal func onProgress(progress : C8oProgress) ->Void
     {
         let condition : NSCondition = NSCondition()
         
@@ -255,7 +245,7 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
             {
                 condition.lock()
                 
-                c8o.RunUI {
+                c8o.runUI {
                     
                     condition.lock()
                     do
@@ -265,7 +255,7 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
                     }
                     catch let e as C8oException
                     {
-                        self.OnFailure(e, parameters: [C8o.ENGINE_PARAMETER_PROGRESS : progress ])
+                        self.onFailure(e, parameters: [C8o.ENGINE_PARAMETER_PROGRESS : progress ])
                         condition.signal()
                     }
                     
@@ -281,13 +271,13 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
             }
         }
         else if(nextPromise != nil){
-            nextPromise?.OnProgress(progress)
+            nextPromise?.onProgress(progress)
         }
     }
     
     
     
-    internal func OnFailure(exception : C8oException, parameters : Dictionary<String, NSObject>)-> Void
+    internal func onFailure(exception : C8oException, parameters : Dictionary<String, NSObject>)-> Void
     {
         lastFailure = exception
         lastParameters = parameters
@@ -299,7 +289,7 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
                 let condition : NSCondition = NSCondition()
                 condition.lock()
                 
-                c8o.RunUI {
+                c8o.runUI {
                     
                     condition.lock()
                     
@@ -324,7 +314,7 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
             }
         }
         if(nextPromise != nil){
-            nextPromise?.OnFailure(lastFailure!, parameters: parameters)
+            nextPromise?.onFailure(lastFailure!, parameters: parameters)
         }
         
     }

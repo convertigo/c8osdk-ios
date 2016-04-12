@@ -12,13 +12,13 @@ import Foundation
 internal class C8oFileManager
 {
 
-    public var CreateFile : (String) -> Streamable;
+    public var createFile : (String) -> Streamable;
     
-    public var OpenFile : (String) -> Streamable;
+    public var openFile : (String) -> Streamable;
     
-    public init (CreateFile : (String) -> Streamable, OpenFile : (String) -> Streamable)
+    public init (createFile : (String) -> Streamable, openFile : (String) -> Streamable)
     {
-        self.CreateFile = CreateFile;
-        self.OpenFile = OpenFile;
+        self.createFile = createFile;
+        self.openFile = openFile;
     }
 }

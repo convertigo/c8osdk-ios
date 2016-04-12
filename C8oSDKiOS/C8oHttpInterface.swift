@@ -20,31 +20,31 @@ internal class C8oHttpInterface
     {
         self.c8o = c8o
         
-        timeout = c8o.Timeout
+        timeout = c8o.timeout
         let cfg = NSURLSessionConfiguration.defaultSessionConfiguration()
         cookieContainer = C8oCookieStorage()
         cfg.HTTPCookieStorage = cookieContainer
         alamofire = Alamofire.Manager(configuration: cfg)
         
         // TODO : add cookies in the cookie container
-        if (c8o.Cookies != nil)
+        if (c8o.cookies != nil)
         {
             //cookieContainer.append(Pair<String, Dictionary<String, String>>(key: c8o.Endpoint, value: c8o.Cookies!));
         }
     }
     
-    internal func OnRequestCreate(request : NSObject)->Void
+    internal func onRequestCreate(request : NSObject)->Void
     {
         
     }
     
-    internal func HandleRequest(url : String, parameters : Dictionary<String, AnyObject>)->(NSData?, NSError?)
+    internal func handleRequest(url : String, parameters : Dictionary<String, AnyObject>)->(NSData?, NSError?)
     {
         var myResponse : (NSData?, NSError?)
-        let data : NSData? = SetRequestEntity(url, parameters: parameters)
+        let data : NSData? = setRequestEntity(url, parameters: parameters)
         let headers = [
-            "x-convertigo-sdk" : C8o.GetSdkVersion(),
-            "User-Agent" : "Convertigo Client SDK " + C8o.GetSdkVersion()
+            "x-convertigo-sdk" : C8o.getSdkVersion(),
+            "User-Agent" : "Convertigo Client SDK " + C8o.getSdkVersion()
         ]
         let semaphore = dispatch_semaphore_create(0)
         let queue = dispatch_queue_create("com.convertigo.c8o.queue", DISPATCH_QUEUE_CONCURRENT)
@@ -62,10 +62,10 @@ internal class C8oHttpInterface
         
     }
     
-    internal func HandleC8oCallRequest(url : String, parameters : Dictionary<String, NSObject>)->(NSData?, NSError?)
+    internal func handleC8oCallRequest(url : String, parameters : Dictionary<String, NSObject>)->(NSData?, NSError?)
     {
-        c8o.c8oLogger!.LogC8oCall(url, parameters: parameters);
-        return HandleRequest(url, parameters: parameters);
+        c8o.c8oLogger!.logC8oCall(url, parameters: parameters);
+        return handleRequest(url, parameters: parameters);
     }
     
     /// <summary>
@@ -75,17 +75,17 @@ internal class C8oHttpInterface
     /// <param name="name">The name.</param>
     /// <param name="value">The value.</param>
     
-    internal func AddCookie(name : String, value : String)->NSObject?//->Void
+    internal func addCookie(name : String, value : String)->NSObject?//->Void
     {
         //cookieContainer.Add(Uri(c8o.Endpoint), Cookie(name, value));
         return nil
     }
     
-    internal var CookieStore : C8oCookieStorage?/*CookieContainer*/{
+    internal var cookieStore : C8oCookieStorage?/*CookieContainer*/{
         get { return cookieContainer  }
     }
     
-    private func SetRequestEntity(request : NSObject?, parameters: Dictionary<String, AnyObject>?)->NSData?{
+    private func setRequestEntity(request : NSObject?, parameters: Dictionary<String, AnyObject>?)->NSData?{
         
         //request.ContentType = "application/x-www-form-urlencoded";
         // And adds to it parameters

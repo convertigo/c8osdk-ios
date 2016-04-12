@@ -38,7 +38,7 @@ internal class C8oFullSyncTranslator
         
         // Translates the JSON document
         do{
-            C8oTranslator.JsonToXml(json, parentElement: couchdb_output);
+            C8oTranslator.jsonToXml(json, parentElement: couchdb_output);
         }
         catch let e as C8oException{
             throw C8oException(message: C8oExceptionMessage.jsonValueToXML(), exception: e)
@@ -48,7 +48,7 @@ internal class C8oFullSyncTranslator
         return xmlDocument;
     }
     
-    internal static func DictionaryToJson(dictionary : Dictionary<String, NSObject>)->JSON?
+    internal static func dictionaryToJson(dictionary : Dictionary<String, NSObject>)->JSON?
     {
         let json : JSON = JSON(dictionary)
         return json
@@ -106,7 +106,7 @@ internal class C8oFullSyncTranslator
         }
     }
     
-    internal static func  DictionaryToString(dict : Dictionary<String, NSObject>)-> String
+    internal static func  dictionaryToString(dict : Dictionary<String, NSObject>)-> String
     {
         
         var str : String = "{ ";
@@ -117,7 +117,7 @@ internal class C8oFullSyncTranslator
             
             if (item is Dictionary<String, NSObject>)
             {
-                valueStr = DictionaryToString(Dictionary<String, NSObject>(dictionaryLiteral: item));
+                valueStr = dictionaryToString(Dictionary<String, NSObject>(dictionaryLiteral: item));
             }
             else if (item is Array<NSObject>)
             {
@@ -144,7 +144,7 @@ internal class C8oFullSyncTranslator
         return str;
     }
     
-    internal static func ListToString(list : Array<NSObject>)->String
+    internal static func listToString(list : Array<NSObject>)->String
     {
         var str : String = "[";
         for item in list

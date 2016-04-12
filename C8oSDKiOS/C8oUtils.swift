@@ -22,7 +22,7 @@ internal class C8oUtils
     
     
     
-    internal static func GetObjectClassName(obj : AnyObject?)->String
+    internal static func getObjectClassName(obj : AnyObject?)->String
     {
         
         var className  = "nil";
@@ -37,7 +37,7 @@ internal class C8oUtils
     }
     
     
-    internal static func GetParameter(parameters : Dictionary<String, NSObject>, name : String, useName : Bool = false)->Pair<String?, NSObject?>
+    internal static func getParameter(parameters : Dictionary<String, NSObject>, name : String, useName : Bool = false)->Pair<String?, NSObject?>
     {
         
         for parameter in parameters
@@ -55,9 +55,9 @@ internal class C8oUtils
         
     }
     
-    internal static func GetParameterObjectValue(parameters :  Dictionary<String, NSObject>, name : String, useName : Bool = false)->NSObject?
+    internal static func getParameterObjectValue(parameters :  Dictionary<String, NSObject>, name : String, useName : Bool = false)->NSObject?
     {
-        let parameter : Pair<String?, NSObject?> = GetParameter(parameters, name: name, useName: useName);
+        let parameter : Pair<String?, NSObject?> = getParameter(parameters, name: name, useName: useName);
         if (parameter.key != nil)
         {
             return parameter.value
@@ -66,9 +66,9 @@ internal class C8oUtils
     }
     
     
-    internal static func GetParameterStringValue(parameters : Dictionary<String, NSObject> , name : String, useName : Bool = false)->String?
+    internal static func getParameterStringValue(parameters : Dictionary<String, NSObject> , name : String, useName : Bool = false)->String?
     {
-        let parameter = GetParameter(parameters, name: name, useName: useName);
+        let parameter = getParameter(parameters, name: name, useName: useName);
         if (parameter.key != nil)
         {
             return String(parameter.value!);
@@ -76,10 +76,10 @@ internal class C8oUtils
         return nil;
     }
     
-    internal static func PeekParameterStringValue(var parameters : Dictionary<String, NSObject> , name : String, exceptionIfMissing : Bool = false) throws ->String?
+    internal static func peekParameterStringValue(parameters : Dictionary<String, NSObject> , name : String, exceptionIfMissing : Bool = false) throws ->String?
     {
-        
-        let value : String? = GetParameterStringValue(parameters, name: name, useName: false)!;
+        var parameters = parameters
+        let value : String? = getParameterStringValue(parameters, name: name, useName: false)!;
         if (value == nil)
         {
             if (exceptionIfMissing)
@@ -94,7 +94,7 @@ internal class C8oUtils
         return value;
     }
     
-    internal static func GetParameterJsonValue( parameters : Dictionary<String, NSObject>, name : Bool, useName : Bool = false)-> NSObject?
+    internal static func getParameterJsonValue( parameters : Dictionary<String, NSObject>, name : Bool, useName : Bool = false)-> NSObject?
     {
         /*
         var parameter = GetParameter(parameters, name, useName);
@@ -107,7 +107,7 @@ internal class C8oUtils
         return nil;
     }
     
-    internal static func GetParameterJsonValue(parameter : Dictionary<String, NSObject> )->NSObject?
+    internal static func getParameterJsonValue(parameter : Dictionary<String, NSObject> )->NSObject?
     {
         /* if (parameter.Value is string)
         {
@@ -117,7 +117,7 @@ internal class C8oUtils
         return nil;
     }
     
-    internal static func TryGetParameterObjectValue<T>(parameters : Dictionary<String, NSObject>, name : String, value : T, useName : Bool = false,  defaultValue : T )->Bool?
+    internal static func tryGetParameterObjectValue<T>(parameters : Dictionary<String, NSObject>, name : String, value : T, useName : Bool = false,  defaultValue : T )->Bool?
     {
         /*KeyValuePair<string, object> parameter = GetParameter(parameters, name, useName);
         if (parameter.Key != null && parameter.Value != null)
@@ -144,7 +144,7 @@ internal class C8oUtils
      
      @return Bool value.
      */
-    internal static func IsValidUrl(url : String)->Bool
+    internal static func isValidUrl(url : String)->Bool
     {
         let uriResult : NSURL? = NSURL(string: url)
         
@@ -158,7 +158,7 @@ internal class C8oUtils
     }
     
     
-    internal static func GetUnixEpochTime(date : NSDate)->Double?
+    internal static func getUnixEpochTime(date : NSDate)->Double?
     {
         
         let timeSpan = date.timeIntervalSince1970
@@ -189,7 +189,7 @@ internal class C8oUtils
     //    return defaultValue;
     //}
     
-    internal static func TryGetValueAndCheckType<T>(jObject : JSON, key : String, value : T)->Bool?
+    internal static func tryGetValueAndCheckType<T>(jObject : JSON, key : String, value : T)->Bool?
     {
         /*
         JToken foundValue;
@@ -211,7 +211,7 @@ internal class C8oUtils
         return nil;
     }
     
-    internal static func IdentifyC8oCallRequest(parameters : Dictionary<String, NSObject>, responseType : String)->String?
+    internal static func identifyC8oCallRequest(parameters : Dictionary<String, NSObject>, responseType : String)->String?
     {
         /*
         JObject json = new JObject();
