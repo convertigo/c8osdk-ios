@@ -112,7 +112,7 @@ public class C8oLogger
         get { return canLog(C8oLogLevel.TRACE); }
     }
     
-    internal func log(logLevel: C8oLogLevel, message:String , exception: C8oSDKiOS.C8oException?! = nil) ->Void
+    internal func log(logLevel: C8oLogLevel, message:String , exception: C8oException?! = nil) ->Void
     {
         var message = message
         let isLogConsole : Bool = isLoggableConsole(logLevel);
@@ -146,37 +146,37 @@ public class C8oLogger
         }
     }
     
-    public func fatal(message: String, exceptions: C8oSDKiOS.C8oException? = nil) ->Void
+    public func fatal(message: String, exceptions: C8oException? = nil) ->Void
     {
         log(C8oLogLevel.FATAL, message: message, exception: exceptions);
     }
     
-    public func error(message: String, exceptions: C8oSDKiOS.C8oException?  = nil) -> Void
+    public func error(message: String, exceptions: C8oException?  = nil) -> Void
     {
         log(C8oLogLevel.ERROR, message: message, exception: exceptions);
     }
     
-    public func warn(message: String, exceptions: C8oSDKiOS.C8oException?  = nil) -> Void
+    public func warn(message: String, exceptions: C8oException?  = nil) -> Void
     {
         log(C8oLogLevel.WARN, message: message, exception: exceptions);
     }
     
-    public func info(message: String, exceptions: C8oSDKiOS.C8oException? = nil) -> Void
+    public func info(message: String, exceptions: C8oException? = nil) -> Void
     {
         log(C8oLogLevel.INFO, message: message, exception: exceptions);
     }
     
-    public func debug(message: String, exceptions: C8oSDKiOS.C8oException?  = nil) -> Void
+    public func debug(message: String, exceptions: C8oException?  = nil) -> Void
     {
         log(C8oLogLevel.DEBUG, message: message, exception: exceptions);
     }
     
-    public func trace(message: String, exceptions: C8oSDKiOS.C8oException?  = nil) -> Void
+    public func trace(message: String, exceptions: C8oException?  = nil) -> Void
     {
         log(C8oLogLevel.TRACE, message: message, exception: exceptions);
     }
     
-    internal func _log(logLevel : C8oLogLevel, messages : String, exceptions : C8oSDKiOS.C8oException?)->Void
+    internal func _log(logLevel : C8oLogLevel, messages : String, exceptions : C8oException?)->Void
     {
         if (c8o.logC8o)
         {
@@ -184,32 +184,32 @@ public class C8oLogger
         }
     }
     
-    internal func _fatal(message: String, exceptions: C8oSDKiOS.C8oException?) -> Void
+    internal func _fatal(message: String, exceptions: C8oException?) -> Void
     {
         _log(C8oLogLevel.FATAL, messages: message, exceptions: exceptions);
     }
     
-    internal func _c8oException(message: String, exceptions:C8oSDKiOS.C8oException?) -> Void
+    internal func _c8oException(message: String, exceptions:C8oException?) -> Void
     {
         _log(C8oLogLevel.ERROR, messages: message, exceptions: exceptions);
     }
     
-    internal func _warn(message: String, exceptions: C8oSDKiOS.C8oException?) -> Void
+    internal func _warn(message: String, exceptions: C8oException?) -> Void
     {
         _log(C8oLogLevel.WARN, messages: message, exceptions: exceptions);
     }
     
-    internal func _info(message: String, exceptions: C8oSDKiOS.C8oException?) -> Void
+    internal func _info(message: String, exceptions: C8oException?) -> Void
     {
         _log(C8oLogLevel.INFO, messages: message, exceptions: exceptions);
     }
     
-    internal func _debug(message: String, exceptions: C8oSDKiOS.C8oException?) -> Void
+    internal func _debug(message: String, exceptions: C8oException?) -> Void
     {
         _log(C8oLogLevel.DEBUG, messages: message, exceptions: exceptions);
     }
     
-    internal func _trace(message: String, exceptions: C8oSDKiOS.C8oException?) -> Void
+    internal func _trace(message: String, exceptions: C8oException?) -> Void
     {
         _log(C8oLogLevel.TRACE, messages: message, exceptions: exceptions);
     }

@@ -13,7 +13,7 @@ import Alamofire
 import AEXML
 
 
-@testable import C8oSDKiOS
+@testable import C8o
 
 class C8oSDKiOSTests: XCTestCase {
     

@@ -101,7 +101,7 @@ internal class C8oCallTask
             }
             else
             {
-                throw C8oSDKiOS.C8oError.C8oException("Wrong listener")
+                throw C8oError.C8oException("Wrong listener")
             }
             
             /** Local cache */
