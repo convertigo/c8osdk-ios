@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Fuzi
 
 public class C8oResponseXmlListener : C8oResponseListener
 {

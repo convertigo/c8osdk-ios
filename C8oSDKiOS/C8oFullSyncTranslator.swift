@@ -9,7 +9,6 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
-import Fuzi
 import AEXML
 import CouchbaseLite
 internal class C8oFullSyncTranslator

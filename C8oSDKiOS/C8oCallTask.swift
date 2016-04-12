@@ -10,7 +10,6 @@ import Foundation
 import ObjectiveC
 import Alamofire
 import SwiftyJSON
-import Fuzi
 import AEXML
 import CouchbaseLite
 

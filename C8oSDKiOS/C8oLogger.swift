@@ -9,7 +9,6 @@
 import Foundation
 import CoreFoundation
 import SwiftyJSON
-import Fuzi
 import AEXML
 
 

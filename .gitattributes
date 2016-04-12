@@ -18,6 +18,10 @@ C8oSDKiOS.xcodeproj/xcshareddata/xcschemes/C8oSDKiOS.xcscheme -text
 C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/C8oSDKTestApp.xcscheme -text
 C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/C8oSDKiOS.xcscheme -text
 C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/xcschememanagement.plist -text
+C8oSDKiOS.xcworkspace/contents.xcworkspacedata -text
+C8oSDKiOS.xcworkspace/xcshareddata/C8oSDKiOS.xcscmblueprint -text
+C8oSDKiOS.xcworkspace/xcuserdata/nicolasa.xcuserdatad/UserInterfaceState.xcuserstate -text
+C8oSDKiOS.xcworkspace/xcuserdata/nicolasa.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist -text
 C8oSDKiOS/AlamofireSync.swift -text
 C8oSDKiOS/C8OTranslator.swift -text
 C8oSDKiOS/C8o.swift -text
@@ -73,6 +77,5 @@ ObjC/Info.plist -text
 ObjC/ViewController.h -text
 ObjC/ViewController.m -text
 ObjC/main.m -text
-/PodFile -text
 Pods/Target[!!-~]Support[!!-~]Files/Pods/Pods.debug.xcconfig -text
 Pods/Target[!!-~]Support[!!-~]Files/Pods/Pods.release.xcconfig -text

@@ -10,7 +10,6 @@ import XCTest
 import Foundation
 import SwiftyJSON
 import Alamofire
-import Fuzi
 import AEXML
 
 

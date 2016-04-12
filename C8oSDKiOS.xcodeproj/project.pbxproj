@@ -98,13 +98,6 @@
 			remoteGlobalIDString = B69223ED6FBFF540928933B52215FC8D;
 			remoteInfo = SwiftyJSON;
 		};
-		622CA1701CAEB5CF0074F704 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 62CD2BD21C635D02009E9F7E /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 671A8E48B31CF570A49BB319D60C878B;
-			remoteInfo = AEXML;
-		};
 		6268493C1C7B49D900872D34 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 62CD2A3E1C6207AC009E9F7E /* Project object */;
@@ -123,7 +116,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 62CD2BD21C635D02009E9F7E /* Pods.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = B529B1C5AA9853830CB0805EFA4BAAE6;
+			remoteGlobalIDString = 3D35701E86C4F745A48C126ECDBFE88E;
 			remoteInfo = SwiftyJSON;
 		};
 		62CD2A531C6207AD009E9F7E /* PBXContainerItemProxy */ = {
@@ -224,7 +217,7 @@
 		62CD2A831C620961009E9F7E /* C8oSDKTestAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = C8oSDKTestAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		62CD2A871C620961009E9F7E /* C8oSDKTestAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oSDKTestAppUITests.swift; sourceTree = "<group>"; };
 		62CD2A891C620961009E9F7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		62CD2A961C6210D6009E9F7E /* PodFile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PodFile; sourceTree = "<group>"; };
+		62CD2A961C6210D6009E9F7E /* PodFile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PodFile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		62CD2A981C621243009E9F7E /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = "Pods/../build/Debug-iphoneos/Alamofire.framework"; sourceTree = "<group>"; };
 		62CD2A9A1C621652009E9F7E /* CouchbaseLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLite.framework; path = "Pods/couchbase-lite-ios/CouchbaseLite.framework"; sourceTree = "<group>"; };
 		62CD2A9D1C6217D0009E9F7E /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -656,7 +649,6 @@
 		62CD2BD31C635D02009E9F7E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				622CA1711CAEB5CF0074F704 /* AEXML.framework */,
 				62CD2BF71C635D02009E9F7E /* Alamofire.framework */,
 				37BF0DDB1C8894800004A710 /* Fuzi.framework */,
 				62CD2BFB1C635D02009E9F7E /* Pods_C8oSDKiOS.framework */,
@@ -956,13 +948,6 @@
 			fileType = wrapper.framework;
 			path = SwiftyJSON.framework;
 			remoteRef = 6222327A1C651257001D2EA1 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		622CA1711CAEB5CF0074F704 /* AEXML.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = AEXML.framework;
-			remoteRef = 622CA1701CAEB5CF0074F704 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		62CD2BF71C635D02009E9F7E /* Alamofire.framework */ = {

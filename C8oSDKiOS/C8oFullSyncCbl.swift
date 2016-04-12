@@ -10,7 +10,6 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 import CouchbaseLite
-import Fuzi
 
 class C8oFullSyncCbl : C8oFullSync{
     private static let ATTACHMENT_PROPERTY_KEY_CONTENT_URL : String = "content_url"
