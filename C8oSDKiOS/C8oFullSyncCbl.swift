@@ -105,8 +105,6 @@ class C8oFullSyncCbl : C8oFullSync{
         }
         else{
             //throw
-            let c : AnyObject? = nil
-            return c
             fatalError("must be implemented")
             
         }
@@ -142,10 +140,10 @@ class C8oFullSyncCbl : C8oFullSync{
     }
     
     func handleDeleteDocumentRequest(DatatbaseName: String, docid: String, parameters: Dictionary<String, NSObject>)throws -> FullSyncDocumentOperationResponse? {
-        let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(DatatbaseName)
+        //let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(DatatbaseName)
         //TODO...
         fatalError("Must be implemented")
-        let revParameterValue : String? = C8oUtils.getParameterStringValue(parameters, name: /*FullSyncEnum.FullSyncDeleteDocumentParameter.REV.name*/ "TODO", useName: false)!
+        /*let revParameterValue : String? = C8oUtils.getParameterStringValue(parameters, name: /*FullSyncEnum.FullSyncDeleteDocumentParameter.REV.name*/ "TODO", useName: false)!
         
         let document = fullSyncDatabase.getDatabase()?.existingDocumentWithID(docid)
         if (document == nil) {
@@ -177,11 +175,11 @@ class C8oFullSyncCbl : C8oFullSync{
             fatalError("error not handled")
         }
         
-        return FullSyncDocumentOperationResponse(documentId: docid, documentRevision: documentRevision, operationStatus: deleted)
+        return FullSyncDocumentOperationResponse(documentId: docid, documentRevision: documentRevision, operationStatus: deleted)*/
     }
     
     func handlePostDocumentRequest(databaseName: String, fullSyncPolicy: FullSyncPolicy, parameters: Dictionary<String, NSObject>)throws -> NSObject? {
-        let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
+        let _ : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         
         // Gets the subkey separator parameter
         var subkeySeparatorParameterValue : String? = C8oUtils.getParameterStringValue(parameters, name: C8o.FS_SUBKEY_SEPARATOR, useName: false)!
@@ -196,7 +194,7 @@ class C8oFullSyncCbl : C8oFullSync{
             
             // Ignores parameters beginning with "__" or "_use_"
             if (!parameterName.hasPrefix("__") && !parameterName.hasPrefix("_use_")) {
-                var objectParameterValueTemp = parameter.1
+                let objectParameterValueTemp = parameter.1
                 var objectParameterValue : AnyObject
                 
                 do {
@@ -209,9 +207,9 @@ class C8oFullSyncCbl : C8oFullSync{
                     } else if (objectParameterValue.isKindOfClass(JSONArray)) {
                     objectParameterValue = new ObjectMapper().readValue(objectParameterValue.toString(), ArrayList.class)
                     }*/
-                } catch let e as NSError {
+                } /*catch let _ as NSError {
                     //throw C8oException(message: C8oExceptionMessage.InvalidParameterValue(parameterName, details: String(objectParameterValue)), exception: e)
-                }
+                }*/
                 
                 // !!!!!!!!!!!!!! Becarefull here cause a possible trouble due to non use of pattern.quote in swift...
                 // Checks if the parameter name is splittable
@@ -231,7 +229,7 @@ class C8oFullSyncCbl : C8oFullSync{
                         count = count - 1
                     }
                     let existProperty : AnyObject? = newProperties[parameterName]
-                    if let e = existProperty as! Dictionary<NSObject,NSObject>? {
+                    if let _ = existProperty as! Dictionary<NSObject,NSObject>? {
                         //TODO...
                         //mergeProperties(objectParameterValue, existProperty)
                     }
@@ -258,9 +256,9 @@ class C8oFullSyncCbl : C8oFullSync{
         let query : CBLQuery = fullSyncDatabase.getDatabase()!.createAllDocumentsQuery()
         do{
             //addParametersToQuery(query, parameters)
-        }catch{
+        }/*catch{
             // throw C8oException(C8oExceptionMessage.addparametersToQuery(), e)
-        }
+        }*/
         
         // Runs the query
         var result : CBLQueryEnumerator? = nil
@@ -345,15 +343,16 @@ class C8oFullSyncCbl : C8oFullSync{
         
         do{
             
-        }catch{
+        }
+        /*}catch{
             //TODO...
             C8oException(message: "TODO")
-        }
+        }*/
         return FullSyncDefaultResponse(operationStatus: true)
     }
     
     func handleCreateDatabaseRequest(databaseName: String)throws->FullSyncDefaultResponse? {
-        let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
+        let _ : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         return FullSyncDefaultResponse(operationStatus: true)
     }
     
@@ -369,7 +368,7 @@ class C8oFullSyncCbl : C8oFullSync{
                 try db?.deleteDatabase()
             }
         } catch {
-            C8oException(message: "TODO")
+            throw C8oException(message: "TODO")
         }
         return FullSyncDefaultResponse(operationStatus: true)
     }
@@ -410,12 +409,12 @@ class C8oFullSyncCbl : C8oFullSync{
     
     private func checkAndCreateJavaScriptView(database : CBLDatabase, ddocName : String, viewName : String)->CBLView?{
         let tdViewName : String = ddocName + "/" + viewName
-        var view : CBLView? = database.existingViewNamed(tdViewName)
+        let view : CBLView? = database.existingViewNamed(tdViewName)
         
         if(view == nil || view!.mapBlock == nil){
             //TODO...
             fatalError("must be implemented")
-            let rev : CBLRevision? //= database.documentWithID(String(format: "_design/%s", ddocName))?.revisionWithID()
+            /*let rev : CBLRevision? //= database.documentWithID(String(format: "_design/%s", ddocName))?.revisionWithID()
             if (rev == nil){
                 return nil
             }
@@ -431,7 +430,7 @@ class C8oFullSyncCbl : C8oFullSync{
                 return nil
             }
             
-            return view
+            return view*/
         }
         return view
     }
@@ -444,11 +443,11 @@ class C8oFullSyncCbl : C8oFullSync{
         }*/
     }
     
-    static func mergeProperties( newProperties : Dictionary<String, NSObject>, oldProperties : Dictionary<String, NSObject>){
-        
+    static func mergeProperties( newProperties : Dictionary<String, NSObject>, oldProperties : Dictionary<String, AnyObject>){
+        fatalError("must be Implemented")
     }
     
-    public func getDocucmentFromDatabase(c8o :C8o, databaseName : String, documentId : String)throws->CBLDocument {
+    internal func getDocucmentFromDatabase(c8o :C8o, databaseName : String, documentId : String)throws->CBLDocument {
         var c8oFullSyncDatabase : C8oFullSyncDatabase
         do {
             c8oFullSyncDatabase = try self.getOrCreateFullSyncDatabase(databaseName)
@@ -458,14 +457,15 @@ class C8oFullSyncCbl : C8oFullSync{
         return (c8oFullSyncDatabase.getDatabase()?.documentWithID(documentId))!
     }
     
-    public static func overrideDocument(document : CBLDocument, var properties : Dictionary<String, NSObject>)throws{
+    internal static func overrideDocument(document : CBLDocument, properties : Dictionary<String, NSObject>)throws{
+        var propertiesMutable = properties
         let currentRevision : CBLSavedRevision? = document.currentRevision
         if (currentRevision != nil){
-            properties[C8oFullSync.FULL_SYNC__REV] = currentRevision?.revisionID
+            propertiesMutable[C8oFullSync.FULL_SYNC__REV] = currentRevision?.revisionID
         }
         
         do{
-            try document.putProperties(properties)
+            try document.putProperties(propertiesMutable)
         }
         catch{
             throw C8oException(message: "TODO")

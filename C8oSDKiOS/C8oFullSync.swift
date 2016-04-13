@@ -15,17 +15,17 @@ import SwiftyJSON
 
 internal class C8oFullSync
 {
-    public static var FULL_SYNC_URL_PATH : String = "/fullsync/";
+    internal static var FULL_SYNC_URL_PATH : String = "/fullsync/";
     /// <summary>
     /// The project requestable value to execute a fullSync request.
     /// </summary>
-    public static var FULL_SYNC_PROJECT : String = "fs://";
-    public static var FULL_SYNC__ID : String = "_id";
-    public static var FULL_SYNC__REV : String = "_rev";
-    public static var FULL_SYNC__ATTACHMENTS : String = "_attachments";
+    internal static var FULL_SYNC_PROJECT : String = "fs://";
+    internal static var FULL_SYNC__ID : String = "_id";
+    internal static var FULL_SYNC__REV : String = "_rev";
+    internal static var FULL_SYNC__ATTACHMENTS : String = "_attachments";
     
-    public static var FULL_SYNC_DDOC_PREFIX : String = "_design";
-    public static var FULL_SYNC_VIEWS : String = "views";
+    internal static var FULL_SYNC_DDOC_PREFIX : String = "_design";
+    internal static var FULL_SYNC_VIEWS : String = "views";
     
     internal var c8o : C8o?;
     internal var fullSyncDatabaseUrlBase : String?
@@ -42,7 +42,7 @@ internal class C8oFullSync
     internal func handleFullSyncRequest(parameters : Dictionary<String, NSObject>, listener : C8oResponseListener)throws ->NSObject?
     {
         // Checks if this is really a fullSync request (even if this is normally already checked)
-        var projectParameterValue = try! C8oUtils.peekParameterStringValue(parameters, name: C8o.ENGINE_PARAMETER_PROJECT, exceptionIfMissing: true);
+        let projectParameterValue = try! C8oUtils.peekParameterStringValue(parameters, name: C8o.ENGINE_PARAMETER_PROJECT, exceptionIfMissing: true);
         
         if (!projectParameterValue!.hasPrefix(C8oFullSync.FULL_SYNC_PROJECT))
         {
@@ -50,15 +50,15 @@ internal class C8oFullSync
         }
 
         // Gets the sequence parameter to know which fullSync requestable to use
-        var fullSyncRequestableValue : String = try! C8oUtils.peekParameterStringValue(parameters, name: C8o.ENGINE_PARAMETER_SEQUENCE, exceptionIfMissing: true)!;
-        var fullSyncRequestable : FullSyncEnum.FullSyncRequestable? = FullSyncEnum.FullSyncRequestable.getFullSyncRequestable(fullSyncRequestableValue);
+        let fullSyncRequestableValue : String = try! C8oUtils.peekParameterStringValue(parameters, name: C8o.ENGINE_PARAMETER_SEQUENCE, exceptionIfMissing: true)!;
+        let fullSyncRequestable : FullSyncRequestable? = FullSyncRequestable.getFullSyncRequestable(fullSyncRequestableValue);
         if (fullSyncRequestable == nil)
         {
             throw C8oException(message: C8oExceptionMessage.invalidParameterValue(C8o.ENGINE_PARAMETER_PROJECT, details: C8oExceptionMessage.unknownValue("fullSync requestable", value: fullSyncRequestableValue)));
         }
         
         // Gets the database name if this is not specified then if takes the default database name
-        var index1 = projectParameterValue!.startIndex.advancedBy(C8oFullSync.FULL_SYNC_PROJECT.characters.count)
+        let index1 = projectParameterValue!.startIndex.advancedBy(C8oFullSync.FULL_SYNC_PROJECT.characters.count)
         var databaseName : String? = projectParameterValue!.substringFromIndex(index1)
         if (databaseName!.length < 1)
         {
@@ -72,109 +72,45 @@ internal class C8oFullSync
         var response : NSObject?;
         do
         {
-            response = try fullSyncRequestable!.handleFullSyncRequest(self, databaseName: databaseName!, parameters: parameters, c8oResponseListener: listener);
+            // ?? no Error thrown
+            response = fullSyncRequestable!.handleFullSyncRequest(self, databaseNameName: databaseName!, parameters: parameters, c8oResponseListner: listener);
         }
-        catch let e as C8oException
+        /*catch let e as C8oException
         {
             throw  C8oException(message: C8oExceptionMessage.FullSyncRequestFail(), exception: e);
-        }
+        }*/
         
         if (response == nil)
         {
             throw C8oException(message: C8oExceptionMessage.couchNullResult());
         }
 
-        response = handleFullSyncResponse(response!,listener:  listener);
+        response = handleFullSyncResponse(response!, listener: listener);
         return response;
     }
     
-  internal func handleFullSyncResponse(var response : AnyObject, listener : C8oResponseListener)->NSObject
+  internal func handleFullSyncResponse(response : AnyObject, listener : C8oResponseListener)->NSObject
     {
-        /*if (response is JSON)
+        /*var responseMutable = response
+        if (responseMutable is JSON)
         {
             if (listener is C8oResponseXmlListener)
             {
-                //response = C8oFullSyncTranslator.FullSyncJsonToXml(response as JSON);
+                responseMutable = try! C8oFullSyncTranslator.fullSyncJsonToXml(responseMutable as! JSON)!;
             }
-        }*/
+        }
+        else if(responseMutable is C8oJSON){
+            if (listener is C8oResponseXmlListener)
+            {
+                responseMutable = try! C8oFullSyncTranslator.fullSyncJsonToXml((responseMutable as! C8oJSON).myJSON!)!;
+            }
+
+            
+        }
         
-        return response as! NSObject;
+        return responseMutable as! NSObject;*/
+        return response as! NSObject
     }
-    
-
-    /*internal func handleGetDocumentRequest(fullSyncDatatbaseName : String, docid : String, parameters : Dictionary<String, NSObject>)throws ->CBLDocument
-    {
-        fatalError("Must Override")
-    }
-
-  internal func handleDeleteDocumentRequest(fullSyncDatatbaseName : String, docid :  String, parameters : Dictionary<String, NSObject>)throws ->FullSyncDocumentOperationResponse?//Task<object>
-    {
-        fatalError("Must Override")
-    }
-    
-
-    
-  internal func handlePostDocumentRequest(fullSyncDatatbaseName : String, fullSyncPolicy : FullSyncEnum.FullSyncPolicy, parameters : Dictionary<String, NSObject>)throws->NSObject?//Task<object>
-    {
-        fatalError("Must Override")
-    }
-    
-
-    
-  internal func handleAllDocumentsRequest(DatatbaseName : String, parameters : Dictionary<String, NSObject>)throws ->NSObject?//->Task<object>
-    {
-        fatalError("Must Override")
-    }
-
-    
-    internal func handleGetViewRequest(databaseName : String, ddocName : String?, viewName : String?, parameters : Dictionary<String, NSObject>)throws->CBLQueryEnumerator?//->Task<object>
-    {
-        fatalError("Must Override")
-    }
-    
-
-    
-    internal func handleSyncRequest(databaseName : String, parameters : Dictionary<String, NSObject>, c8oResponseListener : C8oResponseListener)throws->VoidResponse?//->Task<object>
-    {
-        fatalError("Must Override")
-    }
-    
-    internal func handleReplicatePullRequest(databaseName : String, parameters : Dictionary<String, NSObject>, c8oResponseListener : C8oResponseListener)throws->VoidResponse?//->Task<object>
-    {
-        fatalError("Must Override")
-    }
-    
-    internal func handleReplicatePushRequest(databaseName : String, parameters : Dictionary<String, NSObject>, c8oResponseListener : C8oResponseListener)throws->VoidResponse?//->Task<object>
-    {
-        fatalError("Must Override")
-    }
-    
-    
-    internal func handleResetDatabaseRequest(databaseName : String)throws->FullSyncDefaultResponse?{
-        fatalError("Must Override")
-    }
-
-    internal func handleCreateDatabaseRequest(databaseName : String)throws->FullSyncDefaultResponse?{
-        fatalError("Must Override")
-    }
-    
-
-    internal func handleDestroyDatabaseRequest(databaseName : String)throws->FullSyncDefaultResponse?//->Task<object>
-    {
-        fatalError("Must Override")
-    }
-    
-
-    internal func getResponseFromLocalCache(c8oCallRequestIdentifier : String)throws->NSObject?//->Task<C8oLocalCacheResponse>
-    {
-        fatalError("Must Override")
-    }
-    
-
-    internal func saveResponseToLocalCache(c8oCallRequestIdentifier : String, localCacheResponse : NSObject?/*C8oLocalCacheResponse*/)throws->NSObject?//->Task
-    {
-        fatalError("Must Override")
-    }*/
     
 
     internal static func isFullSyncRequest(requestParameters : Dictionary<String, NSObject>)->Bool

@@ -40,9 +40,6 @@ internal class C8oFullSyncTranslator
         do{
             C8oTranslator.jsonToXml(json, parentElement: couchdb_output)
         }
-        catch let e as C8oException{
-            throw C8oException(message: C8oExceptionMessage.jsonValueToXML(), exception: e)
-        }
         
         rootElement.addChild(couchdb_output)
         return xmlDocument
@@ -77,9 +74,7 @@ internal class C8oFullSyncTranslator
                 FULL_SYNC_RESPONSE_KEY_ROWS : rowsArray!.stringValue]
             json = JSON(dic)
         }
-        catch{
-            
-        }
+
         return json
     }
     
@@ -106,30 +101,18 @@ internal class C8oFullSyncTranslator
         }
     }
     
-    internal static func  dictionaryToString(dict : Dictionary<String, NSObject>)-> String
+    internal static func dictionaryToString(dict : Dictionary<String, NSObject>)-> String
     {
-        
-        var str : String = "{ "
+        //Becarefull here this function may not work propely
+        var str : String = "{ ";
         
         for item in dict
         {
             var valueStr : String = ""
             
-            if (item is Dictionary<String, NSObject>)
-            {
-                valueStr = dictionaryToString(Dictionary<String, NSObject>(dictionaryLiteral: item))
-            }
-            else if (item is Array<NSObject>)
-            {
-                fatalError("This part of this Function (\"DictionaryToString\") must be defined -> (\"Array<NSObject>\")")
-            }
-            else
-            {
-                valueStr = String(item)
-            }
-            
-            
-            str += item.0 + " : " + valueStr + ", "
+           valueStr = dictionaryToString(Dictionary<String, NSObject>(dictionaryLiteral: item));
+
+            str += item.0 + " : " + valueStr + ", ";
         }
         
         if(dict.count > 0)

@@ -12,11 +12,11 @@ internal class FullSyncResponse {
     
     private static var fullSyncResponsesInstance : FullSyncResponse = FullSyncResponse()
     
-    public static let RESPONSE_KEY_OK : String = "ok"
+    internal static let RESPONSE_KEY_OK : String = "ok";
     
-    public static let RESPONSE_KEY_DOCUMENT_ID : String = "id"
+    internal static let RESPONSE_KEY_DOCUMENT_ID : String = "id";
     
-    public static let RESPONSE_KEY_DOCUMENT_REVISION : String = "rev"
+    internal static let RESPONSE_KEY_DOCUMENT_REVISION : String = "rev";
     
     
 }
@@ -43,10 +43,10 @@ internal class FullSyncResponse {
     }
     
     internal class FullSyncDocumentOperationResponse : FullSyncAbstractResponse {
-        public var documentId : String?
-        public var documentRevision : String?
+        internal var documentId : String?
+        internal var documentRevision : String?
         
-        public init(documentId : String, documentRevision : String, operationStatus : Bool){
+        internal init(documentId : String, documentRevision : String, operationStatus : Bool){
             super.init(operationStatus: operationStatus)
             self.documentId = documentId
             self.documentRevision = documentRevision

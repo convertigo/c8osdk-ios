@@ -256,6 +256,7 @@ import AEXML
     {
         var parameters = parameters
         // IMPORTANT : all c8o calls have to end here !
+        //TODO... no error are thrown in do block
         do
         {
             c8oLogger!.logMethodCall("Call", parameters: parameters!)
@@ -277,10 +278,10 @@ import AEXML
             let task = C8oCallTask(c8o: self, parameters: parameters!, c8oResponseListener: c8oResponseListener!, c8oExceptionListener: c8oExceptionListener!)
             task.Execute()
         }
-        catch let e as C8oException
+        /*catch let e as C8oException
         {
             handleCallException(c8oExceptionListener, requestParameters: parameters!, exception: e)
-        }
+        }*/
     }
     
     /**
@@ -488,7 +489,7 @@ import AEXML
     }
     
     
-    public var cookieStore : NSObject//CookieContainer
+    public var cookieStore : NSObject
         {
         get { return httpInterface!.cookieStore! }
     }
@@ -497,7 +498,7 @@ import AEXML
     {
         if (parameters!.count % 2 != 0)
         {
-            throw C8oError.InvalidArgument(C8oExceptionMessage.invalidParameterValue("parameters", details: "needs pairs of values")) //throw System.ArgumentException(C8oExceptionMessage.InvalidParameterValue("parameters", "needs pairs of values"))
+            throw C8oError.InvalidArgument(C8oExceptionMessage.invalidParameterValue("parameters", details: "needs pairs of values"))
         }
         
         var newParameters = Dictionary<String, NSObject>()

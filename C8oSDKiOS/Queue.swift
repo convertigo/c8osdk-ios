@@ -50,10 +50,10 @@ public class Queue<T>
 typealias Key = NSObject
 typealias Value = NSObject*/
 internal class C8oJSON : AnyObject {
-    public init(){
+    internal init(){
         myJSON = nil
     }
-    public var myJSON : JSON?
+    internal var myJSON : JSON?
 }
 
 public class Pair<K , V> : NSObject {

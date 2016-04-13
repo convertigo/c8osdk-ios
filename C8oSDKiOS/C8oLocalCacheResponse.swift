@@ -14,13 +14,13 @@ class C8oLocalCacheResponse {
     private var responseType : String
     private var expirationDate : Int
     
-    public init(response : String, responseType : String, expirationDate : Int) {
+    internal init(response : String, responseType : String, expirationDate : Int){
         self.response = response
         self.responseType = responseType
         self.expirationDate = expirationDate
     }
     
-    public func isExpired() -> Bool {
+    internal func isExpired() -> Bool{
         if(expirationDate <= 0 ){
             return false
         }
@@ -29,15 +29,15 @@ class C8oLocalCacheResponse {
             return Double(expirationDate) < currentDate
         }
     }
-    public func getResponse() -> String {
+    internal func getResponse() -> String{
         return response
     }
     
-    public func getResponseType() ->String {
+    internal func getResponseType() ->String{
         return responseType
     }
     
-    public func getExpirationDate() ->Int {
+    internal func getExpirationDate() ->Int{
         return expirationDate
     }
     

@@ -15,7 +15,7 @@ class VoidResponse{
         
     }
     
-    public static func getInstance()->VoidResponse{
+    internal static func getInstance()->VoidResponse{
         return VoidResponse.VOID_RESPONSE_INSTANCE
     }
 }

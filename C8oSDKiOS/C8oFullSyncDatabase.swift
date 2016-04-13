@@ -26,19 +26,20 @@ import SwiftyJSON
     
     private var pushFullSyncReplication : FullSyncReplication? = FullSyncReplication(pull: false)
     
-    public init (c8o : C8o, manager : CBLManager, var databaseName : String, fullSyncDatabases : String, localSuffix : String)throws{
+    public init (c8o : C8o, manager : CBLManager, databaseName : String, fullSyncDatabases : String, localSuffix : String)throws{
+        var databaseNameMutable = databaseName
         self.c8o = c8o
         do{
-            c8oFullSyncDatabaseUrl = NSURL(string: fullSyncDatabases + databaseName + "/")!
+            c8oFullSyncDatabaseUrl = NSURL(string: fullSyncDatabases + databaseNameMutable + "/")!
         }
-        catch{
+        /*catch{
             
-        }
-        databaseName = databaseName + localSuffix
-        self.databaseName = databaseName
+        }*/
+        databaseNameMutable = databaseNameMutable + localSuffix
+        self.databaseName = databaseNameMutable
         
         do{
-            database = try manager.databaseNamed(databaseName)
+            database = try manager.databaseNamed(databaseNameMutable)
         }
         catch{
             
@@ -78,7 +79,8 @@ import SwiftyJSON
     }
     
     private func startReplication(fullSyncReplication : FullSyncReplication, parameters : Dictionary<String, NSObject>, c8oResponseListener : C8oResponseListener) throws {
-        var continious : Bool = false
+        fatalError("must be finished")
+       /* var continious : Bool = false
         var cancel : Bool = false
         
         if let _ = parameters["continious"]{
@@ -116,7 +118,7 @@ import SwiftyJSON
         //push
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "replicationChanged", name: kCBLDatabaseChangeNotification, object: pushFullSyncReplication?.replication)
         //pull
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "replicationChanged", name: kCBLDatabaseChangeNotification, object: pullFullSyncReplication?.replication)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "replicationChanged", name: kCBLDatabaseChangeNotification, object: pullFullSyncReplication?.replication)*/
         
         
     }
@@ -155,7 +157,7 @@ import SwiftyJSON
         var changeListener : NSObject?
         var pull : Bool
         
-        public init(pull : Bool){
+        private init(pull : Bool){
             self.pull = pull
         }
         

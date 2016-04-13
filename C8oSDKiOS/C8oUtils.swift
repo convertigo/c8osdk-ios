@@ -40,7 +40,7 @@ internal class C8oUtils
         
         for parameter in parameters
         {
-            var parameterName : String = parameter.0;
+            let parameterName : String = parameter.0;
             if ((name == parameterName) || (useName && name == (C8oUtils.USE_PARAMETER_IDENTIFIER + parameterName)))
             {
                 return Pair<String?, NSObject?>(key: parameter.0, value: parameter.1);

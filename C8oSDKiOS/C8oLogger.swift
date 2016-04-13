@@ -272,17 +272,17 @@ import AEXML
                     }
                     
                 }
-                catch _ as NSError
+                /*catch _ as NSError
                 {
                     
-                }
+                }*/
                 
                 var logLevelResponse = jsonResponse[C8oLogger.JSON_KEY_REMOTE_LOG_LEVEL]
                 
                 if (logLevelResponse != nil)
                 {
-                    var logLevelResponseStr : String = logLevelResponse.stringValue
-                    var c8oLogLevel = C8oLogLevel.getC8oLogLevel(logLevelResponseStr)
+                    let logLevelResponseStr : String = logLevelResponse.stringValue
+                    let c8oLogLevel = C8oLogLevel.getC8oLogLevel(logLevelResponseStr)
                     
                     if (c8oLogLevel != nil)
                     {

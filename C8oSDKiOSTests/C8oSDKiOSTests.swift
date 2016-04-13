@@ -79,9 +79,6 @@ class C8oSDKiOSTests: XCTestCase {
             newTs = doc2?.root["session"]["expression"].stringValue
             XCTAssertEqual(ts, newTs)
             return c8o
-            
-        default:
-            return nil
         }
     }
     
@@ -123,7 +120,7 @@ class C8oSDKiOSTests: XCTestCase {
         let promise : C8oPromise<AEXMLDocument> = c8o.callXml(".Ping")
         NSThread.sleepForTimeInterval(0.5)
         let doc : AEXMLDocument = try! promise.sync()!
-        var pong : NSObject = (doc.root["pong"].count)
+        let pong : NSObject = (doc.root["pong"].count)
         XCTAssertEqual(1,pong)
 
     }
@@ -299,7 +296,7 @@ class C8oSDKiOSTests: XCTestCase {
             let line = JSON(data: dataFromString)
             XCTAssertEqual(lvl, line[2].string)
             var newMsg = line[4].stringValue
-            newMsg  = newMsg.substringWithRange(Range<String.Index>(start: newMsg.rangeOfString("logID=")!.startIndex, end: newMsg.endIndex))
+            newMsg  = newMsg.substringWithRange(Range<String.Index>(newMsg.rangeOfString("logID=")!.startIndex ..< newMsg.endIndex))
             print(newMsg)
             XCTAssertEqual(msg,newMsg)
         }
@@ -725,7 +722,7 @@ class C8oSDKiOSTests: XCTestCase {
     /*func testC8o0Ssl2TrustAll(){
         
     }*/
-    /*
+    
     func testC8oFsPostGetDelete(){
         let c8o : C8o = try! self.Get(.C8O_FS)!
         let condition : NSCondition = NSCondition()
@@ -736,7 +733,8 @@ class C8oSDKiOSTests: XCTestCase {
         json = try! c8o.callJson("fs://.post", parameters: "_id", myId)?.sync()
         print(json!["ok"].stringValue)
         XCTAssertTrue(json!["ok"].boolValue)
-    }*/
+        condition.unlock()
+    }
     
 }
 
