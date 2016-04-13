@@ -116,7 +116,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return c
     }
     
-    override func handleGetDocumentRequest(fullSyncDatatbaseName: String, docid: String, parameters: Dictionary<String, NSObject>)throws -> CBLDocument {
+    func handleGetDocumentRequest(fullSyncDatatbaseName: String, docid: String, parameters: Dictionary<String, NSObject>)throws -> CBLDocument {
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(fullSyncDatatbaseName)
         
         // Gets the document from the local database
@@ -142,7 +142,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return document!
     }
     
-    override func handleDeleteDocumentRequest(DatatbaseName: String, docid: String, parameters: Dictionary<String, NSObject>)throws -> FullSyncDocumentOperationResponse? {
+    func handleDeleteDocumentRequest(DatatbaseName: String, docid: String, parameters: Dictionary<String, NSObject>)throws -> FullSyncDocumentOperationResponse? {
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(DatatbaseName)
         //TODO...
         fatalError("Must be implemented")
@@ -181,7 +181,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return FullSyncDocumentOperationResponse(documentId: docid, documentRevision: documentRevision, operationStatus: deleted)
     }
     
-    override func handlePostDocumentRequest(databaseName: String, fullSyncPolicy: FullSyncEnum.FullSyncPolicy, parameters: Dictionary<String, NSObject>)throws -> NSObject? {
+    func handlePostDocumentRequest(databaseName: String, fullSyncPolicy: FullSyncPolicy, parameters: Dictionary<String, NSObject>)throws -> NSObject? {
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         
         // Gets the subkey separator parameter
@@ -246,13 +246,13 @@ class C8oFullSyncCbl : C8oFullSync{
         
         // Execute the query depending to the policy
         
-        let createdDocument : CBLDocument = try! fullSyncPolicy.postDocument(fullSyncDatabase.getDatabase()!, newProperties: newProperties)
-        let documentId : String = createdDocument.documentID
-        let currentRevision : String = createdDocument.currentRevisionID!
+        let createdDocument : CBLDocument? = nil//try! fullSyncPolicy.postDocument(fullSyncDatabase.getDatabase()!, newProperties: newProperties)
+        let documentId : String = createdDocument!.documentID
+        let currentRevision : String = createdDocument!.currentRevisionID!
         return FullSyncDocumentOperationResponse(documentId: documentId, documentRevision: currentRevision, operationStatus: true)
     }
     
-    override func handleAllDocumentsRequest(databaseName: String, parameters: Dictionary<String, NSObject>)throws -> NSObject? {
+    func handleAllDocumentsRequest(databaseName: String, parameters: Dictionary<String, NSObject>)throws -> NSObject? {
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         
         // Creates the fullSync query and add parameters to it
@@ -274,7 +274,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return result
     }
     
-    override func handleGetViewRequest(databaseName: String, ddocName: String?, viewName : String?, parameters: Dictionary<String, NSObject>) throws -> CBLQueryEnumerator? {
+    func handleGetViewRequest(databaseName: String, ddocName: String?, viewName : String?, parameters: Dictionary<String, NSObject>) throws -> CBLQueryEnumerator? {
         
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         
@@ -311,7 +311,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return result
     }
     
-    override func handleSyncRequest(databaseName: String, parameters: Dictionary<String, NSObject>, c8oResponseListener: C8oResponseListener)throws -> VoidResponse? {
+    func handleSyncRequest(databaseName: String, parameters: Dictionary<String, NSObject>, c8oResponseListener: C8oResponseListener)throws -> VoidResponse? {
         
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         
@@ -320,7 +320,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return VoidResponse.getInstance()
     }
     
-    override func handleReplicatePullRequest(databaseName: String, parameters: Dictionary<String, NSObject>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
+    func handleReplicatePullRequest(databaseName: String, parameters: Dictionary<String, NSObject>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
         
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         
@@ -329,7 +329,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return VoidResponse.getInstance()
     }
     
-    override func handleReplicatePushRequest(databaseName: String, parameters: Dictionary<String, NSObject>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
+    func handleReplicatePushRequest(databaseName: String, parameters: Dictionary<String, NSObject>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
         
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         
@@ -338,7 +338,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return VoidResponse.getInstance()
     }
     
-    override func handleResetDatabaseRequest(databaseName: String) throws -> FullSyncDefaultResponse? {
+    func handleResetDatabaseRequest(databaseName: String) throws -> FullSyncDefaultResponse? {
         let localDatabaseName = databaseName + localSuffix!
         if let _ = fullSyncDatabases![localDatabaseName] {
             fullSyncDatabases?.removeValueForKey(localDatabaseName)
@@ -351,6 +351,28 @@ class C8oFullSyncCbl : C8oFullSync{
             C8oException(message: "TODO")
         }
         return FullSyncDefaultResponse(operationStatus: true)
+    }
+    
+    func handleCreateDatabaseRequest(databaseName: String)throws->FullSyncDefaultResponse? {
+        let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
+        return FullSyncDefaultResponse(operationStatus: true)
+    }
+    
+    func handleDestroyDatabaseRequest(databaseName : String)throws->FullSyncDefaultResponse? {
+        let localDatabaseName : String = databaseName + localSuffix!
+        if let _ = fullSyncDatabases![localDatabaseName]{
+            fullSyncDatabases?.removeValueForKey(localDatabaseName)
+        }
+        
+        do {
+            let db : CBLDatabase? = try self.manager?.databaseNamed(databaseName + localSuffix!)
+            if (db != nil) {
+                try db?.deleteDatabase()
+            }
+        } catch {
+            C8oException(message: "TODO")
+        }
+        return FullSyncDefaultResponse(operationStatus: true);
     }
     
     private func compileView(db : CBLDatabase, viewName : String, viewProps : Dictionary<String, NSObject>?)->CBLView?{

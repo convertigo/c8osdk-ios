@@ -102,7 +102,7 @@ internal class C8oFullSync
     }
     
 
-    internal func handleGetDocumentRequest(fullSyncDatatbaseName : String, docid : String, parameters : Dictionary<String, NSObject>)throws ->CBLDocument
+    /*internal func handleGetDocumentRequest(fullSyncDatatbaseName : String, docid : String, parameters : Dictionary<String, NSObject>)throws ->CBLDocument
     {
         fatalError("Must Override")
     }
@@ -174,7 +174,7 @@ internal class C8oFullSync
     internal func saveResponseToLocalCache(c8oCallRequestIdentifier : String, localCacheResponse : NSObject?/*C8oLocalCacheResponse*/)throws->NSObject?//->Task
     {
         fatalError("Must Override")
-    }
+    }*/
     
 
     internal static func isFullSyncRequest(requestParameters : Dictionary<String, NSObject>)->Bool
