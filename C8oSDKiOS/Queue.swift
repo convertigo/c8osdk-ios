@@ -55,6 +55,7 @@ internal class C8oJSON : AnyObject {
     }
     public var myJSON : JSON?
 }
+
 public class Pair<K , V> : NSObject {
     
     var key : K

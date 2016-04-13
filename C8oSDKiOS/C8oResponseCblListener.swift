@@ -7,9 +7,8 @@
 //
 
 import Foundation
-import CouchbaseLite
 
-public protocol C8oResponseCblListener : C8oResponseListener{
+@objc public protocol C8oResponseCblListener : C8oResponseListener {
     
     func onDocumentResponse(document : CBLDocument, requestParameters : Dictionary<String, NSObject>)
     

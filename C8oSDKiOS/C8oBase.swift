@@ -8,16 +8,15 @@
 
 import Foundation
 
-public class C8oBase : NSObject
+@objc public class C8oBase : NSObject
 {
-    public override init(){
+    override init(){
         super.init()
-        
     }
     
     //*** HTTP ***//
-    internal var  _timeout : Int?  = -1;
-    internal var _trustAllCertificates :Bool? = false;
+    internal var  _timeout : Int?  = -1
+    internal var _trustAllCertificates :Bool? = false
     internal var _cookies :Dictionary<String, String>?
     public typealias Byte = UInt8?
     internal var _clientCertificateBinaries : Dictionary<UInt8, String>?
@@ -25,18 +24,18 @@ public class C8oBase : NSObject
     
     
     //*** Log ***//
-    internal var _logRemote : Bool?  = true;
-    internal var _logLevelLocal : C8oLogLevel = C8oLogLevel.NONE;
-    internal var _logC8o :Bool? = true;
+    internal var _logRemote : Bool?  = true
+    internal var _logLevelLocal : C8oLogLevel = C8oLogLevel.NONE
+    internal var _logC8o :Bool? = true
     internal var _logOnFail :((exception :C8oException, parameters : Dictionary<String, NSObject>?) ->(Void))? = nil
     
     //*** FullSync ***//
-    internal var  _defaultDatabaseName : String?;
-    internal var _authenticationCookieValue: String?;
-    internal var _fullSyncLocalSuffix: String?;
-    internal var _fullSyncServerUrl :String = "http://localhost:5984";
-    internal var _fullSyncUsername :String?;
-    internal var _fullSyncPassword :String?;
+    internal var  _defaultDatabaseName : String?
+    internal var _authenticationCookieValue: String?
+    internal var _fullSyncLocalSuffix: String?
+    internal var _fullSyncServerUrl :String = "http://localhost:5984"
+    internal var _fullSyncUsername :String?
+    internal var _fullSyncPassword :String?
     
     
     //*** Getter ***//
@@ -53,7 +52,7 @@ public class C8oBase : NSObject
     */
     public var timeout :Int
         {
-        get { return _timeout!; }
+        get { return _timeout! }
     }
     
     /**
@@ -64,11 +63,11 @@ public class C8oBase : NSObject
      trustAllCertificates : Bool = myC8o.TrustAllCetificates
      @endcode
      @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
-     @return <c>true</c> if https calls trust all certificates; otherwise, <c>false</c>.
+     @return <c>true</c> if https calls trust all certificates otherwise, <c>false</c>.
      */
     public var trustAllCertificates: Bool
         {
-        get { return _trustAllCertificates!; }
+        get { return _trustAllCertificates! }
     }
     
     /**
@@ -83,7 +82,7 @@ public class C8oBase : NSObject
      */
     public var cookies :Dictionary<String, String>?
         {
-        get { return _cookies; }
+        get { return _cookies }
     }
     
     /**
@@ -98,7 +97,7 @@ public class C8oBase : NSObject
      */
     public var clientCertificateBinaries :Dictionary<UInt8, String>?
         {
-        get { return _clientCertificateBinaries!; }
+        get { return _clientCertificateBinaries! }
     }
     
     /**
@@ -113,7 +112,7 @@ public class C8oBase : NSObject
      */
     public var clientCertificateFiles : Dictionary<String, String>?
         {
-        get { return _clientCertificateFiles; }
+        get { return _clientCertificateFiles }
     }
     
     /**
@@ -124,11 +123,11 @@ public class C8oBase : NSObject
      logRemote : Bool = myC8o.LogRemote
      @endcode
      @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
-     @return <c>true</c> if logs are sent to the Convertigo server; otherwise, <c>false</c>
+     @return <c>true</c> if logs are sent to the Convertigo server otherwise, <c>false</c>
      */
     public var logRemote : Bool
         {
-        get { return _logRemote!; }
+        get { return _logRemote! }
     }
     
     /**
@@ -139,11 +138,11 @@ public class C8oBase : NSObject
      logLevelLocal : Bool = myC8o.LogLevelLocal
      @endcode
      @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
-     @return <c>true</c> if logs are sent to the Convertigo server; otherwise, <c>false</c>.
+     @return <c>true</c> if logs are sent to the Convertigo server otherwise, <c>false</c>.
      */
     public var logLevelLocal: C8oLogLevel
         {
-        get { return _logLevelLocal; }
+        get { return _logLevelLocal }
     }
     
     /**
@@ -154,11 +153,11 @@ public class C8oBase : NSObject
      logC8o : Bool = myC8o.LogC8o
      @endcode
      @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
-     @return <c>true</c> if c8o is log; otherwise, <c>false</c>.
+     @return <c>true</c> if c8o is log otherwise, <c>false</c>.
      */
     public var logC8o: Bool
         {
-        get { return _logC8o!; }
+        get { return _logC8o! }
     }
     
     /**
@@ -187,7 +186,7 @@ public class C8oBase : NSObject
      */
     public var defaultDatabaseName:String
         {
-        get { return _defaultDatabaseName!; }
+        get { return _defaultDatabaseName! }
     }
     
     /**
@@ -202,7 +201,7 @@ public class C8oBase : NSObject
      */
     public var authenticationCookieValue :String
         {
-        get { return _authenticationCookieValue!; }
+        get { return _authenticationCookieValue! }
     }
     
     /**
@@ -217,7 +216,7 @@ public class C8oBase : NSObject
      */
     public var fullSyncLocalSuffix:String?
         {
-        get { return _fullSyncLocalSuffix; }
+        get { return _fullSyncLocalSuffix }
     }
     
     /**
@@ -232,7 +231,7 @@ public class C8oBase : NSObject
      */
     public var fullSyncServerUrl:String
         {
-        get { return _fullSyncServerUrl; }
+        get { return _fullSyncServerUrl }
     }
     
     /**
@@ -247,7 +246,7 @@ public class C8oBase : NSObject
      */
     public var fullSyncUsername:String
         {
-        get { return _fullSyncUsername!; }
+        get { return _fullSyncUsername! }
     }
     
     /**
@@ -262,22 +261,7 @@ public class C8oBase : NSObject
      */
     public var fullSyncPassword:String
         {
-        get { return _fullSyncPassword!; }
-    }
-    
-    /**
-     Gets the uiDispatcher.
-     Example usage:
-     @code
-     myc8o : C8o = C8o()
-     uiDispatcher : NSObject? = myC8o.UiDispatcher
-     @endcode
-     @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
-     @return A NSObject? containing the uiDispatcher.
-     */
-    public var UiDispatcher: NSObject?//process
-        {
-        get { return nil/*uiDispatcher;*/ }
+        get { return _fullSyncPassword! }
     }
     
     /**
@@ -297,30 +281,30 @@ public class C8oBase : NSObject
     {
         //*** HTTP ***//
         
-        _timeout = c8oBase._timeout;
-        _trustAllCertificates = c8oBase._trustAllCertificates;
+        _timeout = c8oBase._timeout
+        _trustAllCertificates = c8oBase._trustAllCertificates
         
         if (c8oBase._cookies != nil)
         {
             if (_cookies == nil)
             {
-                _cookies = NSObject() as? Dictionary<String, String>//CookieCollection();
+                _cookies = NSObject() as? Dictionary<String, String>//CookieCollection()
             }
-            //cookies.Add(c8oBase.cookies);
+            //cookies.Add(c8oBase.cookies)
         }
         
         if (c8oBase._clientCertificateBinaries != nil)
         {
             if (_clientCertificateBinaries == nil)
             {
-                _clientCertificateBinaries = c8oBase._clientCertificateBinaries;
+                _clientCertificateBinaries = c8oBase._clientCertificateBinaries
             }
             else
             {
                 for entry in c8oBase._clientCertificateBinaries!
                 {
                     
-                    _clientCertificateBinaries?.updateValue(entry.1,  forKey :entry.0);
+                    _clientCertificateBinaries?.updateValue(entry.1,  forKey :entry.0)
                 }
             }
         }
@@ -329,34 +313,34 @@ public class C8oBase : NSObject
         {
             if (_clientCertificateFiles == nil)
             {
-                _clientCertificateFiles = c8oBase._clientCertificateFiles;
+                _clientCertificateFiles = c8oBase._clientCertificateFiles
             }
             else
             {
                 for entry in c8oBase._clientCertificateFiles!
                 {
-                    _clientCertificateFiles?.updateValue(entry.1, forKey : entry.0);
+                    _clientCertificateFiles?.updateValue(entry.1, forKey : entry.0)
                 }
             }
         }
         
         //*** Log ***//
         
-        _logRemote = c8oBase._logRemote;
-        _logLevelLocal = c8oBase._logLevelLocal;
-        _logC8o = c8oBase._logC8o;
-        _logOnFail = c8oBase._logOnFail;
+        _logRemote = c8oBase._logRemote
+        _logLevelLocal = c8oBase._logLevelLocal
+        _logC8o = c8oBase._logC8o
+        _logOnFail = c8oBase._logOnFail
         
         //*** FullSync ***//
         
-        _defaultDatabaseName = c8oBase._defaultDatabaseName;
-        _authenticationCookieValue = c8oBase._authenticationCookieValue;
-        _fullSyncLocalSuffix = c8oBase._fullSyncLocalSuffix;
+        _defaultDatabaseName = c8oBase._defaultDatabaseName
+        _authenticationCookieValue = c8oBase._authenticationCookieValue
+        _fullSyncLocalSuffix = c8oBase._fullSyncLocalSuffix
         
-        _fullSyncServerUrl = c8oBase._fullSyncServerUrl;
-        _fullSyncUsername = c8oBase._fullSyncUsername;
-        _fullSyncPassword = c8oBase._fullSyncPassword;
+        _fullSyncServerUrl = c8oBase._fullSyncServerUrl
+        _fullSyncUsername = c8oBase._fullSyncUsername
+        _fullSyncPassword = c8oBase._fullSyncPassword
         
-        //uiDispatcher = c8oBase.uiDispatcher;
+        //uiDispatcher = c8oBase.uiDispatcher
     }
 }

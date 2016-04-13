@@ -9,17 +9,17 @@
 import Foundation
 
 
-public class C8oLocalCache : NSObject
+@objc public class C8oLocalCache : NSObject
 {
-    public static var PARAM : String = "__localCache";
+    public static var PARAM : String = "__localCache"
     
     
    public class Priority{
     
         var isAvailable: (c8o : C8o)->(Bool)
     
-    /*public static var SERVER : Priority = Priority(c8o : C8o->(Bool));
-        public static var LOCAL : Priority = Priority(isAviable: (c8o: C8o(), bool: true));
+    /*public static var SERVER : Priority = Priority(c8o : C8o->(Bool))
+        public static var LOCAL : Priority = Priority(isAviable: (c8o: C8o(), bool: true))
 */
         public init (isAvailable : (c8o : C8o)->(Bool))
         {
@@ -28,19 +28,19 @@ public class C8oLocalCache : NSObject
         
     }
     
-    internal var priority : C8oLocalCache.Priority?;
-    internal var ttl : Int;
-    internal var enabled : Bool;
+    internal var priority : C8oLocalCache.Priority?
+    internal var ttl : Int
+    internal var enabled : Bool
     
     public init(priority : Priority? , ttl : Int = -1, enabled : Bool = true)
     {
         if (priority == nil)
         {
-            //throw new System.ArgumentException("Local Cache priority cannot be null");
+            //throw new System.ArgumentException("Local Cache priority cannot be null")
         }
-        self.priority = priority;
-        self.ttl = ttl;
-        self.enabled = enabled;
+        self.priority = priority
+        self.ttl = ttl
+        self.enabled = enabled
     }
 }
 
@@ -53,27 +53,27 @@ private init()
 }
 func IsAvailable() ->(C8o -> Bool){}
 
-public static var SERVER : C8oLocalCache.Priority = Priority(c8o : C8o) -> Bool{return true};
+public static var SERVER : C8oLocalCache.Priority = Priority(c8o : C8o) -> Bool{return true}
 /*{
-return true;
-});*/
+return true
+})*/
 
 public static func LOCAL(c8o: C8o)->Bool
 {
-return true;
-};
+return true
+}
 
 /*
 public static var LOCAL : Priority = Priority(c8o =>
 {
-return true;
-});*/
+return true
+})*/
 
-/*var IsAvailable: (C8o) ->Bool;
+/*var IsAvailable: (C8o) ->Bool
 
 private func Priority(isAvailable : (C8o) ->Bool)
 {
-IsAvailable = isAvailable;
+IsAvailable = isAvailable
 
 }*/
 }*/

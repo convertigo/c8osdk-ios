@@ -8,19 +8,19 @@
 
 import Foundation
 
-class C8oLocalCacheResponse{
+class C8oLocalCacheResponse {
   
     private var response : String
     private var responseType : String
     private var expirationDate : Int
     
-    public init(response : String, responseType : String, expirationDate : Int){
+    public init(response : String, responseType : String, expirationDate : Int) {
         self.response = response
         self.responseType = responseType
         self.expirationDate = expirationDate
     }
     
-    public func isExpired() -> Bool{
+    public func isExpired() -> Bool {
         if(expirationDate <= 0 ){
             return false
         }
@@ -29,15 +29,15 @@ class C8oLocalCacheResponse{
             return Double(expirationDate) < currentDate
         }
     }
-    public func getResponse() -> String{
+    public func getResponse() -> String {
         return response
     }
     
-    public func getResponseType() ->String{
+    public func getResponseType() ->String {
         return responseType
     }
     
-    public func getExpirationDate() ->Int{
+    public func getExpirationDate() ->Int {
         return expirationDate
     }
     

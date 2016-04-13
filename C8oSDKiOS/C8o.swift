@@ -11,7 +11,7 @@ import Alamofire
 import SwiftyJSON
 import AEXML
 
-import CouchbaseLite
+//import CouchbaseLite
 
 @objc public class C8o : C8oBase {
     
@@ -173,9 +173,6 @@ import CouchbaseLite
         
         if (c8oSettings != nil){
             copyProperties(c8oSettings!)
-        }
-        if (UiDispatcher == nil){
-            // uiDispatcher = self.defaultUiDispatcher
         }
         
         self.httpInterface  =  C8oHttpInterface(c8o: self)
@@ -463,7 +460,7 @@ import CouchbaseLite
     }
     
     
-    public var EndpointIsSecure :  Bool
+    public var endpointIsSecure :  Bool
         {
         get { return _endpointIsSecure! }
     }

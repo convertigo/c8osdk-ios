@@ -11,7 +11,6 @@ import ObjectiveC
 import Alamofire
 import SwiftyJSON
 import AEXML
-import CouchbaseLite
 
 internal class C8oCallTask
 {
@@ -77,8 +76,11 @@ internal class C8oCallTask
             // But it can be useful bor debug
             do
             {
-                let fullSyncResult = try c8o.c8oFullSync!.handleFullSyncRequest(parameters, listener: c8oResponseListener!);
-                return fullSyncResult;
+                let man = CBLManager()
+                man.allDatabaseNames
+                return VoidResponse.getInstance()
+                //let fullSyncResult = try c8o.c8oFullSync!.handleFullSyncRequest(parameters, listener: c8oResponseListener!);
+                //return fullSyncResult;
             }
             catch let e as NSError//(Exception e)
             {

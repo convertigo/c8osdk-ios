@@ -7,9 +7,8 @@
 //
 
 import Foundation
-import CouchbaseLite
 
-class FullSyncEnum{
+class FullSyncEnum {
     enum FullSyncRequestable {
         case GET(String), DELETE(String), POST(String), ALL(String), VIEW(String), SYNC(String), REPLICATE_PULL(String), REPLICATE_PUSH(String), RESET(String), CREATE(String), DESTROY(String)
 
@@ -113,7 +112,7 @@ class FullSyncEnum{
         }*/
        
         
-        //abstract void addToQuery(Query query, Object parameter);
+        //abstract void addToQuery(Query query, Object parameter)
         
     }
     
@@ -197,7 +196,7 @@ class FullSyncEnum{
             //self.name = name
         }*/
         
-        //abstract void setReplication(Replication replication, Object parameterValue);
+        //abstract void setReplication(Replication replication, Object parameterValue)
     }
     
     enum FullSyncPolicy {

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class C8oCookieStorage : NSHTTPCookieStorage {
+@objc public class C8oCookieStorage : NSHTTPCookieStorage {
     var _cookies: [NSHTTPCookie] = []
     
     /*!

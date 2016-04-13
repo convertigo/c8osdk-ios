@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-import CouchbaseLite
+//import CouchbaseLite
 
 
 internal class C8oFullSync

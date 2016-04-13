@@ -10,22 +10,22 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 import AEXML
-import CouchbaseLite
+
 internal class C8oFullSyncTranslator
 {
-    internal static var FULL_SYNC_RESPONSE_KEY_COUNT  : String = "count";
-    internal static var FULL_SYNC_RESPONSE_KEY_ROWS : String = "rows";
-    internal static var FULL_SYNC_RESPONSE_KEY_CURRENT : String = "current";
-    internal static var FULL_SYNC_RESPONSE_KEY_DIRECTION : String = "direction";
-    internal static var FULL_SYNC_RESPONSE_KEY_TOTAL : String = "total";
-    internal static var FULL_SYNC_RESPONSE_KEY_OK : String = "ok";
-    internal static var FULL_SYNC_RESPONSE_KEY_STATUS : String = "status";
+    internal static var FULL_SYNC_RESPONSE_KEY_COUNT  : String = "count"
+    internal static var FULL_SYNC_RESPONSE_KEY_ROWS : String = "rows"
+    internal static var FULL_SYNC_RESPONSE_KEY_CURRENT : String = "current"
+    internal static var FULL_SYNC_RESPONSE_KEY_DIRECTION : String = "direction"
+    internal static var FULL_SYNC_RESPONSE_KEY_TOTAL : String = "total"
+    internal static var FULL_SYNC_RESPONSE_KEY_OK : String = "ok"
+    internal static var FULL_SYNC_RESPONSE_KEY_STATUS : String = "status"
     
-    internal static var FULL_SYNC_RESPONSE_VALUE_DIRECTION_PUSH : String = "push";
-    internal static var FULL_SYNC_RESPONSE_VALUE_DIRECTION_PULL : String = "pull";
+    internal static var FULL_SYNC_RESPONSE_VALUE_DIRECTION_PUSH : String = "push"
+    internal static var FULL_SYNC_RESPONSE_VALUE_DIRECTION_PULL : String = "pull"
     
-    internal static var XML_KEY_DOCUMENT : String = "document";
-    internal static var XML_KEY_COUCHDB_OUTPUT : String = "couchdb_output";
+    internal static var XML_KEY_DOCUMENT : String = "document"
+    internal static var XML_KEY_COUCHDB_OUTPUT : String = "couchdb_output"
     
     internal static func fullSyncJsonToXml(json : JSON)throws->AEXMLDocument?
     {
@@ -34,18 +34,18 @@ internal class C8oFullSyncTranslator
         // Create the root element node
         let rootElement : AEXMLElement = AEXMLElement(C8oFullSyncTranslator.XML_KEY_DOCUMENT)//try! XMLDocument(string: C8oFullSyncTranslator.XML_KEY_DOCUMENT)
         xmlDocument.addChild(rootElement)
-        let couchdb_output : AEXMLElement =  AEXMLElement(C8oFullSyncTranslator.XML_KEY_COUCHDB_OUTPUT);
+        let couchdb_output : AEXMLElement =  AEXMLElement(C8oFullSyncTranslator.XML_KEY_COUCHDB_OUTPUT)
         
         // Translates the JSON document
         do{
-            C8oTranslator.jsonToXml(json, parentElement: couchdb_output);
+            C8oTranslator.jsonToXml(json, parentElement: couchdb_output)
         }
         catch let e as C8oException{
             throw C8oException(message: C8oExceptionMessage.jsonValueToXML(), exception: e)
         }
         
-        rootElement.addChild(couchdb_output);
-        return xmlDocument;
+        rootElement.addChild(couchdb_output)
+        return xmlDocument
     }
     
     internal static func dictionaryToJson(dictionary : Dictionary<String, NSObject>)->JSON?
@@ -109,15 +109,15 @@ internal class C8oFullSyncTranslator
     internal static func  dictionaryToString(dict : Dictionary<String, NSObject>)-> String
     {
         
-        var str : String = "{ ";
+        var str : String = "{ "
         
         for item in dict
         {
-            var valueStr : String = "";
+            var valueStr : String = ""
             
             if (item is Dictionary<String, NSObject>)
             {
-                valueStr = dictionaryToString(Dictionary<String, NSObject>(dictionaryLiteral: item));
+                valueStr = dictionaryToString(Dictionary<String, NSObject>(dictionaryLiteral: item))
             }
             else if (item is Array<NSObject>)
             {
@@ -129,7 +129,7 @@ internal class C8oFullSyncTranslator
             }
             
             
-            str += item.0 + " : " + valueStr + ", ";
+            str += item.0 + " : " + valueStr + ", "
         }
         
         if(dict.count > 0)
@@ -139,17 +139,17 @@ internal class C8oFullSyncTranslator
             str = str.substringToIndex(desiredLength)
         }
         
-        str += " }";
+        str += " }"
         
-        return str;
+        return str
     }
     
     internal static func listToString(list : Array<NSObject>)->String
     {
-        var str : String = "[";
+        var str : String = "["
         for item in list
         {
-            str = str + String(item) + ", ";
+            str = str + String(item) + ", "
         }
         
         if(list.count > 0)
@@ -158,9 +158,9 @@ internal class C8oFullSyncTranslator
             str = str.substringToIndex(desiredLength)
         }
         
-        str = str + "]";
+        str = str + "]"
         
-        return str;
+        return str
     }
     
     internal static func fullSyncDocumentOperationResponseToJson(fullSyncDocumentOperationResponse : FullSyncAbstractResponse) ->JSON{

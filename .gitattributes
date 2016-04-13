@@ -55,6 +55,7 @@ C8oSDKiOS/C8oResponseXmlListener.swift -text
 C8oSDKiOS/C8oSDKiOS.h -text
 C8oSDKiOS/C8oSettings.swift -text
 C8oSDKiOS/C8oUtils.swift -text
+C8oSDKiOS/Couchbase-Lite-Bridging-Header.h -text
 C8oSDKiOS/Delegates.swift -text
 C8oSDKiOS/Exceptions.swift -text
 C8oSDKiOS/FullSyncEnum.swift -text
@@ -64,7 +65,6 @@ C8oSDKiOS/FullSyncUtils.swift -text
 C8oSDKiOS/Info.plist -text
 C8oSDKiOS/Queue.swift -text
 C8oSDKiOS/VoidResponse.swift -text
-C8oSDKiOS/module.modulemap -text
 C8oSDKiOSTests/C8ioSDKIOSTestsNotUI.swift -text
 C8oSDKiOSTests/C8oSDKiOSTests.swift -text
 C8oSDKiOSTests/Info.plist -text

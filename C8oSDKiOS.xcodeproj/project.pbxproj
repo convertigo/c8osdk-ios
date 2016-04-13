@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3766883B1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 3766883A1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h */; };
 		37F523B41C9ABE19007952C3 /* C8oCookieStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37F523B31C9ABE19007952C3 /* C8oCookieStorage.swift */; };
 		62057A211CB53DA0004AE521 /* FullSyncEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62057A201CB53DA0004AE521 /* FullSyncEnum.swift */; };
 		62057A261CB63E7B004AE521 /* VoidResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62057A251CB63E7B004AE521 /* VoidResponse.swift */; };
@@ -173,6 +174,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		376688371CBE49D5004FD9A2 /* Pods */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Pods; sourceTree = "<group>"; };
+		3766883A1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Couchbase-Lite-Bridging-Header.h"; sourceTree = "<group>"; };
 		37F523B31C9ABE19007952C3 /* C8oCookieStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oCookieStorage.swift; sourceTree = "<group>"; };
 		62057A201CB53DA0004AE521 /* FullSyncEnum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullSyncEnum.swift; sourceTree = "<group>"; };
 		62057A251CB63E7B004AE521 /* VoidResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoidResponse.swift; sourceTree = "<group>"; };
@@ -295,7 +298,6 @@
 		62CD2BF01C635D02009E9F7E /* Pods-C8oSDKiOS.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Pods-C8oSDKiOS.debug.xcconfig"; sourceTree = "<group>"; };
 		62CD2BF11C635D02009E9F7E /* Pods-C8oSDKiOS.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = "Pods-C8oSDKiOS.modulemap"; sourceTree = "<group>"; };
 		62CD2BF21C635D02009E9F7E /* Pods-C8oSDKiOS.release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Pods-C8oSDKiOS.release.xcconfig"; sourceTree = "<group>"; };
-		62CD2C061C63623F009E9F7E /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		62DE2D171CB6B4130026C3B1 /* C8oLocalCacheResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oLocalCacheResponse.swift; sourceTree = "<group>"; };
 		62EDE9031C7481ED00D9213F /* C8oExceptionListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oExceptionListener.swift; sourceTree = "<group>"; };
 		62EDE9081C7482B300D9213F /* C8oFileTransfer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFileTransfer.swift; sourceTree = "<group>"; };
@@ -385,6 +387,7 @@
 		215A697CF11F1CA08CE2E31B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				376688371CBE49D5004FD9A2 /* Pods */,
 				62CD2BA01C635D02009E9F7E /* Pods */,
 				62CD2B591C634FBA009E9F7E /* libsqlite3.dylib */,
 				62CD2B571C634F9A009E9F7E /* libz.1.dylib */,
@@ -457,8 +460,8 @@
 		62CD2A491C6207AD009E9F7E /* C8oSDKiOS */ = {
 			isa = PBXGroup;
 			children = (
+				3766883A1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h */,
 				62EDE92B1C762CEE00D9213F /* Internal */,
-				62CD2C061C63623F009E9F7E /* module.modulemap */,
 				6222327E1C6B29E2001D2EA1 /* C8oBase.swift */,
 				622CA1721CAEB8340074F704 /* C8o.swift */,
 				62CD2A4A1C6207AD009E9F7E /* C8oSDKiOS.h */,
@@ -754,6 +757,7 @@
 				62CD2B251C625547009E9F7E /* CFNetwork.framework in Headers */,
 				62CD2B261C625556009E9F7E /* Security.framework in Headers */,
 				62CD2B231C6254E4009E9F7E /* CouchbaseLite.framework in Headers */,
+				3766883B1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h in Headers */,
 				62CD2A4B1C6207AD009E9F7E /* C8oSDKiOS.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1355,7 +1359,7 @@
 				SDKROOT = iphoneos9.2;
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/C8oSDKiOS";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "C8oSDKiOS/Couchbase-Lite-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "C8oSDKiOS-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -1393,7 +1397,7 @@
 				SDKROOT = iphoneos9.2;
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/C8oSDKiOS";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "C8oSDKiOS/Couchbase-Lite-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "C8oSDKiOS-Swift.h";
 			};
 			name = Release;

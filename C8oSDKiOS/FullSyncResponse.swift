@@ -10,22 +10,22 @@ import Foundation
 
 internal class FullSyncResponse {
     
-    private static var fullSyncResponsesInstance : FullSyncResponse = FullSyncResponse();
+    private static var fullSyncResponsesInstance : FullSyncResponse = FullSyncResponse()
     
-    public static let RESPONSE_KEY_OK : String = "ok";
+    public static let RESPONSE_KEY_OK : String = "ok"
     
-    public static let RESPONSE_KEY_DOCUMENT_ID : String = "id";
+    public static let RESPONSE_KEY_DOCUMENT_ID : String = "id"
     
-    public static let RESPONSE_KEY_DOCUMENT_REVISION : String = "rev";
+    public static let RESPONSE_KEY_DOCUMENT_REVISION : String = "rev"
     
     
 }
 
-public class FullSyncAbstractResponse : NSObject{
+@objc public class FullSyncAbstractResponse : NSObject{
         private var operationStatus : Bool?
         
         private init(operationStatus : Bool) {
-            self.operationStatus = operationStatus;
+            self.operationStatus = operationStatus
         }
         
         func getProperties()->Dictionary<String, NSObject>{

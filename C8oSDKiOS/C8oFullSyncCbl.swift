@@ -9,7 +9,6 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
-import CouchbaseLite
 
 class C8oFullSyncCbl : C8oFullSync{
     private static let ATTACHMENT_PROPERTY_KEY_CONTENT_URL : String = "content_url"
@@ -372,7 +371,7 @@ class C8oFullSyncCbl : C8oFullSync{
         } catch {
             C8oException(message: "TODO")
         }
-        return FullSyncDefaultResponse(operationStatus: true);
+        return FullSyncDefaultResponse(operationStatus: true)
     }
     
     private func compileView(db : CBLDatabase, viewName : String, viewProps : Dictionary<String, NSObject>?)->CBLView?{
@@ -452,7 +451,7 @@ class C8oFullSyncCbl : C8oFullSync{
     public func getDocucmentFromDatabase(c8o :C8o, databaseName : String, documentId : String)throws->CBLDocument {
         var c8oFullSyncDatabase : C8oFullSyncDatabase
         do {
-            c8oFullSyncDatabase = try self.getOrCreateFullSyncDatabase(databaseName);
+            c8oFullSyncDatabase = try self.getOrCreateFullSyncDatabase(databaseName)
         } catch{
             throw C8oException(message: C8oExceptionMessage.fullSyncGetOrCreateDatabase(databaseName))
         }
@@ -521,9 +520,9 @@ class C8oFullSyncCbl : C8oFullSync{
     
     func saveResponseToLocalCache(c8oCalRequestIdentifier : String, localCacheResponse : C8oLocalCacheResponse) throws{
         
-        let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(C8o.LOCAL_CACHE_DATABASE_NAME);
-        let localCacheDocument : CBLDocument =  (fullSyncDatabase.getDatabase()?.documentWithID(c8oCalRequestIdentifier))!;
-        var properties : Dictionary<String, NSObject> = Dictionary<String, NSObject>();
+        let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(C8o.LOCAL_CACHE_DATABASE_NAME)
+        let localCacheDocument : CBLDocument =  (fullSyncDatabase.getDatabase()?.documentWithID(c8oCalRequestIdentifier))!
+        var properties : Dictionary<String, NSObject> = Dictionary<String, NSObject>()
         properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE] =  localCacheResponse.getResponse()
         properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE_TYPE] = localCacheResponse.getResponseType()
         if (localCacheResponse.getExpirationDate() > 0) {
@@ -535,7 +534,7 @@ class C8oFullSyncCbl : C8oFullSync{
         }
         
         do {
-            try localCacheDocument.putProperties(properties);
+            try localCacheDocument.putProperties(properties)
         } catch {
             throw C8oException(message: "TODO")
         }

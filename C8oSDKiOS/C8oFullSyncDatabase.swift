@@ -9,12 +9,10 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
-import CouchbaseLite
 
-
-public class C8oFullSyncDatabase : NSObject {
+@objc public class C8oFullSyncDatabase : NSObject {
     
-    private static let AUTHENTICATION_COOKIE_NAME : String = "SyncGatewaySession";
+    private static let AUTHENTICATION_COOKIE_NAME : String = "SyncGatewaySession"
     
     private var c8o : C8o
     

@@ -9,7 +9,7 @@
 import Foundation
 
 
-public class C8oException : NSError
+@objc public class C8oException : NSError
 {
     public static let NSC8oErrorDomain : String = "com.convertigo.clientsdk.exception.C8oException"
     public var message : String?
@@ -35,22 +35,22 @@ public class C8oException : NSError
         var message = message
         if (exception is C8oException)
         {
-            message = String(exception) + " | " + message;
+            message = String(exception) + " | " + message
         }
-        return message;
+        return message
     }
     
     private static func filterException(exception : NSError)->NSError
     {
     /*if (exception is C8oException)
     {
-    return null;
+    return null
     }*/
-    return exception;
+    return exception
     }
 }
 
-public class C8oHttpException : NSError
+@objc public class C8oHttpException : NSError
 {
     public init(message : String, innerException : NSError)
     {
@@ -62,7 +62,7 @@ public class C8oHttpException : NSError
     }
 }
 
-public class C8oRessourceNotFoundException : NSError
+@objc public class C8oRessourceNotFoundException : NSError
 {
     public init(message : String, innerException : NSError)
     {
@@ -74,7 +74,7 @@ public class C8oRessourceNotFoundException : NSError
     }
 }
 
-public class C8oUnavailableLocalCacheException : NSError
+@objc public class C8oUnavailableLocalCacheException : NSError
 {
     
     public init(message : String, innerException : NSError)
@@ -95,7 +95,7 @@ public enum C8oError : ErrorType {
     
     }
 
-public enum C8oCode: Int {
+@objc public enum C8oCode: Int {
     case C8oUnavailableLocalCacheException  = -6000
     case C8oRessourceNotFoundException      = -6001
     case C8oHttpException                   = -6002

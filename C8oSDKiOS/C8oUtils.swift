@@ -11,8 +11,6 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-import CouchbaseLite
-
 internal class C8oUtils
 {
     
