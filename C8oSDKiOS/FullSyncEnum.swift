@@ -14,27 +14,33 @@ import AEXML
 
 internal class FullSyncRequestable
 {
-    internal static var GET : FullSyncRequestable = FullSyncRequestable(value: "get", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener)->(NSObject) in
+    internal static var GET : FullSyncRequestable = FullSyncRequestable(value: "get", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener)throws->(NSObject) in
         
         let docid : String = try! C8oUtils.peekParameterStringValue(parameters, name: FullSyncGetDocumentParameter.DOCID.name, exceptionIfMissing: true)!
-        return try! (c8oFullSync as! C8oFullSyncCbl).handleGetDocumentRequest(databaseName, docid: docid, parameters: parameters)
+        return try (c8oFullSync as! C8oFullSyncCbl).handleGetDocumentRequest(databaseName, docid: docid, parameters: parameters)
     })
     
-    internal static var DELETE : FullSyncRequestable = FullSyncRequestable(value: "delete", handleFullSyncrequestOp:{ (c8oFullSync, databaseName, parameters, c8oResponseListener)->(NSObject) in
+    internal static var DELETE : FullSyncRequestable = FullSyncRequestable(value: "delete", handleFullSyncrequestOp:{ (c8oFullSync, databaseName, parameters, c8oResponseListener)throws->(NSObject) in
         
         let docid : String = try! C8oUtils.peekParameterStringValue(parameters, name: FullSyncGetDocumentParameter.DOCID.name, exceptionIfMissing: true)!
-        return try! (c8oFullSync as! C8oFullSyncCbl).handleDeleteDocumentRequest(databaseName, docid: docid, parameters: parameters)!
+        do{
+            return try (c8oFullSync as! C8oFullSyncCbl).handleDeleteDocumentRequest(databaseName, docid: docid, parameters: parameters)!
+        }
+        catch let e as NSError{
+            throw e
+        }
+        
     })
     
     internal static var POST : FullSyncRequestable = FullSyncRequestable(value: "post",  handleFullSyncrequestOp:{ (c8oFullSync, databaseName, parameters, c8oResponseListener)->(NSObject) in
         
         // Gets the policy parameter
-        let fullSyncPolicyParameter : String = try! C8oUtils.peekParameterStringValue(parameters, name: FullSyncPostDocumentParameter.POLICY.name, exceptionIfMissing: false)!
+        let fullSyncPolicyParameter : String? = try! C8oUtils.peekParameterStringValue(parameters, name: FullSyncPostDocumentParameter.POLICY.name, exceptionIfMissing: false)
         
         // Finds the policy corresponding to the parameter value if it exists
         let fullSyncPolicy : FullSyncPolicy = FullSyncPolicy.getFullSyncPolicy(fullSyncPolicyParameter)
         
-        return try! (c8oFullSync as! C8oFullSyncCbl).handlePostDocumentRequest(databaseName, fullSyncPolicy: fullSyncPolicy, parameters: parameters)!
+        return try (c8oFullSync as! C8oFullSyncCbl).handlePostDocumentRequest(databaseName, fullSyncPolicy: fullSyncPolicy, parameters: parameters)!
     })
     
     internal static var ALL : FullSyncRequestable = FullSyncRequestable(value: "all", handleFullSyncrequestOp:{ (c8oFullSync, databaseName, parameters, c8oResponseListener)->(NSObject) in
@@ -179,17 +185,23 @@ internal class FullSyncRequestable
     })
     
     internal var value : String
-    private var handleFullSyncrequestOp : (C8oFullSync, String, Dictionary<String, NSObject>, C8oResponseListener)->(AnyObject)
+    private var handleFullSyncrequestOp : (C8oFullSync, String, Dictionary<String, NSObject>, C8oResponseListener)throws->(AnyObject)
     
-    private init(value : String, handleFullSyncrequestOp : (C8oFullSync, String, Dictionary<String, NSObject>, C8oResponseListener)->(AnyObject))
+    private init(value : String, handleFullSyncrequestOp : (C8oFullSync, String, Dictionary<String, NSObject>, C8oResponseListener)throws->(AnyObject))
     {
         self.value = value
         self.handleFullSyncrequestOp = handleFullSyncrequestOp
     }
     
-    internal func handleFullSyncRequest(c8oFullSync : C8oFullSync, databaseNameName : String, parameters: Dictionary<String, NSObject>, c8oResponseListner : C8oResponseListener)->NSObject
+    internal func handleFullSyncRequest(c8oFullSync : C8oFullSync, databaseNameName : String, parameters: Dictionary<String, NSObject>, c8oResponseListner : C8oResponseListener)throws->NSObject
     {
-        return handleFullSyncrequestOp(c8oFullSync, databaseNameName, parameters, c8oResponseListner) as! NSObject
+        do{
+            return try handleFullSyncrequestOp(c8oFullSync, databaseNameName, parameters, c8oResponseListner) as! NSObject
+        }
+        catch let e as NSError{
+         throw e
+        }
+        
     }
     
     internal static func getFullSyncRequestable(value : String)->FullSyncRequestable?
@@ -400,7 +412,7 @@ public class FullSyncReplicationParameter
 /// </summary>
 public class FullSyncPolicy
 {
-    public static let NONE : FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_NONE, func: {database, newProperties in
+    public static let NONE : FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_NONE, action: {database, newProperties in
         var createdDocument : CBLDocument
         var newPropertiesMutable = newProperties
         do{
@@ -410,13 +422,16 @@ public class FullSyncPolicy
             
             createdDocument = (documentId == nil) ? database.createDocument() : database.documentWithID(documentId!)!
             try createdDocument.putProperties(newPropertiesMutable)
+            /*let a = createdDocument.currentRevisionID
+            let b = createdDocument.documentID
+            let c = "hh"*/
         }
-        catch{
-            fatalError("must implement this catch")
+        catch let e as NSError{
+            throw c8oCouchbaseLiteException(message: C8oExceptionMessage.fullSyncPutProperties(newProperties), exception: e)
         }
         return createdDocument
     })
-    public static let CREATE : FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_CREATE, func: {database, newProperties in
+    public static let CREATE : FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_CREATE, action: {database, newProperties in
         var createdDocument : CBLDocument
         var newPropertiesMutable = newProperties
         do{
@@ -425,12 +440,13 @@ public class FullSyncPolicy
             createdDocument = database.createDocument()
             try createdDocument.putProperties(newPropertiesMutable)
         }
-        catch{
-            fatalError("must implement this catch")
+        catch let e as NSError{
+            throw c8oCouchbaseLiteException(message: C8oExceptionMessage.fullSyncPutProperties(newProperties), exception: e)
         }
+
         return createdDocument
     })
-    public static let OVERRIDE : FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_OVERRIDE, func: {database, newProperties in
+    public static let OVERRIDE : FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_OVERRIDE, action: {database, newProperties in
         var createdDocument : CBLDocument
         var newPropertiesMutable = newProperties
         do{
@@ -450,12 +466,13 @@ public class FullSyncPolicy
             }
             try createdDocument.putProperties(newPropertiesMutable)
         }
-        catch{
-            fatalError("must implement this catch")
+        catch let e as NSError{
+            throw c8oCouchbaseLiteException(message: C8oExceptionMessage.fullSyncPutProperties(newProperties), exception: e)
         }
+
         return createdDocument
     })
-    public static let MERGE : FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_MERGE, func: {database, newProperties in
+    public static let MERGE : FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_MERGE, action: {database, newProperties in
         var createdDocument : CBLDocument
         var newPropertiesMutable = newProperties
         do{
@@ -475,17 +492,19 @@ public class FullSyncPolicy
             }
             try createdDocument.putProperties(newPropertiesMutable)
         }
-        catch{
-            fatalError("must implement this catch")
+        catch let e as NSError{
+            throw c8oCouchbaseLiteException(message: C8oExceptionMessage.fullSyncPutProperties(newProperties), exception: e)
         }
         return createdDocument
     })
     
     public var value : String?
+    public var action : (CBLDatabase, Dictionary<String, AnyObject>)throws->(CBLDocument)
     
-    private init(value : String?, func: (CBLDatabase, Dictionary<String, NSObject>)->(CBLDocument))
+    private init(value : String?, action: (CBLDatabase, Dictionary<String, AnyObject>)throws->(CBLDocument))
     {
         self.value = value
+        self.action = action
         
         //abstract void setReplication(Replication replication, Object parameterValue)
     }

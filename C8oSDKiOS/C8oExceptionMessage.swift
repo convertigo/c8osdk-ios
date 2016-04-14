@@ -289,10 +289,10 @@ internal class C8oExceptionMessage
     return "Delete the Couch document failed"
     }
     
-    //internal static func fullSyncPutProperties(Map<string, object> properties)->String
-    //{
-    //    return "Unable to put the following properties in the fullSync Document : " + properties
-    //}
+    internal static func fullSyncPutProperties(properties : Dictionary<String, AnyObject>)->String
+    {
+        return "Unable to put the following properties in the fullSync Document : " + String(properties)
+    }
     
     internal static func fullSyncGetOrCreateDatabase(databaseName : String)->String
     {

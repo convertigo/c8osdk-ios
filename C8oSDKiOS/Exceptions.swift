@@ -62,11 +62,31 @@ import Foundation
     }
 }
 
-@objc public class C8oRessourceNotFoundException : NSError
+@objc public class C8oRessourceNotFoundException : C8oException
 {
-    public init(message : String, innerException : NSError)
+    public override init(message : String, exception: NSError?)
     {
-        super.init(domain: "com.convertigo.C8o.Error", code: C8oCode.C8oRessourceNotFoundException.rawValue as Int, userInfo: [NSLocalizedFailureReasonErrorKey: message])
+        super.init(message: message, exception: exception)
+    }
+    
+    public override init(message: String){
+        super.init(message: message)
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+@objc public class c8oCouchbaseLiteException : C8oException
+{
+    public override init(message : String, exception: NSError?)
+    {
+        super.init(message: message, exception: exception)
+    }
+    
+    public override init(message: String){
+        super.init(message: message)
     }
     
     required public init?(coder aDecoder: NSCoder) {

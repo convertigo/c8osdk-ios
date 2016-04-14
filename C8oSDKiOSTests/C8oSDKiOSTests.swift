@@ -460,7 +460,7 @@ class C8oSDKiOSTests: XCTestCase {
                 return nil
             })?.fail({ (ex, param) -> () in
                 xfail.append(ex)
-                xparam.append(param)
+                xparam.append(param!)
                 condition.lock()
                     condition.signal()
                 condition.unlock()
@@ -507,7 +507,7 @@ class C8oSDKiOSTests: XCTestCase {
                 return nil
             })?.failUI{ (ex, param) -> () in
                 xfail.append(ex)
-                xparam.append(param)
+                xparam.append(param!)
                 xthread.append(NSThread.currentThread())
                 condition.lock()
                 condition.signal()
@@ -722,17 +722,72 @@ class C8oSDKiOSTests: XCTestCase {
     /*func testC8o0Ssl2TrustAll(){
         
     }*/
-    
     func testC8oFsPostGetDelete(){
+        let c8o : C8o = try! Get(.C8O_FS)!
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        var json : JSON? = try! c8o.callJson("fs://.reset")!.sync()
+        XCTAssertTrue(json!["ok"].boolValue)
+        let myId : String =  "C8oFsPostGetDelete-" + String(NSDate(timeIntervalSince1970: 0).timeIntervalSinceNow * 1000)
+        json = try! c8o.callJson("fs://.post", parameters: "_id", myId)?.sync()
+        XCTAssertTrue(json!["ok"].boolValue)
+        var id : String = json!["id"].stringValue
+        XCTAssertEqual(id, myId)
+        json = try! c8o.callJson("fs://.get", parameters: "docid", id)!.sync()
+        id = json!["_id"].stringValue
+        XCTAssertEqual(myId, id)
+        json = try! c8o.callJson("fs://.delete", parameters: "docid", id)!.sync()
+        XCTAssertTrue(json!["ok"].boolValue)
+        do{
+            try c8o.callJson("fs://.get", parameters: "docid", id)!.sync()
+            XCTAssertTrue(false, "not possible")
+        }
+        catch _ as C8oRessourceNotFoundException{
+            XCTAssertTrue(true)
+        }
+        catch{
+            XCTAssertTrue(false)
+        }
+        
+        
+    }
+    func testC8oFsPostGetDeleteRev(){
         let c8o : C8o = try! self.Get(.C8O_FS)!
         let condition : NSCondition = NSCondition()
         condition.lock()
         var json : JSON? = try! c8o.callJson("fs://.reset")?.sync()
         XCTAssertTrue(json!["ok"].boolValue)
-        let myId =  "C8oFsPostGetDelete-" + String(NSTimeIntervalSince1970 * 1000)
-        json = try! c8o.callJson("fs://.post", parameters: "_id", myId)?.sync()
-        print(json!["ok"].stringValue)
+        let id =  "C8oFsPostGetDelete-Rev" + String(NSDate(timeIntervalSince1970: 0).timeIntervalSinceNow * 1000)
+        json = try! c8o.callJson("fs://.post", parameters: "_id", id)?.sync()
         XCTAssertTrue(json!["ok"].boolValue)
+        let rev : String = json!["rev"].stringValue
+        do{
+            try c8o.callJson("fs://.delete", parameters: "docid", id, "rev", "1-123456")!.sync()
+            XCTAssertTrue(false, "not possible")
+        }
+        catch _ as C8oRessourceNotFoundException{
+            XCTAssertTrue(true)
+        }
+        catch{
+            XCTAssertTrue(false)
+        }
+        do{
+            json = try c8o.callJson("fs://.delete", parameters: "docid", id, "rev", rev)!.sync()
+        }
+        catch _ as NSError{
+            XCTAssert(false)
+        }
+        XCTAssertTrue(json!["ok"].boolValue)
+        do{
+            try c8o.callJson("fs://.get", parameters: "docid", id)!.sync()
+            XCTAssertTrue(false, "not possible")
+        }
+        catch _ as C8oRessourceNotFoundException{
+            XCTAssertTrue(true)
+        }
+        catch{
+            XCTAssertTrue(false)
+        }
         condition.unlock()
     }
     

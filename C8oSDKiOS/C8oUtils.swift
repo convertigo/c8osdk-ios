@@ -35,7 +35,7 @@ internal class C8oUtils
     }
     
     
-    internal static func getParameter(parameters : Dictionary<String, NSObject>, name : String, useName : Bool = false)->Pair<String?, NSObject?>
+    internal static func getParameter(parameters : Dictionary<String, AnyObject>, name : String, useName : Bool = false)->Pair<String?, AnyObject?>
     {
         
         for parameter in parameters
@@ -43,19 +43,19 @@ internal class C8oUtils
             let parameterName : String = parameter.0;
             if ((name == parameterName) || (useName && name == (C8oUtils.USE_PARAMETER_IDENTIFIER + parameterName)))
             {
-                return Pair<String?, NSObject?>(key: parameter.0, value: parameter.1);
+                return Pair<String?, AnyObject?>(key: parameter.0, value: parameter.1)     //   (key: parameter.0, value: parameter.1 as AnyObject);
             }
         }
         let stringNil : String? = nil
         let nsobjectnil : String? = nil
-        return Pair<String?, NSObject?>(key: stringNil, value: nsobjectnil);
+        return Pair<String?, AnyObject?>(key: stringNil, value: nsobjectnil);
         
         
     }
     
-    internal static func getParameterObjectValue(parameters :  Dictionary<String, NSObject>, name : String, useName : Bool = false)->NSObject?
+    internal static func getParameterObjectValue(parameters :  Dictionary<String, NSObject>, name : String, useName : Bool = false)->AnyObject?
     {
-        let parameter : Pair<String?, NSObject?> = getParameter(parameters, name: name, useName: useName);
+        let parameter : Pair<String?, AnyObject?> = getParameter(parameters, name: name, useName: useName);
         if (parameter.key != nil)
         {
             return parameter.value
@@ -64,12 +64,23 @@ internal class C8oUtils
     }
     
     
-    internal static func getParameterStringValue(parameters : Dictionary<String, NSObject> , name : String, useName : Bool = false)->String?
+    internal static func getParameterStringValue(parameters : Dictionary<String, AnyObject> , name : String, useName : Bool = false)->String?
     {
         let parameter = getParameter(parameters, name: name, useName: useName);
         if (parameter.key != nil)
         {
-            return String(parameter.value!);
+            let a = parameter.value
+            if(parameter.value == nil){
+                return nil
+            }
+            else if(parameter.value is C8oJSON){
+                
+                return String((parameter.value as! C8oJSON).myJSON)
+            }
+            else{
+                return String(parameter.value!);
+            }
+            
         }
         return nil;
     }
@@ -77,7 +88,7 @@ internal class C8oUtils
     internal static func peekParameterStringValue(parameters : Dictionary<String, NSObject> , name : String, exceptionIfMissing : Bool = false) throws ->String?
     {
         var parameters = parameters
-        let value : String? = getParameterStringValue(parameters, name: name, useName: false)!;
+        let value : String? = getParameterStringValue(parameters, name: name, useName: false);
         if (value == nil)
         {
             if (exceptionIfMissing)
@@ -95,43 +106,43 @@ internal class C8oUtils
     internal static func getParameterJsonValue( parameters : Dictionary<String, NSObject>, name : Bool, useName : Bool = false)-> NSObject?
     {
         /*
-        var parameter = GetParameter(parameters, name, useName);
-        if (parameter.Key != null)
-        {
-        return C8oUtils.GetParameterJsonValue(parameter);
-        }
-        return null;
-        */
+         var parameter = GetParameter(parameters, name, useName);
+         if (parameter.Key != null)
+         {
+         return C8oUtils.GetParameterJsonValue(parameter);
+         }
+         return null;
+         */
         return nil;
     }
     
     internal static func getParameterJsonValue(parameter : Dictionary<String, NSObject> )->NSObject?
     {
         /* if (parameter.Value is string)
-        {
-        return C8oTranslator.StringToJson(parameter.Value as string);
-        }
-        return parameter.Value;*/
+         {
+         return C8oTranslator.StringToJson(parameter.Value as string);
+         }
+         return parameter.Value;*/
         return nil;
     }
     
     internal static func tryGetParameterObjectValue<T>(parameters : Dictionary<String, NSObject>, name : String, value : T, useName : Bool = false,  defaultValue : T )->Bool?
     {
         /*KeyValuePair<string, object> parameter = GetParameter(parameters, name, useName);
-        if (parameter.Key != null && parameter.Value != null)
-        {
-        if (parameter.Value is string && typeof(T) != typeof(string))
-        {
-        value = (T) C8oTranslator.StringToObject(parameter.Value as string, typeof(T));
-        }
-        else
-        {
-        value = (T) parameter.Value;
-        }
-        return true;
-        }
-        value = defaultValue;
-        return false;*/
+         if (parameter.Key != null && parameter.Value != null)
+         {
+         if (parameter.Value is string && typeof(T) != typeof(string))
+         {
+         value = (T) C8oTranslator.StringToObject(parameter.Value as string, typeof(T));
+         }
+         else
+         {
+         value = (T) parameter.Value;
+         }
+         return true;
+         }
+         value = defaultValue;
+         return false;*/
         return nil;
     }
     
@@ -190,41 +201,41 @@ internal class C8oUtils
     internal static func tryGetValueAndCheckType<T>(jObject : JSON, key : String, value : T)->Bool?
     {
         /*
-        JToken foundValue;
-        if (jObject.TryGetValue(key, out foundValue))
-        {
-        if (foundValue is T)
-        {
-        value = (T)(object)foundValue;
-        return true;
-        }
-        else if (foundValue is JValue && (foundValue as JValue).Value is T)
-        {
-        value = (T)(object)(foundValue as JValue).Value;
-        return true;
-        }
-        }
-        value = default(T);
-        return false;*/
+         JToken foundValue;
+         if (jObject.TryGetValue(key, out foundValue))
+         {
+         if (foundValue is T)
+         {
+         value = (T)(object)foundValue;
+         return true;
+         }
+         else if (foundValue is JValue && (foundValue as JValue).Value is T)
+         {
+         value = (T)(object)(foundValue as JValue).Value;
+         return true;
+         }
+         }
+         value = default(T);
+         return false;*/
         return nil;
     }
     
     internal static func identifyC8oCallRequest(parameters : Dictionary<String, NSObject>, responseType : String)->String?
     {
         /*
-        JObject json = new JObject();
-        foreach (KeyValuePair<string, object> parameter in parameters)
-        {
-        JValue value = new JValue(parameter.Value);
-        json.Add(parameter.Key, value);
-        }
-        return responseType + json.ToString();
-        }
-        
-        public static func UrlDecode(string str)-> String
-        {
-        return Uri.UnescapeDataString(str);
-        */
+         JObject json = new JObject();
+         foreach (KeyValuePair<string, object> parameter in parameters)
+         {
+         JValue value = new JValue(parameter.Value);
+         json.Add(parameter.Key, value);
+         }
+         return responseType + json.ToString();
+         }
+         
+         public static func UrlDecode(string str)-> String
+         {
+         return Uri.UnescapeDataString(str);
+         */
         return nil;
     }
     

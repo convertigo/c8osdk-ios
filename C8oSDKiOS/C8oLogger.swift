@@ -346,20 +346,27 @@ import AEXML
     }
     
     
-    internal func logC8oCallJSONResponse(response : JSON, url : String, parameters : Dictionary<String, NSObject>)-> Void
+    internal func logC8oCallJSONResponse(response : JSON, url : String?, parameters : Dictionary<String, NSObject>)-> Void
     {
-        //LogC8oCallResponse(C8oTranslator.JsonToString(response), "JSON", url, parameters)
+        logC8oCallResponse(C8oTranslator.jsonToString(response)!, responseType: "JSON", url: url, parameters: parameters)
     }
     
-    internal func logC8oCallResponse(responseStr : String, responseType : String, url: String, parameters : Dictionary<String, NSObject>)-> Void
+    internal func logC8oCallResponse(responseStr : String, responseType : String, url: String?, parameters : Dictionary<String, NSObject>)-> Void
     {
         if(c8o.logC8o && isTrace)
         {
-            var c8oCallResponseLogMessage : String = "C8o call " + responseType + " response : " + url
+            var c8oCallResponseLogMessage : String
+            if(url == nil){
+                 c8oCallResponseLogMessage = "C8o call " + responseType + " response : "
+            }
+            else{
+                c8oCallResponseLogMessage = "C8o call " + responseType + " response : " + url!
+            }
+            
             
             if (parameters.count > 0)
             {
-                //c8oCallResponseLogMessage += "\n" + JsonConvert.SerializeObject(parameters)
+                c8oCallResponseLogMessage += "\n" + parameters.description
             }
             
             c8oCallResponseLogMessage += "\n" + responseStr

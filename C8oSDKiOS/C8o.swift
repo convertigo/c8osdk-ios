@@ -276,7 +276,7 @@ import AEXML
             // Creates a async task running on another thread
             // Exceptions have to be handled by the C8oExceptionListener
             let task = C8oCallTask(c8o: self, parameters: parameters!, c8oResponseListener: c8oResponseListener!, c8oExceptionListener: c8oExceptionListener!)
-            task.Execute()
+            task.execute()
         }
         /*catch let e as C8oException
         {
@@ -326,14 +326,14 @@ import AEXML
                     }
                 }
                 else{
-                    promise.onResponse((params?.key)! , parameters: (params?.value)!)
+                    promise.onResponse((params?.key)! , parameters: (params!.value)!)
                 }
                 
             })
             , c8oExceptionListener : C8oExceptionListener(onException:{
                 (params : Pair<C8oException, Dictionary<String, NSObject>?>?)->() in
                 
-                promise.onFailure(((params?.key) as C8oException?)!, parameters: (params?.value)!)
+                promise.onFailure(params?.key as C8oException?, parameters: params?.value)
                 
             }))
         return promise

@@ -10,8 +10,6 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-//import CouchbaseLite
-
 
 internal class C8oFullSync
 {
@@ -39,7 +37,7 @@ internal class C8oFullSync
     }
 
     
-    internal func handleFullSyncRequest(parameters : Dictionary<String, NSObject>, listener : C8oResponseListener)throws ->NSObject?
+    internal func handleFullSyncRequest(parameters : Dictionary<String, NSObject>, listener : C8oResponseListener)throws ->AnyObject?
     {
         // Checks if this is really a fullSync request (even if this is normally already checked)
         let projectParameterValue = try! C8oUtils.peekParameterStringValue(parameters, name: C8o.ENGINE_PARAMETER_PROJECT, exceptionIfMissing: true);
@@ -69,29 +67,31 @@ internal class C8oFullSync
             }
         }
         
-        var response : NSObject?;
+        var response : AnyObject?;
         do
         {
-            // ?? no Error thrown
-            response = fullSyncRequestable!.handleFullSyncRequest(self, databaseNameName: databaseName!, parameters: parameters, c8oResponseListner: listener);
+            response = try fullSyncRequestable!.handleFullSyncRequest(self, databaseNameName: databaseName!, parameters: parameters, c8oResponseListner: listener);
         }
-        /*catch let e as C8oException
+        catch let e as C8oException{
+            throw e
+        }
+        catch let e as NSError
         {
             throw  C8oException(message: C8oExceptionMessage.FullSyncRequestFail(), exception: e);
-        }*/
+        }
         
         if (response == nil)
         {
             throw C8oException(message: C8oExceptionMessage.couchNullResult());
         }
 
-        response = handleFullSyncResponse(response!, listener: listener);
+        response = try! handleFullSyncResponse(response!, listener: listener)
         return response;
     }
     
-  internal func handleFullSyncResponse(response : AnyObject, listener : C8oResponseListener)->NSObject
+  internal func handleFullSyncResponse(response : AnyObject, listener : C8oResponseListener)throws ->AnyObject
     {
-        /*var responseMutable = response
+        var responseMutable = response
         if (responseMutable is JSON)
         {
             if (listener is C8oResponseXmlListener)
@@ -108,8 +108,8 @@ internal class C8oFullSync
             
         }
         
-        return responseMutable as! NSObject;*/
-        return response as! NSObject
+        return responseMutable as! NSObject;
+        
     }
     
 

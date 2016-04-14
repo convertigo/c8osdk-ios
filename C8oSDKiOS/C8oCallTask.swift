@@ -74,7 +74,10 @@ internal class C8oCallTask
                 let fullSyncResult = try c8o.c8oFullSync!.handleFullSyncRequest(parameters, listener: c8oResponseListener!)
                 return fullSyncResult
             }
-            catch let e as NSError//(Exception e)
+            catch let e as C8oException{
+                throw e
+            }
+            catch let e as NSError
             {
                 throw C8oException(message: C8oExceptionMessage.FullSyncRequestFail(), exception: e)
             }
@@ -260,7 +263,7 @@ internal class C8oCallTask
             }
             else {
                 if (result is C8oJSON) {
-                c8o.c8oLogger!.logC8oCallJSONResponse((result as!C8oJSON).myJSON! , url: c8oCallUrl!, parameters: parameters)
+                c8o.c8oLogger!.logC8oCallJSONResponse((result as!C8oJSON).myJSON! , url: c8oCallUrl, parameters: parameters)
                 (c8oResponseListener as! C8oResponseJsonListener).onJsonResponse(Pair(key: (result as!C8oJSON).myJSON!, value: parameters))
                 }
                 else{

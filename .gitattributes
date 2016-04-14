@@ -61,7 +61,6 @@ C8oSDKiOS/Exceptions.swift -text
 C8oSDKiOS/FullSyncEnum.swift -text
 C8oSDKiOS/FullSyncRequestable.swift -text
 C8oSDKiOS/FullSyncResponse.swift -text
-C8oSDKiOS/FullSyncUtils.swift -text
 C8oSDKiOS/Info.plist -text
 C8oSDKiOS/Queue.swift -text
 C8oSDKiOS/VoidResponse.swift -text
