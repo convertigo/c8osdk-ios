@@ -190,7 +190,7 @@ import AEXML
      @endcode
      @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
      */
-    public func call(requestable :String?, parameters : Dictionary<String, NSObject>? = nil , c8oResponseListener : C8oResponseListener , c8oExceptionListener  : C8oExceptionListener )-> Void
+    public func call(requestable :String?, parameters : Dictionary<String, AnyObject>? = nil , c8oResponseListener : C8oResponseListener , c8oExceptionListener  : C8oExceptionListener )-> Void
     {
         var parameters = parameters
         do
@@ -203,12 +203,12 @@ import AEXML
             // Checks parameters validity
             if (parameters == nil)
             {
-                parameters = Dictionary<String, NSObject>()
+                parameters = Dictionary<String, AnyObject>()
             }
             else
             {
                 // Clone parameters in order to modify them
-                parameters = Dictionary<String, NSObject>?(parameters!)
+                parameters = Dictionary<String, AnyObject>?(parameters!)
             }
             
             // Use the requestable string to add parameters corresponding to the c8o project, sequence, connector and transaction (<project>.<sequence> or <project>.<connector>.<transaction>)
@@ -252,7 +252,7 @@ import AEXML
         }
     }
     
-    public func call(parameters : Dictionary<String, NSObject>?  = nil, c8oResponseListener :  C8oResponseListener? = nil, c8oExceptionListener : C8oExceptionListener? = nil) throws
+    public func call(parameters : Dictionary<String, AnyObject>?  = nil, c8oResponseListener :  C8oResponseListener? = nil, c8oExceptionListener : C8oExceptionListener? = nil) throws
     {
         var parameters = parameters
         // IMPORTANT : all c8o calls have to end here !
@@ -264,13 +264,13 @@ import AEXML
             // Checks parameters validity
             if (parameters == nil)
             {
-                parameters = Dictionary<String, NSObject>()
+                parameters = Dictionary<String, AnyObject>()
             }
             else
             {
                 // Clones parameters in order to modify them
                 //parameters = parameters
-                parameters = Dictionary<String, NSObject>?(parameters!)
+                parameters = Dictionary<String, AnyObject>?(parameters!)
             }
             
             // Creates a async task running on another thread
@@ -310,19 +310,19 @@ import AEXML
      FailUI() methods to handle C8oErrors.
      
      */
-    public func callJson (requestable : String, parameters : Dictionary<String, NSObject>?)-> C8oPromise<JSON>?
+    public func callJson (requestable : String, parameters : Dictionary<String, AnyObject>?)-> C8oPromise<JSON>?
     {
         let promise = C8oPromise<JSON>(c8o: self)
         
         call(requestable,
             parameters: parameters,
             c8oResponseListener : C8oResponseJsonListener(onJsonResponse:{
-                (params: Pair<JSON?, Dictionary<String, NSObject>?>?)->() in
+                (params: Pair<JSON?, Dictionary<String, AnyObject>?>?)->() in
                 
                 if((params!.key) == nil ){
                     if((params!.value)!.keys.contains(C8o.ENGINE_PARAMETER_PROGRESS) == true){
                         
-                        promise.onProgress(((((params!.value)! as Dictionary<String, NSObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
+                        promise.onProgress(((((params!.value)! as Dictionary<String, AnyObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
                     }
                 }
                 else{
@@ -331,7 +331,7 @@ import AEXML
                 
             })
             , c8oExceptionListener : C8oExceptionListener(onException:{
-                (params : Pair<C8oException, Dictionary<String, NSObject>?>?)->() in
+                (params : Pair<C8oException, Dictionary<String, AnyObject>?>?)->() in
                 
                 promise.onFailure(params?.key as C8oException?, parameters: params?.value)
                 
@@ -340,7 +340,7 @@ import AEXML
     }
     
     
-    public func callJson(requestable : String, parameters : NSObject...)->C8oPromise<JSON>?{
+    public func callJson(requestable : String, parameters : AnyObject...)->C8oPromise<JSON>?{
         
         return try! callJson(requestable, parameters: C8o.toParameters(parameters))
         
@@ -361,12 +361,12 @@ import AEXML
         call(requestable,
             parameters: parameters,
             c8oResponseListener : C8oResponseXmlListener(onXmlResponse:{
-                (params : Pair<AnyObject?, Dictionary<String, NSObject>?>?)->() in
+                (params : Pair<AnyObject?, Dictionary<String, AnyObject>?>?)->() in
                 
                 if((params!.key) == nil ){
                     if((params!.value)!.keys.contains(C8o.ENGINE_PARAMETER_PROGRESS) == true){
                         
-                        promise.onProgress(((((params!.value)! as Dictionary<String, NSObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
+                        promise.onProgress(((((params!.value)! as Dictionary<String, AnyObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
                     }
                 }
                 else{
@@ -375,7 +375,7 @@ import AEXML
                 
             })
             , c8oExceptionListener : C8oExceptionListener(onException:{
-                (params : Pair<C8oException, Dictionary<String, NSObject>?>?)->() in
+                (params : Pair<C8oException, Dictionary<String, AnyObject>?>?)->() in
                 
                 promise.onFailure(((params?.key) as C8oException?)!, parameters: (params?.value)!)
                 
@@ -384,9 +384,8 @@ import AEXML
         
     }
     
-    public func callXml(requestable : String, parameters : NSObject...)->C8oPromise<AEXMLDocument>
+    public func callXml(requestable : String, parameters : AnyObject...)->C8oPromise<AEXMLDocument>
     {
-        
         return try! callXml(requestable, parameters: C8o.toParameters(parameters))
     }
     /*public func CallXml(requestable : String)->C8oPromise<XMLDocument>
@@ -488,35 +487,35 @@ import AEXML
         get { return C8o.deviceUUID }
     }
     
-    
     public var cookieStore : NSObject
         {
         get { return httpInterface!.cookieStore! }
     }
     
-    private static func toParameters(parameters : [NSObject]?)throws ->Dictionary<String, NSObject>
-    {
+    private static func toParameters(parameters : [AnyObject]?)throws ->Dictionary<String, NSObject>
+    {   
         if (parameters!.count % 2 != 0)
         {
             throw C8oError.InvalidArgument(C8oExceptionMessage.invalidParameterValue("parameters", details: "needs pairs of values"))
         }
         
         var newParameters = Dictionary<String, NSObject>()
-        
+
         for i in 0.stride(to: parameters!.count, by: 2)
         {
-            newParameters[String(parameters![i])] = parameters![i + 1]
+            newParameters[String(parameters![i])] = parameters![i + 1] as? NSObject
         }
+        
         return newParameters
     }
     
-    internal func handleCallException(c8oExceptionListener: C8oExceptionListener?, requestParameters : Dictionary<String, NSObject>, exception : C8oException)
+    internal func handleCallException(c8oExceptionListener: C8oExceptionListener?, requestParameters : Dictionary<String, AnyObject>, exception : C8oException)
     {
         c8oLogger!._warn("Handle a call exception", exceptions: exception)
         
         if (c8oExceptionListener != nil)
         {
-            c8oExceptionListener!.onException(Pair<C8oException, Dictionary<String, NSObject>?>(key: exception, value: requestParameters))
+            c8oExceptionListener!.onException(Pair<C8oException, Dictionary<String, AnyObject>?>(key: exception, value: requestParameters))
         }
     }
 }

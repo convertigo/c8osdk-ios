@@ -15,13 +15,13 @@ import AEXML
 internal class C8oCallTask
 {
     private var c8o : C8o
-    private var parameters : Dictionary<String, NSObject>
+    private var parameters : Dictionary<String, AnyObject>
     private var c8oResponseListener : C8oResponseListener?
     private var c8oExceptionListener : C8oExceptionListener
     private var c8oCallUrl : String?
     
     
-    internal init(c8o : C8o, parameters : Dictionary<String, NSObject>, c8oResponseListener : C8oResponseListener, c8oExceptionListener : C8oExceptionListener)
+    internal init(c8o : C8o, parameters : Dictionary<String, AnyObject>, c8oResponseListener : C8oResponseListener, c8oExceptionListener : C8oExceptionListener)
     {
         self.c8o = c8o
         self.parameters = parameters
@@ -52,7 +52,7 @@ internal class C8oCallTask
         }
         catch let e as C8oException
         {
-            c8oExceptionListener.onException(Pair<C8oException, Dictionary<String, NSObject>?>(key: e, value: nil))
+            c8oExceptionListener.onException(Pair<C8oException, Dictionary<String, AnyObject>?>(key: e, value: nil))
         }
         catch{
         }
@@ -82,7 +82,7 @@ internal class C8oCallTask
                 throw C8oException(message: C8oExceptionMessage.FullSyncRequestFail(), exception: e)
             }
             catch{
-                
+                let a = 1
             }
         }
         else

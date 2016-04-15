@@ -328,7 +328,7 @@ class C8oSDKiOSTests: XCTestCase {
         let doc = try! c8o.callXml(".GetLogs").sync()
         let value : NSObject? = doc?.root["line"].value
         XCTAssertEqual("element <line> not found", value)
-        //XCTAssertNil(value);
+        //XCTAssertNil(value)
         
     }
     
@@ -336,7 +336,7 @@ class C8oSDKiOSTests: XCTestCase {
         let c8o : C8o = try! Get(.C8O)!
         var xdoc : [AEXMLDocument] = [AEXMLDocument]()
         var xthread : [NSThread] = [NSThread]()
-        var xparam : [Dictionary<String, NSObject>] = [Dictionary<String, NSObject>]()
+        var xparam : [Dictionary<String, AnyObject>] = [Dictionary<String, AnyObject>]()
         
         let condition : NSCondition = NSCondition()
         condition.lock()
@@ -354,7 +354,7 @@ class C8oSDKiOSTests: XCTestCase {
         let value = xdoc[0].root["pong"]["var1"].stringValue
         XCTAssertEqual("step 1", value)
         XCTAssertNotEqual(NSThread.currentThread(), xthread[0])
-        XCTAssertEqual("step 1", xparam[0]["var1"])
+        XCTAssertEqual("step 1", xparam[0]["var1"] as! String)
     }
     
     func testC8oDefaultPromiseJsonThree(){
@@ -428,7 +428,7 @@ class C8oSDKiOSTests: XCTestCase {
             XCTAssertNotEqual(UiThread, xthread[1])
             XCTAssertEqual(UiThread, xthread[2])
             asyncExpectation.fulfill()
-        });
+        })
         self.waitForExpectationsWithTimeout(20) { error in
         }
     }
@@ -438,7 +438,7 @@ class C8oSDKiOSTests: XCTestCase {
         let c8o : C8o = try! Get(.C8O)!
         var xjson : [JSON?] = [JSON?](count: 3, repeatedValue: nil)
         var xfail : [NSError] = [NSError]()
-        var xparam : [Dictionary<String, NSObject>] = [Dictionary<String, NSObject>]()
+        var xparam : [Dictionary<String, AnyObject>] = [Dictionary<String, AnyObject>]()
         let condition : NSCondition = NSCondition()
         condition.lock()
         c8o.callJson(".Ping", parameters: "var1", "step 1")?
@@ -473,7 +473,7 @@ class C8oSDKiOSTests: XCTestCase {
         XCTAssertEqual("step 2", value)
         XCTAssertNil(xjson[2])
         XCTAssertEqual("random failure", (xfail[0] as! C8oException).message)
-        XCTAssertEqual("step 2", xparam[0]["var1"])
+        XCTAssertEqual("step 2", xparam[0]["var1"] as! String)
     }
     
     func testC8oDefaultPromiseFailUI(){
@@ -484,7 +484,7 @@ class C8oSDKiOSTests: XCTestCase {
         let c8o : C8o = try! self.Get(.C8O)!
         var xjson : [JSON?] = [JSON?](count: 3, repeatedValue: nil)
         var xfail : [NSError] = [NSError]()
-        var xparam : [Dictionary<String, NSObject>] = [Dictionary<String, NSObject>]()
+        var xparam : [Dictionary<String, AnyObject>] = [Dictionary<String, AnyObject>]()
         var xthread : [NSThread] = [NSThread]()
         let condition : NSCondition = NSCondition()
         condition.lock()
@@ -521,10 +521,10 @@ class C8oSDKiOSTests: XCTestCase {
         XCTAssertEqual("step 2", value)
         XCTAssertNil(xjson[2])
         XCTAssertEqual("random failure", (xfail[0] as! C8oException).message)
-        XCTAssertEqual("step 2", xparam[0]["var1"])
+        XCTAssertEqual("step 2", xparam[0]["var1"] as? String)
         XCTAssertEqual(UiThread, xthread[0])
         asyncExpectation.fulfill()
-        });
+        })
         self.waitForExpectationsWithTimeout(20) { error in
         }
     }
@@ -790,7 +790,312 @@ class C8oSDKiOSTests: XCTestCase {
         }
         condition.unlock()
     }
+    func testC8oFsPostGetDestroyCreate(){
+        let c8o : C8o = try! self.Get(.C8O_FS)!
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        var json : JSON = try! c8o.callJson("fs://.reset")!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        let ts : String = "ts=" + String(NSDate(timeIntervalSince1970: 0).timeIntervalSinceNow * 1000)
+        let ts2 : String = ts + "@test"
+        json = try! c8o.callJson("fs://.post", parameters: "ts", ts)!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        let id = json["id"].stringValue
+        let rev = json["rev"].stringValue
+        json = try! c8o.callJson("fs://.post",
+                            parameters: "_id", id,
+                            "_rev", rev,
+                            "ts", ts,
+                            "ts2", ts2
+            )!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        json = try! c8o.callJson("fs://.get", parameters: "docid", id)!.sync()!
+        XCTAssertEqual(ts, json["ts"].stringValue)
+        XCTAssertEqual(ts2, json["ts2"].stringValue)
+        json = try! c8o.callJson("fs://.destroy")!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        json = try! c8o.callJson("fs://.create")!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        do{
+            try c8o.callJson("fs://.get", parameters: "docid", id)!.sync()
+            XCTAssertTrue(false, "not possible")
+        }
+        catch _ as C8oRessourceNotFoundException{
+           XCTAssertTrue(true)
+        }
+        catch{
+            XCTAssertTrue(false)
+        }
+        condition.unlock()
     
+    }
+    
+    func testC8oFsPostReset(){
+        let c8o : C8o = try! self.Get(.C8O_FS)!
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        
+        var json : JSON = try! c8o.callJson("fs://.reset")!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        json = try! c8o.callJson("fs://.post")!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        let id : String = json["id"].stringValue
+        json = try! c8o.callJson("fs://.reset")!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        do {
+            try c8o.callJson("fs://.get", parameters: "docid", id)!.sync()
+            XCTAssertTrue(false, "not possible")
+        }
+        catch _ as C8oRessourceNotFoundException{
+            XCTAssertTrue(true)
+        }
+        catch{
+            XCTAssertTrue(false)
+        }
+        
+        condition.unlock()
+    
+    }
+    
+    func testC8oFsPostExisting(){
+        let c8o : C8o = try! self.Get(.C8O_FS)!
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        var json : JSON = try! c8o.callJson("fs://.reset")!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        json = try! c8o.callJson("fs://.post")!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        let id : String = json["id"].stringValue
+        do {
+            try c8o.callJson("fs://.post", parameters: "_id", id)!.sync()
+            XCTAssertTrue(false, "not possible")
+        } catch _ as c8oCouchbaseLiteException {
+            XCTAssertTrue(true)
+        }
+        catch{
+            XCTAssertTrue(false)
+        }
+        condition.unlock()
+    }
+    
+    func testC8oFsPostExistingPolicyNone(){
+        let c8o : C8o = try! self.Get(.C8O_FS)!
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        var json : JSON = try! c8o.callJson("fs://.reset")!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        json = try! c8o.callJson("fs://.post", parameters: C8o.FS_POLICY, C8o.FS_POLICY_NONE)!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        let id : String = json["id"].stringValue
+        do {
+            try c8o.callJson("fs://.post",
+                         parameters: C8o.FS_POLICY, C8o.FS_POLICY_NONE,
+                         "_id", id
+                )!.sync()
+            XCTAssertTrue(false, "not possible")
+        } catch _ as c8oCouchbaseLiteException {
+            XCTAssertTrue(true)
+        }
+        catch{
+            XCTAssertTrue(false)
+        }
+
+    }
+    
+    func testC8oFsPostExistingPolicyCreate(){
+        let c8o : C8o = try! self.Get(.C8O_FS)!
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        var json : JSON = try! c8o.callJson("fs://.reset")!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        let myId : String = "C8oFsPostExistingPolicyCreate-" +  String(NSDate(timeIntervalSince1970: 0).timeIntervalSinceNow * 1000)
+        json = try! c8o.callJson("fs://.post", parameters: "_id", myId)!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        var id : String = json["id"].stringValue
+        XCTAssertEqual(myId, id)
+        json = try! c8o.callJson("fs://.post",
+                            parameters: C8o.FS_POLICY, C8o.FS_POLICY_CREATE,
+                            "_id", id
+            )!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        id = json["id"].stringValue
+        XCTAssertNotEqual(myId, id)
+        
+    }
+    
+    func testC8oFsPostExistingPolicyOverride(){
+        let c8o : C8o = try! self.Get(.C8O_FS)!
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        var json : JSON = try! c8o.callJson("fs://.reset")!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        let myId : String = "C8oFsPostExistingPolicyOverride-" + String(NSDate(timeIntervalSince1970: 0).timeIntervalSinceNow * 1000)
+        json = try! c8o.callJson("fs://.post",
+                            parameters: C8o.FS_POLICY, C8o.FS_POLICY_OVERRIDE,
+                            "_id", myId,
+                            "a", 1,
+                            "b", 2
+            )!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        var id : String = json["id"].stringValue
+        XCTAssertEqual(myId, id)
+        json = try! c8o.callJson("fs://.post",
+                            parameters: C8o.FS_POLICY, C8o.FS_POLICY_OVERRIDE,
+                            "_id", myId,
+                            "a", 3,
+                            "c", 4
+            )!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        id = json["id"].stringValue
+        XCTAssertEqual(myId, id)
+        json = try! c8o.callJson("fs://.get", parameters: "docid", myId)!.sync()!
+        XCTAssertEqual(3, json["a"].intValue)
+        XCTAssertFalse(json["b"].isExists())
+        XCTAssertEqual(4, json["c"].intValue)
+    }
+    
+    func testC8oFsPostExistingPolicyMerge(){
+        let c8o : C8o = try! self.Get(.C8O_FS)!
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        var json : JSON = try! c8o.callJson("fs://.reset")!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        let myId : String = "C8oFsPostExistingPolicyMerge-" + String(NSDate(timeIntervalSince1970: 0).timeIntervalSinceNow * 1000)
+        json = try! c8o.callJson("fs://.post",
+                            parameters: C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
+                            "_id", myId,
+                            "a", 1,
+                            "b", 2
+            )!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        var id : String = json["id"].stringValue
+        XCTAssertEqual(myId, id)
+        json = try! c8o.callJson("fs://.post",
+                            parameters: C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
+                            "_id", myId,
+                            "a", 3,
+                            "c", 4
+            )!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        id = json["id"].stringValue
+        XCTAssertEqual(myId, id)
+        json = try! c8o.callJson("fs://.get", parameters: "docid", myId)!.sync()!
+        XCTAssertEqual(3, json["a"].intValue)
+        XCTAssertEqual(2, json["b"].intValue)
+        XCTAssertEqual(4, json["c"].intValue)
+    }
+    func testC8oFsPostExistingPolicyMergeSub(){
+        let c8o : C8o = try! self.Get(.C8O_FS)!
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        var json : JSON = try! c8o.callJson("fs://.reset")!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        let myId : String = "C8oFsPostExistingPolicyMergeSub-" + String(NSDate(timeIntervalSince1970: 0).timeIntervalSinceNow * 1000)
+        let sub_f : JSON = ["g": true, "h": ["one", "two", "three", "four"]]
+        var sub_c : JSON = ["d":3, "e":"four", "f": sub_f.object]
+        json = try! c8o.callJson("fs://.post",
+                            parameters: "_id", myId,
+                            "a", 1,
+                            "b", -2,
+                            "c", sub_c.object
+            )!.sync()!
+        XCTAssert(json["ok"].boolValue)
+        json = try! c8o.callJson("fs://.post",
+                            parameters: C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
+                            "_id", myId,
+                            "i", JSON(arrayLiteral: ["5","6","7.1","nil"]).object,
+                            "c.f.j", "good",
+                            "c.f.h", JSON(arrayLiteral: [true,false]).object
+        )!.sync()!
+        XCTAssert(json["ok"].boolValue)
+        json = try! c8o.callJson("fs://.post",
+                            parameters: C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
+                            C8o.FS_SUBKEY_SEPARATOR, "<>",
+                            "_id", myId,
+                            "c<>i-j", "great"
+            )!.sync()!
+        XCTAssert(json["ok"].boolValue)
+        json = try! c8o.callJson("fs://.get", parameters: "docid", myId)!.sync()!
+        json.dictionaryObject?.removeValueForKey("_rev")
+        XCTAssertEqual(myId, json.dictionaryObject?.removeValueForKey("_id") as? String)
+        let expectedJson = JSON(arrayLiteral: "{\"a\":1,\"i\":[\"5\",6,7.1,null],\"b\":-2,\"c\":{\"d\":3,\"i-j\":\"great\",\"f\":{\"j\":\"good\",\"g\":true,\"h\":[true,false,\"three\",\"four\"]},\"e\":\"four\"}}").stringValue
+        let sJson = json.stringValue
+        XCTAssertEqual(expectedJson, sJson)
+    }
+    
+    func testC8oFsPostGetMultibase(){
+        let c8o : C8o = try! self.Get(.C8O_FS)!
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        var json : JSON = try! c8o.callJson("fs://.reset")!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        json = try! c8o.callJson("fs://notdefault.reset")!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        let myId : String =  "C8oFsPostGetMultibase-" + String(NSDate(timeIntervalSince1970: 0).timeIntervalSinceNow * 1000)
+        json = try! c8o.callJson("fs://.post", parameters: "_id", myId)!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        do{
+            try c8o.callJson("fs://notdefault.get", parameters: "docid", myId)!.sync()
+            XCTAssertTrue(false, "not possible")
+        }
+        catch _ as C8oRessourceNotFoundException{
+            XCTAssertTrue(true)
+        }
+        catch{
+            XCTAssertTrue(false)
+        }
+        json = try! c8o.callJson("fs://notdefault.post", parameters: "_id", myId)!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        json = try! c8o.callJson("fs://notdefault.get", parameters: "docid", myId)!.sync()!
+        let id : String = json["_id"].stringValue
+        XCTAssertEqual(myId, id)
+    }
+   /* func testC8oFsReplicateAnoAndAuth(){
+        let c8o : C8o = try! self.Get(.C8O_FS)!
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        do{
+            var json : JSON = try! c8o.callJson("fs://.reset")!.sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            do{
+                try c8o.callJson("fs://.get", parameters: "docid", "258")!.sync()
+                XCTAssertTrue(false, "not possible")
+            }
+            catch _ as C8oRessourceNotFoundException{
+                XCTAssertTrue(true)
+            }
+            catch{
+                XCTAssertTrue(false)
+            }
+            json = try! c8o.callJson("fs://.replicate_pull")!.sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            json = try! c8o.callJson("fs://.get", parameters: "docid", "258")!.sync()!
+            var value : String = json["data"].stringValue
+            XCTAssertEqual("258", value)
+            do{
+                try c8o.callJson("fs://.get", parameters: "docid", "456")!.sync()
+                XCTAssertTrue(false, "not possible")
+            }
+            catch _ as C8oRessourceNotFoundException{
+                XCTAssertTrue(true)
+            }
+            catch{
+                XCTAssertTrue(false)
+            }
+            try! json = c8o.callJson(".LoginTesting")!.sync()!
+            value = json["document"]["authenticatedUserID"].stringValue
+            XCTAssertEqual("testing_user", value)
+            json = try! c8o.callJson("fs://.replicate_pull")!.sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            json = try! c8o.callJson("fs://.get", parameters: "docid", "456")!.sync()!
+            value = json["data"].stringValue
+            XCTAssertEqual("456", value)
+            
+        }
+        catch{
+        }
+        try! c8o.callJson(".LogoutTesting")!.sync()
+    }*/
 }
 
 

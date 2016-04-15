@@ -37,7 +37,7 @@ internal class C8oFullSync
     }
 
     
-    internal func handleFullSyncRequest(parameters : Dictionary<String, NSObject>, listener : C8oResponseListener)throws ->AnyObject?
+    internal func handleFullSyncRequest(parameters : Dictionary<String, AnyObject>, listener : C8oResponseListener)throws ->AnyObject?
     {
         // Checks if this is really a fullSync request (even if this is normally already checked)
         let projectParameterValue = try! C8oUtils.peekParameterStringValue(parameters, name: C8o.ENGINE_PARAMETER_PROJECT, exceptionIfMissing: true);
@@ -113,7 +113,7 @@ internal class C8oFullSync
     }
     
 
-    internal static func isFullSyncRequest(requestParameters : Dictionary<String, NSObject>)->Bool
+    internal static func isFullSyncRequest(requestParameters : Dictionary<String, AnyObject>)->Bool
     {
         // Check if there is one parameter named "__project" and if its value starts with "fs://"
         if let parameterValue : String = C8oUtils.getParameterStringValue(requestParameters, name: C8o.ENGINE_PARAMETER_PROJECT, useName: false){

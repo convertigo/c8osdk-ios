@@ -14,13 +14,13 @@ import AEXML
 
 internal class FullSyncRequestable
 {
-    internal static var GET : FullSyncRequestable = FullSyncRequestable(value: "get", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener)throws->(NSObject) in
+    internal static var GET : FullSyncRequestable = FullSyncRequestable(value: "get", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener)throws->(AnyObject) in
         
         let docid : String = try! C8oUtils.peekParameterStringValue(parameters, name: FullSyncGetDocumentParameter.DOCID.name, exceptionIfMissing: true)!
         return try (c8oFullSync as! C8oFullSyncCbl).handleGetDocumentRequest(databaseName, docid: docid, parameters: parameters)
     })
     
-    internal static var DELETE : FullSyncRequestable = FullSyncRequestable(value: "delete", handleFullSyncrequestOp:{ (c8oFullSync, databaseName, parameters, c8oResponseListener)throws->(NSObject) in
+    internal static var DELETE : FullSyncRequestable = FullSyncRequestable(value: "delete", handleFullSyncrequestOp:{ (c8oFullSync, databaseName, parameters, c8oResponseListener)throws->(AnyObject) in
         
         let docid : String = try! C8oUtils.peekParameterStringValue(parameters, name: FullSyncGetDocumentParameter.DOCID.name, exceptionIfMissing: true)!
         do{
@@ -32,7 +32,7 @@ internal class FullSyncRequestable
         
     })
     
-    internal static var POST : FullSyncRequestable = FullSyncRequestable(value: "post",  handleFullSyncrequestOp:{ (c8oFullSync, databaseName, parameters, c8oResponseListener)->(NSObject) in
+    internal static var POST : FullSyncRequestable = FullSyncRequestable(value: "post",  handleFullSyncrequestOp:{ (c8oFullSync, databaseName, parameters, c8oResponseListener)->(AnyObject) in
         
         // Gets the policy parameter
         let fullSyncPolicyParameter : String? = try! C8oUtils.peekParameterStringValue(parameters, name: FullSyncPostDocumentParameter.POLICY.name, exceptionIfMissing: false)
@@ -43,12 +43,12 @@ internal class FullSyncRequestable
         return try (c8oFullSync as! C8oFullSyncCbl).handlePostDocumentRequest(databaseName, fullSyncPolicy: fullSyncPolicy, parameters: parameters)!
     })
     
-    internal static var ALL : FullSyncRequestable = FullSyncRequestable(value: "all", handleFullSyncrequestOp:{ (c8oFullSync, databaseName, parameters, c8oResponseListener)->(NSObject) in
+    internal static var ALL : FullSyncRequestable = FullSyncRequestable(value: "all", handleFullSyncrequestOp:{ (c8oFullSync, databaseName, parameters, c8oResponseListener)->(AnyObject) in
         
         return try! (c8oFullSync as! C8oFullSyncCbl).handleAllDocumentsRequest(databaseName, parameters: parameters)!
     })
     
-    internal static var VIEW : FullSyncRequestable = FullSyncRequestable(value: "view", handleFullSyncrequestOp:{(c8oFullSync, databaseName, parameters, c8oResponseListener)->(NSObject) in
+    internal static var VIEW : FullSyncRequestable = FullSyncRequestable(value: "view", handleFullSyncrequestOp:{(c8oFullSync, databaseName, parameters, c8oResponseListener)->(AnyObject) in
         
         // Gets the design doc parameter value
         let ddoc : String = try! C8oUtils.peekParameterStringValue(parameters, name: FullSyncGetViewParameter.DDOC.name, exceptionIfMissing: false)!
@@ -185,15 +185,15 @@ internal class FullSyncRequestable
     })
     
     internal var value : String
-    private var handleFullSyncrequestOp : (C8oFullSync, String, Dictionary<String, NSObject>, C8oResponseListener)throws->(AnyObject)
+    private var handleFullSyncrequestOp : (C8oFullSync, String, Dictionary<String, AnyObject>, C8oResponseListener)throws->(AnyObject)
     
-    private init(value : String, handleFullSyncrequestOp : (C8oFullSync, String, Dictionary<String, NSObject>, C8oResponseListener)throws->(AnyObject))
+    private init(value : String, handleFullSyncrequestOp : (C8oFullSync, String, Dictionary<String, AnyObject>, C8oResponseListener)throws->(AnyObject))
     {
         self.value = value
         self.handleFullSyncrequestOp = handleFullSyncrequestOp
     }
     
-    internal func handleFullSyncRequest(c8oFullSync : C8oFullSync, databaseNameName : String, parameters: Dictionary<String, NSObject>, c8oResponseListner : C8oResponseListener)throws->NSObject
+    internal func handleFullSyncRequest(c8oFullSync : C8oFullSync, databaseNameName : String, parameters: Dictionary<String, AnyObject>, c8oResponseListner : C8oResponseListener)throws->NSObject
     {
         do{
             return try handleFullSyncrequestOp(c8oFullSync, databaseNameName, parameters, c8oResponseListner) as! NSObject
@@ -488,7 +488,7 @@ public class FullSyncPolicy
             }
             var oldProperties = createdDocument.properties
             if(oldProperties != nil){
-                C8oFullSyncCbl.mergeProperties(newPropertiesMutable, oldProperties: oldProperties!)
+                C8oFullSyncCbl.mergeProperties(&newPropertiesMutable, oldProperties: oldProperties!)
             }
             try createdDocument.putProperties(newPropertiesMutable)
         }

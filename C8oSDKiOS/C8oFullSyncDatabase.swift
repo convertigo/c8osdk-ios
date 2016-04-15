@@ -65,20 +65,20 @@ import SwiftyJSON
         
     }
     
-    public func startAllReplications(parameters : Dictionary<String, NSObject>, c8oResponseListener : C8oResponseListener)throws{
+    public func startAllReplications(parameters : Dictionary<String, AnyObject>, c8oResponseListener : C8oResponseListener)throws{
         try! startPullReplication(parameters, c8oResponseListener: c8oResponseListener)
         try! startPushReplication(parameters, c8oResponseListener: c8oResponseListener)
     }
     
-    public func startPullReplication(parameters : Dictionary<String, NSObject>, c8oResponseListener : C8oResponseListener)throws{
+    public func startPullReplication(parameters : Dictionary<String, AnyObject>, c8oResponseListener : C8oResponseListener)throws{
         try! startReplication(pullFullSyncReplication!, parameters: parameters, c8oResponseListener: c8oResponseListener)
     }
     
-    public func startPushReplication(parameters : Dictionary<String, NSObject>, c8oResponseListener : C8oResponseListener)throws{
+    public func startPushReplication(parameters : Dictionary<String, AnyObject>, c8oResponseListener : C8oResponseListener)throws{
         try! startReplication(pullFullSyncReplication!, parameters: parameters, c8oResponseListener: c8oResponseListener)
     }
     
-    private func startReplication(fullSyncReplication : FullSyncReplication, parameters : Dictionary<String, NSObject>, c8oResponseListener : C8oResponseListener) throws {
+    private func startReplication(fullSyncReplication : FullSyncReplication, parameters : Dictionary<String, AnyObject>, c8oResponseListener : C8oResponseListener) throws {
         fatalError("must be finished")
        /* var continious : Bool = false
         var cancel : Bool = false

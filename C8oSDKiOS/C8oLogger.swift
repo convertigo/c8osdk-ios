@@ -340,18 +340,18 @@ import AEXML
     }
     
     
-    internal func logC8oCallXMLResponse(response : AEXMLDocument, url: String, parameters : Dictionary<String, NSObject>)-> Void
+    internal func logC8oCallXMLResponse(response : AEXMLDocument, url: String, parameters : Dictionary<String, AnyObject>)-> Void
     {
         logC8oCallResponse(C8oTranslator.xmlToString(response)!, responseType: "XML", url: url, parameters: parameters)
     }
     
     
-    internal func logC8oCallJSONResponse(response : JSON, url : String?, parameters : Dictionary<String, NSObject>)-> Void
+    internal func logC8oCallJSONResponse(response : JSON, url : String?, parameters : Dictionary<String, AnyObject>)-> Void
     {
         logC8oCallResponse(C8oTranslator.jsonToString(response)!, responseType: "JSON", url: url, parameters: parameters)
     }
     
-    internal func logC8oCallResponse(responseStr : String, responseType : String, url: String?, parameters : Dictionary<String, NSObject>)-> Void
+    internal func logC8oCallResponse(responseStr : String, responseType : String, url: String?, parameters : Dictionary<String, AnyObject>)-> Void
     {
         if(c8o.logC8o && isTrace)
         {

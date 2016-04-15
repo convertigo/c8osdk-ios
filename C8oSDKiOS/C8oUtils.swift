@@ -53,7 +53,7 @@ internal class C8oUtils
         
     }
     
-    internal static func getParameterObjectValue(parameters :  Dictionary<String, NSObject>, name : String, useName : Bool = false)->AnyObject?
+    internal static func getParameterObjectValue(parameters :  Dictionary<String, AnyObject>, name : String, useName : Bool = false)->AnyObject?
     {
         let parameter : Pair<String?, AnyObject?> = getParameter(parameters, name: name, useName: useName);
         if (parameter.key != nil)
@@ -85,7 +85,7 @@ internal class C8oUtils
         return nil;
     }
     
-    internal static func peekParameterStringValue(parameters : Dictionary<String, NSObject> , name : String, exceptionIfMissing : Bool = false) throws ->String?
+    internal static func peekParameterStringValue(parameters : Dictionary<String, AnyObject> , name : String, exceptionIfMissing : Bool = false) throws ->String?
     {
         var parameters = parameters
         let value : String? = getParameterStringValue(parameters, name: name, useName: false);
@@ -103,7 +103,7 @@ internal class C8oUtils
         return value;
     }
     
-    internal static func getParameterJsonValue( parameters : Dictionary<String, NSObject>, name : Bool, useName : Bool = false)-> NSObject?
+    internal static func getParameterJsonValue( parameters : Dictionary<String, AnyObject>, name : Bool, useName : Bool = false)-> NSObject?
     {
         /*
          var parameter = GetParameter(parameters, name, useName);
@@ -126,7 +126,7 @@ internal class C8oUtils
         return nil;
     }
     
-    internal static func tryGetParameterObjectValue<T>(parameters : Dictionary<String, NSObject>, name : String, value : T, useName : Bool = false,  defaultValue : T )->Bool?
+    internal static func tryGetParameterObjectValue<T>(parameters : Dictionary<String, AnyObject>, name : String, value : T, useName : Bool = false,  defaultValue : T )->Bool?
     {
         /*KeyValuePair<string, object> parameter = GetParameter(parameters, name, useName);
          if (parameter.Key != null && parameter.Value != null)

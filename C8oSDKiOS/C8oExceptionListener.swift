@@ -11,9 +11,9 @@ import Foundation
 
 public class C8oExceptionListener
 {
-    public var onException :  (Pair<C8oException, Dictionary<String, NSObject>?>?)->()
+    public var onException :  (Pair<C8oException, Dictionary<String, AnyObject>?>?)->()
     
-    init(onException : (params : Pair<C8oException, Dictionary<String, NSObject>?>?)->())
+    init(onException : (params : Pair<C8oException, Dictionary<String, AnyObject>?>?)->())
     {
         self.onException = onException;
     }

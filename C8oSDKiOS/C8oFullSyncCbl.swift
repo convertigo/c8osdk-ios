@@ -114,7 +114,7 @@ class C8oFullSyncCbl : C8oFullSync{
     }
     
     
-    func handleGetDocumentRequest(fullSyncDatatbaseName: String, docid: String, parameters: Dictionary<String, NSObject>)throws -> CBLDocument {
+    func handleGetDocumentRequest(fullSyncDatatbaseName: String, docid: String, parameters: Dictionary<String, AnyObject>)throws -> CBLDocument {
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(fullSyncDatatbaseName)
         
         // Gets the document from the local database
@@ -122,7 +122,7 @@ class C8oFullSyncCbl : C8oFullSync{
         // If there are attachments, compute for each one the url to local storage and add it to the attachment descriptor
         if (document != nil) {
             
-            let attachments : Dictionary<String, NSObject>? = document?.propertyForKey(C8oFullSync.FULL_SYNC__ATTACHMENTS) as?  Dictionary<String, NSObject>
+            let attachments : Dictionary<String, AnyObject>? = document?.propertyForKey(C8oFullSync.FULL_SYNC__ATTACHMENTS) as?  Dictionary<String, AnyObject>
             
             if (attachments != nil) {
                 let rev : CBLRevision = (document?.currentRevision)!
@@ -130,7 +130,7 @@ class C8oFullSyncCbl : C8oFullSync{
                 for attachmentName in  (attachments?.keys)!{
                     let attachment : CBLAttachment  = rev.attachmentNamed(attachmentName)!
                     let url : NSURL  = attachment.contentURL!
-                    var attachmentDesc : Dictionary<String, NSObject>? = (attachments![attachmentName] as? Dictionary<String, NSObject>)!
+                    var attachmentDesc : Dictionary<String, AnyObject>? = (attachments![attachmentName] as? Dictionary<String, AnyObject>)!
                     attachmentDesc![C8oFullSyncCbl.ATTACHMENT_PROPERTY_KEY_CONTENT_URL] =  String(url).stringByRemovingPercentEncoding
                 }
             }
@@ -140,7 +140,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return document!
     }
     
-    func handleDeleteDocumentRequest(DatatbaseName: String, docid: String, parameters: Dictionary<String, NSObject>)throws -> FullSyncDocumentOperationResponse? {
+    func handleDeleteDocumentRequest(DatatbaseName: String, docid: String, parameters: Dictionary<String, AnyObject>)throws -> FullSyncDocumentOperationResponse? {
         
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(DatatbaseName)
         let revParameterValue : String? = C8oUtils.getParameterStringValue(parameters, name: FullSyncDeleteDocumentParameter.REV.name, useName: false)
@@ -153,7 +153,7 @@ class C8oFullSyncCbl : C8oFullSync{
         
         // If the revision is specified then checks if this is the right revision
         if (revParameterValue != nil && revParameterValue != documentRevision) {
-             throw C8oRessourceNotFoundException(message: C8oExceptionMessage.couchRequestInvalidRevision())
+            throw C8oRessourceNotFoundException(message: C8oExceptionMessage.couchRequestInvalidRevision())
         }
         var deleted : Bool = true
         
@@ -172,7 +172,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return FullSyncDocumentOperationResponse(documentId: docid, documentRevision: documentRevision, operationStatus: deleted)
     }
     
-    func handlePostDocumentRequest(databaseName: String, fullSyncPolicy: FullSyncPolicy, parameters: Dictionary<String, NSObject>)throws -> NSObject? {
+    func handlePostDocumentRequest(databaseName: String, fullSyncPolicy: FullSyncPolicy, parameters: Dictionary<String, AnyObject>)throws -> NSObject? {
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         
         // Gets the subkey separator parameter
@@ -188,10 +188,11 @@ class C8oFullSyncCbl : C8oFullSync{
             
             // Ignores parameters beginning with "__" or "_use_"
             if (!parameterName.hasPrefix("__") && !parameterName.hasPrefix("_use_")) {
-                var objectParameterValue : AnyObject = parameter.1 as! String
+                var objectParameterValue : AnyObject = parameter.1 as AnyObject
                 var objectParameterValueT : Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
                 do {
                     var count = 0
+                    objectParameterValue = String(objectParameterValue)
                     if let dataFromString = objectParameterValue.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
                         let json = JSON(data: dataFromString)
                         for (key, value) : (String, JSON) in json {
@@ -202,6 +203,8 @@ class C8oFullSyncCbl : C8oFullSync{
                             objectParameterValue = objectParameterValueT
                         }
                     }
+                    
+                    
                     
                 }
                 
@@ -221,8 +224,12 @@ class C8oFullSyncCbl : C8oFullSync{
                         count = count - 1
                     }
                     let existProperty : AnyObject? = newProperties[parameterName]
-                    if let ex = existProperty as! Dictionary<String,AnyObject>? {
-                        C8oFullSyncCbl.mergeProperties(objectParameterValue as! Dictionary<String, AnyObject> , oldProperties: ex)
+                    if let ex = existProperty as? Dictionary<String,AnyObject> {
+                        if var e = objectParameterValue as? Dictionary<String, AnyObject>{
+                            C8oFullSyncCbl.mergeProperties(&e , oldProperties: ex)
+                            objectParameterValue = e
+                        }
+                        
                     }
                     
                     
@@ -240,7 +247,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return FullSyncDocumentOperationResponse(documentId: documentId, documentRevision: currentRevision, operationStatus: true)
     }
     
-    func handleAllDocumentsRequest(databaseName: String, parameters: Dictionary<String, NSObject>)throws -> NSObject? {
+    func handleAllDocumentsRequest(databaseName: String, parameters: Dictionary<String, AnyObject>)throws -> AnyObject? {
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         
         // Creates the fullSync query and add parameters to it
@@ -262,7 +269,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return result
     }
     
-    func handleGetViewRequest(databaseName: String, ddocName: String?, viewName : String?, parameters: Dictionary<String, NSObject>) throws -> CBLQueryEnumerator? {
+    func handleGetViewRequest(databaseName: String, ddocName: String?, viewName : String?, parameters: Dictionary<String, AnyObject>) throws -> CBLQueryEnumerator? {
         
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         
@@ -299,7 +306,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return result
     }
     
-    func handleSyncRequest(databaseName: String, parameters: Dictionary<String, NSObject>, c8oResponseListener: C8oResponseListener)throws -> VoidResponse? {
+    func handleSyncRequest(databaseName: String, parameters: Dictionary<String, AnyObject>, c8oResponseListener: C8oResponseListener)throws -> VoidResponse? {
         
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         
@@ -308,7 +315,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return VoidResponse.getInstance()
     }
     
-    func handleReplicatePullRequest(databaseName: String, parameters: Dictionary<String, NSObject>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
+    func handleReplicatePullRequest(databaseName: String, parameters: Dictionary<String, AnyObject>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
         
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         
@@ -317,7 +324,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return VoidResponse.getInstance()
     }
     
-    func handleReplicatePushRequest(databaseName: String, parameters: Dictionary<String, NSObject>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
+    func handleReplicatePushRequest(databaseName: String, parameters: Dictionary<String, AnyObject>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
         
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         
@@ -333,12 +340,14 @@ class C8oFullSyncCbl : C8oFullSync{
         }
         
         do{
-            
+            let db : CBLDatabase? = try manager?.databaseNamed(databaseName + localSuffix!)
+            if(db != nil){
+                try db?.deleteDatabase()
+            }
         }
-        /*}catch{
-         //TODO...
-         C8oException(message: "TODO")
-         }*/
+        catch let e as NSError{
+            throw C8oException(message: "TODO", exception: e)
+        }
         return FullSyncDefaultResponse(operationStatus: true)
     }
     
@@ -426,7 +435,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return view
     }
     
-    private static func addParametersToQuery(query : CBLQuery, parameters : Dictionary<String, NSObject>) throws{
+    private static func addParametersToQuery(query : CBLQuery, parameters : Dictionary<String, AnyObject>) throws{
         //TODO...
         fatalError("must be Implemented")
         /*for fullSyncParameter in FullSyncEnum.FullSyncRequestable{
@@ -434,100 +443,153 @@ class C8oFullSyncCbl : C8oFullSync{
          }*/
     }
     
-    static func mergeProperties( newProperties : Dictionary<String, AnyObject>, oldProperties : Dictionary<String, AnyObject>){
-        fatalError("must be Implemented")
-    }
-    
-    internal func getDocucmentFromDatabase(c8o :C8o, databaseName : String, documentId : String)throws->CBLDocument {
-        var c8oFullSyncDatabase : C8oFullSyncDatabase
-        do {
-            c8oFullSyncDatabase = try self.getOrCreateFullSyncDatabase(databaseName)
-        } catch{
-            throw C8oException(message: C8oExceptionMessage.fullSyncGetOrCreateDatabase(databaseName))
-        }
-        return (c8oFullSyncDatabase.getDatabase()?.documentWithID(documentId))!
-    }
-    
-    internal static func overrideDocument(document : CBLDocument, properties : Dictionary<String, NSObject>)throws{
-        var propertiesMutable = properties
-        let currentRevision : CBLSavedRevision? = document.currentRevision
-        if (currentRevision != nil){
-            propertiesMutable[C8oFullSync.FULL_SYNC__REV] = currentRevision?.revisionID
-        }
-        
-        do{
-            try document.putProperties(propertiesMutable)
-        }
-        catch{
-            throw C8oException(message: "TODO")
-        }
-    }
-    
-    func getResponseFromLocalCache(c8oCallRequestIdentifier: String) throws -> C8oLocalCacheResponse? {
-        let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(C8o.LOCAL_CACHE_DATABASE_NAME)
-        let localCacheDocument : CBLDocument? = fullSyncDatabase.getDatabase()?.existingDocumentWithID(c8oCallRequestIdentifier)
-        
-        if(localCacheDocument == nil){
-            fatalError("todo")
-        }
-        
-        let response  = localCacheDocument?.propertyForKey(C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE)
-        let responseType  = localCacheDocument?.propertyForKey(C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE_TYPE)
-        let expirationDate  = localCacheDocument?.propertyForKey(C8o.LOCAL_CACHE_DOCUMENT_KEY_EXPIRATION_DATE)
-        var responseString : String? = nil
-        var responseTypeString : String? = nil
-        var expirationDateLong : Int = -1
-        
-        if(response != nil){
-            if let e = response as! String?{
-                responseString = e
-            }
-        }
-        else{
-            throw C8oException(message: C8oExceptionMessage.InvalidLocalCacheResponseInformation())
-        }
-        if(responseType != nil){
-            if let e = responseType as! String?{
-                responseTypeString = e
-            }
-        }
-        else{
-            throw C8oException(message: C8oExceptionMessage.InvalidLocalCacheResponseInformation())
-        }
-        if(expirationDate != nil){
-            if let e = expirationDate as! Int?{
-                expirationDateLong = e
-                let currentTime = NSDate().timeIntervalSince1970 * 1000
-                if(Double(expirationDateLong) < currentTime){
-                    throw C8oException(message: C8oExceptionMessage.timeToLiveExpired())
+    static func mergeProperties(inout newProperties : Dictionary<String, AnyObject>, oldProperties : Dictionary<String, AnyObject>){
+        for old in oldProperties{
+            let oldProperty = old
+            let oldPropertyKey = old.0
+            let oldPropertyValue = old.1
+            
+            //let newPropertyValue : AnyObject
+            if var newPropertyValue = newProperties[oldPropertyKey]{
+                if var a = newPropertyValue as? Dictionary<String, AnyObject>, var b = oldPropertyValue as? Dictionary<String, AnyObject> {
+                    mergeProperties(&a, oldProperties: oldPropertyValue as! Dictionary<String, AnyObject>)
+                    newPropertyValue = a
+                }
+                else if var a  = newPropertyValue as? [AnyObject], let b = oldPropertyValue as? [AnyObject]{
+                        C8oFullSyncCbl.mergeArrayProperties(&a, oldArray: b)
+                        newPropertyValue = a
+                }
+                else{
+                    
                 }
             }
             else{
-                throw C8oException(message: C8oExceptionMessage.InvalidLocalCacheResponseInformation())
+                newProperties[oldPropertyKey] = oldPropertyValue
             }
         }
-        return C8oLocalCacheResponse(response: responseString!, responseType: responseTypeString!, expirationDate: expirationDateLong)
     }
     
-    func saveResponseToLocalCache(c8oCalRequestIdentifier : String, localCacheResponse : C8oLocalCacheResponse) throws{
-        
-        let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(C8o.LOCAL_CACHE_DATABASE_NAME)
-        let localCacheDocument : CBLDocument =  (fullSyncDatabase.getDatabase()?.documentWithID(c8oCalRequestIdentifier))!
-        var properties : Dictionary<String, NSObject> = Dictionary<String, NSObject>()
-        properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE] =  localCacheResponse.getResponse()
-        properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE_TYPE] = localCacheResponse.getResponseType()
-        if (localCacheResponse.getExpirationDate() > 0) {
-            properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_EXPIRATION_DATE] = localCacheResponse.getExpirationDate()
+
+
+static func mergeArrayProperties(inout newArray : [AnyObject], oldArray : [AnyObject]){
+    let newArraySize = newArray.count
+    let oldArraySize = oldArray.count
+    for i in 0...oldArraySize{
+        var newArrayValue : AnyObject? = nil
+        if(i < newArraySize){
+            newArrayValue = newArray[i]
         }
-        let currentRevision : CBLSavedRevision? = localCacheDocument.currentRevision
-        if (currentRevision != nil) {
-            properties[C8oFullSyncCbl.FULL_SYNC__REV] =  currentRevision?.revisionID
-        }
+        let oldArrayValue = oldArray[i]
         
-        do {
-            try localCacheDocument.putProperties(properties)
-        } catch {
-            throw C8oException(message: "TODO")
+        if(newArrayValue != nil){
+            if var e = newArrayValue as? Dictionary<String, AnyObject>, let f = oldArrayValue as? Dictionary<String, AnyObject>{
+                mergeProperties(&e, oldProperties: f)
+                newArrayValue = e
+            }
+            else if var g = newArrayValue as? [AnyObject],let h = oldArrayValue as? [AnyObject]{
+                mergeArrayProperties(&g, oldArray: h)
+                newArrayValue = g
+            }
+            else{
+                
+            }
+        }
+        else{
+            newArray.append(oldArrayValue)
         }
     }
+}
+
+internal func getDocucmentFromDatabase(c8o :C8o, databaseName : String, documentId : String)throws->CBLDocument {
+    var c8oFullSyncDatabase : C8oFullSyncDatabase
+    do {
+        c8oFullSyncDatabase = try self.getOrCreateFullSyncDatabase(databaseName)
+    } catch{
+        throw C8oException(message: C8oExceptionMessage.fullSyncGetOrCreateDatabase(databaseName))
+    }
+    return (c8oFullSyncDatabase.getDatabase()?.documentWithID(documentId))!
+}
+
+internal static func overrideDocument(document : CBLDocument, properties : Dictionary<String, NSObject>)throws{
+    var propertiesMutable = properties
+    let currentRevision : CBLSavedRevision? = document.currentRevision
+    if (currentRevision != nil){
+        propertiesMutable[C8oFullSync.FULL_SYNC__REV] = currentRevision?.revisionID
+    }
+    
+    do{
+        try document.putProperties(propertiesMutable)
+    }
+    catch{
+        throw C8oException(message: "TODO")
+    }
+}
+
+func getResponseFromLocalCache(c8oCallRequestIdentifier: String) throws -> C8oLocalCacheResponse? {
+    let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(C8o.LOCAL_CACHE_DATABASE_NAME)
+    let localCacheDocument : CBLDocument? = fullSyncDatabase.getDatabase()?.existingDocumentWithID(c8oCallRequestIdentifier)
+    
+    if(localCacheDocument == nil){
+        fatalError("todo")
+    }
+    
+    let response  = localCacheDocument?.propertyForKey(C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE)
+    let responseType  = localCacheDocument?.propertyForKey(C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE_TYPE)
+    let expirationDate  = localCacheDocument?.propertyForKey(C8o.LOCAL_CACHE_DOCUMENT_KEY_EXPIRATION_DATE)
+    var responseString : String? = nil
+    var responseTypeString : String? = nil
+    var expirationDateLong : Int = -1
+    
+    if(response != nil){
+        if let e = response as! String?{
+            responseString = e
+        }
+    }
+    else{
+        throw C8oException(message: C8oExceptionMessage.InvalidLocalCacheResponseInformation())
+    }
+    if(responseType != nil){
+        if let e = responseType as! String?{
+            responseTypeString = e
+        }
+    }
+    else{
+        throw C8oException(message: C8oExceptionMessage.InvalidLocalCacheResponseInformation())
+    }
+    if(expirationDate != nil){
+        if let e = expirationDate as! Int?{
+            expirationDateLong = e
+            let currentTime = NSDate().timeIntervalSince1970 * 1000
+            if(Double(expirationDateLong) < currentTime){
+                throw C8oException(message: C8oExceptionMessage.timeToLiveExpired())
+            }
+        }
+        else{
+            throw C8oException(message: C8oExceptionMessage.InvalidLocalCacheResponseInformation())
+        }
+    }
+    return C8oLocalCacheResponse(response: responseString!, responseType: responseTypeString!, expirationDate: expirationDateLong)
+}
+
+func saveResponseToLocalCache(c8oCalRequestIdentifier : String, localCacheResponse : C8oLocalCacheResponse) throws{
+    
+    let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(C8o.LOCAL_CACHE_DATABASE_NAME)
+    let localCacheDocument : CBLDocument =  (fullSyncDatabase.getDatabase()?.documentWithID(c8oCalRequestIdentifier))!
+    var properties : Dictionary<String, NSObject> = Dictionary<String, NSObject>()
+    properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE] =  localCacheResponse.getResponse()
+    properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE_TYPE] = localCacheResponse.getResponseType()
+    if (localCacheResponse.getExpirationDate() > 0) {
+        properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_EXPIRATION_DATE] = localCacheResponse.getExpirationDate()
+    }
+    let currentRevision : CBLSavedRevision? = localCacheDocument.currentRevision
+    if (currentRevision != nil) {
+        properties[C8oFullSyncCbl.FULL_SYNC__REV] =  currentRevision?.revisionID
+    }
+    
+    do {
+        try localCacheDocument.putProperties(properties)
+    } catch {
+        throw C8oException(message: "TODO")
+    }
+}
 }

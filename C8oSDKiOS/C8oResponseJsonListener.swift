@@ -12,9 +12,9 @@ import SwiftyJSON
 
 public class C8oResponseJsonListener : C8oResponseListener
 {
-    public var onJsonResponse : (Pair<JSON?, Dictionary<String, NSObject>?>?)->()
+    public var onJsonResponse : (Pair<JSON?, Dictionary<String, AnyObject>?>?)->()
     
-    public init(onJsonResponse : (params :Pair<JSON?, Dictionary<String, NSObject>?>?)->())
+    public init(onJsonResponse : (params :Pair<JSON?, Dictionary<String, AnyObject>?>?)->())
     {
         self.onJsonResponse = onJsonResponse
     }
