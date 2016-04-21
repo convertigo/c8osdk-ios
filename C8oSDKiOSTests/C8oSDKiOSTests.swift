@@ -1050,7 +1050,7 @@ class C8oSDKiOSTests: XCTestCase {
         let id : String = json["_id"].stringValue
         XCTAssertEqual(myId, id)
     }
-    func atestC8oFsReplicateAnoAndAuth(){
+    func testC8oFsReplicateAnoAndAuth(){
         let c8o : C8o = try! self.Get(.C8O_FS_PULL)!
         let condition : NSCondition = NSCondition()
         condition.lock()
