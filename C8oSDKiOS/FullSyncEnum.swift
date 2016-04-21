@@ -103,14 +103,24 @@ internal class FullSyncRequestable
     internal static var REPLICATE_PULL : FullSyncRequestable =  FullSyncRequestable(value: "replicate_pull", handleFullSyncrequestOp:{(c8oFullSync, databaseName, parameters, c8oResponseListener) ->(AnyObject) in
         
         let condition : NSCondition = NSCondition()
+        let thread : NSThread = NSThread.currentThread()
+        var syncMutex : [Bool] = [Bool]()
+        syncMutex.append(false)
         condition.lock()
         try! (c8oFullSync as! C8oFullSyncCbl).handleReplicatePullRequest(databaseName, parameters: parameters, c8oResponseListener: C8oResponseProgressListener(onProgressResponse: { (progress, param) -> () in
             
             if (progress.finished)
             {
-                condition.lock()
-                condition.signal()
-                condition.unlock()
+                if(NSThread.currentThread() == thread){
+                    syncMutex[0] = true
+                }
+                else{
+                    syncMutex[0] = true
+                    condition.lock()
+                    condition.signal()
+                    condition.unlock()
+                }
+                
             }
             
             if (c8oResponseListener is C8oResponseJsonListener){
@@ -123,13 +133,13 @@ internal class FullSyncRequestable
             }
             
         }))
-        condition.wait()
-        let myjson : C8oJSON = C8oJSON()
-        let jsonString = "{ok, true}"
-        if let dataFromString = jsonString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
-            let json = JSON(data: dataFromString)
-            myjson.myJSON = json
+        if(!syncMutex[0]){
+            condition.wait()
         }
+        let myjson : C8oJSON = C8oJSON()
+        let json : JSON = ["ok": true]
+        myjson.myJSON = json
+        
         condition.unlock()
         return myjson
     })
@@ -193,13 +203,13 @@ internal class FullSyncRequestable
         self.handleFullSyncrequestOp = handleFullSyncrequestOp
     }
     
-    internal func handleFullSyncRequest(c8oFullSync : C8oFullSync, databaseNameName : String, parameters: Dictionary<String, AnyObject>, c8oResponseListner : C8oResponseListener)throws->NSObject
+    internal func handleFullSyncRequest(c8oFullSync : C8oFullSync, databaseNameName : String, parameters: Dictionary<String, AnyObject>, c8oResponseListner : C8oResponseListener)throws->AnyObject
     {
         do{
-            return try handleFullSyncrequestOp(c8oFullSync, databaseNameName, parameters, c8oResponseListner) as! NSObject
+            return try handleFullSyncrequestOp(c8oFullSync, databaseNameName, parameters, c8oResponseListner) as! AnyObject
         }
         catch let e as NSError{
-         throw e
+            throw e
         }
         
     }
@@ -423,8 +433,8 @@ public class FullSyncPolicy
             createdDocument = (documentId == nil) ? database.createDocument() : database.documentWithID(documentId!)!
             try createdDocument.putProperties(newPropertiesMutable)
             /*let a = createdDocument.currentRevisionID
-            let b = createdDocument.documentID
-            let c = "hh"*/
+             let b = createdDocument.documentID
+             let c = "hh"*/
         }
         catch let e as NSError{
             throw c8oCouchbaseLiteException(message: C8oExceptionMessage.fullSyncPutProperties(newProperties), exception: e)
@@ -443,7 +453,7 @@ public class FullSyncPolicy
         catch let e as NSError{
             throw c8oCouchbaseLiteException(message: C8oExceptionMessage.fullSyncPutProperties(newProperties), exception: e)
         }
-
+        
         return createdDocument
     })
     public static let OVERRIDE : FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_OVERRIDE, action: {database, newProperties in
@@ -469,7 +479,7 @@ public class FullSyncPolicy
         catch let e as NSError{
             throw c8oCouchbaseLiteException(message: C8oExceptionMessage.fullSyncPutProperties(newProperties), exception: e)
         }
-
+        
         return createdDocument
     })
     public static let MERGE : FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_MERGE, action: {database, newProperties in

@@ -14,13 +14,25 @@ class C8oFullSyncCbl : C8oFullSync{
     private static let ATTACHMENT_PROPERTY_KEY_CONTENT_URL : String = "content_url"
     private var manager : CBLManager?
     private var fullSyncDatabases : Dictionary<String, C8oFullSyncDatabase>?
+    private var condition : NSCondition = NSCondition()
     
     internal override init(c8o: C8o) {
         super.init(c8o: c8o)
         self.fullSyncDatabases = Dictionary<String, C8oFullSyncDatabase>()
-        self.manager = CBLManager()
+        condition.lock()
+        NSThread.detachNewThreadSelector("cbl", toTarget: self, withObject: nil)
+        condition.wait()
+        condition.unlock()
+        
     }
-    
+    @objc public func cbl(){
+        NSThread.currentThread().name = "CBLThread"
+            self.manager = CBLManager()
+        condition.signal()
+        while (true) {
+            CFRunLoopRunInMode(kCFRunLoopDefaultMode, 1, true)
+        }
+        }
     private func getOrCreateFullSyncDatabase(databaseName : String) throws -> C8oFullSyncDatabase{
         let localDatabaseName : String = databaseName + localSuffix!
         if let _ = fullSyncDatabases?[localDatabaseName] {
@@ -34,9 +46,9 @@ class C8oFullSyncCbl : C8oFullSync{
         var response = response
         let maVar : C8oJSON = C8oJSON()
         response = try! super.handleFullSyncResponse(response, listener: listener)
-        /*if(response.isMemberOfClass(Void)){
+        if(response.isMemberOfClass(VoidResponse)){
          return response
-         }*/
+         }
         
         if(listener is C8oResponseJsonListener){
             if(response.isMemberOfClass(CBLDocument)){

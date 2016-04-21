@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-@objc public class C8oFullSyncDatabase : NSObject {
+public class C8oFullSyncDatabase : NSObject {
     
     private static let AUTHENTICATION_COOKIE_NAME : String = "SyncGatewaySession"
     
@@ -30,38 +30,52 @@ import SwiftyJSON
         var databaseNameMutable = databaseName
         self.c8o = c8o
         do{
-            c8oFullSyncDatabaseUrl = NSURL(string: fullSyncDatabases + databaseNameMutable + "/")!
+            c8oFullSyncDatabaseUrl = try NSURL(string: fullSyncDatabases + databaseNameMutable)!
         }
-        /*catch{
-            
-        }*/
+        catch let e as NSError{
+            throw C8oException(message: C8oExceptionMessage.illegalArgumentInvalidFullSyncDatabaseUrl(fullSyncDatabases + databaseName + "/"), exception: e)
+        }
+        
         databaseNameMutable = databaseNameMutable + localSuffix
         self.databaseName = databaseNameMutable
+        super.init()
+        var blockerror : C8oException? = nil
+        
         
         do{
-            database = try manager.databaseNamed(databaseNameMutable)
+            self.database = try manager.databaseNamed(databaseNameMutable)
         }
-        catch{
-            
+        catch let e as NSError{
+            blockerror =  C8oException(message: C8oExceptionMessage.unableToGetFullSyncDatabase(self.databaseName) , exception: e)
         }
+        
+        if(blockerror != nil){
+            throw blockerror!
+        }
+        
     }
-    //TODO...
-    private func getReplication(fsReplication : FullSyncReplication?)-> CBLReplication{
     
+    private func getReplication(fsReplication : FullSyncReplication?)-> CBLReplication{
+        
         if(fsReplication?.replication != nil){
             fsReplication!.replication!.stop()
             if(fsReplication?.changeListener != nil){
-                //fsReplication?.replication.removeObserver(NSObject, forKeyPath: String)
+                
+                fsReplication?.replication?.removeObserver(self, forKeyPath: c8oFullSyncDatabaseUrl.absoluteString)//(c8oFullSyncDatabaseUrl)
             }
         }
-        fsReplication!.pull ? database?.createPullReplication(c8oFullSyncDatabaseUrl) : database?.createPushReplication(c8oFullSyncDatabaseUrl)
-        let replication : CBLReplication = (fsReplication?.replication)!
+        var replication : CBLReplication? =  nil
         
-        /*for cookie in c8o.CookieStore.cookies!{
-            replication.setCookieNamed(cookie.name, withValue: cookie.value, path: cookie.path, expirationDate: cookie.expiresDate, secure: cookie.secure)
-        }*/
+        fsReplication!.replication = fsReplication!.pull ? self.database?.createPullReplication(self.c8oFullSyncDatabaseUrl) : self.database?.createPushReplication(self.c8oFullSyncDatabaseUrl)
+        replication  = fsReplication!.replication!
         
-        return replication
+        
+        
+        for cookie in c8o.cookieStore.cookies!{
+            replication!.setCookieNamed(cookie.name, withValue: cookie.value, path: cookie.path, expirationDate: cookie.expiresDate, secure: cookie.secure)
+        }
+        
+        return replication!
         
     }
     
@@ -75,17 +89,19 @@ import SwiftyJSON
     }
     
     public func startPushReplication(parameters : Dictionary<String, AnyObject>, c8oResponseListener : C8oResponseListener)throws{
-        try! startReplication(pullFullSyncReplication!, parameters: parameters, c8oResponseListener: c8oResponseListener)
+        try! startReplication(pushFullSyncReplication!, parameters: parameters, c8oResponseListener: c8oResponseListener)
     }
     
-    private func startReplication(fullSyncReplication : FullSyncReplication, parameters : Dictionary<String, AnyObject>, c8oResponseListener : C8oResponseListener) throws {
-        fatalError("must be finished")
-       /* var continious : Bool = false
+    private func startReplication(fullSyncReplication : FullSyncReplication, parameters : Dictionary<String, AnyObject>, c8oResponseListener : C8oResponseListener?) throws {
+        var continious : Bool = false
         var cancel : Bool = false
         
         if let _ = parameters["continious"]{
             if(String(parameters["continious"]).caseInsensitiveCompare("true") == NSComparisonResult.OrderedSame){
-               continious = true
+                continious = true
+            }
+            else{
+                continious = false
             }
         }
         
@@ -93,32 +109,132 @@ import SwiftyJSON
             if(String(parameters["cancel"]).caseInsensitiveCompare("true") == NSComparisonResult.OrderedSame){
                 cancel = true
             }
+            else{
+                cancel = false
+            }
         }
+        var rep : CBLReplication?
         
-        let rep : CBLReplication? = getReplication(fullSyncReplication)
+        
+        rep = self.getReplication(fullSyncReplication)
+        
         
         if(cancel){
             if(rep != nil)
             {
+                
                 rep!.stop()
+                
+                
             }
             return
         }
         
-        let param : Dictionary<String, NSObject> = parameters
+        var param : Dictionary<String, AnyObject> = parameters
         var progress : C8oProgress = C8oProgress()
-        let _progress : [C8oProgress] = [progress]
+        var _progress : [C8oProgress] = [progress]
         progress.raw = rep!
         progress.pull = rep!.pull
         
+        let thread = NSThread.currentThread()
+        var syncMutex : [Bool] = [Bool]()
+        syncMutex.append(false)
+        var count = -1
         let condition : NSCondition = NSCondition()
+        NSNotificationCenter.defaultCenter().addObserverForName(kCBLReplicationChangeNotification, object: rep!, queue : nil , usingBlock: { _ in
+            count += 1
+            if(count != 0){
+            print(String(rep!.changesCount) + " / " + String(rep!.completedChangesCount))
+            progress.finished = !(rep!.status == CBLReplicationStatus.Active)// || rep?.status == CBLReplicationStatus.Offline)
+            let b = rep?.status
+            let c = progress.finished
+            
+            
+            if(!progress.finished ){//|| count == 0){
+                let progress : C8oProgress = _progress[0]
+                progress.total = Int(rep!.changesCount)
+                progress.current = Int(rep!.completedChangesCount)
+                progress.taskInfo = ("n/a")
+                progress.status = String(rep!.status)
+                
+            }
+            else{
+                if(NSThread.currentThread() == thread){
+                    syncMutex[0] = true
+                }
+                else{
+                    syncMutex[0] = true
+                    condition.lock()
+                    condition.signal()
+                    condition.unlock()
+                }
+            }
+            
+            if(progress.changed){
+                _progress[0] = C8oProgress(progress: progress)
+                if let _ = c8oResponseListener as? C8oResponseProgressListener where c8oResponseListener != nil{
+                    param[C8o.ENGINE_PARAMETER_PROGRESS] = progress
+                    (c8oResponseListener as! C8oResponseProgressListener).onProgressResponse(progress, param)
+                }
+                
+            }
+            }
+            
+        })
         
-        //TODO....
         
-        //push
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "replicationChanged", name: kCBLDatabaseChangeNotification, object: pushFullSyncReplication?.replication)
-        //pull
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "replicationChanged", name: kCBLDatabaseChangeNotification, object: pullFullSyncReplication?.replication)*/
+        
+        condition.lock()
+        rep!.start()
+        
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        rep!.stop()
+        
+        condition.unlock()
+        
+        
+        if(continious){
+            progress = _progress[0]
+            let lastCurrent : Int = progress.current
+            var stat = [0]
+            let replication : CBLReplication = getReplication(fullSyncReplication)
+            progress.raw = replication
+            progress.continuous =  true
+            replication.continuous = true
+            NSNotificationCenter.defaultCenter().addObserverForName(kCBLReplicationChangeNotification, object: pushFullSyncReplication?.replication, queue : nil, usingBlock: {_ in
+                let total = rep?.changesCount
+                if(stat[0] == 0){
+                    if(lastCurrent == 0 || total>0){
+                        stat[0] = 1
+                    }
+                }
+                if(stat[0] == 1){
+                    if(total == 0){
+                        stat[0] = 2
+                    }
+                }
+                if(stat[0] == 2 && total > 0 ){
+                    let progress : C8oProgress = _progress[0]
+                    progress.total = Int(total!)
+                    progress.current = (Int((rep?.completedChangesCount)!))
+                    progress.taskInfo = "n/a"
+                    progress.status = String(rep?.status)
+                    if(progress.changed){
+                        _progress[0] = C8oProgress(progress: progress)
+                        if let _ = c8oResponseListener as? C8oResponseProgressListener where c8oResponseListener != nil{
+                            param[C8o.ENGINE_PARAMETER_PROGRESS] = progress
+                            (c8oResponseListener as! C8oResponseProgressListener).onProgressResponse(progress, param)
+                        }
+                    }
+                    
+                }
+                
+            })
+            replication.start()
+            
+        }
         
         
     }

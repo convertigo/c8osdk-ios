@@ -11,7 +11,7 @@ import CoreFoundation
 import SwiftyJSON
 import AEXML
 
-@objc public class C8oLogger : NSObject
+public class C8oLogger : NSObject
 {
     private let RE_FORMAT_TIME : NSRegularExpression =  try! NSRegularExpression(pattern: "(\\d*?)(?:,|.)(\\d{3}).*", options: [])
     //*** Constants ***//
@@ -376,7 +376,7 @@ import AEXML
     }
 }
 
-@objc public class C8oLogLevel: NSObject
+public class C8oLogLevel: NSObject
 {
     //
     private static var JSON_KEY_REMOTE_LOG_LEVEL  : String = "remoteLogLevel"

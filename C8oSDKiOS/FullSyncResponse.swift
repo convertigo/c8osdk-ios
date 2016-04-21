@@ -21,7 +21,7 @@ internal class FullSyncResponse {
     
 }
 
-@objc public class FullSyncAbstractResponse : NSObject{
+public class FullSyncAbstractResponse : NSObject{
         private var operationStatus : Bool?
         
         private init(operationStatus : Bool) {

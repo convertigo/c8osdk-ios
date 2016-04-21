@@ -9,7 +9,7 @@
 import Foundation
 
 
-@objc public class C8oLocalCache : NSObject
+public class C8oLocalCache : NSObject
 {
     public static var PARAM : String = "__localCache"
     

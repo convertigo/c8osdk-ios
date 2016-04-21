@@ -1050,8 +1050,8 @@ class C8oSDKiOSTests: XCTestCase {
         let id : String = json["_id"].stringValue
         XCTAssertEqual(myId, id)
     }
-   /* func testC8oFsReplicateAnoAndAuth(){
-        let c8o : C8o = try! self.Get(.C8O_FS)!
+    func atestC8oFsReplicateAnoAndAuth(){
+        let c8o : C8o = try! self.Get(.C8O_FS_PULL)!
         let condition : NSCondition = NSCondition()
         condition.lock()
         do{
@@ -1072,7 +1072,7 @@ class C8oSDKiOSTests: XCTestCase {
             json = try! c8o.callJson("fs://.get", parameters: "docid", "258")!.sync()!
             var value : String = json["data"].stringValue
             XCTAssertEqual("258", value)
-            do{
+            /*do{
                 try c8o.callJson("fs://.get", parameters: "docid", "456")!.sync()
                 XCTAssertTrue(false, "not possible")
             }
@@ -1089,13 +1089,13 @@ class C8oSDKiOSTests: XCTestCase {
             XCTAssertTrue(json["ok"].boolValue)
             json = try! c8o.callJson("fs://.get", parameters: "docid", "456")!.sync()!
             value = json["data"].stringValue
-            XCTAssertEqual("456", value)
+            XCTAssertEqual("456", value)*/
             
         }
         catch{
         }
         try! c8o.callJson(".LogoutTesting")!.sync()
-    }*/
+    }
 }
 
 

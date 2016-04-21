@@ -9,7 +9,7 @@
 import Foundation
 
 
-@objc public class C8oProgress : NSObject
+public class C8oProgress : NSObject
 {
     private var _changed :Bool? = false
     private var _continuous :Bool? = false

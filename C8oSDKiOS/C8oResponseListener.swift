@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc public protocol C8oResponseListener
+public protocol C8oResponseListener
 {
     
 }

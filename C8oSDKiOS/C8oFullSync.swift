@@ -35,7 +35,7 @@ internal class C8oFullSync
         fullSyncDatabaseUrlBase = c8o.endpointConvertigo + C8oFullSync.FULL_SYNC_URL_PATH;
         localSuffix = (c8o.fullSyncLocalSuffix != nil) ? c8o.fullSyncLocalSuffix : "_device";
     }
-
+    
     
     internal func handleFullSyncRequest(parameters : Dictionary<String, AnyObject>, listener : C8oResponseListener)throws ->AnyObject?
     {
@@ -46,7 +46,7 @@ internal class C8oFullSync
         {
             throw C8oException(message: C8oExceptionMessage.invalidParameterValue(projectParameterValue!, details: "its don't start with " + C8oFullSync.FULL_SYNC_PROJECT));
         }
-
+        
         // Gets the sequence parameter to know which fullSync requestable to use
         let fullSyncRequestableValue : String = try! C8oUtils.peekParameterStringValue(parameters, name: C8o.ENGINE_PARAMETER_SEQUENCE, exceptionIfMissing: true)!;
         let fullSyncRequestable : FullSyncRequestable? = FullSyncRequestable.getFullSyncRequestable(fullSyncRequestableValue);
@@ -84,12 +84,12 @@ internal class C8oFullSync
         {
             throw C8oException(message: C8oExceptionMessage.couchNullResult());
         }
-
+        
         response = try! handleFullSyncResponse(response!, listener: listener)
         return response;
     }
     
-  internal func handleFullSyncResponse(response : AnyObject, listener : C8oResponseListener)throws ->AnyObject
+    internal func handleFullSyncResponse(response : AnyObject, listener : C8oResponseListener)throws ->AnyObject
     {
         var responseMutable = response
         if (responseMutable is JSON)
@@ -104,23 +104,23 @@ internal class C8oFullSync
             {
                 responseMutable = try! C8oFullSyncTranslator.fullSyncJsonToXml((responseMutable as! C8oJSON).myJSON!)!;
             }
-
+            
             
         }
         
-        return responseMutable as! NSObject;
+        return responseMutable
         
     }
     
-
+    
     internal static func isFullSyncRequest(requestParameters : Dictionary<String, AnyObject>)->Bool
     {
         // Check if there is one parameter named "__project" and if its value starts with "fs://"
         if let parameterValue : String = C8oUtils.getParameterStringValue(requestParameters, name: C8o.ENGINE_PARAMETER_PROJECT, useName: false){
             return parameterValue.hasPrefix(C8oFullSync.FULL_SYNC_PROJECT);
         }
-            return false;
-       
-
+        return false;
+        
+        
     }
 }

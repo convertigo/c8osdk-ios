@@ -13,7 +13,7 @@ import AEXML
 
 //import CouchbaseLite
 
-@objc public class C8o : C8oBase {
+public class C8o : C8oBase {
     
     /** Regular Expression */
      
@@ -487,8 +487,7 @@ import AEXML
         get { return C8o.deviceUUID }
     }
     
-    public var cookieStore : NSObject
-        {
+    public var cookieStore : C8oCookieStorage{
         get { return httpInterface!.cookieStore! }
     }
     

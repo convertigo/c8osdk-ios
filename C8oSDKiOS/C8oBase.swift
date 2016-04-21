@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc public class C8oBase : NSObject
+public class C8oBase : NSObject
 {
     override init(){
         super.init()

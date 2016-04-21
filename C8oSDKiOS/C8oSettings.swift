@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-@objc public class C8oSettings : C8oBase
+public class C8oSettings : C8oBase
 {
     public override init()
     {
