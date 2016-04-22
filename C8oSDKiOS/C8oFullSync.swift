@@ -11,7 +11,7 @@ import Alamofire
 import SwiftyJSON
 
 
-internal class C8oFullSync
+internal class C8oFullSync : NSObject
 {
     internal static var FULL_SYNC_URL_PATH : String = "/fullsync/";
     /// <summary>

@@ -43,7 +43,9 @@ public class C8oFullSyncDatabase : NSObject {
         
         
         do{
-            self.database = try manager.databaseNamed(databaseNameMutable)
+                self.database = try manager.databaseNamed(databaseNameMutable)
+            
+            
         }
         catch let e as NSError{
             blockerror =  C8oException(message: C8oExceptionMessage.unableToGetFullSyncDatabase(self.databaseName) , exception: e)
@@ -185,12 +187,17 @@ public class C8oFullSyncDatabase : NSObject {
         
         
         condition.lock()
-        rep!.start()
+        (c8o.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+            rep!.start()
+        }
+        
         
         if(!syncMutex[0]){
             condition.wait()
         }
-        rep!.stop()
+        (c8o.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+            rep!.stop()
+        }
         
         condition.unlock()
         

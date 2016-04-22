@@ -116,9 +116,9 @@ internal class FullSyncRequestable
                 }
                 else{
                     syncMutex[0] = true
-                    condition.lock()
+                    //condition.lock()
                     condition.signal()
-                    condition.unlock()
+                    //condition.unlock()
                 }
                 
             }
@@ -422,6 +422,14 @@ public class FullSyncReplicationParameter
 /// </summary>
 public class FullSyncPolicy
 {
+    /*private var c8o : Queue<C8o>? = Queue<C8o>()
+    public func setC8o(c8o : C8o){
+        self.c8o?.enqueue(c8o)
+    }
+    public func getC8o()->C8o{
+        return self.c8o!.dequeue()!
+    }*/
+    
     public static let NONE : FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_NONE, action: {database, newProperties in
         var createdDocument : CBLDocument
         var newPropertiesMutable = newProperties
@@ -430,11 +438,13 @@ public class FullSyncPolicy
             
             newPropertiesMutable.removeValueForKey(C8oFullSync.FULL_SYNC__ID)
             
+            
+                
             createdDocument = (documentId == nil) ? database.createDocument() : database.documentWithID(documentId!)!
+            
             try createdDocument.putProperties(newPropertiesMutable)
-            /*let a = createdDocument.currentRevisionID
-             let b = createdDocument.documentID
-             let c = "hh"*/
+            
+
         }
         catch let e as NSError{
             throw c8oCouchbaseLiteException(message: C8oExceptionMessage.fullSyncPutProperties(newProperties), exception: e)

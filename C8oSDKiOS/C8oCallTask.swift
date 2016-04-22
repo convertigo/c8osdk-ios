@@ -69,9 +69,13 @@ internal class C8oCallTask
             c8o.log._debug("Is FullSync request", exceptions: nil)
             // The result cannot be handled here because it can be different depending to the platform
             // But it can be useful bor debug
-            do
-            {
-                let fullSyncResult = try c8o.c8oFullSync!.handleFullSyncRequest(parameters, listener: c8oResponseListener!)
+            var fullSyncResult : AnyObject? = nil
+            var error : NSError? = nil
+            var errorC8o : C8oException? = nil
+            do{
+                
+                        fullSyncResult = try self.c8o.c8oFullSync!.handleFullSyncRequest(self.parameters, listener: self.c8oResponseListener!)
+ 
                 return fullSyncResult
             }
             catch let e as C8oException{

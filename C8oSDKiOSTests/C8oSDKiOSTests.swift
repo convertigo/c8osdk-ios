@@ -307,7 +307,7 @@ class C8oSDKiOSTests: XCTestCase {
     func testCheckLogRemote() {
         let c8o : C8o = try! C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH , c8oSettings: C8oSettings().setLogC8o(false))
         let id : String = "logID=" + String(NSTimeIntervalSince1970 * 1000)
-        try! c8o.callXml(".GetLogs", parameters: "init", id).sync()
+        try! c8o.callXml(".GetLogs", parameters: "init", id).sync()!
         c8o.log.error(id)
         try! CheckLogRemoteHelper(c8o, lvl: "ERROR", msg: id)
         c8o.log.error(id, exceptions: C8oException(message: "for test"))
@@ -324,7 +324,8 @@ class C8oSDKiOSTests: XCTestCase {
         try! CheckLogRemoteHelper(c8o, lvl: "FATAL", msg: id)
         c8o.logRemote = false
         c8o.log.info(id)
-        NSThread.sleepForTimeInterval(0.05)
+        sleep(1)
+        //NSThread.sleepForTimeInterval(0.05)
         let doc = try! c8o.callXml(".GetLogs").sync()
         let value : NSObject? = doc?.root["line"].value
         XCTAssertEqual("element <line> not found", value)
@@ -697,9 +698,9 @@ class C8oSDKiOSTests: XCTestCase {
         XCTAssertEqual("step 2", value)
         value = xjson[2]!["document"]["pong"]["var1"].stringValue
         XCTAssertEqual("step 3", value)
-    }
+    }/*
     //TODO...
-    /*func testC8o0Ssl1TrustFail(){
+    func testC8o0Ssl1TrustFail(){
         var exception : C8oException? = nil
         do{
             let c8o = try! C8o(endpoint: PREFIX + HOST + ":443" + PROJECT_PATH, c8oSettings: nil)
@@ -820,7 +821,7 @@ class C8oSDKiOSTests: XCTestCase {
             try c8o.callJson("fs://.get", parameters: "docid", id)!.sync()
             XCTAssertTrue(false, "not possible")
         }
-        catch _ as C8oRessourceNotFoundException{
+        catch let e as C8oRessourceNotFoundException{
            XCTAssertTrue(true)
         }
         catch{
@@ -857,7 +858,7 @@ class C8oSDKiOSTests: XCTestCase {
     
     }
     
-    func testC8oFsPostExisting(){
+    func atestC8oFsPostExisting(){
         let c8o : C8o = try! self.Get(.C8O_FS)!
         let condition : NSCondition = NSCondition()
         condition.lock()
@@ -984,6 +985,7 @@ class C8oSDKiOSTests: XCTestCase {
         XCTAssertEqual(2, json["b"].intValue)
         XCTAssertEqual(4, json["c"].intValue)
     }
+    
     func testC8oFsPostExistingPolicyMergeSub(){
         let c8o : C8o = try! self.Get(.C8O_FS)!
         let condition : NSCondition = NSCondition()
@@ -1050,7 +1052,9 @@ class C8oSDKiOSTests: XCTestCase {
         let id : String = json["_id"].stringValue
         XCTAssertEqual(myId, id)
     }
+    
     func testC8oFsReplicateAnoAndAuth(){
+        
         let c8o : C8o = try! self.Get(.C8O_FS_PULL)!
         let condition : NSCondition = NSCondition()
         condition.lock()
@@ -1067,12 +1071,13 @@ class C8oSDKiOSTests: XCTestCase {
             catch{
                 XCTAssertTrue(false)
             }
+            
             json = try! c8o.callJson("fs://.replicate_pull")!.sync()!
             XCTAssertTrue(json["ok"].boolValue)
             json = try! c8o.callJson("fs://.get", parameters: "docid", "258")!.sync()!
             var value : String = json["data"].stringValue
             XCTAssertEqual("258", value)
-            /*do{
+            do{
                 try c8o.callJson("fs://.get", parameters: "docid", "456")!.sync()
                 XCTAssertTrue(false, "not possible")
             }
@@ -1082,6 +1087,7 @@ class C8oSDKiOSTests: XCTestCase {
             catch{
                 XCTAssertTrue(false)
             }
+            
             try! json = c8o.callJson(".LoginTesting")!.sync()!
             value = json["document"]["authenticatedUserID"].stringValue
             XCTAssertEqual("testing_user", value)
@@ -1089,7 +1095,7 @@ class C8oSDKiOSTests: XCTestCase {
             XCTAssertTrue(json["ok"].boolValue)
             json = try! c8o.callJson("fs://.get", parameters: "docid", "456")!.sync()!
             value = json["data"].stringValue
-            XCTAssertEqual("456", value)*/
+            XCTAssertEqual("456", value)
             
         }
         catch{

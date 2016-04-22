@@ -29,7 +29,9 @@ internal class C8oHttpInterface
         // TODO : add cookies in the cookie container
         if (c8o.cookies != nil)
         {
-            //cookieContainer.append(Pair<String, Dictionary<String, String>>(key: c8o.Endpoint, value: c8o.Cookies!));
+            for a in c8o.cookies!{
+                addCookie(a.0, value: a.1)
+            }
         }
     }
     
@@ -47,7 +49,7 @@ internal class C8oHttpInterface
             "User-Agent" : "Convertigo Client SDK " + C8o.getSdkVersion()
         ]
         let semaphore = dispatch_semaphore_create(0)
-        let queue = dispatch_queue_create("com.convertigo.c8o.queue", DISPATCH_QUEUE_CONCURRENT)
+        let queue = dispatch_queue_create("com.convertigo.c8o.queues", DISPATCH_QUEUE_CONCURRENT)
 
         let request = alamofire.upload(.POST, url, headers: headers, data: data!)
         request.response(

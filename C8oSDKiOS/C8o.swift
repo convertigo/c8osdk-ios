@@ -197,7 +197,7 @@ public class C8o : C8oBase {
         {
             if(requestable == nil)
             {
-                throw C8oError.ArgumentNilException(C8oExceptionMessage.InvalidArgumentNullParameter("requestable")) //System.ArgumentNullException(C8oExceptionMessage.InvalidArgumentNullParameter("requestable"))*/
+                throw C8oError.ArgumentNilException(C8oExceptionMessage.InvalidArgumentNullParameter("requestable"))
             }
             
             // Checks parameters validity

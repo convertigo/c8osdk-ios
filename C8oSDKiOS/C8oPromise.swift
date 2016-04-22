@@ -135,8 +135,9 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
                     
                 }
                 else{
-                    condition.lock()
+                    
                     syncMutex[0] = true
+                    condition.lock()
                     self.lastFailure = exception
                     condition.signal()
                     condition.unlock()
