@@ -12,7 +12,7 @@ import SwiftyJSON
 
 class C8oFullSyncCbl : C8oFullSync{
     private static let ATTACHMENT_PROPERTY_KEY_CONTENT_URL : String = "content_url"
-    private var manager : CBLManager?
+    internal var manager : CBLManager?
     private var fullSyncDatabases : Dictionary<String, C8oFullSyncDatabase>?
     private var condition : NSCondition = NSCondition()
     internal static var th : NSThread? = nil
@@ -28,6 +28,12 @@ class C8oFullSyncCbl : C8oFullSync{
             condition.lock()
             C8oFullSyncCbl.th = NSThread(target: self, selector: #selector(C8oFullSyncCbl.cbl), object: nil)
             C8oFullSyncCbl.th!.start()
+            condition.wait()
+            condition.unlock()
+        }
+        else if(self.manager == nil){
+            condition.lock()
+            self.performSelector(#selector(C8oFullSyncCbl.managerInstanciate), onThread: C8oFullSyncCbl.th!, withObject: nil, waitUntilDone: false)
             condition.wait()
             condition.unlock()
         }
@@ -47,14 +53,17 @@ class C8oFullSyncCbl : C8oFullSync{
         }
         
     }
-    
+    @objc internal func managerInstanciate(){
+        self.manager = CBLManager()
+        condition.signal()
+
+    }
     @objc internal func cbl(){
         NSThread.currentThread().name = "CBLThread"
         self.manager = CBLManager()
         condition.signal()
         while (true) {
             CFRunLoopRunInMode(kCFRunLoopDefaultMode, 1, true)
-
             
         }
     }
@@ -447,7 +456,7 @@ class C8oFullSyncCbl : C8oFullSync{
         }
         
         do{
-            let db : CBLDatabase? = try manager!.databaseNamed(databaseName + localSuffix!)
+            let db : CBLDatabase? = try self.manager!.databaseNamed(databaseName + localSuffix!)
             if(db != nil){
                 try db?.deleteDatabase()
             }
