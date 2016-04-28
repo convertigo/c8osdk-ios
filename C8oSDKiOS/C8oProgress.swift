@@ -24,14 +24,6 @@ public class C8oProgress : NSObject
     internal override init()
     {
         super.init()
-        self._changed = nil
-        self._continuous = nil
-        self._finished = nil
-        self._pull = nil
-        self._current = nil
-        self._total = nil
-        self._status = nil
-        self._taskInfo = nil
         self._raw = nil
     
     }
@@ -64,7 +56,9 @@ public class C8oProgress : NSObject
     
     public override var description: String
     {
-        return ""// Direction + ": " + current + "/" + total + " (" + (finished ? (continuous ? "live" : "done") : "running") + ")"
+        var ch : String = direction + ": " + String(current) + "/" + String(total) + " ("
+            ch +=  (finished ? (continuous ? "live" : "done") : "running") + ")"
+        return ch
     }
     
     public var continuous : Bool

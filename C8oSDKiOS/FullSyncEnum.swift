@@ -48,14 +48,14 @@ internal class FullSyncRequestable
         return try! (c8oFullSync as! C8oFullSyncCbl).handleAllDocumentsRequest(databaseName, parameters: parameters)!
     })
     
-    internal static var VIEW : FullSyncRequestable = FullSyncRequestable(value: "view", handleFullSyncrequestOp:{(c8oFullSync, databaseName, parameters, c8oResponseListener)->(AnyObject) in
+    internal static var VIEW : FullSyncRequestable = FullSyncRequestable(value: "view", handleFullSyncrequestOp:{(c8oFullSync, databaseName, parameters, c8oResponseListener)throws->(AnyObject) in
         
         // Gets the design doc parameter value
         let ddoc : String = try! C8oUtils.peekParameterStringValue(parameters, name: FullSyncGetViewParameter.DDOC.name, exceptionIfMissing: false)!
         // Gets the view name parameter value
         let view : String = try! C8oUtils.peekParameterStringValue(parameters, name: FullSyncGetViewParameter.VIEW.name, exceptionIfMissing: false)!
         
-        return try! (c8oFullSync as! C8oFullSyncCbl).handleGetViewRequest(databaseName, ddocName: ddoc, viewName: view, parameters: parameters)!
+        return try (c8oFullSync as! C8oFullSyncCbl).handleGetViewRequest(databaseName, ddocName: ddoc, viewName: view, parameters: parameters)!
     })
     
     internal static var SYNC : FullSyncRequestable = FullSyncRequestable(value: "sync", handleFullSyncrequestOp:{(c8oFullSync, databaseName, parameters, c8oResponseListener) ->(AnyObject) in

@@ -499,7 +499,11 @@ class C8oFullSyncCbl : C8oFullSync{
             return nil
         }
         
-        let mapBlock : CBLMapBlock? = CBLView.compiler()?.compileMapFunction(mapSource!, language: language!)
+        var mapBlock : CBLMapBlock? = nil
+        (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+            mapBlock = CBLView.compiler()?.compileMapFunction(mapSource!, language: language!)
+        }
+        
         if(mapBlock == nil){
             return nil
         }
@@ -507,7 +511,7 @@ class C8oFullSyncCbl : C8oFullSync{
         let reduceSource : String? = viewProps!["reduce"] as? String
         var reduceBlock : CBLReduceBlock? = nil
         if(reduceSource != nil){
-            reduceBlock = CBLView.compiler()?.compileReduceFunction(reduceSource!, language: language!)
+            reduceBlock = CBLView.compiler()!.compileReduceFunction(reduceSource!, language: language!)
             if(reduceBlock == nil){
                 return nil
             }
@@ -525,12 +529,19 @@ class C8oFullSyncCbl : C8oFullSync{
     
     private func checkAndCreateJavaScriptView(database : CBLDatabase, ddocName : String, viewName : String)->CBLView?{
         let tdViewName : String = ddocName + "/" + viewName
-        let view : CBLView? = database.existingViewNamed(tdViewName)
+        var view : CBLView? = nil
+        (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+             view = database.existingViewNamed(tdViewName)
+        }
         
         if(view == nil || view!.mapBlock == nil){
             //TODO...
-            fatalError("must be implemented")
-            /*let rev : CBLRevision? //= database.documentWithID(String(format: "_design/%s", ddocName))?.revisionWithID()
+            //fatalError("must be implemented")
+             var rev : CBLRevision? = nil
+            (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+                rev = database.documentWithID(String(format: "_design/%@", ddocName))?.currentRevision
+            }
+            
              if (rev == nil){
              return nil
              }
@@ -546,7 +557,7 @@ class C8oFullSyncCbl : C8oFullSync{
              return nil
              }
              
-             return view*/
+             return view
         }
         return view
     }

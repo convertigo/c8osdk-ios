@@ -1059,7 +1059,7 @@ class C8oSDKiOSTests: XCTestCase {
         XCTAssertEqual(myId, id)
     }
     
-    func atestC8oFsReplicateAnoAndAuth(){
+    func testC8oFsReplicateAnoAndAuth(){
         
         let c8o : C8o = try! self.Get(.C8O_FS_PULL)!
         let condition : NSCondition = NSCondition()
@@ -1077,7 +1077,6 @@ class C8oSDKiOSTests: XCTestCase {
             catch{
                 XCTAssertTrue(false)
             }
-            try! c8o.callJson(".LogoutTesting")!.sync()
             json = try! c8o.callJson("fs://.replicate_pull")!.sync()!
             XCTAssertTrue(json["ok"].boolValue)
             json = try! c8o.callJson("fs://.get", parameters: "docid", "258")!.sync()!
@@ -1107,6 +1106,173 @@ class C8oSDKiOSTests: XCTestCase {
         catch{
         }
         try! c8o.callJson(".LogoutTesting")!.sync()
+    }
+    
+    func testC8oFsReplicatePullProgress(){
+        let c8o : C8o = try! self.Get(.C8O_FS_PULL)!
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        do{
+            var json : JSON = try! c8o.callJson("fs://.reset")!.sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            try! json = c8o.callJson(".LoginTesting")!.sync()!
+            var value = json["document"]["authenticatedUserID"].stringValue
+            XCTAssertEqual("testing_user", value)
+            var count : [Int] = [0]
+            var first : [String?] = [nil]
+            var last : [String?] = [nil]
+            var uiThread : [Bool] = [false]
+            json = try! c8o.callJson("fs://.replicate_pull")!.progress({ (C8oProgress) in
+                count[0] += 1
+                if(NSThread.mainThread() == NSThread.currentThread())
+                {
+                    uiThread[0] = true
+                }
+                else{
+                    uiThread[0] = false;
+                }
+                if(first[0] == nil){
+                    first[0] = C8oProgress.description
+                }
+                last[0] = C8oProgress.description
+                
+            }).sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            json = try! c8o.callJson("fs://.get", parameters: "docid", "456")!.sync()!
+            value = json["data"].stringValue
+            XCTAssertEqual("456", value)
+            XCTAssertFalse(uiThread[0], "uiThread must be False")
+            XCTAssertEqual("pull: 0/0 (running)", first[0])
+            XCTAssertEqual("pull: 8/8 (done)", last[0])
+            XCTAssertTrue(count[0] > 2, "count > 5")
+        }
+        catch{
+            
+        }
+        try! c8o.callJson(".LogoutTesting")!.sync()!
+
+    
+    }
+    
+    func testC8oFsReplicatePullProgressUI(){
+        
+        let c8o : C8o = try! self.Get(.C8O_FS_PULL)!
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        do{
+            var json : JSON = try! c8o.callJson("fs://.reset")!.sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            try! json = c8o.callJson(".LoginTesting")!.sync()!
+            var value = json["document"]["authenticatedUserID"].stringValue
+            XCTAssertEqual("testing_user", value)
+            var count : [Int] = [0]
+            var first : [String?] = [nil]
+            var last : [String?] = [nil]
+            var uiThread : [Bool] = [false]
+            let asyncExpectation = expectationWithDescription("longRunningFunction")
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+            json = try! c8o.callJson("fs://.replicate_pull")!.progressUI({ (C8oProgress) in
+                count[0] += 1
+                if(NSThread.mainThread() == NSThread.currentThread())
+                {
+                    uiThread[0] = true
+                }
+                else{
+                    uiThread[0] = false;
+                }
+                if(first[0] == nil){
+                    first[0] = C8oProgress.description
+                }
+                last[0] = C8oProgress.description
+                
+            }).sync()!
+            asyncExpectation.fulfill()
+            })
+            self.waitForExpectationsWithTimeout(20) { error in
+            }
+            XCTAssertTrue(json["ok"].boolValue)
+            XCTAssertTrue(json["ok"].boolValue)
+            json = try! c8o.callJson("fs://.get", parameters: "docid", "456")!.sync()!
+            value = json["data"].stringValue
+            XCTAssertEqual("456", value)
+            XCTAssertTrue(uiThread[0], "uiThread must be False")
+            XCTAssertEqual("pull: 0/0 (running)", first[0])
+            XCTAssertEqual("pull: 8/8 (done)", last[0])
+            XCTAssertTrue(count[0] > 2, "count > 5")
+        }
+        catch{
+            
+        }
+        try! c8o.callJson(".LogoutTesting")!.sync()!
+        
+    }
+    
+    func testC8oFsReplicatePullAnoAndAuthView(){
+        let c8o : C8o = try! self.Get(.C8O_FS_PULL)!
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        do{
+            var json : JSON = try! c8o.callJson("fs://.reset")!.sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            json = try! c8o.callJson("fs://.replicate_pull")!.sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            json = try! c8o.callJson("fs://.view",
+                                parameters: "ddoc", "design",
+                                "view", "reverse"
+                )!.sync()!
+            var value : AnyObject = json["rows"][0]["value"].doubleValue
+            XCTAssertEqual(774.0, value as? Double)
+            json = try! c8o.callJson("fs://.view",
+                                parameters: "ddoc", "design",
+                                "view", "reverse",
+                                "reduce", false
+                )!.sync()!
+            value = json["count"].intValue
+            XCTAssertEqual(3, value as? Int)
+            value = json["rows"][1]["key"].stringValue
+            XCTAssertEqual("852", value as? String)
+            json = try! c8o.callJson("fs://.view",
+                                parameters: "ddoc", "design",
+                                "view", "reverse",
+                                "startkey", "0",
+                                "endkey", "9"
+                )!.sync()!
+            value = json["rows"][0]["value"].doubleValue
+            XCTAssertEqual(405.0, value as? Double)
+            json = try! c8o.callJson(".LoginTesting")!.sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            json = try! c8o.callJson("fs://.view",
+                                parameters: "ddoc", "design",
+                                "view", "reverse"
+                )!.sync()!
+            value = json["rows"][0]["value"].doubleValue
+            XCTAssertEqual(2142.0, value as? Double)
+            json = try! c8o.callJson("fs://.view",
+                                parameters: "ddoc", "design",
+                                "view", "reverse",
+                                "reduce", false
+                )!.sync()!
+            value = json["count"].intValue
+            XCTAssertEqual(6, value as? Int)
+            value = json["rows"][1]["key"].stringValue
+            XCTAssertEqual("654", value as? String)
+            json = try! c8o.callJson("fs://.post", parameters: "_id", "111", "data", "16")!.sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            json = try! c8o.callJson("fs://.view",
+                                parameters: "ddoc", "design",
+                                "view", "reverse",
+                                "startkey", "0",
+                                "endkey", "9"
+                )!.sync()!
+            value = json["rows"][0]["value"].doubleValue
+            XCTAssertEqual(1000.0, value as? Double)
+            
+        }
+        catch{
+            
+        }
+        try! c8o.callJson(".LogoutTesting")!.sync()!
+        
     }
 }
 

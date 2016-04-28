@@ -162,21 +162,14 @@ public class C8oFullSyncDatabase : NSObject {
         NSNotificationCenter.defaultCenter().addObserverForName(kCBLReplicationChangeNotification, object: rep!, queue : nil , usingBlock: { _ in
             count += 1
             if(count != 0){
-            print(String(rep!.changesCount) + " / " + String(rep!.completedChangesCount))
-            progress.finished = !(rep!.status == CBLReplicationStatus.Active)// || rep?.status == CBLReplicationStatus.Offline)
-            let b = rep?.status
-            let c = progress.finished
-            
-            
-            if(!progress.finished ){//|| count == 0){
-                let progress : C8oProgress = _progress[0]
-                progress.total = Int(rep!.changesCount)
-                progress.current = Int(rep!.completedChangesCount)
-                progress.taskInfo = ("n/a")
-                progress.status = String(rep!.status)
+            progress.finished = !(rep!.status == CBLReplicationStatus.Active)
+            progress.total = rep!.changesCount.hashValue
+            progress.current = rep!.completedChangesCount.hashValue
+            progress.taskInfo = ("n/a")
+            progress.status = String(rep!.status)
                 
-            }
-            else{
+            
+            if(progress.finished){
                 if(NSThread.currentThread() == thread){
                     syncMutex[0] = true
                 }
@@ -186,6 +179,7 @@ public class C8oFullSyncDatabase : NSObject {
                     condition.signal()
                     condition.unlock()
                 }
+                
             }
             
             if(progress.changed){
