@@ -61,20 +61,17 @@ internal class C8oFullSyncTranslator
     }
     
     internal static func queryEnumeratorToJson(queryEnumerator : CBLQueryEnumerator) throws ->JSON{
-        let json : JSON
-        var rowsArray : JSON? = nil
+        
+        var array : [String] = [String]()
         while((queryEnumerator.nextRow()) != nil) {
             let queryRow : CBLQueryRow = queryEnumerator.nextRow()!
-            let jsonQueryRow : JSON = JSON(queryRow)
-            rowsArray = jsonQueryRow
+            
+            array.append(queryRow.description)
         }
-        do{
-            var dic : Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
-            dic = [FULL_SYNC_RESPONSE_KEY_COUNT : queryEnumerator.count,
-                FULL_SYNC_RESPONSE_KEY_ROWS : rowsArray!.stringValue]
-            json = JSON(dic)
-        }
-
+        print("FULL_SYNC_RESPONSE_KEY_COUNT" + FULL_SYNC_RESPONSE_KEY_COUNT + "  ,FULL_SYNC_RESPONSE_KEY_ROWS" + array.description)
+        var json : JSON = [FULL_SYNC_RESPONSE_KEY_COUNT : queryEnumerator.count, FULL_SYNC_RESPONSE_KEY_ROWS : array.description]
+        
+        let b = "hhh"
         return json
     }
     

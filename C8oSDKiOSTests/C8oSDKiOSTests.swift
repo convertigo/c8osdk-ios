@@ -1207,7 +1207,7 @@ class C8oSDKiOSTests: XCTestCase {
         
     }
     
-    func testC8oFsReplicatePullAnoAndAuthView(){
+    func atestC8oFsReplicatePullAnoAndAuthView(){
         let c8o : C8o = try! self.Get(.C8O_FS_PULL)!
         let condition : NSCondition = NSCondition()
         condition.lock()
@@ -1273,6 +1273,53 @@ class C8oSDKiOSTests: XCTestCase {
         }
         try! c8o.callJson(".LogoutTesting")!.sync()!
         
+    }
+    
+    func atestC8oFsReplicatePullGetAll(){
+        let c8o : C8o = try! self.Get(.C8O_FS_PULL)!
+        let condition : NSCondition = NSCondition()
+        condition.lock()
+        do{
+            var json : JSON = try! c8o.callJson("fs://.reset")!.sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            try! json = c8o.callJson(".LoginTesting")!.sync()!
+            var value = json["document"]["authenticatedUserID"].stringValue
+            XCTAssertEqual("testing_user", value)
+            json = try! c8o.callJson("fs://.replicate_pull")!.sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            json = try! c8o.callJson("fs://.all")!.sync()!
+            XCTAssertEqual(8, json["count"].intValue)
+            XCTAssertEqual(8, json["rows"].count)
+            XCTAssertEqual("789", json["rows"][5]["key"].stringValue)
+            XCTAssertFalse(json["rows"][5]["doc"].isExists())
+            json = try! c8o.callJson("fs://.all",
+                                parameters: "include_docs", true
+                )!.sync()!
+            XCTAssertEqual(2, json["count"].intValue)
+            XCTAssertEqual(8, json["rows"].count)
+            XCTAssertEqual("789", json["rows"][5]["key"].stringValue)
+            XCTAssertEqual("testing_user", json["rows"][5]["dox"]["~c8oAcl"].stringValue)
+            json = try! c8o.callJson("fs://.all",
+                                parameters: "limit", 2
+                )!.sync()!
+            XCTAssertEqual(2, json["count"].intValue)
+            XCTAssertEqual(2, json["rows"].count)
+            XCTAssertEqual("147", json["rows"][1]["key"].stringValue)
+            XCTAssertFalse(json["rows"][1]["doc"].isExists())
+            json = try! c8o.callJson("fs://.all",
+                                parameters: "include_docs", true,
+                                "limit", 3,
+                                "skip", 2
+                )!.sync()!
+            XCTAssertEqual(3, json["count"].intValue)
+            XCTAssertEqual(3, json["rows"].count)
+            XCTAssertEqual("369", json["rows"][1]["key"].stringValue)
+            XCTAssertEqual("doc", json["rows"][1]["doc"]["type"].stringValue)
+        }
+        catch{
+            
+        }
+         try! c8o.callJson(".LogoutTesting")!.sync()!
     }
 }
 

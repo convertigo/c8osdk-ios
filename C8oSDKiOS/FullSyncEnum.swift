@@ -239,12 +239,12 @@ internal class FullSyncRequestable
 
 public class FullSyncRequestParameter
 {
-    public static let DESCENDING : FullSyncRequestParameter = FullSyncRequestParameter(name: "descending", action: { query, value in
+    public static let DESCENDING : FullSyncRequestParameter = FullSyncRequestParameter(name: "descending", isJson: true, action: { query, value in
         
         query.descending = value as! Bool
         
     })
-    public static let ENDKEY : FullSyncRequestParameter = FullSyncRequestParameter(name: "endkey", action: { query, value in
+    public static let ENDKEY : FullSyncRequestParameter = FullSyncRequestParameter(name: "endkey", isJson: true, action: { query, value in
         
         query.endKey = value
         
@@ -252,51 +252,60 @@ public class FullSyncRequestParameter
     public static let ENDKEY_DOCID : FullSyncRequestParameter = FullSyncRequestParameter(name: "endkey_docid", action: { query, value in
         query.endKeyDocID = value as? String
     })
-    public static let GROUP_LEVEL : FullSyncRequestParameter = FullSyncRequestParameter(name: "group_level", action: { query, value in
+    public static let GROUP_LEVEL : FullSyncRequestParameter = FullSyncRequestParameter(name: "group_level", isJson: true, action: { query, value in
         query.groupLevel = value as! UInt
     })
-    public static let INCLUDE_DELETED : FullSyncRequestParameter = FullSyncRequestParameter(name: "include_deleted", action: { query, value in
+    public static let INCLUDE_DELETED : FullSyncRequestParameter = FullSyncRequestParameter(name: "include_deleted", isJson: true, action: { query, value in
         fatalError("must be done")
         //query.allDocsMode. //= value as! Bool
     })
-    public static let INDEX_UPDATE_MODE : FullSyncRequestParameter = FullSyncRequestParameter(name: "index_update_mode", action: { query, value in
+    public static let INDEX_UPDATE_MODE : FullSyncRequestParameter = FullSyncRequestParameter(name: "index_update_mode",  action: { query, value in
         fatalError("must be done")
         /*let valueStr : String = value as! String
          var indexUpdateModeValues = enum   CBLIndexUpdateMode()
          var indexUpdateModeEnumerator =*/
     })
-    public static let KEYS : FullSyncRequestParameter = FullSyncRequestParameter(name: "keys", action: { query, value in
+    public static let KEYS : FullSyncRequestParameter = FullSyncRequestParameter(name: "keys", isJson: true, action: { query, value in
         query.keys = value as? [AnyObject]
     })
-    public static let LIMIT : FullSyncRequestParameter = FullSyncRequestParameter(name: "limit", action: { query, value in
+    public static let LIMIT : FullSyncRequestParameter = FullSyncRequestParameter(name: "limit",isJson: true, action: { query, value in
         query.limit = value as! UInt
     })
-    public static let INCLUDE_DOCS : FullSyncRequestParameter = FullSyncRequestParameter(name: "include_docs", action: { query, value in
+    public static let INCLUDE_DOCS : FullSyncRequestParameter = FullSyncRequestParameter(name: "include_docs", isJson: true, action: { query, value in
         query.prefetch = value as! Bool
     })
-    public static let REDUCE : FullSyncRequestParameter = FullSyncRequestParameter(name: "reduce", action: { query, value in
+    public static let REDUCE : FullSyncRequestParameter = FullSyncRequestParameter(name: "reduce", isJson: true, action: { query, value in
         query.mapOnly = !(value as! Bool)
     })
-    public static let GROUP : FullSyncRequestParameter = FullSyncRequestParameter(name: "group", action: { query, value in
+    public static let GROUP : FullSyncRequestParameter = FullSyncRequestParameter(name: "group", isJson: true, action: { query, value in
         query.groupLevel = (value as! Bool) ? 99 : 0
     })
-    public static let SKIP : FullSyncRequestParameter = FullSyncRequestParameter(name: "skip", action: { query, value in
+    public static let SKIP : FullSyncRequestParameter = FullSyncRequestParameter(name: "skip", isJson: true, action: { query, value in
         query.skip = value as! UInt
     })
-    public static let STARTKEY : FullSyncRequestParameter = FullSyncRequestParameter(name: "startkey", action: { query, value in
+    public static let STARTKEY : FullSyncRequestParameter = FullSyncRequestParameter(name: "startkey", isJson: true, action: { query, value in
         query.startKey = value
     })
     public static let STARTKEY_DOCID : FullSyncRequestParameter = FullSyncRequestParameter(name: "startkey_docid", action: { query, value in
         query.startKeyDocID = value as? String
     })
     
-    public let name : String
-    //public let Type type
+    public var name : String
+    public var isJson : Bool
+    public var action : (CBLQuery, AnyObject)->()
     
     private init(name : String, action : (CBLQuery, AnyObject)->())
     {
         self.name = name
-        //this.type = type
+        self.isJson = false
+        self.action = action
+    }
+    
+    private init(name : String, isJson : Bool, action : (CBLQuery, AnyObject)->())
+    {
+        self.name = name
+        self.isJson = isJson
+        self.action = action
     }
     
     public static func values()->[FullSyncRequestParameter]
@@ -328,7 +337,7 @@ public class FullSyncGetViewParameter {
     public static let VIEW : FullSyncGetViewParameter = FullSyncGetViewParameter(name: "view")
     public static let DDOC : FullSyncGetViewParameter = FullSyncGetViewParameter(name: "ddoc")
     
-    public let name : String
+    public var name : String
     
     private init(name : String)
     {
@@ -400,10 +409,13 @@ public class FullSyncReplicationParameter
     
     public var name : String
     //public var type : type
+    public var action : (CBLReplication , AnyObject)->()
     
     private init(name : String, action : (CBLReplication , AnyObject)->())
     {
         self.name = name
+        self.action = action
+
         //self.type = type
         
     }

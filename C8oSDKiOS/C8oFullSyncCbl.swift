@@ -96,8 +96,24 @@ class C8oFullSyncCbl : C8oFullSync{
                 return maVar
             }
             else if(response.isMemberOfClass(CBLQueryEnumerator)){
+                var jsonDD : JSON? = nil
                 do{
-                    maVar.myJSON = try C8oFullSyncTranslator.queryEnumeratorToJson(response as! CBLQueryEnumerator)
+                    var err : NSError? = nil
+                    (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+                        do{
+                            jsonDD = try C8oFullSyncTranslator.queryEnumeratorToJson(response as! CBLQueryEnumerator)
+                            
+                        }
+                        catch let e as NSError{
+                           err = e
+                        }
+                    }
+                    if(err != nil){
+                        throw err!
+                    }
+                    else{
+                        return maVar
+                    }
                 }
                 catch let e as C8oException{
                     throw C8oException(message: C8oExceptionMessage.queryEnumeratorToJSON(), exception: e)
@@ -110,9 +126,10 @@ class C8oFullSyncCbl : C8oFullSync{
             }
             else if(response.isMemberOfClass(C8oJSON)){
                 return response
-            } else {
-                fatalError("handleFullSyncResponse function must implement throwing error")
-                //throw C8oException(C8oExceptionMessage.illegalArgumentIncompatibleListener(listener., responseType: <#T##String#>)
+            }
+            else {
+                
+                throw C8oException(message: C8oExceptionMessage.illegalArgumentIncompatibleListener(String(listener), responseType: String(response)))
             }
         }
         else if(listener is C8oResponseXmlListener){
@@ -374,7 +391,19 @@ class C8oFullSyncCbl : C8oFullSync{
         // Runs the query
         var result : CBLQueryEnumerator? = nil
         do {
-            result = try query!.run()
+            var err : NSError? = nil
+            (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+                do{
+                    result = try query!.run()
+                }
+                catch let e as NSError{
+                    err = e
+                }
+                
+            }
+            if(err != nil){
+                throw err!
+            }
         } catch let e as NSError{
             throw C8oException(message: C8oExceptionMessage.couchRequestAllDocuments(), exception: e)
         }
@@ -563,11 +592,24 @@ class C8oFullSyncCbl : C8oFullSync{
     }
     
     private static func addParametersToQuery(query : CBLQuery, parameters : Dictionary<String, AnyObject>) throws{
-        //TODO...
-        fatalError("must be Implemented")
-        /*for fullSyncParameter in FullSyncEnum.FullSyncRequestable{
-         
-         }*/
+
+        for var fullSyncParameter in FullSyncRequestParameter.values(){
+            var objectParameterValue : AnyObject? = nil
+            if(fullSyncParameter.isJson){
+                do{
+                    objectParameterValue = C8oUtils.getParameterObjectValue(parameters, name: fullSyncParameter.name, useName: true)
+                }
+                catch let e as C8oException{
+                    throw C8oException(message: C8oExceptionMessage.getNameValuePairObjectValue(fullSyncParameter.name), exception: e)
+                }
+            }
+            else{
+                objectParameterValue = C8oUtils.getParameterStringValue(parameters, name: fullSyncParameter.name, useName: true)
+            }
+            if(objectParameterValue != nil){
+                fatalError()
+            }
+         }
     }
     
     static func mergeProperties(inout newProperties : Dictionary<String, AnyObject>, oldProperties : Dictionary<String, AnyObject>){
