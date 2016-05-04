@@ -56,7 +56,7 @@ class C8oFullSyncCbl : C8oFullSync{
     @objc internal func managerInstanciate(){
         self.manager = CBLManager()
         condition.signal()
-
+        
     }
     @objc internal func cbl(){
         NSThread.currentThread().name = "CBLThread"
@@ -96,16 +96,15 @@ class C8oFullSyncCbl : C8oFullSync{
                 return maVar
             }
             else if(response.isMemberOfClass(CBLQueryEnumerator)){
-                var jsonDD : JSON? = nil
                 do{
                     var err : NSError? = nil
                     (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
                         do{
-                            jsonDD = try C8oFullSyncTranslator.queryEnumeratorToJson(response as! CBLQueryEnumerator)
+                            maVar.myJSON = C8oFullSyncTranslator.queryEnumeratorToJson(response as! CBLQueryEnumerator)
                             
                         }
                         catch let e as NSError{
-                           err = e
+                            err = e
                         }
                     }
                     if(err != nil){
@@ -193,6 +192,7 @@ class C8oFullSyncCbl : C8oFullSync{
         if (document != nil) {
             
             let attachments : Dictionary<String, AnyObject>? = document?.propertyForKey(C8oFullSync.FULL_SYNC__ATTACHMENTS) as?  Dictionary<String, AnyObject>
+            //let att = document?.properties
             
             if (attachments != nil) {
                 let rev : CBLRevision = (document?.currentRevision)!
@@ -288,7 +288,8 @@ class C8oFullSyncCbl : C8oFullSync{
                 var objectParameterValueT : Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
                 do {
                     var count = 0
-                    objectParameterValue = String(objectParameterValue)
+                    objectParameterValue = objectParameterValue.description
+                    /*let json = JSON(objectParameterValue)
                     if let dataFromString = objectParameterValue.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
                         let json = JSON(data: dataFromString)
                         for (key, value) : (String, JSON) in json {
@@ -298,7 +299,7 @@ class C8oFullSyncCbl : C8oFullSync{
                         if(count > 0){
                             objectParameterValue = objectParameterValueT
                         }
-                    }
+                    }*/
                     
                     
                     
@@ -530,7 +531,8 @@ class C8oFullSyncCbl : C8oFullSync{
         
         var mapBlock : CBLMapBlock? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
-            mapBlock = CBLView.compiler()?.compileMapFunction(mapSource!, language: language!)
+            
+            mapBlock = CBLView.compiler()!.compileMapFunction(mapSource!, language: language!)
         }
         
         if(mapBlock == nil){
@@ -560,39 +562,39 @@ class C8oFullSyncCbl : C8oFullSync{
         let tdViewName : String = ddocName + "/" + viewName
         var view : CBLView? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
-             view = database.existingViewNamed(tdViewName)
+            view = database.existingViewNamed(tdViewName)
         }
         
         if(view == nil || view!.mapBlock == nil){
             //TODO...
             //fatalError("must be implemented")
-             var rev : CBLRevision? = nil
+            var rev : CBLRevision? = nil
             (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
                 rev = database.documentWithID(String(format: "_design/%@", ddocName))?.currentRevision
             }
             
-             if (rev == nil){
-             return nil
-             }
-             
-             let views : Dictionary<String, NSObject>? = rev?.properties!["views"] as? Dictionary<String, NSObject>
-             let viewProps : Dictionary<String, NSObject>? = views![viewName] as? Dictionary<String, NSObject>
-             if(viewProps == nil){
-             return nil
-             }
-             
-             view = compileView(database, viewName: tdViewName, viewProps: viewProps)
-             if(view == nil){
-             return nil
-             }
-             
-             return view
+            if (rev == nil){
+                return nil
+            }
+            
+            let views : Dictionary<String, NSObject>? = rev?.properties!["views"] as? Dictionary<String, NSObject>
+            let viewProps : Dictionary<String, NSObject>? = views![viewName] as? Dictionary<String, NSObject>
+            if(viewProps == nil){
+                return nil
+            }
+            let b = database.description
+            view = compileView(database, viewName: tdViewName, viewProps: viewProps)
+            if(view == nil){
+                return nil
+            }
+            
+            return view
         }
         return view
     }
     
     private static func addParametersToQuery(query : CBLQuery, parameters : Dictionary<String, AnyObject>) throws{
-
+        
         for var fullSyncParameter in FullSyncRequestParameter.values(){
             var objectParameterValue : AnyObject? = nil
             if(fullSyncParameter.isJson){
@@ -607,9 +609,9 @@ class C8oFullSyncCbl : C8oFullSync{
                 objectParameterValue = C8oUtils.getParameterStringValue(parameters, name: fullSyncParameter.name, useName: true)
             }
             if(objectParameterValue != nil){
-                fatalError()
+                fullSyncParameter.action(query,objectParameterValue!)
             }
-         }
+        }
     }
     
     static func mergeProperties(inout newProperties : Dictionary<String, AnyObject>, oldProperties : Dictionary<String, AnyObject>){
@@ -707,7 +709,7 @@ class C8oFullSyncCbl : C8oFullSync{
         let expirationDate  = localCacheDocument?.propertyForKey(C8o.LOCAL_CACHE_DOCUMENT_KEY_EXPIRATION_DATE)
         var responseString : String? = nil
         var responseTypeString : String? = nil
-        var expirationDateLong : Int = -1
+        var expirationDateLong : Double = -1
         
         if(response != nil){
             if let e = response as! String?{
@@ -726,7 +728,7 @@ class C8oFullSyncCbl : C8oFullSync{
             throw C8oException(message: C8oExceptionMessage.InvalidLocalCacheResponseInformation())
         }
         if(expirationDate != nil){
-            if let e = expirationDate as! Int?{
+            if let e = expirationDate as! Double?{
                 expirationDateLong = e
                 let currentTime = NSDate().timeIntervalSince1970 * 1000
                 if(Double(expirationDateLong) < currentTime){

@@ -52,6 +52,7 @@ internal class C8oFullSyncTranslator
     }
     
     internal static func documentToJson(document : CBLDocument)->JSON{
+        print((document.properties)!.description)
         return JSON(document.properties!)
     }
     
@@ -60,18 +61,42 @@ internal class C8oFullSyncTranslator
         return try! fullSyncJsonToXml(json)!
     }
     
-    internal static func queryEnumeratorToJson(queryEnumerator : CBLQueryEnumerator) throws ->JSON{
+    internal static func queryRowToDic(queryRow :CBLQueryRow)->Dictionary<String, AnyObject>{
+        var result : Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
+        if(queryRow.value == nil && queryRow.sourceDocumentID == nil){
+            result["key"] = queryRow.key
+            result["error"] = "not_found"
+        }
+        else{
+            result["key"] = queryRow.key
+            if(queryRow.value != nil){
+                result["value"] = queryRow.value
+            }
+            
+            result["id"] = queryRow.sourceDocumentID
+            if(queryRow.documentProperties != nil){
+                result["doc"] = queryRow.documentProperties
+            }
+        }
+        return result
+    }
+    
+    internal static func queryEnumeratorToJson(queryEnumerator : CBLQueryEnumerator)->JSON{
         
-        var array : [String] = [String]()
-        while((queryEnumerator.nextRow()) != nil) {
+        var array : [Dictionary<String, AnyObject>] = [Dictionary<String, AnyObject>]()
+        let countQ = queryEnumerator.count
+        for index in 1...queryEnumerator.count{
+            array.append(C8oFullSyncTranslator.queryRowToDic(queryEnumerator.nextRow()!))
+        }
+        /*while((queryEnumerator.nextRow()) != nil) {
+            count += 1
             let queryRow : CBLQueryRow = queryEnumerator.nextRow()!
             
             array.append(queryRow.description)
-        }
-        print("FULL_SYNC_RESPONSE_KEY_COUNT" + FULL_SYNC_RESPONSE_KEY_COUNT + "  ,FULL_SYNC_RESPONSE_KEY_ROWS" + array.description)
-        var json : JSON = [FULL_SYNC_RESPONSE_KEY_COUNT : queryEnumerator.count, FULL_SYNC_RESPONSE_KEY_ROWS : array.description]
+        }*/
+        var json : JSON = [FULL_SYNC_RESPONSE_KEY_COUNT : countQ, FULL_SYNC_RESPONSE_KEY_ROWS : array]
         
-        let b = "hhh"
+        
         return json
     }
     

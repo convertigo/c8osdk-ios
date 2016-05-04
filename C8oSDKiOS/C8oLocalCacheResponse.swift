@@ -12,9 +12,9 @@ class C8oLocalCacheResponse {
   
     private var response : String
     private var responseType : String
-    private var expirationDate : Int
+    private var expirationDate : Double
     
-    internal init(response : String, responseType : String, expirationDate : Int){
+    internal init(response : String, responseType : String, expirationDate : Double){
         self.response = response
         self.responseType = responseType
         self.expirationDate = expirationDate
@@ -37,7 +37,7 @@ class C8oLocalCacheResponse {
         return responseType
     }
     
-    internal func getExpirationDate() ->Int{
+    internal func getExpirationDate() ->Double{
         return expirationDate
     }
     

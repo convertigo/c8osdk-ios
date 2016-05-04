@@ -119,7 +119,7 @@ public class C8oProgress : NSObject
     {
         get
         {
-            return _pull!
+            return !_pull!
         }
     }
     
@@ -164,7 +164,7 @@ public class C8oProgress : NSObject
     {
         get
         {
-            return (_pull != nil) ?
+            return _pull! ?
                 C8oFullSyncTranslator.FULL_SYNC_RESPONSE_VALUE_DIRECTION_PULL :
                 C8oFullSyncTranslator.FULL_SYNC_RESPONSE_VALUE_DIRECTION_PUSH
         }

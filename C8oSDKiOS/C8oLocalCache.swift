@@ -14,13 +14,17 @@ public class C8oLocalCache : NSObject
     public static var PARAM : String = "__localCache"
     
     
-   public class Priority{
-    
+    public class Priority{
+        
         var isAvailable: (c8o : C8o)->(Bool)
-    
-    /*public static var SERVER : Priority = Priority(c8o : C8o->(Bool))
-        public static var LOCAL : Priority = Priority(isAviable: (c8o: C8o(), bool: true))
-*/
+        
+        public static var SERVER : Priority = Priority(isAvailable : {(c8o)->(Bool) in
+            return true
+        })
+        public static var LOCAL : Priority = Priority(isAvailable : {(c8o)->(Bool) in
+            return true
+        })
+        
         public init (isAvailable : (c8o : C8o)->(Bool))
         {
             self.isAvailable = isAvailable
@@ -46,57 +50,57 @@ public class C8oLocalCache : NSObject
 
 
 /*public class Priority
-{
-private init()
-{
-
-}
-func IsAvailable() ->(C8o -> Bool){}
-
-public static var SERVER : C8oLocalCache.Priority = Priority(c8o : C8o) -> Bool{return true}
-/*{
-return true
-})*/
-
-public static func LOCAL(c8o: C8o)->Bool
-{
-return true
-}
-
-/*
-public static var LOCAL : Priority = Priority(c8o =>
-{
-return true
-})*/
-
-/*var IsAvailable: (C8o) ->Bool
-
-private func Priority(isAvailable : (C8o) ->Bool)
-{
-IsAvailable = isAvailable
-
-}*/
-}*/
+ {
+ private init()
+ {
+ 
+ }
+ func IsAvailable() ->(C8o -> Bool){}
+ 
+ public static var SERVER : C8oLocalCache.Priority = Priority(c8o : C8o) -> Bool{return true}
+ /*{
+ return true
+ })*/
+ 
+ public static func LOCAL(c8o: C8o)->Bool
+ {
+ return true
+ }
+ 
+ /*
+ public static var LOCAL : Priority = Priority(c8o =>
+ {
+ return true
+ })*/
+ 
+ /*var IsAvailable: (C8o) ->Bool
+ 
+ private func Priority(isAvailable : (C8o) ->Bool)
+ {
+ IsAvailable = isAvailable
+ 
+ }*/
+ }*/
 
 /*public enum Priority  {
-
-case SERVER, LOCAL
-
-var abc :
-func isAviable(c8o : C8o)->Bool
-{
-switch(self)
-{
-case .SERVER :
-return true
-break
-
-case .LOCAL :
-return true
-break
-}
-}
-
-
-
-}*/
+ 
+ case SERVER, LOCAL
+ 
+ var abc :
+ func isAviable(c8o : C8o)->Bool
+ {
+ switch(self)
+ {
+ case .SERVER :
+ return true
+ break
+ 
+ case .LOCAL :
+ return true
+ break
+ }
+ }
+ 
+ 
+ 
+ }*/

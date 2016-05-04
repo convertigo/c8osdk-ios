@@ -167,11 +167,9 @@ internal class C8oUtils
     }
     
     
-    internal static func getUnixEpochTime(date : NSDate)->Double?
+    internal static func getUnixEpochTime()->Double?
     {
-        
-        let timeSpan = date.timeIntervalSince1970
-        return timeSpan * 1000
+       return Double(NSDate().timeIntervalSince1970 * 1000)
     }
     
     //public static T GetParameterAndCheckType<T>(IDictionary<string, object> parameters, String name, T defaultValue = default(T))
@@ -220,23 +218,26 @@ internal class C8oUtils
         return nil;
     }
     
-    internal static func identifyC8oCallRequest(parameters : Dictionary<String, NSObject>, responseType : String)->String?
+    internal static func identifyC8oCallRequest(parameters : Dictionary<String, AnyObject>, responseType : String)->String?
     {
         /*
-         JObject json = new JObject();
-         foreach (KeyValuePair<string, object> parameter in parameters)
-         {
-         JValue value = new JValue(parameter.Value);
-         json.Add(parameter.Key, value);
-         }
-         return responseType + json.ToString();
-         }
-         
-         public static func UrlDecode(string str)-> String
-         {
-         return Uri.UnescapeDataString(str);
-         */
-        return nil;
+        let json : JSON
+        let dict = new Di
+        for parameter in parameters{
+            
+            
+            json.Add(parameter.Key, value);
+        }*/
+        let json : JSON = JSON(parameters)
+        return responseType + json.dictionaryObject!.description
+    }
+    
+    public static func UrlDecode(str : String)-> String
+    {
+        fatalError()
+        //return Uri.UnescapeDataString(str);
+        
+        return "hhh";
     }
     
 }

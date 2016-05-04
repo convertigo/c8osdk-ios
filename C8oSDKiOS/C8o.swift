@@ -228,18 +228,29 @@ public class C8o : C8oBase {
             
             
             // If the C8o call use a sequence
-            
-            if (((requestable! as NSString?)!.substringWithRange(regexV[0].rangeAtIndex(2)) as String?) !=  "")
-            {
-                parameters![C8o.ENGINE_PARAMETER_SEQUENCE ] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(2))
+            let rangeLenght = regexV[0].rangeAtIndex(2).length - 1
+            let requestableLenght = (requestable! as NSString?)?.length
+            if(rangeLenght < requestableLenght && rangeLenght > 0){
+                
+                if (((requestable! as NSString?)!.substringWithRange(regexV[0].rangeAtIndex(2)) as String?) !=  "")
+                {
+                    parameters![C8o.ENGINE_PARAMETER_SEQUENCE ] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(2))
+                }
+                else
+                {
+                    parameters![C8o.ENGINE_PARAMETER_CONNECTOR] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(3))
+                    
+                    parameters![C8o.ENGINE_PARAMETER_TRANSACTION] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(4))
+                    
+                }
+                
             }
-            else
-            {
+            else{
                 parameters![C8o.ENGINE_PARAMETER_CONNECTOR] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(3))
                 
                 parameters![C8o.ENGINE_PARAMETER_TRANSACTION] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(4))
-                
             }
+            
             
             try! call(parameters, c8oResponseListener: c8oResponseListener, c8oExceptionListener: c8oExceptionListener)
         }

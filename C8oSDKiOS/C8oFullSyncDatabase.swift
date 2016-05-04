@@ -157,11 +157,10 @@ public class C8oFullSyncDatabase : NSObject {
         let thread = NSThread.currentThread()
         var syncMutex : [Bool] = [Bool]()
         syncMutex.append(false)
-        var count = -1
+        var count = false
         let condition : NSCondition = NSCondition()
         NSNotificationCenter.defaultCenter().addObserverForName(kCBLReplicationChangeNotification, object: rep!, queue : nil , usingBlock: { _ in
-            count += 1
-            if(count != 0){
+            if(count){
             progress.finished = !(rep!.status == CBLReplicationStatus.Active)
             progress.total = rep!.changesCount.hashValue
             progress.current = rep!.completedChangesCount.hashValue
@@ -174,7 +173,7 @@ public class C8oFullSyncDatabase : NSObject {
                     syncMutex[0] = true
                 }
                 else{
-                    syncMutex[0] = true
+                    //syncMutex[0] = true
                     condition.lock()
                     condition.signal()
                     condition.unlock()
@@ -191,6 +190,7 @@ public class C8oFullSyncDatabase : NSObject {
                 
             }
             }
+            count = true
             
         })
         

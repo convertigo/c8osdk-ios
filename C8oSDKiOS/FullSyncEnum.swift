@@ -59,7 +59,9 @@ internal class FullSyncRequestable
     })
     
     internal static var SYNC : FullSyncRequestable = FullSyncRequestable(value: "sync", handleFullSyncrequestOp:{(c8oFullSync, databaseName, parameters, c8oResponseListener) ->(AnyObject) in
-        
+        let thread : NSThread = NSThread.currentThread()
+        var syncMutex : [Bool] = [Bool]()
+        syncMutex.append(false)
         var pullFinished : Bool = false
         var pushFinished : Bool = false
         let condition : NSCondition = NSCondition()
@@ -75,9 +77,15 @@ internal class FullSyncRequestable
                 pushFinished = true
             }
             if (pullFinished && pushFinished){
-                condition.lock()
-                condition.signal()
-                condition.unlock()
+                if(NSThread.currentThread() == thread){
+                    syncMutex[0] = true
+                }
+                else{
+                    syncMutex[0] = true
+                    //condition.lock()
+                    condition.signal()
+                    //condition.unlock()
+                }
             }
             
             if (c8oResponseListener is C8oResponseJsonListener){
@@ -89,15 +97,14 @@ internal class FullSyncRequestable
                 (c8oResponseListener as! C8oResponseXmlListener).onXmlResponse(Pair(key: varNil, value: param))
             }
         }))
+        if(!syncMutex[0]){
         condition.wait()
-        let myjson : C8oJSON? = C8oJSON()
-        let jsonString = "{ok, true}"
-        if let dataFromString = jsonString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
-            let json = JSON(data: dataFromString)
-            myjson!.myJSON = json
         }
+        let myjson : C8oJSON = C8oJSON()
+        let json : JSON = ["ok": true]
+        myjson.myJSON = json
         condition.unlock()
-        return myjson!
+        return myjson
     })
     
     internal static var REPLICATE_PULL : FullSyncRequestable =  FullSyncRequestable(value: "replicate_pull", handleFullSyncrequestOp:{(c8oFullSync, databaseName, parameters, c8oResponseListener) ->(AnyObject) in
@@ -147,15 +154,24 @@ internal class FullSyncRequestable
     internal static var REPLICATE_PUSH : FullSyncRequestable =  FullSyncRequestable(value: "replicate_push",  handleFullSyncrequestOp:{(c8oFullSync, databaseName, parameters, c8oResponseListener) ->(AnyObject) in
         
         let condition : NSCondition = NSCondition()
+        let thread : NSThread = NSThread.currentThread()
+        var syncMutex : [Bool] = [Bool]()
+        syncMutex.append(false)
         condition.lock()
         
         try! (c8oFullSync as! C8oFullSyncCbl).handleReplicatePushRequest(databaseName, parameters: parameters, c8oResponseListener: C8oResponseProgressListener(onProgressResponse: { (progress, param) -> () in
             
             if (progress.finished)
             {
-                condition.lock()
-                condition.signal()
-                condition.unlock()
+                if(NSThread.currentThread() == thread){
+                    syncMutex[0] = true
+                }
+                else{
+                    syncMutex[0] = true
+                    //condition.lock()
+                    condition.signal()
+                    //condition.unlock()
+                }
             }
             
             if (c8oResponseListener is C8oResponseJsonListener){
@@ -168,14 +184,13 @@ internal class FullSyncRequestable
             }
             
         }))
-        condition.wait()
-        let myjson : C8oJSON = C8oJSON()
-        let jsonString = "{ok, true}"
-        if let dataFromString = jsonString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
-            let json = JSON(data: dataFromString)
-            
-            myjson.myJSON = json
+        if(!syncMutex[0]){
+            condition.wait()
         }
+        let myjson : C8oJSON = C8oJSON()
+        let json : JSON = ["ok": true]
+        myjson.myJSON = json
+        
         condition.unlock()
         return myjson
     })
@@ -310,7 +325,7 @@ public class FullSyncRequestParameter
     
     public static func values()->[FullSyncRequestParameter]
     {
-        let array : [FullSyncRequestParameter] = [DESCENDING, ENDKEY, ENDKEY_DOCID, GROUP_LEVEL, INCLUDE_DELETED, INDEX_UPDATE_MODE, KEYS, LIMIT, REDUCE, GROUP, SKIP, STARTKEY, STARTKEY_DOCID]
+        let array : [FullSyncRequestParameter] = [DESCENDING, ENDKEY, ENDKEY_DOCID, GROUP_LEVEL, INCLUDE_DELETED, INDEX_UPDATE_MODE, KEYS, LIMIT, REDUCE, GROUP, SKIP, STARTKEY, STARTKEY_DOCID, INCLUDE_DOCS]
         return array
     }
     

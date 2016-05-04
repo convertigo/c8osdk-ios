@@ -25,7 +25,7 @@ internal class C8oCallTask
     {
         self.c8o = c8o
         self.parameters = parameters
-
+        
         self.c8oResponseListener = c8oResponseListener
         self.c8oExceptionListener = c8oExceptionListener
         self.c8oCallUrl = nil
@@ -74,8 +74,8 @@ internal class C8oCallTask
             var errorC8o : C8oException? = nil
             do{
                 
-                        fullSyncResult = try self.c8o.c8oFullSync!.handleFullSyncRequest(self.parameters, listener: self.c8oResponseListener!)
- 
+                fullSyncResult = try self.c8o.c8oFullSync!.handleFullSyncRequest(self.parameters, listener: self.c8oResponseListener!)
+                
                 return fullSyncResult
             }
             catch let e as C8oException{
@@ -107,7 +107,7 @@ internal class C8oCallTask
             
             /** Local cache */
             
-            //var c8oCallRequestIdentifier : String? = nil
+            var c8oCallRequestIdentifier : String? = nil
             
             // Allows to enable or disable the local cache on a Convertigo requestable, default value is true
             let localCache : C8oLocalCache? = (C8oUtils.getParameterObjectValue(parameters, name: C8oLocalCache.PARAM, useName: false) as! C8oLocalCache?)
@@ -116,41 +116,42 @@ internal class C8oCallTask
             // If the engine parameter for local cache is specified
             if (localCache != nil)
             {
-                print("local cache actif (Le code n'est pas implémenté)")
-                /* // Removes local cache parameters and build the c8o call request identifier
+                //print("local cache actif (Le code n'est pas implémenté)")
+                // Removes local cache parameters and build the c8o call request identifier
                 parameters.removeValueForKey(C8oLocalCache.PARAM)
                 
                 if (localCacheEnabled == localCache!.enabled)
                 {
-                c8oCallRequestIdentifier = C8oUtils.IdentifyC8oCallRequest(parameters, responseType: responseType)
-                
-                if (localCache!.priority.IsAvailable(c8o))
-                {
-                do
-                {
-                var localCacheResponse : C8oLocalCacheResponse = c8o.c8oFullSync.GetResponseFromLocalCache(c8oCallRequestIdentifier)
-                if (!localCacheResponse.Expired)
-                {
-                if (responseType == C8o.RESPONSE_TYPE_XML)
-                {
-                return C8oTranslator.StringToXml(localCacheResponse.Response)
+                    c8oCallRequestIdentifier = C8oUtils.identifyC8oCallRequest(parameters, responseType: responseType)
+                    
+                    if (localCache!.priority!.isAvailable(c8o: c8o))
+                    {
+                        do
+                        {
+                            let localCacheResponse : C8oLocalCacheResponse = try (c8o.c8oFullSync as! C8oFullSyncCbl).getResponseFromLocalCache(c8oCallRequestIdentifier!)!
+                            if (!localCacheResponse.isExpired())
+                            {
+                                if (responseType == C8o.RESPONSE_TYPE_XML)
+                                {
+                                    return C8oTranslator.stringToXml(localCacheResponse.getResponse())
+                                }
+                                else if (responseType == C8o.RESPONSE_TYPE_JSON)
+                                {
+                                    let myJson : C8oJSON = C8oJSON()
+                                    myJson.myJSON = C8oTranslator.stringToJson(localCacheResponse.getResponse())
+                                    return myJson
+                                }
+                            }
+                        }
+                        catch _ as C8oUnavailableLocalCacheException{
+                            // no entry
+                        }
+                    }
                 }
-                else if (responseType == C8o.RESPONSE_TYPE_JSON)
-                {
-                return C8oTranslator.StringToJson(localCacheResponse.Response)
-                }
-                }
-                }
-                catch //(C8oUnavailableLocalCacheException)
-                {
-                // no entry
-                }
-                }
-                }*/
             }
             
             /** Get response */
-        
+            
             parameters[C8o.ENGINE_PARAMETER_DEVICE_UUID] = c8o.deviceUUID
             
             // Build the c8o call URL
@@ -163,6 +164,28 @@ internal class C8oCallTask
             {
                 httpResponseDataError = (c8o.httpInterface?.handleRequest(c8oCallUrl!, parameters: parameters))!
                 if(httpResponseDataError.error != nil){
+                    if (localCacheEnabled)
+                    {
+                        do{
+                            let localCacheResponse : C8oLocalCacheResponse = try (c8o.c8oFullSync as! C8oFullSyncCbl).getResponseFromLocalCache(c8oCallRequestIdentifier!)!
+                            if (!localCacheResponse.isExpired())
+                            {
+                                if (responseType == C8o.RESPONSE_TYPE_XML)
+                                {
+                                    return C8oTranslator.stringToXml(localCacheResponse.getResponse())
+                                }
+                                else if (responseType == C8o.RESPONSE_TYPE_JSON)
+                                {
+                                    let myJson : C8oJSON = C8oJSON()
+                                    myJson.myJSON = C8oTranslator.stringToJson(localCacheResponse.getResponse())
+                                    return myJson
+                                }
+                            }
+                        }
+                        catch _ as C8oUnavailableLocalCacheException{
+                            // no entry
+                        }
+                    }
                     httpResponse = httpResponseDataError.data
                     return C8oException(message: C8oExceptionMessage.handleC8oCallRequest(), exception: httpResponseDataError.error! )
                     
@@ -172,82 +195,55 @@ internal class C8oCallTask
                 }
                 
             }
-            /*catch let e as NSError
-            {
-               if (localCacheEnabled)
-                {
-                    /*do
-                    {
-                        var localCacheResponse : C8oLocalCacheResponse = c8o.c8oFullSync.GetResponseFromLocalCache(c8oCallRequestIdentifier)
-                        if (!localCacheResponse.Expired)
-                        {
-                            if (responseType == C8o.RESPONSE_TYPE_XML)
-                            {
-                                return C8oTranslator.StringToXml(localCacheResponse.Response)
-                            }
-                            else if (responseType == C8o.RESPONSE_TYPE_JSON)
-                            {
-                                return C8oTranslator.StringToJson(localCacheResponse.Response)
-                            }
-                        }
-                    }
-                    catch //(C8oUnavailableLocalCacheException)
-                    {
-                        // no entry
-                    }*/
-                }
-                return C8oException(message: C8oExceptionMessage.handleC8oCallRequest(), exception: e )
-            }*/
             
             
             var response : AnyObject? = nil
-            //var responseString : String? = nil
+            var responseString : String? = nil
             if (c8oResponseListener is C8oResponseXmlListener)
             {
                 
                 response = C8oTranslator.dataToXml(httpResponse!)!
                 if(localCacheEnabled)
                 {
-                    //responseString = (response as! AEXMLDocument).description
+                    responseString = (response as! AEXMLDocument).description
                     
                 }
-               
+                
             }
             else if (c8oResponseListener is C8oResponseJsonListener)
             {
-                //responseString = C8oTranslator.StreamToString(responseStream)
                 let myc8 = C8oJSON()
                 myc8.myJSON = C8oTranslator.dataToJson(httpResponse!)!
                 response = myc8
-
+                
                 
             }
             else
             {
-                //return C8oException("wrong listener")
+                return C8oException(message: "wrong listener")
             }
             
             if (localCacheEnabled)
             {
-                // String responseString = C8oTranslator.StreamToString(responseStream)
-                /*var expirationDate : Int = -1
-                if (localCache!.ttl > 0) {*/
-                //    expirationDate = localCache.ttl + C8oUtils.GetUnixEpochTime(NSDate.Now)
-                //}
-               // var localCacheResponse = C8oLocalCacheResponse(responseString, responseType, expirationDate)
-               // c8o.c8oFullSync.SaveResponseToLocalCache(c8oCallRequestIdentifier, localCacheResponse)
+                //let responseString  = C8oTranslator.StreamToString(responseStream)
+                var expirationDate : Double = -1
+                 if (localCache!.ttl > 0) {
+                    expirationDate = Double(localCache!.ttl) + C8oUtils.getUnixEpochTime()!
+                }
+                 let localCacheResponse = C8oLocalCacheResponse(response: responseString!, responseType: responseType, expirationDate: expirationDate)
+                 try! (c8o.c8oFullSync as! C8oFullSyncCbl).saveResponseToLocalCache(c8oCallRequestIdentifier!, localCacheResponse: localCacheResponse)
             }
             
             return response
             
-            }
-        return nil
         }
+        return nil
+    }
     
     
     internal func handleResponse(result :AnyObject?)->Void {
         do{
-        
+            
             if (result == nil)
             {
                 return
@@ -267,8 +263,8 @@ internal class C8oCallTask
             }
             else {
                 if (result is C8oJSON) {
-                c8o.c8oLogger!.logC8oCallJSONResponse((result as!C8oJSON).myJSON! , url: c8oCallUrl, parameters: parameters)
-                (c8oResponseListener as! C8oResponseJsonListener).onJsonResponse(Pair(key: (result as!C8oJSON).myJSON!, value: parameters))
+                    c8o.c8oLogger!.logC8oCallJSONResponse((result as!C8oJSON).myJSON! , url: c8oCallUrl, parameters: parameters)
+                    (c8oResponseListener as! C8oResponseJsonListener).onJsonResponse(Pair(key: (result as!C8oJSON).myJSON!, value: parameters))
                 }
                 else{
                     if result is C8oException{
@@ -282,9 +278,9 @@ internal class C8oCallTask
             
         }
         /*catch //(Exception e)
-        {
-            //c8o.HandleCallException(c8oExceptionListener, parameters, e)
-        }*/
+         {
+         //c8o.HandleCallException(c8oExceptionListener, parameters, e)
+         }*/
     }
     
 }

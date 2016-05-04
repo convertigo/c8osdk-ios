@@ -59,7 +59,7 @@ public class C8oLogger : NSObject
         
         let currentTime = NSDate()
         startTimeRemoteLog = currentTime
-        uidRemoteLogs = C8oTranslator.doubleToHexString(C8oUtils.getUnixEpochTime(currentTime)!)
+        uidRemoteLogs = C8oTranslator.doubleToHexString(C8oUtils.getUnixEpochTime()!)
         let envJSON : JSON = ["uid" : uidRemoteLogs!, "uuid" : c8o.deviceUUID, "project" : c8o.endpointProject]
         env = String(envJSON)
     }
