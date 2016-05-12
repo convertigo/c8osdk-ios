@@ -35,7 +35,8 @@
 		626849431C7B4F7400872D34 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2BF71C635D02009E9F7E /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		626849461C7B4F7A00872D34 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6222327B1C651257001D2EA1 /* SwiftyJSON.framework */; };
 		626849471C7B4F7A00872D34 /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6222327B1C651257001D2EA1 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		62CD2A4B1C6207AD009E9F7E /* C8oSDKiOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 62CD2A4A1C6207AD009E9F7E /* C8oSDKiOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		626CC78B1CE4BE97002ED698 /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 626CC78A1CE4BE97002ED698 /* JavaScriptCore.framework */; };
+		626CC7BF1CE4CAD6002ED698 /* libCBLJSViewCompiler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 626CC7941CE4C5B4002ED698 /* libCBLJSViewCompiler.a */; };
 		62CD2A521C6207AD009E9F7E /* C8o.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2A471C6207AD009E9F7E /* C8o.framework */; };
 		62CD2A571C6207AD009E9F7E /* C8oSDKiOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CD2A561C6207AD009E9F7E /* C8oSDKiOSTests.swift */; };
 		62CD2A681C620960009E9F7E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CD2A671C620960009E9F7E /* AppDelegate.swift */; };
@@ -198,8 +199,50 @@
 		623C74471C86DBB600E691B0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		623C744A1C86DBB600E691B0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		623C744C1C86DBB600E691B0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		626CC78A1CE4BE97002ED698 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		626CC7931CE4C5B4002ED698 /* CBLRegisterJSViewCompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBLRegisterJSViewCompiler.h; path = ../ObjC/CBLRegisterJSViewCompiler.h; sourceTree = "<group>"; };
+		626CC7941CE4C5B4002ED698 /* libCBLJSViewCompiler.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCBLJSViewCompiler.a; path = ../ObjC/libCBLJSViewCompiler.a; sourceTree = "<group>"; };
+		626CC7971CE4C8A4002ED698 /* AlamofireSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamofireSync.swift; sourceTree = "<group>"; };
+		626CC7981CE4C8A4002ED698 /* C8o.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8o.swift; sourceTree = "<group>"; };
+		626CC7991CE4C8A4002ED698 /* C8oBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oBase.swift; sourceTree = "<group>"; };
+		626CC79A1CE4C8A4002ED698 /* C8oCallTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oCallTask.swift; sourceTree = "<group>"; };
+		626CC79B1CE4C8A4002ED698 /* C8oCookieStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oCookieStorage.swift; sourceTree = "<group>"; };
+		626CC79C1CE4C8A4002ED698 /* C8oExceptionListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oExceptionListener.swift; sourceTree = "<group>"; };
+		626CC79D1CE4C8A4002ED698 /* C8oExceptionMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oExceptionMessage.swift; sourceTree = "<group>"; };
+		626CC79E1CE4C8A4002ED698 /* C8oFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oFileManager.swift; sourceTree = "<group>"; };
+		626CC79F1CE4C8A4002ED698 /* C8oFileTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oFileTransfer.swift; sourceTree = "<group>"; };
+		626CC7A01CE4C8A4002ED698 /* C8oFileTransferStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oFileTransferStatus.swift; sourceTree = "<group>"; };
+		626CC7A11CE4C8A4002ED698 /* C8oFullSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oFullSync.swift; sourceTree = "<group>"; };
+		626CC7A21CE4C8A4002ED698 /* C8oFullSyncCbl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oFullSyncCbl.swift; sourceTree = "<group>"; };
+		626CC7A31CE4C8A4002ED698 /* C8oFullSyncDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oFullSyncDatabase.swift; sourceTree = "<group>"; };
+		626CC7A41CE4C8A4002ED698 /* C8oFullSyncHttp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oFullSyncHttp.swift; sourceTree = "<group>"; };
+		626CC7A51CE4C8A4002ED698 /* C8oFullSyncTranslator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oFullSyncTranslator.swift; sourceTree = "<group>"; };
+		626CC7A61CE4C8A4002ED698 /* C8oHttpInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oHttpInterface.swift; sourceTree = "<group>"; };
+		626CC7A71CE4C8A4002ED698 /* C8oLocalCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oLocalCache.swift; sourceTree = "<group>"; };
+		626CC7A81CE4C8A4002ED698 /* C8oLocalCacheResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oLocalCacheResponse.swift; sourceTree = "<group>"; };
+		626CC7A91CE4C8A4002ED698 /* C8oLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oLogger.swift; sourceTree = "<group>"; };
+		626CC7AA1CE4C8A4002ED698 /* C8oProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oProgress.swift; sourceTree = "<group>"; };
+		626CC7AB1CE4C8A4002ED698 /* C8oPromise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oPromise.swift; sourceTree = "<group>"; };
+		626CC7AC1CE4C8A4002ED698 /* C8oPromiseFailSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oPromiseFailSync.swift; sourceTree = "<group>"; };
+		626CC7AD1CE4C8A4002ED698 /* C8oPromiseSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oPromiseSync.swift; sourceTree = "<group>"; };
+		626CC7AE1CE4C8A4002ED698 /* C8oResponseCblListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oResponseCblListener.swift; sourceTree = "<group>"; };
+		626CC7AF1CE4C8A4002ED698 /* C8oResponseJsonListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oResponseJsonListener.swift; sourceTree = "<group>"; };
+		626CC7B01CE4C8A4002ED698 /* C8oResponseListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oResponseListener.swift; sourceTree = "<group>"; };
+		626CC7B11CE4C8A4002ED698 /* C8oResponseProgressListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oResponseProgressListener.swift; sourceTree = "<group>"; };
+		626CC7B21CE4C8A4002ED698 /* C8oResponseXmlListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oResponseXmlListener.swift; sourceTree = "<group>"; };
+		626CC7B31CE4C8A4002ED698 /* C8oSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oSettings.swift; sourceTree = "<group>"; };
+		626CC7B41CE4C8A4002ED698 /* C8OTranslator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8OTranslator.swift; sourceTree = "<group>"; };
+		626CC7B51CE4C8A4002ED698 /* C8oUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oUtils.swift; sourceTree = "<group>"; };
+		626CC7B61CE4C8A4002ED698 /* Couchbase-Lite-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Couchbase-Lite-Bridging-Header.h"; sourceTree = "<group>"; };
+		626CC7B71CE4C8A4002ED698 /* Delegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delegates.swift; sourceTree = "<group>"; };
+		626CC7B81CE4C8A4002ED698 /* Exceptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exceptions.swift; sourceTree = "<group>"; };
+		626CC7B91CE4C8A4002ED698 /* FullSyncEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullSyncEnum.swift; sourceTree = "<group>"; };
+		626CC7BA1CE4C8A4002ED698 /* FullSyncRequestable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullSyncRequestable.swift; sourceTree = "<group>"; };
+		626CC7BB1CE4C8A4002ED698 /* FullSyncResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullSyncResponse.swift; sourceTree = "<group>"; };
+		626CC7BC1CE4C8A4002ED698 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		626CC7BD1CE4C8A4002ED698 /* Queue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
+		626CC7BE1CE4C8A4002ED698 /* VoidResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoidResponse.swift; sourceTree = "<group>"; };
 		62CD2A471C6207AD009E9F7E /* C8o.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = C8o.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		62CD2A4A1C6207AD009E9F7E /* C8oSDKiOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = C8oSDKiOS.h; sourceTree = "<group>"; };
 		62CD2A4C1C6207AD009E9F7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		62CD2A511C6207AD009E9F7E /* C8oSDKiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = C8oSDKiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		62CD2A561C6207AD009E9F7E /* C8oSDKiOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oSDKiOSTests.swift; sourceTree = "<group>"; };
@@ -335,6 +378,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				626CC78B1CE4BE97002ED698 /* JavaScriptCore.framework in Frameworks */,
 				6268493F1C7B4A6B00872D34 /* Alamofire.framework in Frameworks */,
 				62CD2C0C1C63879F009E9F7E /* libsqlite3.dylib in Frameworks */,
 				62CD2C0B1C63877C009E9F7E /* libz.1.dylib in Frameworks */,
@@ -342,6 +386,7 @@
 				62CD2C091C638633009E9F7E /* CFNetwork.framework in Frameworks */,
 				62CD2C081C638628009E9F7E /* SystemConfiguration.framework in Frameworks */,
 				FF7F496186E3925E683B11CC /* Pods_C8oSDKiOS.framework in Frameworks */,
+				626CC7BF1CE4CAD6002ED698 /* libCBLJSViewCompiler.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,6 +428,8 @@
 		215A697CF11F1CA08CE2E31B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				626CC7961CE4C8A4002ED698 /* C8oSDKiOS */,
+				626CC78A1CE4BE97002ED698 /* JavaScriptCore.framework */,
 				376688371CBE49D5004FD9A2 /* Pods */,
 				62CD2BA01C635D02009E9F7E /* Pods */,
 				62CD2B591C634FBA009E9F7E /* libsqlite3.dylib */,
@@ -424,6 +471,53 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		626CC7961CE4C8A4002ED698 /* C8oSDKiOS */ = {
+			isa = PBXGroup;
+			children = (
+				626CC7971CE4C8A4002ED698 /* AlamofireSync.swift */,
+				626CC7981CE4C8A4002ED698 /* C8o.swift */,
+				626CC7991CE4C8A4002ED698 /* C8oBase.swift */,
+				626CC79A1CE4C8A4002ED698 /* C8oCallTask.swift */,
+				626CC79B1CE4C8A4002ED698 /* C8oCookieStorage.swift */,
+				626CC79C1CE4C8A4002ED698 /* C8oExceptionListener.swift */,
+				626CC79D1CE4C8A4002ED698 /* C8oExceptionMessage.swift */,
+				626CC79E1CE4C8A4002ED698 /* C8oFileManager.swift */,
+				626CC79F1CE4C8A4002ED698 /* C8oFileTransfer.swift */,
+				626CC7A01CE4C8A4002ED698 /* C8oFileTransferStatus.swift */,
+				626CC7A11CE4C8A4002ED698 /* C8oFullSync.swift */,
+				626CC7A21CE4C8A4002ED698 /* C8oFullSyncCbl.swift */,
+				626CC7A31CE4C8A4002ED698 /* C8oFullSyncDatabase.swift */,
+				626CC7A41CE4C8A4002ED698 /* C8oFullSyncHttp.swift */,
+				626CC7A51CE4C8A4002ED698 /* C8oFullSyncTranslator.swift */,
+				626CC7A61CE4C8A4002ED698 /* C8oHttpInterface.swift */,
+				626CC7A71CE4C8A4002ED698 /* C8oLocalCache.swift */,
+				626CC7A81CE4C8A4002ED698 /* C8oLocalCacheResponse.swift */,
+				626CC7A91CE4C8A4002ED698 /* C8oLogger.swift */,
+				626CC7AA1CE4C8A4002ED698 /* C8oProgress.swift */,
+				626CC7AB1CE4C8A4002ED698 /* C8oPromise.swift */,
+				626CC7AC1CE4C8A4002ED698 /* C8oPromiseFailSync.swift */,
+				626CC7AD1CE4C8A4002ED698 /* C8oPromiseSync.swift */,
+				626CC7AE1CE4C8A4002ED698 /* C8oResponseCblListener.swift */,
+				626CC7AF1CE4C8A4002ED698 /* C8oResponseJsonListener.swift */,
+				626CC7B01CE4C8A4002ED698 /* C8oResponseListener.swift */,
+				626CC7B11CE4C8A4002ED698 /* C8oResponseProgressListener.swift */,
+				626CC7B21CE4C8A4002ED698 /* C8oResponseXmlListener.swift */,
+				626CC7B31CE4C8A4002ED698 /* C8oSettings.swift */,
+				626CC7B41CE4C8A4002ED698 /* C8OTranslator.swift */,
+				626CC7B51CE4C8A4002ED698 /* C8oUtils.swift */,
+				626CC7B61CE4C8A4002ED698 /* Couchbase-Lite-Bridging-Header.h */,
+				626CC7B71CE4C8A4002ED698 /* Delegates.swift */,
+				626CC7B81CE4C8A4002ED698 /* Exceptions.swift */,
+				626CC7B91CE4C8A4002ED698 /* FullSyncEnum.swift */,
+				626CC7BA1CE4C8A4002ED698 /* FullSyncRequestable.swift */,
+				626CC7BB1CE4C8A4002ED698 /* FullSyncResponse.swift */,
+				626CC7BC1CE4C8A4002ED698 /* Info.plist */,
+				626CC7BD1CE4C8A4002ED698 /* Queue.swift */,
+				626CC7BE1CE4C8A4002ED698 /* VoidResponse.swift */,
+			);
+			path = C8oSDKiOS;
+			sourceTree = "<group>";
+		};
 		62CD2A3D1C6207AC009E9F7E = {
 			isa = PBXGroup;
 			children = (
@@ -460,7 +554,6 @@
 				62EDE92B1C762CEE00D9213F /* Internal */,
 				6222327E1C6B29E2001D2EA1 /* C8oBase.swift */,
 				622CA1721CAEB8340074F704 /* C8o.swift */,
-				62CD2A4A1C6207AD009E9F7E /* C8oSDKiOS.h */,
 				622232851C6B2A00001D2EA1 /* Queue.swift */,
 				62CD2A4C1C6207AD009E9F7E /* Info.plist */,
 				62EDE90E1C75C5BD00D9213F /* C8oLocalCache.swift */,
@@ -725,6 +818,8 @@
 				620F6D151C776E0500683D0F /* C8OTranslator.swift */,
 				620F6D171C7771B300683D0F /* C8oUtils.swift */,
 				37F523B31C9ABE19007952C3 /* C8oCookieStorage.swift */,
+				626CC7931CE4C5B4002ED698 /* CBLRegisterJSViewCompiler.h */,
+				626CC7941CE4C5B4002ED698 /* libCBLJSViewCompiler.a */,
 			);
 			name = Internal;
 			sourceTree = "<group>";
@@ -752,7 +847,6 @@
 				62CD2B261C625556009E9F7E /* Security.framework in Headers */,
 				62CD2B231C6254E4009E9F7E /* CouchbaseLite.framework in Headers */,
 				3766883B1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h in Headers */,
-				62CD2A4B1C6207AD009E9F7E /* C8oSDKiOS.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1214,6 +1308,10 @@
 				INFOPLIST_FILE = ObjC/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.ObjC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1226,6 +1324,10 @@
 				INFOPLIST_FILE = ObjC/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.ObjC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1324,6 +1426,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7CE1A3C0E60462F140575CFB /* Pods-C8oSDKiOS.debug.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
@@ -1339,6 +1442,11 @@
 				INFOPLIST_FILE = C8oSDKiOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/C8oSDKiOS",
+					"$(PROJECT_DIR)/ObjC",
+				);
 				MODULEMAP_FILE = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1361,6 +1469,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F1F795A1F44565BEA6556CA1 /* Pods-C8oSDKiOS.release.xcconfig */;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
@@ -1377,6 +1486,11 @@
 				INFOPLIST_FILE = C8oSDKiOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/C8oSDKiOS",
+					"$(PROJECT_DIR)/ObjC",
+				);
 				MODULEMAP_FILE = "";
 				OTHER_LDFLAGS = (
 					"$(inherited)",

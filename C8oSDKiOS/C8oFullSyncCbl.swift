@@ -181,30 +181,36 @@ class C8oFullSyncCbl : C8oFullSync{
     func handleGetDocumentRequest(fullSyncDatatbaseName: String, docid: String, parameters: Dictionary<String, AnyObject>)throws -> CBLDocument {
         var fullSyncDatabase : C8oFullSyncDatabase? = nil
         var document : CBLDocument?
+        var exep : Bool = false
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             fullSyncDatabase = try! self.getOrCreateFullSyncDatabase(fullSyncDatatbaseName)
             
             // Gets the document from the local database
             
             document = fullSyncDatabase!.getDatabase()?.existingDocumentWithID(docid)
-        }
-        // If there are attachments, compute for each one the url to local storage and add it to the attachment descriptor
-        if (document != nil) {
             
-            let attachments : Dictionary<String, AnyObject>? = document?.propertyForKey(C8oFullSync.FULL_SYNC__ATTACHMENTS) as?  Dictionary<String, AnyObject>
-            //let att = document?.properties
-            
-            if (attachments != nil) {
-                let rev : CBLRevision = (document?.currentRevision)!
+            // If there are attachments, compute for each one the url to local storage and add it to the attachment descriptor
+            if (document != nil) {
                 
-                for attachmentName in  (attachments?.keys)!{
-                    let attachment : CBLAttachment  = rev.attachmentNamed(attachmentName)!
-                    let url : NSURL  = attachment.contentURL!
-                    var attachmentDesc : Dictionary<String, AnyObject>? = (attachments![attachmentName] as? Dictionary<String, AnyObject>)!
-                    attachmentDesc![C8oFullSyncCbl.ATTACHMENT_PROPERTY_KEY_CONTENT_URL] =  String(url).stringByRemovingPercentEncoding
+                let attachments : Dictionary<String, AnyObject>? = document?.propertyForKey(C8oFullSync.FULL_SYNC__ATTACHMENTS) as?  Dictionary<String, AnyObject>
+                //let att = document?.properties
+                
+                if (attachments != nil) {
+                    let rev : CBLRevision = (document?.currentRevision)!
+                    
+                    for attachmentName in  (attachments?.keys)!{
+                        let attachment : CBLAttachment  = rev.attachmentNamed(attachmentName)!
+                        let url : NSURL  = attachment.contentURL!
+                        var attachmentDesc : Dictionary<String, AnyObject>? = (attachments![attachmentName] as? Dictionary<String, AnyObject>)!
+                        attachmentDesc![C8oFullSyncCbl.ATTACHMENT_PROPERTY_KEY_CONTENT_URL] =  String(url).stringByRemovingPercentEncoding
+                    }
                 }
+            } else {
+                exep = true
+                //throw C8oRessourceNotFoundException(message: C8oExceptionMessage.ressourceNotFound("requested document \"" + docid + "\""))
             }
-        } else {
+        }
+        if(exep){
             throw C8oRessourceNotFoundException(message: C8oExceptionMessage.ressourceNotFound("requested document \"" + docid + "\""))
         }
         return document!
@@ -290,16 +296,16 @@ class C8oFullSyncCbl : C8oFullSync{
                     var count = 0
                     objectParameterValue = objectParameterValue.description
                     /*let json = JSON(objectParameterValue)
-                    if let dataFromString = objectParameterValue.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
-                        let json = JSON(data: dataFromString)
-                        for (key, value) : (String, JSON) in json {
-                            objectParameterValueT[key] = value.object
-                            count += 1
-                        }
-                        if(count > 0){
-                            objectParameterValue = objectParameterValueT
-                        }
-                    }*/
+                     if let dataFromString = objectParameterValue.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
+                     let json = JSON(data: dataFromString)
+                     for (key, value) : (String, JSON) in json {
+                     objectParameterValueT[key] = value.object
+                     count += 1
+                     }
+                     if(count > 0){
+                     objectParameterValue = objectParameterValueT
+                     }
+                     }*/
                     
                     
                     
@@ -442,11 +448,17 @@ class C8oFullSyncCbl : C8oFullSync{
         }
         
         // Runs the query
-        let result : CBLQueryEnumerator
-        do {
-            result = try query.run()
-        } catch {
-            //TODO...
+        var bool = false
+        var result : CBLQueryEnumerator? = nil
+        (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+            do {
+                result = try query.run()
+            } catch {
+                //TODO...
+                bool = true
+            }
+        }
+        if(bool){
             throw C8oException(message: C8oExceptionMessage.couchRequestGetView())
         }
         return result
@@ -519,7 +531,7 @@ class C8oFullSyncCbl : C8oFullSync{
         return FullSyncDefaultResponse(operationStatus: true)
     }
     
-    private func compileView(db : CBLDatabase, viewName : String, viewProps : Dictionary<String, NSObject>?)->CBLView?{
+    private func compileView (db : CBLDatabase, viewName : String, viewProps : Dictionary<String, NSObject>?)->CBLView?{
         var language : String? = viewProps!["language"] as? String
         if(language == nil){
             language = "javascript"
@@ -531,8 +543,11 @@ class C8oFullSyncCbl : C8oFullSync{
         
         var mapBlock : CBLMapBlock? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+            let a = CBLView.compiler()
+            let b = a != nil
+            CBLRegisterJSViewCompiler()
+            mapBlock = CBLView.compiler()?.compileMapFunction(mapSource!, language: language!)
             
-            mapBlock = CBLView.compiler()!.compileMapFunction(mapSource!, language: language!)
         }
         
         if(mapBlock == nil){
@@ -542,16 +557,22 @@ class C8oFullSyncCbl : C8oFullSync{
         let reduceSource : String? = viewProps!["reduce"] as? String
         var reduceBlock : CBLReduceBlock? = nil
         if(reduceSource != nil){
-            reduceBlock = CBLView.compiler()!.compileReduceFunction(reduceSource!, language: language!)
+            (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+                reduceBlock = CBLView.compiler()!.compileReduceFunction(reduceSource!, language: language!)
+            }
             if(reduceBlock == nil){
                 return nil
             }
         }
-        
-        let view : CBLView = db.viewNamed(viewName)
-        view.setMapBlock(mapBlock!, reduceBlock: reduceBlock, version: "1")
+        var view : CBLView?
+        (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+            view = db.viewNamed(viewName)
+            
+            view!.setMapBlock(mapBlock!, reduceBlock: reduceBlock, version: "1")
+        }
         let collation : String? = viewProps!["collation"] as? String
         if("raw" == collation){
+            //view.
             //TODO....
             fatalError("TODO ... collation not found for the moment within IOS")
         }
@@ -563,14 +584,14 @@ class C8oFullSyncCbl : C8oFullSync{
         var view : CBLView? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             view = database.existingViewNamed(tdViewName)
+            
         }
-        
         if(view == nil || view!.mapBlock == nil){
             //TODO...
             //fatalError("must be implemented")
             var rev : CBLRevision? = nil
             (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
-                rev = database.documentWithID(String(format: "_design/%@", ddocName))?.currentRevision
+                rev = database.existingDocumentWithID(String(format: "_design/%@", ddocName))?.currentRevision
             }
             
             if (rev == nil){
@@ -583,7 +604,7 @@ class C8oFullSyncCbl : C8oFullSync{
                 return nil
             }
             let b = database.description
-            view = compileView(database, viewName: tdViewName, viewProps: viewProps)
+            view = self.compileView(database, viewName: tdViewName, viewProps: viewProps)
             if(view == nil){
                 return nil
             }
@@ -678,7 +699,7 @@ class C8oFullSyncCbl : C8oFullSync{
         } catch{
             throw C8oException(message: C8oExceptionMessage.fullSyncGetOrCreateDatabase(databaseName))
         }
-        return (c8oFullSyncDatabase.getDatabase()?.documentWithID(documentId))!
+        return (c8oFullSyncDatabase.getDatabase()?.existingDocumentWithID(documentId))!
     }
     
     internal static func overrideDocument(document : CBLDocument, properties : Dictionary<String, NSObject>)throws{
@@ -745,7 +766,7 @@ class C8oFullSyncCbl : C8oFullSync{
     func saveResponseToLocalCache(c8oCalRequestIdentifier : String, localCacheResponse : C8oLocalCacheResponse) throws{
         
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(C8o.LOCAL_CACHE_DATABASE_NAME)
-        let localCacheDocument : CBLDocument =  (fullSyncDatabase.getDatabase()?.documentWithID(c8oCalRequestIdentifier))!
+        let localCacheDocument : CBLDocument =  (fullSyncDatabase.getDatabase()?.existingDocumentWithID(c8oCalRequestIdentifier))!
         var properties : Dictionary<String, NSObject> = Dictionary<String, NSObject>()
         properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE] =  localCacheResponse.getResponse()
         properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE_TYPE] = localCacheResponse.getResponseType()

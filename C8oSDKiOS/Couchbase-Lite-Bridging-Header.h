@@ -2,5 +2,5 @@
 #define Couchbase_Lite_Bridging_Header_h
 
 #import <CouchbaseLite/CouchbaseLite.h>
-
+#import "CBLRegisterJSViewCompiler.h"
 #endif

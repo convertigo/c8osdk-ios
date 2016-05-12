@@ -1231,7 +1231,7 @@ class C8oSDKiOSTests: XCTestCase {
         
     }
     
-    func atestC8oFsReplicatePullAnoAndAuthView(){
+    func testC8oFsReplicatePullAnoAndAuthView(){
         let c8o : C8o = try! self.Get(.C8O_FS_PULL)!
         let condition : NSCondition = NSCondition()
         condition.lock()
@@ -1264,6 +1264,9 @@ class C8oSDKiOSTests: XCTestCase {
             value = json["rows"][0]["value"].doubleValue
             XCTAssertEqual(405.0, value as? Double)
             json = try! c8o.callJson(".LoginTesting")!.sync()!
+            value = json["document"]["authenticatedUserID"].stringValue
+            XCTAssertEqual("testing_user", value as? String)
+            json = try! c8o.callJson("fs://.replicate_pull")!.sync()!
             XCTAssertTrue(json["ok"].boolValue)
             json = try! c8o.callJson("fs://.view",
                                      parameters: "ddoc", "design",
@@ -1528,17 +1531,22 @@ class C8oSDKiOSTests: XCTestCase {
             value = json["_id"].stringValue
             XCTAssertEqual("def", value as? String)
             json.dictionaryObject!["custom"] = id
+            print(json.description)
             json = try! c8o.callJson("fs://.post", parameters: json)!.sync()!
             XCTAssertTrue(json["ok"].boolValue)
             json = try! c8o.callJson(".qa_fs_push.PostDocument", parameters: "_id", "ghi", "custom", id)!.sync()!
             XCTAssertTrue(json["document"]["couchdb_output"]["ok"].boolValue)
-            sleep(3)
+            sleep(2)
+            let b = 10
+            sleep(2)
             json = try! c8o.callJson("fs://.get", parameters: "docid", "ghi")!.sync()!
             print(json.description)
             value = json["custom"].stringValue
+            
             XCTAssertEqual(id, value as? String)
             json = try! c8o.callJson(".qa_fs_push.GetDocument", parameters: "_use_docid", "def")!.sync()!
             value = json["document"]["couchdb_output"]["custom"].stringValue
+            print(json["document"].description)
             XCTAssertEqual(id, value as? String)
         }
         catch{
@@ -1546,6 +1554,7 @@ class C8oSDKiOSTests: XCTestCase {
         }
         try! c8o.callJson(".LogoutTesting")!.sync()!
     }
+    
     func testC8oLocalCacheXmlPriorityLocal(){
         let c8o : C8o = try! self.Get(.C8O_LC)!
         let id : String = "C8oFsReplidateFormattercateSyncContinuousProgress-" + String(NSDate().timeIntervalSince1970 * 1000)

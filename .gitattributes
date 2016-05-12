@@ -51,7 +51,6 @@ C8oSDKiOS/C8oResponseJsonListener.swift -text
 C8oSDKiOS/C8oResponseListener.swift -text
 C8oSDKiOS/C8oResponseProgressListener.swift -text
 C8oSDKiOS/C8oResponseXmlListener.swift -text
-C8oSDKiOS/C8oSDKiOS.h -text
 C8oSDKiOS/C8oSettings.swift -text
 C8oSDKiOS/C8oUtils.swift -text
 C8oSDKiOS/Couchbase-Lite-Bridging-Header.h -text
@@ -71,9 +70,11 @@ ObjC/AppDelegate.m -text
 ObjC/Assets.xcassets/AppIcon.appiconset/Contents.json -text
 ObjC/Base.lproj/LaunchScreen.storyboard -text
 ObjC/Base.lproj/Main.storyboard -text
+ObjC/CBLRegisterJSViewCompiler.h -text
 ObjC/Info.plist -text
 ObjC/ViewController.h -text
 ObjC/ViewController.m -text
+ObjC/libCBLJSViewCompiler.a -text
 ObjC/main.m -text
 /PodFile -text
 Pods/Target[!!-~]Support[!!-~]Files/Pods/Pods.debug.xcconfig -text
