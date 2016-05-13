@@ -76,7 +76,7 @@ public class C8o : C8oBase {
      */
     public static func getSdkVersion()-> String
     {
-        return "2.0.0"
+        return "2.0.4"
     }
     
     /** Attributes */

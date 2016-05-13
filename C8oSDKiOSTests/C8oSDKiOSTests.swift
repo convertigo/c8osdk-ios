@@ -1459,7 +1459,7 @@ class C8oSDKiOSTests: XCTestCase {
     }
     
     func testC8oFsReplicateSyncContinuousProgress(){
-
+        
         let c8o : C8o = try! self.Get(.C8O_FS_PUSH)!
         let condition : NSCondition = NSCondition()
         condition.lock()
@@ -1483,30 +1483,32 @@ class C8oSDKiOSTests: XCTestCase {
             var firstPull : [String?] = [nil]
             var lastPull : [String?] = [nil]
             var livePull : [String?] = [nil]
-            json = try! c8o.callJson("fs://.sync", parameters: "continuous", true)!.progress({ (progress) in
-                if(progress.continuous){
-                    if(progress.push){
-                        livePush[0] = progress.description
-                    }
-                    if(progress.pull){
-                        livePull[0] = progress.description
-                    }
-                }
-                else{
-                    if(progress.push){
-                        if(firstPush[0] == nil){
-                            firstPush[0] = progress.description
+                
+                json = try! c8o.callJson("fs://.sync", parameters: "continuous", true)!.progress({ (progress) in
+                    if(progress.continuous){
+                        if(progress.push){
+                            livePush[0] = progress.description
                         }
-                        lastPush[0] = progress.description
-                    }
-                    if(progress.pull){
-                        if(firstPull[0] == nil){
-                            firstPull[0] = progress.description
+                        if(progress.pull){
+                            livePull[0] = progress.description
                         }
-                        lastPull[0] = progress.description
                     }
-                }
-            }).sync()!
+                    else{
+                        if(progress.push){
+                            if(firstPush[0] == nil){
+                                firstPush[0] = progress.description
+                            }
+                            lastPush[0] = progress.description
+                        }
+                        if(progress.pull){
+                            if(firstPull[0] == nil){
+                                firstPull[0] = progress.description
+                            }
+                            lastPull[0] = progress.description
+                        }
+                    }
+                }).sync()!
+            
             XCTAssertTrue(json["ok"].boolValue)
             XCTAssertEqual(firstPush[0], "push: 0/0 (running)")
             var range = NSMakeRange(0, (lastPush[0] as String!).characters.count)
@@ -1516,7 +1518,7 @@ class C8oSDKiOSTests: XCTestCase {
             range = NSMakeRange(0, (lastPull[0] as String!).characters.count)
             regexV = try! NSRegularExpression(pattern: "pull: \\d+/\\d+ \\(done\\)",options: []).matchesInString(lastPull[0]!, options: [], range: range)
             XCTAssertTrue(regexV.first != nil, "pull: \\d+/\\d+ \\(done\\)")
-
+            
             json = try! c8o.callJson(".qa_fs_push.AllDocs",
                                      parameters: "startkey", id,
                                      "endkey", id + "z"
@@ -1627,15 +1629,15 @@ class C8oSDKiOSTests: XCTestCase {
     
     //TODO...
     /*
-    func testC8oSslValid(){
+     func testC8oSslValid(){
      
-    }
-    func testC8oSslTrustAllClientFail(){
-        
-    }
-    func testC8oSslTrustAllClientOk(){
-        
-    }*/
+     }
+     func testC8oSslTrustAllClientFail(){
+     
+     }
+     func testC8oSslTrustAllClientOk(){
+     
+     }*/
     
     func testC8oWithTimeout(){
         let c8o : C8o = try! C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: C8oSettings().setTimeout(1000))

@@ -111,15 +111,16 @@ public class C8oFullSyncDatabase : NSObject {
     }
     
     private func startReplication(fullSyncReplication : FullSyncReplication, parameters : Dictionary<String, AnyObject>, c8oResponseListener : C8oResponseListener?) throws {
-        var continious : Bool = false
+        var continuous : Bool = false
         var cancel : Bool = false
         
-        if let _ = parameters["continious"]{
-            if(String(parameters["continious"]).caseInsensitiveCompare("true") == NSComparisonResult.OrderedSame){
-                continious = true
+        if let _ = parameters["continuous"]{
+            //if(String(parameters["continuous"]).caseInsensitiveCompare("true") == NSComparisonResult.OrderedSame){
+            if(parameters["continuous"] as! Bool == true){
+                continuous = true
             }
             else{
-                continious = false
+                continuous = false
             }
         }
         
@@ -212,7 +213,7 @@ public class C8oFullSyncDatabase : NSObject {
         condition.unlock()
         
         
-        if(continious){
+        if(continuous){
             progress = _progress[0]
             let lastCurrent : Int = progress.current
             var stat = [0]

@@ -14,5 +14,5 @@ public protocol C8oResponseCblListener : C8oResponseListener {
     
     func onQueryEnumeratorResponse(queryEnumerator : CBLQueryEnumerator, requestParameters : Dictionary<String, NSObject>)
     
-    //func onReplicationChangeEventResponse(changeEvent : CBLQuery.ChangeDelegate, requestParameters : Dictionary<String, NSObject>)
+    //func onReplicationChangeEventResponse(changeEvent : , requestParameters : Dictionary<String, NSObject>)
 }
