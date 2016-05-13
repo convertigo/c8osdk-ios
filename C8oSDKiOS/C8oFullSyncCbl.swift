@@ -152,8 +152,7 @@ class C8oFullSyncCbl : C8oFullSync{
                 return maVar
             }
             else{
-                //throw
-                fatalError("must be implemented")
+                throw C8oException(message: C8oExceptionMessage.illegalArgumentIncompatibleListener(String(listener), responseType: String(response)))
             }
         }
         else if(listener is C8oResponseCblListener){
@@ -161,14 +160,12 @@ class C8oFullSyncCbl : C8oFullSync{
                 return response
             }
             else{
-                //throw
-                fatalError("must be implemented")
+                throw C8oException(message: C8oExceptionMessage.illegalArgumentIncompatibleListener(String(listener), responseType: String(response)))
             }
             
         }
         else{
-            //throw
-            fatalError("must be implemented")
+            throw C8oException(message: C8oExceptionMessage.unhandledListenerType(String(listener)))
             
         }
         //TO be removen
@@ -587,8 +584,6 @@ class C8oFullSyncCbl : C8oFullSync{
             
         }
         if(view == nil || view!.mapBlock == nil){
-            //TODO...
-            //fatalError("must be implemented")
             var rev : CBLRevision? = nil
             (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
                 rev = database.existingDocumentWithID(String(format: "_design/%@", ddocName))?.currentRevision
@@ -722,7 +717,7 @@ class C8oFullSyncCbl : C8oFullSync{
         let localCacheDocument : CBLDocument? = fullSyncDatabase.getDatabase()?.existingDocumentWithID(c8oCallRequestIdentifier)
         
         if(localCacheDocument == nil){
-            fatalError("todo")
+            throw C8oException(message: C8oExceptionMessage.localCacheDocumentJustCreated())
         }
         
         let response  = localCacheDocument?.propertyForKey(C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE)
