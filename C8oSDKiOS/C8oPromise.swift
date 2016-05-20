@@ -251,14 +251,17 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
                     condition.lock()
                     do
                     {
-                        try! self.c8oProgress?.key(progress)
+                        try self.c8oProgress?.key(progress)
                         condition.signal()
                     }
-                    /*catch let e as C8oException
+                    catch let e as C8oException
                     {
                         self.onFailure(e, parameters: [C8o.ENGINE_PARAMETER_PROGRESS : progress ])
                         condition.signal()
-                    }*/
+                    }
+                    catch{
+                        
+                    }
                     
                     condition.unlock()
                 }
@@ -296,13 +299,16 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
                     
                     do
                     {
-                        try! self.c8oFail?.key(exception!, parameters!)
+                        try self.c8oFail?.key(exception!, parameters!)
                     }
-                    /*catch let e as C8oException
+                    catch let e as C8oException
                     {
                         self.lastFailure = e
                         condition.signal()
-                    }*/
+                    }
+                    catch{
+                        
+                    }
                     condition.signal()
                     condition.unlock()
                 }

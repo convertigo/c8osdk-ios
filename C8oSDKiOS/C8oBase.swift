@@ -184,9 +184,10 @@ public class C8oBase : NSObject
      @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
      @return A string containing the default database's name.
      */
-    public var defaultDatabaseName:String
-        {
-        get { return _defaultDatabaseName! }
+    public var defaultDatabaseName:String{
+        get{
+            return _defaultDatabaseName!
+        }
     }
     
     /**

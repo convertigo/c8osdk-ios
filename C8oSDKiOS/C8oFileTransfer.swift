@@ -7,83 +7,73 @@
 //
 
 import Foundation
+import SwiftyJSON
 
 
 
-/*
 public class C8oFileTransfer
 {
-    static internal var fileManager : C8oFileManager;
-    
-    private var tasksDbCreated : Bool = false;
-    private var alive : Bool = true;
-    
-    private var c8oTask : C8o;
-    private var tasks : Dictionary<String, C8oFileTransferStatus>? = nil;
-    public event  RaiseTransferStatus : EventHandler<C8oFileTransferStatus>;
-    public event RaiseDebug :  EventHandler<string>
-    public event RaiseException EventHandler<Exception> ;
-    
-    /// <summary>
-    /// Initialize a File transfer. This will prepare everything needed to transfer a file. The name of the backend project and
-    /// the name of the FullSync status database will be set by default to <b>lib_FileTransfer</b> and to <b>c8ofiletransfer_tasks</b> but
-    /// you can override them passing custom values the <b>projectname</b> and the <b>taskDb</b> parameters.
-    /// </summary>
-    /// <param name="c8o">An initilized C8o endpoint object</param>
-    /// <param name="projectName">the overrided project name</param>
-    /// <param name="taskDb">the overrided status database name</param>
-    /// <sample>
-    ///     Typical usage :
-    ///     <code>
-    ///         // Construct the endpoint to Convertigo Server
-    ///         c8o = new C8o("http://[server:port]/convertigo/projects/[my__backend_project]");
-    ///
-    ///         // Buid a C8oFileTransfer object
-    ///         fileTransfer = new C8oFileTransfer(c8o);
-    ///
-    ///         // Attach a TransferStatus monitor
-    ///         fileTransfer.RaiseTransferStatus += (sender, transferStatus) => {
-    ///             // Do Whatever has to be done to monitor the transfer
-    ///         };
-    ///
-    ///         // Start Transfer engine
-    ///         fileTransfer.Start();
-    ///
-    ///         // DO Some Stuff
-    ///         ....
-    ///         // Call a custom Sequence in the server responsible for getting the document to be transffered from any
-    ///         // Repository and pushing it to FullSync using the lib_FileTransfer.var library.
-    ///         JObject data = await c8o.CallJSON(".AddFileXfer").Async();
-    ///
-    ///         // This sequence should return an uuid identifying the transfer.
-    ///         String uuid = ["document"]["uuid"].Value();
-    ///
-    ///         // Use this uuid to start the transfer and give the target filename and path on your device file system.
-    ///         fileTransfer.DownloadFile(uuid, "c:\\temp\\MyTransferredFile.data");
-    ///     </code>
-    /// </sample>
-    public init(c8o : C8o, projectName : String = "lib_FileTransfer", taskDb : String = "c8ofiletransfer_tasks")
-    {
-        c8oTask = C8o(c8o.EndpointConvertigo + "/projects/" + projectName, C8oSettings(c8o).SetDefaultDatabaseName(taskDb));
+    static internal var fileManager : C8oFileManager{
+        get{
+            return self.fileManager
+        }
+        set(value){
+            self.fileManager = value
+        }
     }
     
-    public func Start()-> Void
-    {
-        if (tasks == nil)
-        {
-            tasks = Dictionary<String, C8oFileTransferStatus>();
-            
-            let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
-            
-            
-            
-            //Task.Factory.StartNew(async () =>
-            dispatch_async(dispatch_get_global_queue(priority, 0)){
-                CheckTaskDb();
-                var skip : Int = 0;
-                var condition : NSCondition
+    private var tasksDbCreated : Bool = false
+    private var alive : Bool = true
     
-                var param : Dictionary<String, NSObject> = Dictionary<String, NSObject>()
+    private var c8oTask : C8o
+    private var tasks : Dictionary<String, C8oFileTransferStatus>? = nil
+    public var raiseTransferStatus : (C8oFileTransfer, C8oFileTransferStatus)? = nil
+    public var raiseDebug : (C8oFileTransfer, String)? = nil
+    public var raiseException : (C8oFileTransfer, NSError)? = nil
+    
+    public convenience init(c8o : C8o)throws{
+        try self.init(c8o: c8o, projectName: "lib_FileTransfer")
+    }
+    
+    public convenience init(c8o : C8o, projectName : String)throws{
+        try self.init(c8o: c8o, projectName: projectName, taskDb: "c8ofiletransfer_tasks")
+    }
+    
+    public init(c8o : C8o, projectName : String, taskDb : String)throws{
+        let c8oSet = C8oSettings(c8oSettings: c8o)
+        c8oSet.setDefaultDatabaseName(taskDb)
+        c8oTask = try C8o(endpoint: c8o.endpointConvertigo + "/projects/" + projectName, c8oSettings: c8oSet)
+    }
+    
+    public func raiseTransferStatus(handler:(C8oFileTransfer, C8oFileTransferStatus))->C8oFileTransfer{
+        self.raiseTransferStatus = handler
+        return self
+    }
+    
+    public func raiseDebug(handler:(C8oFileTransfer, String))->C8oFileTransfer{
+        self.raiseDebug = handler
+        return self
+    }
+    
+    public func raiseException(handler :(C8oFileTransfer, NSError))->C8oFileTransfer{
+        self.raiseException = handler
+        return self
+    }
+    
+    public func start()-> Void
+    {
+        if(tasks == nil){
+            
+            tasks = Dictionary<String, C8oFileTransferStatus>()
+            
+            let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT            
+        
+            dispatch_async(dispatch_get_global_queue(priority, 0)){
+                try! self.checkTaskDb()
+                var skip : Int = 0
+                var condition : NSCondition = NSCondition()
+    
+                var param : Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
                             ["limit": "222" as NSObject,
                             "include_docs" : true as NSObject]
                 
@@ -92,34 +82,36 @@ public class C8oFileTransfer
                     {
                         do
                         {
-                            param["skip"] = skip;
-                            var res = c8oTask.CallJson("fs://.all", param).Async();
+                            param["skip"] = skip
+                            var res : JSON = try self.c8oTask.callJson("fs://.all", parameters: param)!.sync()!
     
-                            if ((res["rows"] as JSON).count > 0)
+                            if(res["rows"].count > 0)
                             {
-                                var task = res["rows"][0]["doc"] as JSON?;
+                                var task : JSON = res["rows"][0]["doc"]
                                 if (task == nil)
                                 {
-                                    task = c8oTask.CallJson("fs://.get",
-                                    "docid", res["rows"][0]["id"].ToString()
-                                    ).Async();
+                                    task = try self.c8oTask.callJson("fs://.get",
+                                    parameters: "docid", res["rows"][0]["id"].stringValue
+                                    )!.sync()!
                                 }
-                                var uuid : String = String(task["_id"]);
+                                var uuid : String = String(task["_id"])
     
-                                if (!tasks.ContainsKey(uuid))
-                                {
-                                    var filePath : String = task["filePath"].Value<String>();
-    
-                                    var transferStatus = tasks[uuid] = C8oFileTransferStatus(uuid, filePath);
-                                    Notify(transferStatus);
-    
-                                    DownloadFile(transferStatus, task).GetAwaiter();
-    
-                                    skip = 0;
+                                if let e = self.tasks!["uuid"]{
+                                    skip = skip + 1
                                 }
                                 else
                                 {
-                                    skip = skip + 1 ;
+                                    var filePath : String = task["filePath"].stringValue
+                                    
+                                    var transferStatus : C8oFileTransferStatus = C8oFileTransferStatus(uuid: uuid, filepath: filePath)
+                                    self.tasks![uuid] = transferStatus
+                                    
+                                    self.notify(transferStatus)
+                                    
+                                    self.downloadFile(transferStatus, task: task)
+                                    
+                                    skip = 0
+                                    
                                 }
                             }
                             else
@@ -127,87 +119,78 @@ public class C8oFileTransfer
                                 condition.lock()
                                 
                                         condition.wait()
-                                        skip = 0;
+                                        skip = 0
                                 
                                 condition.unlock()
                             }
                         }
-                        catch
+                        catch let e as NSError
                         {
-                            //e.ToString();
+                            
                         }
                 }
-            } //, TaskCreationOptions.LongRunning);
+            }
         }
     }
     
-    private func CheckTaskDb()->Void
-    {
+    private func checkTaskDb()throws{
         if (!tasksDbCreated)
         {
-            c8oTask.CallJson("fs://.create").Async();
-            tasksDbCreated = true;
+            try c8oTask.callJson("fs://.create")?.sync()
+            tasksDbCreated = true
         }
     }
     
-    /// <summary>
-    /// Add a file to transfer to the download queue. This call must be done after getting a uuid from the Convertigo Server.
-    /// the uuid is generated by the server by calling the RequestFile file Sequence.
-    /// </summary>
-    /// <param name="uuid">a uuid obtained by a call to the 'RequestFile' sequence on the server</param>
-    /// <param name="filepath">a path where the file will be assembled when the transfer is finished</param>
-    public func DownloadFile(uuid : String, filePath : String)->Void
-    {
-        var condition : NSCondition
-        CheckTaskDb();
-    
-        c8oTask.CallJson("fs://.post",
-                            "_id", uuid,
+
+    public func downloadFile(uuid : String, filePath : String)throws{
+        let condition : NSCondition = NSCondition()
+        try checkTaskDb()
+        try c8oTask.callJson("fs://.post",
+                            parameters: "_id", uuid,
                             "filePath", filePath,
                             "replicated", false,
                             "assembled", false,
                             "remoteDeleted", false
-                        ).Async();
+                )?.then({ (response, parameters) -> (C8oPromise<JSON>?) in
+                    condition.lock()
+                    //C8oFileTransfer.self.Notify(C8oFileTransfer)
+                    condition.unlock()
+                    return nil
+                })
     
-            condition.lock()
-            {
-                Monitor.Pulse(this);
-            }
+        
     }
     
     
-    public func DownloadFile(transferStatus : C8oFileTransferStatus, task : JSON)->Void
-    {
-        var needRemoveSession : Bool = false;
-        var c8o:C8o? = nil;
+    public func downloadFile(transferStatus : C8oFileTransferStatus, task : JSON){
+        var task2 = task
+        var needRemoveSession : Bool = false
+        var c8o : C8o? = nil
         do
         {
-            c8o = try! C8o(endpoint: c8oTask.Endpoint);
-            /*C8oSettings(c8oTask).SetFullSyncLocalSuffix("_" + transferStatus.Uuid)*/)
-            var fsConnector : String = nil;
+            c8o = try C8o(endpoint: c8oTask.endpoint, c8oSettings : C8oSettings(c8oSettings: c8oTask).setFullSyncLocalSuffix("_" + transferStatus.uuid))
+            var fsConnector : String? = nil
     
             //
             // 0 : Authenticates the user on the Convertigo server in order to replicate wanted documents
             //
-            if (!task["replicated"].Value<Bool>() || !task["remoteDeleted"].Value<Bool>())
-            {
-                needRemoveSession = true;
-                var json = c8o.CallJson(".SelectUuid", "uuid", transferStatus.Uuid).Async();
+            if (!task2["replicated"].boolValue || !task2["remoteDeleted"].boolValue){
+                needRemoveSession = true
+                var json : JSON = try c8o!.callJson(".SelectUuid", parameters: "uuid", transferStatus.uuid)!.sync()!
     
-                self.Debug("SelectUuid:\n" + json.ToString());
+                self.debug("SelectUuid:\n" + json.stringValue)
     
-                if (json.SelectToken("document.selected").ToString() != "true")
-                {
-                    if (!task["replicated"].Value<Bool>())
+                if(json["document"]["selected"].stringValue != "true"){
+                    if (!task2["replicated"].boolValue)
                     {
-                        //throw new Exception("uuid not selected");
+                        throw C8oException(message: "uuid not selected")
                     }
                 }
                 else
                 {
-                    fsConnector = json.SelectToken("document.connector").ToString();
-                    transferStatus.State = C8oFileTransferStatus.StateAuthenticated;
-                    self.Notify(transferStatus);
+                    fsConnector = json["document"]["connector"].stringValue
+                    transferStatus.state = C8oFileTransferStatus.stateAuthenticated
+                    self.notify(transferStatus)
                 }
             }
     
@@ -215,40 +198,32 @@ public class C8oFileTransfer
             // 1 : Replicate the document discribing the chunks ids list
             //
     
-            if (!task["replicated"].Value<Bool>() && fsConnector != nil)
+            if (!task2["replicated"].boolValue && fsConnector != nil)
             {
                 var locker : [Bool] = [Bool]()
                 locker[0] = false
-     
-                c8o?.CallJson("fs://" + fsConnector + ".create").Async();
-    
-                needRemoveSession = true;
-                
-                var condition : NSCondition
+                try c8o!.callJson("fs://" + fsConnector! + ".create")!.sync()!
+                needRemoveSession = true
+                var condition : NSCondition = NSCondition()
                 
                 
 
                 
-                //c8o.CallJson("fs://" + fsConnector + ".replicate_pull").Then((json, param) =>
-                //{
-                        condition.lock()
-                    
-                    
-                            locker[0] = true;
-                            Monitor.Pulse(locker);
-                    
-                        condition.unlock()
-                    
-                    return nil;
+                c8o!.callJson("fs://" + fsConnector! + ".replicate_pull")?.then({ (response, parameters) -> (C8oPromise<JSON>?) in
+                    condition.lock()
+                        locker[0] = true
+                        condition.signal()
+                    condition.unlock()
+                    return nil
+                })
                 
-                    //});
+                
+                transferStatus.state = C8oFileTransferStatus.stateReplicate
+                notify(transferStatus)
     
-                transferStatus.State = C8oFileTransferStatus.StateReplicate;
-                Notify(transferStatus);
-    
-                var allOptions : Dictionary<String, NSObject> = Dictionary<String, NSObject>()
-                    [ "startkey" : "\"" + transferStatus.Uuid + "_\"",
-                     "endkey" : "\"" + transferStatus.Uuid + "__\"" ]
+                var allOptions : Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
+                    [ "startkey" : "\"" + transferStatus.uuid + "_\"",
+                     "endkey" : "\"" + transferStatus.uuid + "__\"" ]
                 
     
                 // Waits the end of the replication if it is not finished
@@ -259,173 +234,151 @@ public class C8oFileTransfer
                         condition.lock()
                         
                         condition.wait()
-                        //Monitor.Wait(locker, 500);
                         
                         condition.unlock()
                     
     
-                        var all = c8o?.CallJson("fs://" + fsConnector + ".all", allOptions).Async();
-                        var rows = all["rows"];
+                        var all = try c8o?.callJson("fs://" + fsConnector! + ".all", parameters: allOptions)!.sync()
+                        var rows = all!["rows"]
                         if (rows != nil)
                         {
-                            var current : Int = (rows as JArray).Count;
-                            if (current != transferStatus.Current)
+                            var current : Int = rows.count
+                            if (current != transferStatus.current)
                             {
-                                transferStatus.Current = current;
-                                self.Notify(transferStatus);
+                                transferStatus.current = current
+                                self.notify(transferStatus)
                             }
                         }
                     }
-                    catch
+                    catch let e as NSError
                     {
-                        //self.Debug(e.ToString());
+                        self.debug(e.description)
                     }
                 }
     
-                if (transferStatus.Current < transferStatus.Total)
+                if (transferStatus.current < transferStatus.total)
                 {
-                    //throw new Exception("replication not completed");
+                    throw C8oException(message: "replication not completed")
                 }
     
-                var res = c8oTask.CallJson("fs://" + fsConnector + ".post",
-                    C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
-                    "_id", task["_id"].Value<String>(),
-                    "replicated", task["replicated"] = true
-                    ).Async();
-                self.Debug("replicated true:\n" + res);
+                var res = try c8oTask.callJson("fs://" + fsConnector! + ".post",
+                    parameters: C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
+                    "_id", task2["_id"].stringValue,
+                    "replicated", true
+                    )!.sync()
+                
+                self.debug("replicated true:\n" + (res?.description)!)
             }
     
-            if (!task["assembled"].Value<Bool>() && fsConnector != nil)
+            if (!task2["assembled"].boolValue && fsConnector != nil)
             {
-                transferStatus.State = C8oFileTransferStatus.StateAssembling;
-                self.Notify(transferStatus);
+                transferStatus.state = C8oFileTransferStatus.stateAssembling
+                self.notify(transferStatus)
                 //
                 // 2 : Gets the document describing the chunks list
                 //
-                var createdFileStream = fileManager.CreateFile(transferStatus.Filepath);
-                createdFileStream.Position = 0;
+                var createdFileStream = C8oFileTransfer.fileManager.createFile(transferStatus.filepath)
+                
     
-                for var i = 0; i < transferStatus.Total; ++i
-                {
-                    var meta = c8o.CallJson("fs://" + fsConnector + ".get", "docid", transferStatus.Uuid + "_" + i).Async();
-                    Debug(meta.ToString());
+                for i in 0...transferStatus.total{
+                    let meta : JSON = try c8o!.callJson("fs://" + fsConnector! + ".get", parameters: "docid", transferStatus.uuid + "_" + i.description)!.sync()!
+                    self.debug((meta.description))
     
-                    AppendChunk(createdFileStream, meta.SelectToken("_attachments.chunk.content_url").ToString());
+                    appendChunk(&createdFileStream, contentPath: meta["_attachments"]["chunk"]["content_url"].stringValue)
                 }
-                createdFileStream.Dispose();
-    
-                var res = c8oTask.CallJson("fs://.post",
-                    C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
-                    "_id", task["_id"].Value<String>(),
-                    "assembled", task["assembled"] = true
-                    ).Async();
-                self.Debug("assembled true:\n" + res);
+                createdFileStream.close()
+                
+                task2["assembled"] = true
+                var res = try c8oTask.callJson("fs://.post",
+                    parameters: C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
+                    "_id", task2["_id"].stringValue,
+                    "assembled", true
+                    )!.sync()!
+                self.debug("assembled true:\n" + res.description)
             }
     
-            if (!task["remoteDeleted"].Value<Bool>() && fsConnector != nil)
+            if (!task2["remoteDeleted"].boolValue && fsConnector != nil)
             {
-                transferStatus.State = C8oFileTransferStatus.StateCleaning;
-                self.Notify(transferStatus);
+                transferStatus.state = C8oFileTransferStatus.stateCleaning
+                self.notify(transferStatus)
     
-                var res = self.c8o.CallJson("fs://" + fsConnector + ".destroy").Async();
-                self.Debug("destroy local true:\n" + res.ToString());
+                var res = try c8o!.callJson("fs://" + fsConnector! + ".destroy")!.sync()
+                self.debug("destroy local true:\n" + (res?.stringValue)!)
     
-                needRemoveSession = true;
-                res = c8o.CallJson(".DeleteUuid", "uuid", transferStatus.Uuid).Async();
-                self.Debug("deleteUuid:\n" + res);
+                needRemoveSession = true
+                res = try c8o!.callJson(".DeleteUuid", parameters: "uuid", transferStatus.uuid)!.sync()!
+                self.debug("deleteUuid:\n" + (res?.description)!)
     
-                res = c8oTask.CallJson("fs://.post",
+                task2["remoteDeleted"] = true
+                
+                res = try c8oTask.callJson("fs://.post",
+                    parameters :
                     C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
-                    "_id", task["_id"].Value<String>(),
-                    "remoteDeleted", task["remoteDeleted"] = true
-                    ).Async();
-                self.Debug("remoteDeleted true:\n" + res);
+                    "_id", task2["_id"].stringValue,
+                    "remoteDeleted", true
+                    )!.sync()!
+                self.debug("remoteDeleted true:\n" + (res?.description)!)
             }
     
-            if (task["replicated"].Value<Bool>() && task["assembled"].Value<Bool>() && task["remoteDeleted"].Value<Bool>())
+            if (task2["replicated"].boolValue && task2["assembled"].boolValue && task2["remoteDeleted"].boolValue)
             {
-                var res = c8oTask.CallJson("fs://.delete", "docid", transferStatus.Uuid).Async();
-                self.Debug("local delete:\n" + res.ToString());
+                var res = try c8oTask.callJson("fs://.delete", parameters: "docid", transferStatus.uuid)!.sync()
+                self.debug("local delete:\n" + (res?.description)!)
     
-                transferStatus.State = C8oFileTransferStatus.StateFinished;
-                self.Notify(transferStatus);
+                transferStatus.state = C8oFileTransferStatus.stateFinished
+                self.notify(transferStatus)
             }
         }
-        catch //(Exception e)
+        catch let e as NSError
         {
-            //self.Notify(e);
+            self.notify(e)
         }
     
         if (needRemoveSession && c8o != nil)
         {
-            //c8o.CallJson(".RemoveSession");
+            try! c8o!.callJson(".RemoveSession")
         }
     
-        tasks.Remove(transferStatus.Uuid);
-        var condition : NSCondition
+        tasks?.removeValueForKey(transferStatus.uuid)
+        let condition : NSCondition = NSCondition()
         condition.lock()
-        
+        condition.signal()
             
         condition.unlock()
     }
     
-    private func AppendChunk(createdFileStream : NSStream, contentPath : NSStream)->Void
+    private func appendChunk(inout createdFileStream : NSStream, contentPath : String)->Void
     {
-        var chunkStream : NSStream
-        if (contentPath.StartsWith("http://") || contentPath.StartsWith("https://"))
-        {
-            var request = HttpWebRequest.CreateHttp(contentPath);
-            var response = Task<WebResponse>.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, request).Result as HttpWebResponse;
-            chunkStream = response.GetResponseStream();
-        }
-    else
-    {
-        var contentPath2 : String = UrlToPath(contentPath);
-        chunkStream = fileManager.OpenFile(contentPath2);
-    }
-        chunkStream.CopyTo(createdFileStream, 4096);
-        chunkStream.Dispose();
-        createdFileStream.Position = createdFileStream.Length;
+        var str = contentPath
+        let regex = try! NSRegularExpression(pattern: "^file:", options: .CaseInsensitive)
+        str = regex.stringByReplacingMatchesInString(str, options: [], range: NSRange(0..<str.utf16.count), withTemplate: "")
+        let chunkStream = NSInputStream(fileAtPath: str)
+        createdFileStream = chunkStream!
+        chunkStream?.close()
     }
     
-    private static func UrlToPath(url : String)->String
-    {
-    // Lesson learnt - always check for a valid URI
-        do
-        {
-            var uri : NSUri = try! Uri(url);
-            url =  try !uri.LocalPath;
-        }
-        catch
-        {
-            // not uri format
-        }
-        // URL decode the string
-        url = Uri.UnescapeDataString(url);
-        return url;
-    }
     
-    private func Notify(transferStatus : C8oFileTransferStatus)->Void
+    private func notify(transferStatus : C8oFileTransferStatus)->Void
     {
-        if (RaiseTransferStatus != nil)
+        if (raiseTransferStatus != nil)
         {
-            RaiseTransferStatus(this, transferStatus);
+            raiseTransferStatus(self, transferStatus)
         }
     }
     
-    private func Notify(exception : NSException)->Void
+    private func notify(exception : NSError)->Void
     {
-        if (RaiseException != nil)
+        if (raiseException != nil)
         {
-            RaiseException(this, exception);
+            raiseException(self, exception)
         }
     }
     
-    private func Debug(debug : String)->Void
+    private func debug(debug : String)->Void
     {
-        if (RaiseDebug != nil)
+        if (raiseDebug != nil)
         {
-            RaiseDebug(this, debug);
+            raiseDebug(self, debug)
         }
     }
-}*/
+}

@@ -86,10 +86,6 @@ public class C8oFullSyncDatabase : NSObject {
         
         
         for cookie in c8o.cookieStore.cookies!{
-            let a = cookie.name
-            let b = cookie.value
-            let c = cookie.path
-            let d = cookie.expiresDate
             replication!.setCookieNamed(cookie.name, withValue: cookie.value, path: cookie.path, expirationDate: cookie.expiresDate, secure: cookie.secure)
         }
         

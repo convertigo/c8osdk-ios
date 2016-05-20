@@ -168,10 +168,6 @@ class C8oFullSyncCbl : C8oFullSync{
             throw C8oException(message: C8oExceptionMessage.unhandledListenerType(String(listener)))
             
         }
-        //TO be removen
-        let c : AnyObject? = nil
-        return c!
-        
     }
     
     
@@ -268,8 +264,8 @@ class C8oFullSyncCbl : C8oFullSync{
             do{
                 fullSyncDatabase = try self.getOrCreateFullSyncDatabase(databaseName)
             }
-            catch let e as NSError{
-                let a = e
+            catch{
+                
             }
             
         }
@@ -288,9 +284,9 @@ class C8oFullSyncCbl : C8oFullSync{
             // Ignores parameters beginning with "__" or "_use_"
             if (!parameterName.hasPrefix("__") && !parameterName.hasPrefix("_use_")) {
                 var objectParameterValue : AnyObject = parameter.1 as AnyObject
-                var objectParameterValueT : Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
+                //var objectParameterValueT : Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
                 do {
-                    var count = 0
+                    //var count = 0
                     objectParameterValue = objectParameterValue.description
                     /*let json = JSON(objectParameterValue)
                      if let dataFromString = objectParameterValue.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
@@ -540,8 +536,6 @@ class C8oFullSyncCbl : C8oFullSync{
         
         var mapBlock : CBLMapBlock? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
-            let a = CBLView.compiler()
-            let b = a != nil
             CBLRegisterJSViewCompiler()
             mapBlock = CBLView.compiler()?.compileMapFunction(mapSource!, language: language!)
             
@@ -598,7 +592,6 @@ class C8oFullSyncCbl : C8oFullSync{
             if(viewProps == nil){
                 return nil
             }
-            let b = database.description
             view = self.compileView(database, viewName: tdViewName, viewProps: viewProps)
             if(view == nil){
                 return nil
@@ -632,7 +625,7 @@ class C8oFullSyncCbl : C8oFullSync{
     
     static func mergeProperties(inout newProperties : Dictionary<String, AnyObject>, oldProperties : Dictionary<String, AnyObject>){
         for old in oldProperties{
-            let oldProperty = old
+            //let oldProperty = old
             let oldPropertyKey = old.0
             let oldPropertyValue = old.1
             

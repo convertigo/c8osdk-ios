@@ -8,47 +8,7 @@
 
 import Foundation
 import SwiftyJSON
-/*
-class QNode<T>
-{
-    var key: T?
-    var next: QNode?
-}
 
-public class Queue<T>
-{
-    private var top: QNode<T>! = QNode<T>()
-    //enqueue the specified object
-    func enQueue(var key: T) {
-        //check for the instance
-        if (top == nil)
-        {
-            top = QNode<T>()
-        }
-        //establish the top node
-        if (top.key == nil)
-        {
-            top.key = key;
-            return
-        }
-        var childToUse: QNode<T> = QNode<T>()
-        var current: QNode = top
-        
-        //cycle through the list of items to get to the end.
-        while (current.next != nil)
-        {
-            current = current.next!
-        }
-        
-        //append a new item 
-        childToUse.key = key;
-        current.next = childToUse;
-    }
-        
-}*/
-/*
-typealias Key = NSObject
-typealias Value = NSObject*/
 internal class C8oJSON : AnyObject {
     internal init(){
         myJSON = nil
@@ -68,8 +28,6 @@ public class Pair<K , V> : NSObject {
     }
     
 }
-
-
 
 extension String {
     static func IsNullOrEmpty(value: String?) -> Bool
@@ -145,8 +103,22 @@ public class Queue<T> {
     }
 }
 
-public class CustomErrors{
-
-   
-
+extension String {
+    
+    func indexOf(target: String) -> Int? {
+        if let range = self.rangeOfString(target) {
+            return startIndex.distanceTo(range.startIndex)
+        } else {
+            return nil
+        }
+    }
+    
+    func lastIndexOf(target: String) -> Int? {
+        if let range = self.rangeOfString(target, options: .BackwardsSearch) {
+            return startIndex.distanceTo(range.startIndex)
+        } else {
+            return nil
+        }
+    }
 }
+

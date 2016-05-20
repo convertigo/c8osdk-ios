@@ -12,11 +12,11 @@ import Foundation
 internal class C8oFileManager
 {
 
-    internal var createFile : (String) -> Streamable;
+    internal var createFile : (String) -> NSStream;
     
-    internal var openFile : (String) -> Streamable;
+    internal var openFile : (String) -> NSStream;
     
-    internal init (createFile : (String) -> Streamable, openFile : (String) -> Streamable)
+    internal init (createFile : (String) -> NSStream, openFile : (String) -> NSStream)
     {
         self.createFile = createFile;
         self.openFile = openFile;

@@ -267,7 +267,6 @@ public class C8o : C8oBase {
     {
         var parameters = parameters
         // IMPORTANT : all c8o calls have to end here !
-        //TODO... no error are thrown in do block
         do
         {
             c8oLogger!.logMethodCall("Call", parameters: parameters!)
@@ -289,10 +288,9 @@ public class C8o : C8oBase {
             let task = C8oCallTask(c8o: self, parameters: parameters!, c8oResponseListener: c8oResponseListener!, c8oExceptionListener: c8oExceptionListener!)
             task.execute()
         }
-        /*catch let e as C8oException
-        {
+        catch let e as C8oException{
             handleCallException(c8oExceptionListener, requestParameters: parameters!, exception: e)
-        }*/
+        }
     }
     
     /**
@@ -399,12 +397,16 @@ public class C8o : C8oBase {
     {
         return try! callXml(requestable, parameters: C8o.toParameters(parameters))
     }
-    /*public func CallXml(requestable : String)->C8oPromise<XMLDocument>
-    {
     
-    return CallXml(requestable, parameters: Dictionary<String, NSObject>())
-    }*/
-    
+    /**
+     Add a cookie to the cookie store.<br/>
+     Automatically set the domain and secure flag using the c8o endpoint.
+     Example usage:
+     @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
+     @param name : String
+     @param value : String
+     
+     */
     public func addCookie(name : String, value : String)->Void
     {
         httpInterface!.addCookie(name, value: value)
@@ -428,13 +430,6 @@ public class C8o : C8oBase {
         set(value) { _logLevelLocal = value }
     }
     
-    
-    /*public func Log(C8oLogLevel c8oLogLevel, string message)
-    {
-    c8oLogger.Log(c8oLogLevel, message)
-    }*/
-    
-    
     public var log : C8oLogger{
         get { return c8oLogger! }
     }
@@ -453,9 +448,14 @@ public class C8o : C8oBase {
         
         
     }
-    public func toString()->String
+    /*public func toString()->String
     {
-        return "C8o[" + _endpoint! + "] " //+ super.description()
+        return "C8o[" + _endpoint! + "] " + super.description
+    }*/
+    public override var description: String{
+        get {
+            return "C8o[" + _endpoint! + "] " + super.description
+        }
     }
     
     

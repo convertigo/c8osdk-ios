@@ -7,103 +7,108 @@
 //
 
 import Foundation
-/*
+
 public class C8oFileTransferStatus
 {
-    public static var  StateQueued : DownloadState =  DownloadState("queued");
-    public static var  StateAuthenticated : DownloadState =  DownloadState("authenticated");
-    public static var  StateReplicate : DownloadState =  DownloadState("replicating");
-    public static var  StateAssembling : DownloadState =  DownloadState("assembling");
-    public static var  StateCleaning : DownloadState =  DownloadState("cleaning");
-    public static var  StateFinished : DownloadState =  DownloadState("finished");
+    public static var  stateQueued : DownloadState =  DownloadState(description: "queued")
+    public static var  stateAuthenticated : DownloadState =  DownloadState(description: "authenticated")
+    public static var  stateReplicate : DownloadState =  DownloadState(description: "replicating")
+    public static var  stateAssembling : DownloadState =  DownloadState(description: "assembling")
+    public static var  stateCleaning : DownloadState =  DownloadState(description: "cleaning")
+    public static var  stateFinished : DownloadState =  DownloadState(description: "finished")
     
     public class DownloadState
     {
-        var description : String;
+        var description : String
         
         internal init (description: String)
         {
-            self.description = description;
+            self.description = description
+            
         }
         
-        public func Description()->String
-        {
-            return self.description;
-        }
     }
     
-    private var state : DownloadState = StateQueued;
     
-    public var State : DownloadState
-    {
+    public var state : DownloadState{
         get
         {
-            return state;
+            return self.state
         }
         set(value)
         {
-            state = value;
+            self.state = value
         }
     }
     
-    private var uuid : String;
     
-    public var Uuid: String
+    public private(set) var uuid: String
     {
         get
         {
-            return uuid;
+            return self.uuid
+        }
+        set(value){
+            self.uuid = value
         }
     }
     
-    private var filepath : String;
     
-    public var Filepath : String
+    public private(set) var filepath : String
     {
         get
         {
-            return filepath;
+            return self.filepath
+        }
+        set(value){
+            self.filepath = value
         }
     }
     
-    public var current : Int;
     
-    public var Current : Int
+    public var current : Int
     {
         get
         {
-            return current;
+            return self.current
         }
     
         set(value)
         {
-            current = value;
+            self.current = value
         }
     }
     
-    public var total : Int;
-    
-    public var Total : Int
+    public private(set) var total : Int
     {
         get
         {
-            return total;
+            return self.total
+        }
+        set(value){
+            self.total = value
         }
     }
     
-    public var Progress : Double
+    public var progress : Double
     {
         get
         {
-            return total > 0 ? current * 1.0f / total : 0;
+            return total > 0 ? (Double(current) * 1.0 / Double(total)) : 0
         }
     }
     
     internal init (uuid : String, filepath : String)
     {
-        self.uuid = uuid;
-        self.filepath = filepath;
-        var index =  advance(uuid.endIndex)
-        total = Int(uuid.substringWithRange(NSRange() + 1));
+        self.state = C8oFileTransferStatus.stateQueued
+        self.uuid = uuid
+        self.filepath = filepath
+        
+        let r = uuid.indexOf("-")
+        
+        let range: Range<String.Index> = uuid.rangeOfString("-")!
+        
+        total = Int(uuid.substringWithRange(range))!
     }
-}*/
+    
+}

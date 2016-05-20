@@ -10,7 +10,6 @@ import Foundation
 
 public class C8oPromiseSync<T>
 {
-    //Task<T> Async();
     func sync() throws ->T?{
         return nil as T?
     }

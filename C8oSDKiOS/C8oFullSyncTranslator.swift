@@ -90,16 +90,10 @@ internal class C8oFullSyncTranslator
         
         var array : [Dictionary<String, AnyObject>] = [Dictionary<String, AnyObject>]()
         let countQ = queryEnumerator.count
-        for index in 1...queryEnumerator.count{
+        for _ in 1...queryEnumerator.count{
             array.append(C8oFullSyncTranslator.queryRowToDic(queryEnumerator.nextRow()!))
         }
-        /*while((queryEnumerator.nextRow()) != nil) {
-            count += 1
-            let queryRow : CBLQueryRow = queryEnumerator.nextRow()!
-            
-            array.append(queryRow.description)
-        }*/
-        var json : JSON = [FULL_SYNC_RESPONSE_KEY_COUNT : countQ, FULL_SYNC_RESPONSE_KEY_ROWS : array]
+        let json : JSON = [FULL_SYNC_RESPONSE_KEY_COUNT : countQ, FULL_SYNC_RESPONSE_KEY_ROWS : array]
         
         
         return json

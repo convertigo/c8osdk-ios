@@ -70,8 +70,6 @@ internal class C8oCallTask
             // The result cannot be handled here because it can be different depending to the platform
             // But it can be useful bor debug
             var fullSyncResult : AnyObject? = nil
-            var error : NSError? = nil
-            var errorC8o : C8oException? = nil
             do{
                 
                 fullSyncResult = try self.c8o.c8oFullSync!.handleFullSyncRequest(self.parameters, listener: self.c8oResponseListener!)
@@ -84,9 +82,6 @@ internal class C8oCallTask
             catch let e as NSError
             {
                 throw C8oException(message: C8oExceptionMessage.FullSyncRequestFail(), exception: e)
-            }
-            catch{
-                let a = 1
             }
         }
         else
@@ -237,7 +232,6 @@ internal class C8oCallTask
             return response
             
         }
-        return nil
     }
     
     

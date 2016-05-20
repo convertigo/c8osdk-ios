@@ -69,7 +69,6 @@ internal class C8oUtils
         let parameter = getParameter(parameters, name: name, useName: useName);
         if (parameter.key != nil)
         {
-            let a = parameter.value
             if(parameter.value == nil){
                 return nil
             }
@@ -198,6 +197,7 @@ internal class C8oUtils
     
     internal static func tryGetValueAndCheckType<T>(jObject : JSON, key : String, value : T)->Bool?
     {
+        fatalError()
         /*
          JToken foundValue;
          if (jObject.TryGetValue(key, out foundValue))
@@ -215,7 +215,6 @@ internal class C8oUtils
          }
          value = default(T);
          return false;*/
-        return nil;
     }
     
     internal static func identifyC8oCallRequest(parameters : Dictionary<String, AnyObject>, responseType : String)->String?
@@ -232,12 +231,10 @@ internal class C8oUtils
         return responseType + json.dictionaryObject!.description
     }
     
-    public static func UrlDecode(str : String)-> String
+    internal static func UrlDecode(str : String)-> String
     {
         fatalError()
-        //return Uri.UnescapeDataString(str);
-        
-        return "hhh";
+        //return Uri.UnescapeDataString(str)
     }
     
 }

@@ -221,7 +221,7 @@ internal class FullSyncRequestable
     internal func handleFullSyncRequest(c8oFullSync : C8oFullSync, databaseNameName : String, parameters: Dictionary<String, AnyObject>, c8oResponseListner : C8oResponseListener)throws->AnyObject
     {
         do{
-            return try handleFullSyncrequestOp(c8oFullSync, databaseNameName, parameters, c8oResponseListner) as! AnyObject
+            return try handleFullSyncrequestOp(c8oFullSync, databaseNameName, parameters, c8oResponseListner) 
         }
         catch let e as NSError{
             throw e
@@ -277,7 +277,7 @@ public class FullSyncRequestParameter
     public static let INDEX_UPDATE_MODE : FullSyncRequestParameter = FullSyncRequestParameter(name: "index_update_mode",  action: { query, value in
         fatalError("must be done")
         /*let valueStr : String = value as! String
-         var indexUpdateModeValues = enum   CBLIndexUpdateMode()
+         var indexUpdateModeValues =   CBLIndexUpdateMode()
          var indexUpdateModeEnumerator =*/
     })
     public static let KEYS : FullSyncRequestParameter = FullSyncRequestParameter(name: "keys", isJson: true, action: { query, value in

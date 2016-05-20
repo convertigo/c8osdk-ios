@@ -27,7 +27,17 @@ public class C8oSettings : C8oBase
         return C8oSettings(c8oSettings: self)
     }
     
-    public func  setTimeout(timeout : Int)->C8oSettings
+    /**
+     Sets the connection timeout to Convertigo in milliseconds. A value of zero means the timeout is not used.<br/>
+     Default is <b>0</b>.
+     Example usage:
+     C8oSettings().setTimeout(100)
+     @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
+     @param timeout : Int
+     @return The current <b>C8oSettings</b>, for chaining.
+     
+     */
+    public func setTimeout(timeout : Int)->C8oSettings
     {
         var timeout = timeout
         if (timeout <= 0)
@@ -38,7 +48,16 @@ public class C8oSettings : C8oBase
         return self
     }
     
-
+    /**
+     Sets a value indicating whether https calls trust all certificates or not.<br/>
+     Default is <b>false</b>.
+     Example usage:
+     C8oSettings().setTrustAllCertificates(true)
+     @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
+     @param trustAllCertificates : Bool
+     @return The current <b>C8oSettings</b>, for chaining.
+     
+     */
     public func setTrustAllCertificates(trustAllCertificates : Bool)->C8oSettings
     {
         _trustAllCertificates = trustAllCertificates
@@ -69,22 +88,39 @@ public class C8oSettings : C8oBase
         return self
     }
     
-
-    public func addCookie(name : String, Value : String)-> C8oSettings
+    /**
+     Add a new cookie to the initial cookies send to the Convertigo server.
+     Example usage:
+     C8oSettings().setTrustAllCertificates("username", value : "Convertigo")
+     @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
+     @param name : String
+     @param value : String
+     @return The current <b>C8oSettings</b>, for chaining.
+     
+     */
+    public func addCookie(name : String, value : String)-> C8oSettings
     {
         
         if (_cookies == nil)
         {
             _cookies = Dictionary<String, String>()
         }
-        _cookies = [name : Value]
+        _cookies = [name : value]
         
         return self
     }
     
-    /** Log */
     
-
+    /**
+     Add a new cookie to the initial cookies send to the Convertigo server.
+     Example usage:
+     C8oSettings().setTrustAllCertificates("username", value : "Convertigo")
+     @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
+     @param name : String
+     @param value : String
+     @return The current <b>C8oSettings</b>, for chaining.
+     
+     */
     public func setLogRemote(logRemote : Bool)->C8oSettings
     {
         _logRemote = logRemote

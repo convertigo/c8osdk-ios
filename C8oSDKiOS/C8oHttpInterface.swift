@@ -26,7 +26,6 @@ internal class C8oHttpInterface
         cfg.HTTPCookieStorage = cookieContainer
         alamofire = Alamofire.Manager(configuration: cfg)
         
-        // TODO : add cookies in the cookie container
         if (c8o.cookies != nil)
         {
             for a in c8o.cookies!{
