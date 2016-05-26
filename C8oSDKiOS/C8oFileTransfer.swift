@@ -71,7 +71,7 @@ public class C8oFileTransfer
             dispatch_async(dispatch_get_global_queue(priority, 0)){
                 try! self.checkTaskDb()
                 var skip : Int = 0
-                var condition : NSCondition = NSCondition()
+                let condition : NSCondition = NSCondition()
     
                 var param : Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
                             ["limit": "222" as NSObject,
@@ -94,16 +94,16 @@ public class C8oFileTransfer
                                     parameters: "docid", res["rows"][0]["id"].stringValue
                                     )!.sync()!
                                 }
-                                var uuid : String = String(task["_id"])
+                                let uuid : String = String(task["_id"])
     
                                 if let e = self.tasks!["uuid"]{
                                     skip = skip + 1
                                 }
                                 else
                                 {
-                                    var filePath : String = task["filePath"].stringValue
+                                    let filePath : String = task["filePath"].stringValue
                                     
-                                    var transferStatus : C8oFileTransferStatus = C8oFileTransferStatus(uuid: uuid, filepath: filePath)
+                                    let transferStatus : C8oFileTransferStatus = C8oFileTransferStatus(uuid: uuid, filepath: filePath)
                                     self.tasks![uuid] = transferStatus
                                     
                                     self.notify(transferStatus)
@@ -124,7 +124,7 @@ public class C8oFileTransfer
                                 condition.unlock()
                             }
                         }
-                        catch let e as NSError
+                        catch _ as NSError
                         {
                             
                         }
@@ -145,7 +145,7 @@ public class C8oFileTransfer
     public func downloadFile(uuid : String, filePath : String)throws{
         let condition : NSCondition = NSCondition()
         try checkTaskDb()
-        try c8oTask.callJson("fs://.post",
+        c8oTask.callJson("fs://.post",
                             parameters: "_id", uuid,
                             "filePath", filePath,
                             "replicated", false,
@@ -204,7 +204,7 @@ public class C8oFileTransfer
                 locker[0] = false
                 try c8o!.callJson("fs://" + fsConnector! + ".create")!.sync()!
                 needRemoveSession = true
-                var condition : NSCondition = NSCondition()
+                let condition : NSCondition = NSCondition()
                 
                 
 
@@ -221,7 +221,7 @@ public class C8oFileTransfer
                 transferStatus.state = C8oFileTransferStatus.stateReplicate
                 notify(transferStatus)
     
-                var allOptions : Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
+                let allOptions : Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
                     [ "startkey" : "\"" + transferStatus.uuid + "_\"",
                      "endkey" : "\"" + transferStatus.uuid + "__\"" ]
                 
@@ -239,10 +239,10 @@ public class C8oFileTransfer
                     
     
                         var all = try c8o?.callJson("fs://" + fsConnector! + ".all", parameters: allOptions)!.sync()
-                        var rows = all!["rows"]
+                        let rows = all!["rows"]
                         if (rows != nil)
                         {
-                            var current : Int = rows.count
+                            let current : Int = rows.count
                             if (current != transferStatus.current)
                             {
                                 transferStatus.current = current
@@ -261,7 +261,7 @@ public class C8oFileTransfer
                     throw C8oException(message: "replication not completed")
                 }
     
-                var res = try c8oTask.callJson("fs://" + fsConnector! + ".post",
+                let res = try c8oTask.callJson("fs://" + fsConnector! + ".post",
                     parameters: C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
                     "_id", task2["_id"].stringValue,
                     "replicated", true
@@ -289,7 +289,7 @@ public class C8oFileTransfer
                 createdFileStream.close()
                 
                 task2["assembled"] = true
-                var res = try c8oTask.callJson("fs://.post",
+                let res = try c8oTask.callJson("fs://.post",
                     parameters: C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
                     "_id", task2["_id"].stringValue,
                     "assembled", true
@@ -322,7 +322,7 @@ public class C8oFileTransfer
     
             if (task2["replicated"].boolValue && task2["assembled"].boolValue && task2["remoteDeleted"].boolValue)
             {
-                var res = try c8oTask.callJson("fs://.delete", parameters: "docid", transferStatus.uuid)!.sync()
+                let res = try c8oTask.callJson("fs://.delete", parameters: "docid", transferStatus.uuid)!.sync()
                 self.debug("local delete:\n" + (res?.description)!)
     
                 transferStatus.state = C8oFileTransferStatus.stateFinished
@@ -336,7 +336,7 @@ public class C8oFileTransfer
     
         if (needRemoveSession && c8o != nil)
         {
-            try! c8o!.callJson(".RemoveSession")
+            c8o!.callJson(".RemoveSession")
         }
     
         tasks?.removeValueForKey(transferStatus.uuid)

@@ -144,8 +144,10 @@ public class C8oSettings : C8oBase
         _logOnFail = logOnFail
         return self
     }
-    /** FullSync */
-
+    /** 
+     pecify the default FullSync database name. Must match a Convertigo Server
+     FullSync connector name
+     */
     public func setDefaultDatabaseName(defaultDatabaseName: String)->C8oSettings
     {
         _defaultDatabaseName = defaultDatabaseName
@@ -182,9 +184,14 @@ public class C8oSettings : C8oBase
         return self
     }
     
-    public func setUiDispatcher(uiDispatcher : NSObject)->C8oSettings
+    /*public func setUiDispatcher(uiDispatcher : NSObject)->C8oSettings
     {
         /*_uiDispatcher = uiDispatcher*/
+        return self
+    }*/
+    
+    public func setUseEncryption(useEncryption : Bool)-> C8oSettings{
+        _useEncryption = useEncryption
         return self
     }
 }

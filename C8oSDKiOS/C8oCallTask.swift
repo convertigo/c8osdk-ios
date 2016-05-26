@@ -111,7 +111,7 @@ internal class C8oCallTask
             // If the engine parameter for local cache is specified
             if (localCache != nil)
             {
-                //print("local cache actif (Le code n'est pas implémenté)")
+                
                 // Removes local cache parameters and build the c8o call request identifier
                 parameters.removeValueForKey(C8oLocalCache.PARAM)
                 

@@ -37,6 +37,10 @@ public class C8oBase : NSObject
     internal var _fullSyncUsername :String?
     internal var _fullSyncPassword :String?
     
+    //*** Encryption ***//
+    
+    internal var _useEncryption : Bool?
+    
     
     //*** Getter ***//
     

@@ -172,11 +172,8 @@ class C8oSDKiOSTests: XCTestCase {
             XCTAssertTrue(false)
         }
         XCTAssertNotNil(exception)
-        XCTAssertTrue(exception! is C8oException)
         XCTAssertNotNil(exceptionLog)
-        XCTAssertTrue(exceptionLog! is C8oException)
         //TODO finish tests...
-        
     }
     
     func testC8oUnknownHostCallWait(){
@@ -194,9 +191,7 @@ class C8oSDKiOSTests: XCTestCase {
             
         }
         XCTAssertNotNil(exception)
-        XCTAssertTrue(exception! is C8oException)
         //TODO finish tests...
-        
     }
     
     func testC8oDefaultPingOneSingleValue() {
@@ -222,7 +217,6 @@ class C8oSDKiOSTests: XCTestCase {
                                     "var2","value two",
                                     "mvar1", ["mvalue one", "mvalue two", "mvalue three"]
             ).sync()
-        print(doc?.xmlString)
         var value = doc?.root["pong"]["var1"].stringValue
         XCTAssertEqual("value one", value)
         value = doc?.root["pong"]["var2"].stringValue
@@ -321,7 +315,6 @@ class C8oSDKiOSTests: XCTestCase {
             XCTAssertEqual(lvl, line[2].string)
             var newMsg = line[4].stringValue
             newMsg  = newMsg.substringWithRange(Range<String.Index>(newMsg.rangeOfString("logID=")!.startIndex ..< newMsg.endIndex))
-            print(newMsg)
             XCTAssertEqual(msg,newMsg)
         }
         
@@ -379,7 +372,7 @@ class C8oSDKiOSTests: XCTestCase {
         let value = xdoc[0].root["pong"]["var1"].stringValue
         XCTAssertEqual("step 1", value)
         XCTAssertNotEqual(NSThread.currentThread(), xthread[0])
-        XCTAssertEqual("step 1", xparam[0]["var1"] as! String)
+        XCTAssertEqual("step 1", xparam[0]["var1"] as? String)
     }
     
     func testC8oDefaultPromiseJsonThree(){
@@ -498,7 +491,7 @@ class C8oSDKiOSTests: XCTestCase {
         XCTAssertEqual("step 2", value)
         XCTAssertNil(xjson[2])
         XCTAssertEqual("random failure", (xfail[0] as! C8oException).message)
-        XCTAssertEqual("step 2", xparam[0]["var1"] as! String)
+        XCTAssertEqual("step 2", xparam[0]["var1"] as? String)
     }
     
     func testC8oDefaultPromiseFailUI(){
@@ -845,7 +838,7 @@ class C8oSDKiOSTests: XCTestCase {
             try c8o.callJson("fs://.get", parameters: "docid", id)!.sync()
             XCTAssertTrue(false, "not possible")
         }
-        catch let e as C8oRessourceNotFoundException{
+        catch _ as C8oRessourceNotFoundException{
             XCTAssertTrue(true)
         }
         catch{
@@ -1127,8 +1120,7 @@ class C8oSDKiOSTests: XCTestCase {
             XCTAssertEqual("456", value)
             
         }
-        catch{
-        }
+        
         try! c8o.callJson(".LogoutTesting")!.sync()
     }
     
@@ -1170,9 +1162,7 @@ class C8oSDKiOSTests: XCTestCase {
             XCTAssertEqual("pull: 8/8 (done)", last[0])
             XCTAssertTrue(count[0] > 2, "count > 5")
         }
-        catch{
-            
-        }
+        
         try! c8o.callJson(".LogoutTesting")!.sync()!
         
         
@@ -1295,9 +1285,7 @@ class C8oSDKiOSTests: XCTestCase {
             XCTAssertEqual(1000.0, value as? Double)
             
         }
-        catch let e as NSError{
-            XCTFail(e.description)
-        }
+        
         try! c8o.callJson(".LogoutTesting")!.sync()!
         
     }
@@ -1310,17 +1298,13 @@ class C8oSDKiOSTests: XCTestCase {
             var json : JSON = try c8o.callJson("fs://.reset")!.sync()!
             XCTAssertTrue(json["ok"].boolValue)
             try! json = c8o.callJson(".LoginTesting")!.sync()!
-            var value = json["document"]["authenticatedUserID"].stringValue
+            let value = json["document"]["authenticatedUserID"].stringValue
             XCTAssertEqual("testing_user", value)
             json = try c8o.callJson("fs://.replicate_pull")!.sync()!
             XCTAssertTrue(json["ok"].boolValue)
             json = try c8o.callJson("fs://.all")!.sync()!
-            for (key,subJson):(String, JSON) in json {
-                print(key)
-            }
             XCTAssertEqual(8, json["count"].intValue)
             XCTAssertEqual(8, json["rows"].count)
-            let bb = json["rows"][5]
             XCTAssertEqual("789", json["rows"][5]["key"].stringValue)
             XCTAssertFalse(json["rows"][5]["doc"].isExists())
             json = try c8o.callJson("fs://.all",
@@ -1533,22 +1517,17 @@ class C8oSDKiOSTests: XCTestCase {
             value = json["_id"].stringValue
             XCTAssertEqual("def", value as? String)
             json.dictionaryObject!["custom"] = id
-            print(json.description)
             json = try! c8o.callJson("fs://.post", parameters: json)!.sync()!
             XCTAssertTrue(json["ok"].boolValue)
             json = try! c8o.callJson(".qa_fs_push.PostDocument", parameters: "_id", "ghi", "custom", id)!.sync()!
             XCTAssertTrue(json["document"]["couchdb_output"]["ok"].boolValue)
             sleep(2)
-            let b = 10
-            sleep(2)
             json = try! c8o.callJson("fs://.get", parameters: "docid", "ghi")!.sync()!
-            print(json.description)
             value = json["custom"].stringValue
             
             XCTAssertEqual(id, value as? String)
             json = try! c8o.callJson(".qa_fs_push.GetDocument", parameters: "_use_docid", "def")!.sync()!
             value = json["document"]["couchdb_output"]["custom"].stringValue
-            print(json["document"].description)
             XCTAssertEqual(id, value as? String)
         }
         catch{

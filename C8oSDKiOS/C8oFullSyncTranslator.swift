@@ -52,12 +52,6 @@ internal class C8oFullSyncTranslator
     }
     
     internal static func documentToJson(document : CBLDocument)->JSON{
-        /*do{
-            try print((document.userProperties)?.description)
-        }
-        catch{
-            
-        }*/
         return JSON(document.properties!)
     }
     

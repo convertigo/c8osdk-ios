@@ -172,9 +172,6 @@ public class C8oPromise<T> : C8oPromiseFailSync<T>
                         catch let e as C8oError{
                             failure = e
                         }
-                        catch _ as NSException{
-                            print("exception....")
-                        }
                         catch {
                         }
                         condition.signal()
