@@ -147,7 +147,7 @@ public class C8o : C8oBase {
         // Checks the URL validity
         if (!C8oUtils.isValidUrl(endpoint)){
             //throw NSC8oError(domain: NSURLC8oErrorDomain, code: NSURLC8oErrorCannotOpenFile, userInfo: nil)
-            throw C8oError.ArgumentException(C8oExceptionMessage.InvalidArgumentInvalidURL(endpoint))
+            throw C8oException(message:C8oExceptionMessage.InvalidArgumentInvalidURL(endpoint))
         }
         
         // Checks the endpoint validty
@@ -155,7 +155,7 @@ public class C8o : C8oBase {
         let regexV  = regex.matchesInString(endpoint, options: [], range: NSMakeRange(0, endpoint.characters.count ))
         
         if(regexV.first == nil){
-            throw C8oError.ArgumentException(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint))
+            throw C8oException(message: C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint))
         }
         
         _endpoint = endpoint
@@ -197,7 +197,7 @@ public class C8o : C8oBase {
         {
             if(requestable == nil)
             {
-                throw C8oError.ArgumentNilException(C8oExceptionMessage.InvalidArgumentNullParameter("requestable"))
+                throw C8oException(message: C8oExceptionMessage.InvalidArgumentNullParameter("requestable"))
             }
             
             // Checks parameters validity
@@ -216,7 +216,7 @@ public class C8o : C8oBase {
             let regexV  = regex.matchesInString(requestable!, options: [], range: NSMakeRange(0, requestable!.characters.count ))
             
             if(regexV.first == nil){
-                throw C8oError.ArgumentException(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(_endpoint!)) //Exception(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint))
+                throw C8oException(message: C8oExceptionMessage.InvalidArgumentInvalidEndpoint(_endpoint!)) //Exception(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint))
             }
             
             
@@ -448,10 +448,7 @@ public class C8o : C8oBase {
         
         
     }
-    /*public func toString()->String
-    {
-        return "C8o[" + _endpoint! + "] " + super.description
-    }*/
+
     public override var description: String{
         get {
             return "C8o[" + _endpoint! + "] " + super.description
@@ -506,7 +503,7 @@ public class C8o : C8oBase {
     {   
         if (parameters!.count % 2 != 0)
         {
-            throw C8oError.InvalidArgument(C8oExceptionMessage.invalidParameterValue("parameters", details: "needs pairs of values"))
+            throw C8oException(message: C8oExceptionMessage.invalidParameterValue("parameters", details: "needs pairs of values"))
         }
         
         var newParameters = Dictionary<String, NSObject>()

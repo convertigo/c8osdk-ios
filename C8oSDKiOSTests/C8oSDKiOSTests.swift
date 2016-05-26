@@ -1528,6 +1528,7 @@ class C8oSDKiOSTests: XCTestCase {
             XCTAssertEqual(id, value as? String)
             json = try! c8o.callJson(".qa_fs_push.GetDocument", parameters: "_use_docid", "def")!.sync()!
             value = json["document"]["couchdb_output"]["custom"].stringValue
+            print(json["document"].description)
             XCTAssertEqual(id, value as? String)
         }
         catch{
@@ -1623,6 +1624,22 @@ class C8oSDKiOSTests: XCTestCase {
         let doc : AEXMLDocument = try! c8o.callXml(".Sleep2sec").sync()!
         let value : String = doc["document"]["element"].stringValue
         XCTAssertEqual("ok", value)
+        
+    }
+    
+    func testBadExec(){
+        do{
+            let c8o : C8o = try C8o(endpoint: PREFIX + HOST + PORT + "hdhhdhd", c8oSettings: C8oSettings().setTimeout(1000))
+            XCTAssertFalse(false, "not possible")
+        }
+        catch let e as C8oException{
+            XCTAssertTrue(e is NSError)
+            //print(e.description)
+        }
+        catch{
+            
+        }
+        //let c8o : C8o = try! C8o(endpoint: PREFIX + HOST + PORT + "hdhhdhd", c8oSettings: C8oSettings().setTimeout(1000))
         
     }
     
