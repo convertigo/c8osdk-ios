@@ -1543,11 +1543,11 @@ class C8oSDKiOSTests: XCTestCase {
         var doc : AEXMLDocument = try! c8o.callXml(".Ping",
                                                    parameters:
             C8oLocalCache.PARAM, C8oLocalCache(priority: C8oLocalCache.Priority.LOCAL, ttl: 3000),
-                                 "var1", id + "bis"
+                                 "var1", id
             ).sync()!
         var value = doc["document"]["pong"]["var1"].stringValue
-        XCTAssertEqual(id + "bis", value)
-        let signature : String = doc.root["document"]["@signature"].stringValue
+        XCTAssertEqual(id, value)
+        let signature : String = doc["document"].attributes["signature"]!
         sleep(1)
         doc = try! c8o.callXml(".Ping",
                                parameters: C8oLocalCache.PARAM, C8oLocalCache(priority: C8oLocalCache.Priority.LOCAL, ttl: 3000),
@@ -1555,7 +1555,7 @@ class C8oSDKiOSTests: XCTestCase {
             ).sync()!
         value = doc["document"]["pong"]["var1"].stringValue
         XCTAssertEqual(id + "bis", value)
-        var signature2 : String = doc["document"]["@signature"].stringValue
+        var signature2 : String = doc["document"].attributes["signature"]!
         XCTAssertNotEqual(signature, signature2)
         sleep(1)
         doc = try! c8o.callXml(".Ping",
@@ -1564,7 +1564,16 @@ class C8oSDKiOSTests: XCTestCase {
             ).sync()!
         value = doc["document"]["pong"]["var1"].stringValue
         XCTAssertEqual(id, value)
-        signature2 = doc["document"]["@signature"].stringValue
+        signature2 = doc["document"].attributes["signature"]!
+        XCTAssertEqual(signature, signature2)
+        sleep(2)
+        doc = try! c8o.callXml(".Ping",
+                               parameters: C8oLocalCache.PARAM,  C8oLocalCache(priority: C8oLocalCache.Priority.LOCAL, ttl: 3000),
+                               "var1", id
+            ).sync()!
+        value = doc["document"]["pong"]["var1"].stringValue
+        XCTAssertEqual(id, value)
+        signature2 = doc["document"].attributes["signature"]!
         XCTAssertNotEqual(signature, signature2)
     }
     
@@ -1595,7 +1604,7 @@ class C8oSDKiOSTests: XCTestCase {
         value = json["document"]["pong"]["var1"].stringValue
         XCTAssertEqual(id, value)
         signature2 = json["document"]["attr"]["signature"].stringValue
-        XCTAssertNotEqual(signature, signature2)
+        XCTAssertEqual(signature, signature2)
         sleep(3)
         json = try! c8o.callJson(".Ping",
                                  parameters: C8oLocalCache.PARAM, C8oLocalCache(priority: C8oLocalCache.Priority.LOCAL, ttl: 3000),
@@ -1641,8 +1650,7 @@ class C8oSDKiOSTests: XCTestCase {
         }
         //let c8o : C8o = try! C8o(endpoint: PREFIX + HOST + PORT + "hdhhdhd", c8oSettings: C8oSettings().setTimeout(1000))
         
-    }
-    
+    }    
     
 }
 

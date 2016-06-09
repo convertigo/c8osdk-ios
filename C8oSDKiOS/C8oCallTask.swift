@@ -106,7 +106,7 @@ internal class C8oCallTask
             
             // Allows to enable or disable the local cache on a Convertigo requestable, default value is true
             let localCache : C8oLocalCache? = (C8oUtils.getParameterObjectValue(parameters, name: C8oLocalCache.PARAM, useName: false) as! C8oLocalCache?)
-            let localCacheEnabled : Bool = false
+            var localCacheEnabled : Bool = false
             
             // If the engine parameter for local cache is specified
             if (localCache != nil)
@@ -115,7 +115,8 @@ internal class C8oCallTask
                 // Removes local cache parameters and build the c8o call request identifier
                 parameters.removeValueForKey(C8oLocalCache.PARAM)
                 
-                if (localCacheEnabled == localCache!.enabled)
+                localCacheEnabled = localCache!.enabled
+                if (localCacheEnabled)
                 {
                     c8oCallRequestIdentifier = C8oUtils.identifyC8oCallRequest(parameters, responseType: responseType)
                     
@@ -128,7 +129,7 @@ internal class C8oCallTask
                             {
                                 if (responseType == C8o.RESPONSE_TYPE_XML)
                                 {
-                                    return C8oTranslator.stringToXml(localCacheResponse.getResponse())
+                                    return try C8oTranslator.stringToXml(localCacheResponse.getResponse())
                                 }
                                 else if (responseType == C8o.RESPONSE_TYPE_JSON)
                                 {
@@ -138,7 +139,7 @@ internal class C8oCallTask
                                 }
                             }
                         }
-                        catch _ as C8oUnavailableLocalCacheException{
+                        catch _ as C8oUnavailableLocalCacheException {
                             // no entry
                         }
                     }
@@ -167,7 +168,7 @@ internal class C8oCallTask
                             {
                                 if (responseType == C8o.RESPONSE_TYPE_XML)
                                 {
-                                    return C8oTranslator.stringToXml(localCacheResponse.getResponse())
+                                    return try C8oTranslator.stringToXml(localCacheResponse.getResponse())
                                 }
                                 else if (responseType == C8o.RESPONSE_TYPE_JSON)
                                 {
@@ -198,10 +199,9 @@ internal class C8oCallTask
             {
                 
                 response = C8oTranslator.dataToXml(httpResponse!)!
-                if(localCacheEnabled)
+                if (localCacheEnabled)
                 {
-                    responseString = (response as! AEXMLDocument).description
-                    
+                    responseString = (response as! AEXMLDocument).xmlString
                 }
                 
             }
@@ -210,8 +210,7 @@ internal class C8oCallTask
                 let myc8 = C8oJSON()
                 myc8.myJSON = C8oTranslator.dataToJson(httpResponse!)!
                 response = myc8
-                
-                
+                responseString = C8oTranslator.jsonToString(myc8.myJSON!)
             }
             else
             {
@@ -252,7 +251,7 @@ internal class C8oCallTask
             if (result is AEXMLDocument)
             {
                 
-                c8o.c8oLogger!.logC8oCallXMLResponse(result as! AEXMLDocument, url: c8oCallUrl!,  parameters : self.parameters)
+                c8o.c8oLogger!.logC8oCallXMLResponse(result as! AEXMLDocument, url: c8oCallUrl,  parameters : self.parameters)
                 (c8oResponseListener as! C8oResponseXmlListener).onXmlResponse(Pair(key: result!, value: parameters))
             }
             else {

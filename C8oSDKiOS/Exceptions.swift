@@ -97,7 +97,7 @@ public class c8oCouchbaseLiteException : C8oException
 public class C8oUnavailableLocalCacheException : NSError
 {
     
-    public init(message : String, innerException : NSError)
+    public init(message : String)
     {
         super.init(domain: "com.convertigo.C8o.Error", code: C8oCode.C8oUnavailableLocalCacheException.rawValue as Int, userInfo: [NSLocalizedFailureReasonErrorKey: message])
     }

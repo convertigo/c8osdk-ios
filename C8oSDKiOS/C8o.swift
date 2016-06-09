@@ -123,7 +123,6 @@ public class C8o : C8oBase {
         super.init()
     }
     
-    
     /**
      This is the base object representing a Convertigo Server end point. This object should be instanciated
      when the apps starts and be accessible from any class of the app. Although this is not common , you may have
@@ -141,7 +140,7 @@ public class C8o : C8oBase {
      A C8oSettings object describing the endpoint configuration parameters such as authorizations credentials,
      cookies, client certificates and various other settings.
      */
-    public init(endpoint :String, c8oSettings : C8oSettings?) throws
+    public init(endpoint :String, c8oSettings : C8oSettings? = nil) throws
     {
         super.init()
         // Checks the URL validity
@@ -151,27 +150,28 @@ public class C8o : C8oBase {
         }
         
         // Checks the endpoint validty
-        let regex : NSRegularExpression = C8o.RE_ENDPOINT
-        let regexV  = regex.matchesInString(endpoint, options: [], range: NSMakeRange(0, endpoint.characters.count ))
+        let regexV  = C8o.RE_ENDPOINT.matchesInString(endpoint, options: [], range: NSMakeRange(0, endpoint.characters.count ))
         
-        if(regexV.first == nil){
+        if(regexV.first == nil) {
             throw C8oException(message: C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint))
         }
         
         _endpoint = endpoint
         _endpointConvertigo = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(1))
         
-        if(regexV[0].rangeAtIndex(2).location != NSNotFound){
+        if(regexV[0].rangeAtIndex(2).location != NSNotFound) {
             _endpointIsSecure  = !(endpoint as NSString?)!.substringWithRange(regexV[0].rangeAtIndex(2)).isEmpty
         }
         else {
             _endpointIsSecure  = false
         }
         _endpointHost = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(3))
-        _endpointPort = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(4))
+        if(regexV[0].rangeAtIndex(4).location != NSNotFound) {
+            _endpointPort = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(4))
+        }
         _endpointProject = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(5))
         
-        if (c8oSettings != nil){
+        if (c8oSettings != nil) {
             copyProperties(c8oSettings!)
         }
         
@@ -386,7 +386,7 @@ public class C8o : C8oBase {
             , c8oExceptionListener : C8oExceptionListener(onException:{
                 (params : Pair<C8oException, Dictionary<String, AnyObject>?>?)->() in
                 
-                promise.onFailure(((params?.key) as C8oException?)!, parameters: (params?.value)!)
+                promise.onFailure((params?.key) as C8oException?, parameters: params?.value)
                 
             }))
         return promise

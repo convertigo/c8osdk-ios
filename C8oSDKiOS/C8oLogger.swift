@@ -340,7 +340,7 @@ public class C8oLogger : NSObject
     }
     
     
-    internal func logC8oCallXMLResponse(response : AEXMLDocument, url: String, parameters : Dictionary<String, AnyObject>)-> Void
+    internal func logC8oCallXMLResponse(response : AEXMLDocument, url: String?, parameters : Dictionary<String, AnyObject>)-> Void
     {
         logC8oCallResponse(C8oTranslator.xmlToString(response)!, responseType: "XML", url: url, parameters: parameters)
     }

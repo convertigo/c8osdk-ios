@@ -707,10 +707,15 @@ class C8oFullSyncCbl : C8oFullSync{
     
     func getResponseFromLocalCache(c8oCallRequestIdentifier: String) throws -> C8oLocalCacheResponse? {
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(C8o.LOCAL_CACHE_DATABASE_NAME)
-        let localCacheDocument : CBLDocument? = fullSyncDatabase.getDatabase()?.existingDocumentWithID(c8oCallRequestIdentifier)
         
-        if(localCacheDocument == nil){
-            throw C8oException(message: C8oExceptionMessage.localCacheDocumentJustCreated())
+        var localCacheDocument : CBLDocument? = nil
+        
+        (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+            localCacheDocument = fullSyncDatabase.getDatabase()?.existingDocumentWithID(c8oCallRequestIdentifier)
+        }
+        
+        if(localCacheDocument == nil) {
+            throw C8oUnavailableLocalCacheException(message: C8oExceptionMessage.localCacheDocumentJustCreated())
         }
         
         let response  = localCacheDocument?.propertyForKey(C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE)
@@ -720,56 +725,66 @@ class C8oFullSyncCbl : C8oFullSync{
         var responseTypeString : String? = nil
         var expirationDateLong : Double = -1
         
-        if(response != nil){
-            if let e = response as! String?{
+        if (response != nil){
+            if let e = response as! String? {
                 responseString = e
             }
         }
-        else{
+        else {
             throw C8oException(message: C8oExceptionMessage.InvalidLocalCacheResponseInformation())
         }
-        if(responseType != nil){
-            if let e = responseType as! String?{
+        if (responseType != nil) {
+            if let e = responseType as! String? {
                 responseTypeString = e
             }
         }
-        else{
+        else {
             throw C8oException(message: C8oExceptionMessage.InvalidLocalCacheResponseInformation())
         }
-        if(expirationDate != nil){
-            if let e = expirationDate as! Double?{
+        if (expirationDate != nil) {
+            if let e = expirationDate as! Double? {
                 expirationDateLong = e
                 let currentTime = NSDate().timeIntervalSince1970 * 1000
-                if(Double(expirationDateLong) < currentTime){
-                    throw C8oException(message: C8oExceptionMessage.timeToLiveExpired())
+                if (Double(expirationDateLong) < currentTime) {
+                    throw C8oUnavailableLocalCacheException(message: C8oExceptionMessage.timeToLiveExpired())
                 }
             }
-            else{
+            else {
                 throw C8oException(message: C8oExceptionMessage.InvalidLocalCacheResponseInformation())
             }
         }
         return C8oLocalCacheResponse(response: responseString!, responseType: responseTypeString!, expirationDate: expirationDateLong)
     }
     
-    func saveResponseToLocalCache(c8oCalRequestIdentifier : String, localCacheResponse : C8oLocalCacheResponse) throws{
+    func saveResponseToLocalCache(c8oCallRequestIdentifier : String, localCacheResponse : C8oLocalCacheResponse) throws {
         
         let fullSyncDatabase : C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(C8o.LOCAL_CACHE_DATABASE_NAME)
-        let localCacheDocument : CBLDocument =  (fullSyncDatabase.getDatabase()?.existingDocumentWithID(c8oCalRequestIdentifier))!
+        
+        var localCacheDocument : CBLDocument? = nil
+        (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+            localCacheDocument = fullSyncDatabase.getDatabase()?.documentWithID(c8oCallRequestIdentifier)
+    //    }
         var properties : Dictionary<String, NSObject> = Dictionary<String, NSObject>()
         properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE] =  localCacheResponse.getResponse()
         properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE_TYPE] = localCacheResponse.getResponseType()
         if (localCacheResponse.getExpirationDate() > 0) {
             properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_EXPIRATION_DATE] = localCacheResponse.getExpirationDate()
         }
-        let currentRevision : CBLSavedRevision? = localCacheDocument.currentRevision
+        let currentRevision : CBLSavedRevision? = localCacheDocument!.currentRevision
         if (currentRevision != nil) {
             properties[C8oFullSyncCbl.FULL_SYNC__REV] =  currentRevision?.revisionID
         }
         
-        do {
-            try localCacheDocument.putProperties(properties)
-        } catch {
+        //do {
+           // (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+                do {
+                    try localCacheDocument!.putProperties(properties)
+                } catch {
+                    
+                }
+            }
+        /*} catch {
             throw C8oException(message: "TODO")
-        }
+        }*/
     }
 }
