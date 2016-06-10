@@ -150,8 +150,7 @@ internal class C8oFullSyncHttp : C8oFullSync
                     if (obj[path] is JSON)
                     {
                         obj = obj[path] as JObject;
-                    }
-                    else
+                    } else
                     {
                         obj = (obj[path] = JSON()) as JObject;
                     }
@@ -608,13 +607,11 @@ internal class C8oFullSyncHttp : C8oFullSync
     if (fullSyncPolicy == FullSyncPolicy.NONE)
     {
     
-    }
-    else if (fullSyncPolicy == FullSyncPolicy.CREATE)
+    } else if (fullSyncPolicy == FullSyncPolicy.CREATE)
     {
     document.Remove("_id");
     document.Remove("_rev");
-    }
-    else
+    } else
     {
     string docid = document["_id"].ToString();
     
@@ -628,8 +625,7 @@ internal class C8oFullSyncHttp : C8oFullSync
     {
     document["_rev"] = rev;
     }
-    }
-    else if (fullSyncPolicy == FullSyncPolicy.MERGE)
+    } else if (fullSyncPolicy == FullSyncPolicy.MERGE)
     {
     var dbDocument = await HandleGetDocumentRequest(fullSyncDatatbaseName, docid) as JObject;
     
@@ -660,17 +656,14 @@ internal class C8oFullSyncHttp : C8oFullSync
     if (targetValue is JObject && kvp.Value is JObject)
     {
     Merge(targetValue as JObject, kvp.Value as JObject);
-    }
-    else if (targetValue is JArray && kvp.Value is JArray)
+    } else if (targetValue is JArray && kvp.Value is JArray)
     {
     Merge(targetValue as JArray, kvp.Value as JArray);
-    }
-    else
+    } else
     {
     jsonTarget[kvp.Key] = kvp.Value;
     }
-    }
-    else
+    } else
     {
     jsonTarget[kvp.Key] = kvp.Value;
     }
@@ -702,13 +695,11 @@ internal class C8oFullSyncHttp : C8oFullSync
     if (targetValue is JArray && sourceValue is JArray)
     {
     Merge(targetValue as JArray, sourceValue as JArray);
-    }
-    else
+    } else
     {
     targetArray[i] = sourceValue;
     }
-    }
-    else if (sourceValue != null && targetValue == null)
+    } else if (sourceValue != null && targetValue == null)
     {
     targetArray.Add(sourceValue);
     }
@@ -765,8 +756,7 @@ internal class C8oFullSyncHttp : C8oFullSync
     if (e.InnerException is WebException)
     {
     response = (e.InnerException as WebException).Response as HttpWebResponse;
-    }
-    else
+    } else
     {
     throw new C8oHttpException(C8oExceptionMessage.RunHttpRequest(), e);
     }
@@ -780,8 +770,7 @@ internal class C8oFullSyncHttp : C8oFullSync
     {
     contentType = matchContentType.Groups[1].Value;
     charset = matchContentType.Groups[2].Value;
-    }
-    else
+    } else
     {
     contentType = response.ContentType;
     charset = "UTF-8";
@@ -810,8 +799,7 @@ internal class C8oFullSyncHttp : C8oFullSync
     json["data"] = entityContent;
     }
     }
-    }
-    else
+    } else
     {
     json = new JObject();
     
@@ -820,8 +808,7 @@ internal class C8oFullSyncHttp : C8oFullSync
     StreamReader streamReader = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding(charset));
     string entityContent = streamReader.ReadToEnd();
     json["data"] = entityContent;
-    }
-    else
+    } else
     {
     // TODO base64
     }

@@ -12,7 +12,7 @@
 		62057A211CB53DA0004AE521 /* FullSyncEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62057A201CB53DA0004AE521 /* FullSyncEnum.swift */; };
 		62057A261CB63E7B004AE521 /* VoidResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62057A251CB63E7B004AE521 /* VoidResponse.swift */; };
 		620F6D141C77666800683D0F /* C8oHttpInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620F6D131C77666800683D0F /* C8oHttpInterface.swift */; };
-		620F6D161C776E0500683D0F /* C8OTranslator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620F6D151C776E0500683D0F /* C8OTranslator.swift */; };
+		620F6D161C776E0500683D0F /* C8oTranslator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620F6D151C776E0500683D0F /* C8oTranslator.swift */; };
 		620F6D181C7771B300683D0F /* C8oUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620F6D171C7771B300683D0F /* C8oUtils.swift */; };
 		622232801C6B29E2001D2EA1 /* C8oBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6222327E1C6B29E2001D2EA1 /* C8oBase.swift */; };
 		622232861C6B2A00001D2EA1 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622232851C6B2A00001D2EA1 /* Queue.swift */; };
@@ -179,7 +179,7 @@
 		62057A201CB53DA0004AE521 /* FullSyncEnum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullSyncEnum.swift; sourceTree = "<group>"; };
 		62057A251CB63E7B004AE521 /* VoidResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VoidResponse.swift; sourceTree = "<group>"; };
 		620F6D131C77666800683D0F /* C8oHttpInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oHttpInterface.swift; sourceTree = "<group>"; };
-		620F6D151C776E0500683D0F /* C8OTranslator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8OTranslator.swift; sourceTree = "<group>"; };
+		620F6D151C776E0500683D0F /* C8oTranslator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oTranslator.swift; sourceTree = "<group>"; };
 		620F6D171C7771B300683D0F /* C8oUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oUtils.swift; sourceTree = "<group>"; };
 		6222327E1C6B29E2001D2EA1 /* C8oBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oBase.swift; sourceTree = "<group>"; };
 		622232851C6B2A00001D2EA1 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
@@ -815,7 +815,7 @@
 				62EDE9321C76314200D9213F /* C8oFullSync.swift */,
 				62EDE9371C77202F00D9213F /* C8oFullSyncHttp.swift */,
 				620F6D131C77666800683D0F /* C8oHttpInterface.swift */,
-				620F6D151C776E0500683D0F /* C8OTranslator.swift */,
+				620F6D151C776E0500683D0F /* C8oTranslator.swift */,
 				620F6D171C7771B300683D0F /* C8oUtils.swift */,
 				37F523B31C9ABE19007952C3 /* C8oCookieStorage.swift */,
 				626CC7931CE4C5B4002ED698 /* CBLRegisterJSViewCompiler.h */,
@@ -1181,7 +1181,7 @@
 				62EDE9191C75FF5100D9213F /* C8oPromiseFailSync.swift in Sources */,
 				62EDE91B1C76114B00D9213F /* C8oResponseJsonListener.swift in Sources */,
 				37F523B41C9ABE19007952C3 /* C8oCookieStorage.swift in Sources */,
-				620F6D161C776E0500683D0F /* C8OTranslator.swift in Sources */,
+				620F6D161C776E0500683D0F /* C8oTranslator.swift in Sources */,
 				62EDE90D1C74D88000D9213F /* C8oFullSyncTranslator.swift in Sources */,
 				623C74101C7CD02100E691B0 /* C8oLogger.swift in Sources */,
 				62057A261CB63E7B004AE521 /* VoidResponse.swift in Sources */,

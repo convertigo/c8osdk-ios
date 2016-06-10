@@ -8,14 +8,11 @@
 
 import Foundation
 
-internal class C8oResponseProgressListener : C8oResponseListener
-{
-    internal var onProgressResponse : (C8oProgress, Dictionary<String, AnyObject>)->()
-    
-    internal init(onProgressResponse : (C8oProgress, Dictionary<String, AnyObject>)->())
-    {
-        self.onProgressResponse = onProgressResponse;
-    }
-
-
+internal class C8oResponseProgressListener: C8oResponseListener {
+	internal var onProgressResponse: (C8oProgress, Dictionary<String, AnyObject>) -> ()
+	
+	internal init(onProgressResponse: (C8oProgress, Dictionary<String, AnyObject>) -> ()) {
+		self.onProgressResponse = onProgressResponse;
+	}
+	
 }

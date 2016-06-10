@@ -1131,8 +1131,7 @@ class C8oSDKiOSTests: XCTestCase {
 				count[0] += 1
 				if (NSThread.mainThread() == NSThread.currentThread()) {
 					uiThread[0] = true
-				}
-				else {
+				} else {
 					uiThread[0] = false;
 				}
 				if (first[0] == nil) {
@@ -1176,8 +1175,7 @@ class C8oSDKiOSTests: XCTestCase {
 					count[0] += 1
 					if (NSThread.mainThread() == NSThread.currentThread()) {
 						uiThread[0] = true
-					}
-					else {
+					} else {
 						uiThread[0] = false;
 					}
 					if (first[0] == nil) {
@@ -1388,8 +1386,7 @@ class C8oSDKiOSTests: XCTestCase {
 				count[0] += 1
 				if (NSThread.mainThread() == NSThread.currentThread()) {
 					uiThread[0] = true
-				}
-				else {
+				} else {
 					uiThread[0] = false;
 				}
 				if (first[0] == nil) {
@@ -1461,8 +1458,7 @@ class C8oSDKiOSTests: XCTestCase {
 					if (progress.pull) {
 						livePull[0] = progress.description
 					}
-				}
-				else {
+				} else {
 					if (progress.push) {
 						if (firstPush[0] == nil) {
 							firstPush[0] = progress.description

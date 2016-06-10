@@ -23,7 +23,6 @@ C8oSDKiOS.xcworkspace/xcshareddata/C8oSDKiOS.xcscmblueprint -text
 C8oSDKiOS.xcworkspace/xcuserdata/nicolasa.xcuserdatad/UserInterfaceState.xcuserstate -text
 C8oSDKiOS.xcworkspace/xcuserdata/nicolasa.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist -text
 C8oSDKiOS/AlamofireSync.swift -text
-C8oSDKiOS/C8OTranslator.swift -text
 C8oSDKiOS/C8o.swift -text
 C8oSDKiOS/C8oBase.swift -text
 C8oSDKiOS/C8oCallTask.swift -text
@@ -52,6 +51,7 @@ C8oSDKiOS/C8oResponseListener.swift -text
 C8oSDKiOS/C8oResponseProgressListener.swift -text
 C8oSDKiOS/C8oResponseXmlListener.swift -text
 C8oSDKiOS/C8oSettings.swift -text
+C8oSDKiOS/C8oTranslator.swift -text
 C8oSDKiOS/C8oUtils.swift -text
 C8oSDKiOS/Couchbase-Lite-Bridging-Header.h -text
 C8oSDKiOS/Delegates.swift -text

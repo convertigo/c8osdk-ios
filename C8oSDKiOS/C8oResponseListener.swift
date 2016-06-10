@@ -8,7 +8,6 @@
 
 import Foundation
 
-public protocol C8oResponseListener
-{
-    
+public protocol C8oResponseListener {
+	
 }

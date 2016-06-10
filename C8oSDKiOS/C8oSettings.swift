@@ -10,188 +10,162 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-public class C8oSettings : C8oBase
-{
-    public override init()
-    {
-    }
-    
-    public init(c8oSettings : C8oBase)
-    {
-        super.init()
-        copyProperties(c8oSettings)
-    }
-    
-    public func clone()-> C8oSettings
-    {
-        return C8oSettings(c8oSettings: self)
-    }
-    
-    /**
-     Sets the connection timeout to Convertigo in milliseconds. A value of zero means the timeout is not used.<br/>
-     Default is <b>0</b>.
-     Example usage:
-     C8oSettings().setTimeout(100)
-     @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
-     @param timeout : Int
-     @return The current <b>C8oSettings</b>, for chaining.
-     
-     */
-    public func setTimeout(timeout : Int)->C8oSettings
-    {
-        var timeout = timeout
-        if (timeout <= 0)
-        {
-            timeout = -1
-        }
-        _timeout = timeout
-        return self
-    }
-    
-    /**
-     Sets a value indicating whether https calls trust all certificates or not.<br/>
-     Default is <b>false</b>.
-     Example usage:
-     C8oSettings().setTrustAllCertificates(true)
-     @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
-     @param trustAllCertificates : Bool
-     @return The current <b>C8oSettings</b>, for chaining.
-     
-     */
-    public func setTrustAllCertificates(trustAllCertificates : Bool)->C8oSettings
-    {
-        _trustAllCertificates = trustAllCertificates
-        return self
-    }
-    
+public class C8oSettings: C8oBase {
+	public override init() {
+	}
+	
+	public init(c8oSettings: C8oBase) {
+		super.init()
+		copyProperties(c8oSettings)
+	}
+	
+	public func clone() -> C8oSettings {
+		return C8oSettings(c8oSettings: self)
+	}
+	
+	/**
+	 Sets the connection timeout to Convertigo in milliseconds. A value of zero means the timeout is not used.<br/>
+	 Default is <b>0</b>.
+	 Example usage:
+	 C8oSettings().setTimeout(100)
+	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
+	 @param timeout : Int
+	 @return The current <b>C8oSettings</b>, for chaining.
 
-    public func addClientCertificate(certificate :Byte, password : String)->C8oSettings
-    {
-        if (_clientCertificateBinaries == nil)
-        {
-            _clientCertificateBinaries = Dictionary<UInt8, String>?()
-        }
-        //clientCertificateBinaries = [certificate! as NSObject: password]
-        
-        return self
-    }
-    
+	 */
+	public func setTimeout(timeout: Int) -> C8oSettings {
+		var timeout = timeout
+		if (timeout <= 0) {
+			timeout = -1
+		}
+		_timeout = timeout
+		return self
+	}
+	
+	/**
+	 Sets a value indicating whether https calls trust all certificates or not.<br/>
+	 Default is <b>false</b>.
+	 Example usage:
+	 C8oSettings().setTrustAllCertificates(true)
+	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
+	 @param trustAllCertificates : Bool
+	 @return The current <b>C8oSettings</b>, for chaining.
 
-    public func  addClientCertificate(certificatePath : String, password : String)->C8oSettings
-    {
-        if (_clientCertificateFiles == nil)
-        {
-            _clientCertificateFiles = Dictionary<String, String>()
-        }
-        _clientCertificateFiles = [certificatePath:password]
-        
-        return self
-    }
-    
-    /**
-     Add a new cookie to the initial cookies send to the Convertigo server.
-     Example usage:
-     C8oSettings().setTrustAllCertificates("username", value : "Convertigo")
-     @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
-     @param name : String
-     @param value : String
-     @return The current <b>C8oSettings</b>, for chaining.
-     
-     */
-    public func addCookie(name : String, value : String)-> C8oSettings
-    {
-        
-        if (_cookies == nil)
-        {
-            _cookies = Dictionary<String, String>()
-        }
-        _cookies = [name : value]
-        
-        return self
-    }
-    
-    
-    /**
-     Add a new cookie to the initial cookies send to the Convertigo server.
-     Example usage:
-     C8oSettings().setTrustAllCertificates("username", value : "Convertigo")
-     @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
-     @param name : String
-     @param value : String
-     @return The current <b>C8oSettings</b>, for chaining.
-     
-     */
-    public func setLogRemote(logRemote : Bool)->C8oSettings
-    {
-        _logRemote = logRemote
-        return self
-    }
-    
+	 */
+	public func setTrustAllCertificates(trustAllCertificates: Bool) -> C8oSettings {
+		_trustAllCertificates = trustAllCertificates
+		return self
+	}
+	
+	public func addClientCertificate(certificate: Byte, password: String) -> C8oSettings {
+		if (_clientCertificateBinaries == nil) {
+			_clientCertificateBinaries = Dictionary<UInt8, String>?()
+		}
+		// clientCertificateBinaries = [certificate! as NSObject: password]
+		
+		return self
+	}
+	
+	public func addClientCertificate(certificatePath: String, password: String) -> C8oSettings {
+		if (_clientCertificateFiles == nil) {
+			_clientCertificateFiles = Dictionary<String, String>()
+		}
+		_clientCertificateFiles = [certificatePath: password]
+		
+		return self
+	}
+	
+	/**
+	 Add a new cookie to the initial cookies send to the Convertigo server.
+	 Example usage:
+	 C8oSettings().setTrustAllCertificates("username", value : "Convertigo")
+	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
+	 @param name : String
+	 @param value : String
+	 @return The current <b>C8oSettings</b>, for chaining.
 
-    public func setLogLevelLocal(logLevelLocal : C8oLogLevel)->C8oSettings
-    {
-        _logLevelLocal = logLevelLocal
-        return self
-    }
-    
-    public func setLogC8o(logC8o : Bool)->C8oSettings
-    {
-        _logC8o = logC8o
-        return self
-    }
-    
-    public func setLogOnFail(logOnFail :((exception :C8oException, parameters : Dictionary<String, NSObject>?) ->(Void))?) ->C8oSettings{
-        _logOnFail = logOnFail
-        return self
-    }
-    /** 
-     pecify the default FullSync database name. Must match a Convertigo Server
-     FullSync connector name
-     */
-    public func setDefaultDatabaseName(defaultDatabaseName: String)->C8oSettings
-    {
-        _defaultDatabaseName = defaultDatabaseName
-        return self
-    }
-    
-    public func setAuthenticationCookieValue(authenticationCookieValue : String)->C8oSettings
-    {
-        _authenticationCookieValue = authenticationCookieValue
-        return self
-    }
-    
-    public func setFullSyncServerUrl(fullSyncServerUrl : String)->C8oSettings
-    {
-        _fullSyncServerUrl = fullSyncServerUrl
-        return self
-    }
-    
-    public func setFullSyncUsername(fullSyncUsername : String)->C8oSettings
-    {
-        _fullSyncUsername = fullSyncUsername
-        return self
-    }
-    
-    public func setFullSyncPassword(fullSyncPassword : String)->C8oSettings
-    {
-        _fullSyncPassword = fullSyncPassword
-        return self
-    }
-    
-    public func setFullSyncLocalSuffix(fullSyncLocalSuffix : String)->C8oSettings
-    {
-        _fullSyncLocalSuffix = fullSyncLocalSuffix
-        return self
-    }
-    
-    /*public func setUiDispatcher(uiDispatcher : NSObject)->C8oSettings
-    {
-        /*_uiDispatcher = uiDispatcher*/
-        return self
-    }*/
-    
-    public func setUseEncryption(useEncryption : Bool)-> C8oSettings{
-        _useEncryption = useEncryption
-        return self
-    }
+	 */
+	public func addCookie(name: String, value: String) -> C8oSettings {
+		
+		if (_cookies == nil) {
+			_cookies = Dictionary<String, String>()
+		}
+		_cookies = [name: value]
+		
+		return self
+	}
+	
+	/**
+	 Add a new cookie to the initial cookies send to the Convertigo server.
+	 Example usage:
+	 C8oSettings().setTrustAllCertificates("username", value : "Convertigo")
+	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
+	 @param name : String
+	 @param value : String
+	 @return The current <b>C8oSettings</b>, for chaining.
+
+	 */
+	public func setLogRemote(logRemote: Bool) -> C8oSettings {
+		_logRemote = logRemote
+		return self
+	}
+	
+	public func setLogLevelLocal(logLevelLocal: C8oLogLevel) -> C8oSettings {
+		_logLevelLocal = logLevelLocal
+		return self
+	}
+	
+	public func setLogC8o(logC8o: Bool) -> C8oSettings {
+		_logC8o = logC8o
+		return self
+	}
+	
+	public func setLogOnFail(logOnFail: ((exception: C8oException, parameters: Dictionary<String, NSObject>?) -> (Void))?) -> C8oSettings {
+		_logOnFail = logOnFail
+		return self
+	}
+	/**
+	 pecify the default FullSync database name. Must match a Convertigo Server
+	 FullSync connector name
+	 */
+	public func setDefaultDatabaseName(defaultDatabaseName: String) -> C8oSettings {
+		_defaultDatabaseName = defaultDatabaseName
+		return self
+	}
+	
+	public func setAuthenticationCookieValue(authenticationCookieValue: String) -> C8oSettings {
+		_authenticationCookieValue = authenticationCookieValue
+		return self
+	}
+	
+	public func setFullSyncServerUrl(fullSyncServerUrl: String) -> C8oSettings {
+		_fullSyncServerUrl = fullSyncServerUrl
+		return self
+	}
+	
+	public func setFullSyncUsername(fullSyncUsername: String) -> C8oSettings {
+		_fullSyncUsername = fullSyncUsername
+		return self
+	}
+	
+	public func setFullSyncPassword(fullSyncPassword: String) -> C8oSettings {
+		_fullSyncPassword = fullSyncPassword
+		return self
+	}
+	
+	public func setFullSyncLocalSuffix(fullSyncLocalSuffix: String) -> C8oSettings {
+		_fullSyncLocalSuffix = fullSyncLocalSuffix
+		return self
+	}
+	
+	/*public func setUiDispatcher(uiDispatcher : NSObject)->C8oSettings
+	 {
+	 /*_uiDispatcher = uiDispatcher*/
+	return self
+} * /
+
+public func setUseEncryption(useEncryption: Bool) -> C8oSettings {
+	_useEncryption = useEncryption
+	return self
+}
 }

@@ -8,14 +8,14 @@
 
 import Foundation
 
-class VoidResponse{
-    private static let VOID_RESPONSE_INSTANCE : VoidResponse = VoidResponse()
-    
-    private init(){
-        
-    }
-    
-    internal static func getInstance()->VoidResponse{
-        return VoidResponse.VOID_RESPONSE_INSTANCE
-    }
+class VoidResponse {
+	private static let VOID_RESPONSE_INSTANCE: VoidResponse = VoidResponse()
+	
+	private init() {
+		
+	}
+	
+	internal static func getInstance() -> VoidResponse {
+		return VoidResponse.VOID_RESPONSE_INSTANCE
+	}
 }
