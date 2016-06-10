@@ -158,14 +158,8 @@ public class C8oSettings: C8oBase {
 		return self
 	}
 	
-	/*public func setUiDispatcher(uiDispatcher : NSObject)->C8oSettings
-	 {
-	 /*_uiDispatcher = uiDispatcher*/
-	return self
-} * /
-
-public func setUseEncryption(useEncryption: Bool) -> C8oSettings {
-	_useEncryption = useEncryption
-	return self
-}
+	public func setUseEncryption(useEncryption: Bool) -> C8oSettings {
+		_useEncryption = useEncryption
+		return self
+	}
 }

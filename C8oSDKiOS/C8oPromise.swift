@@ -13,9 +13,9 @@ import SwiftyJSON
 public class C8oPromise<T>: C8oPromiseFailSync<T> {
 	
 	private var c8o: C8o
-	private var c8oResponse: Pair < (T, Dictionary<String, AnyObject>) throws -> (C8oPromise<T>?), Bool > ?
-	private var c8oProgress: Pair < (C8oProgress) throws -> (), Bool > ?
-	private var c8oFail: Pair < (C8oException, Dictionary<String, AnyObject>?) throws -> (), Bool > ?
+	private var c8oResponse: Pair < (T, Dictionary<String, AnyObject>) throws -> (C8oPromise<T>?), Bool >?
+	private var c8oProgress: Pair < (C8oProgress) throws -> (), Bool >?
+	private var c8oFail: Pair < (C8oException, Dictionary<String, AnyObject>?) throws -> (), Bool >?
 	private var nextPromise: C8oPromise<T>?
 	
 	private var lastResponse: T?
