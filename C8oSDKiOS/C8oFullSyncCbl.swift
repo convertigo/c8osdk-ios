@@ -259,17 +259,19 @@ class C8oFullSyncCbl: C8oFullSync {
 		}
 		
 		// Filters and modifies wrong properties
-		var newProperties: Dictionary<String, AnyObject> = Dictionary<String, NSObject>()
+		var newProperties = Dictionary<String, AnyObject>()
 		for parameter in parameters {
 			var parameterName: String = parameter.0
 			
 			// Ignores parameters beginning with "__" or "_use_"
 			if (!parameterName.hasPrefix("__") && !parameterName.hasPrefix("_use_")) {
-				var objectParameterValue: AnyObject = parameter.1 as AnyObject
+				var objectParameterValue = parameter.1
 				// var objectParameterValueT : Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
-				do {
+                do {
+                    objectParameterValue = C8oFullSyncTranslator.toAnyObject(objectParameterValue)
+                    
 					// var count = 0
-					objectParameterValue = objectParameterValue.description
+					//objectParameterValue = objectParameterValue.description
 					/*let json = JSON(objectParameterValue)
 					 if let dataFromString = objectParameterValue.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
 					 let json = JSON(data: dataFromString)
@@ -606,13 +608,13 @@ class C8oFullSyncCbl: C8oFullSync {
 			let oldPropertyValue = old.1
 			
 			// let newPropertyValue : AnyObject
-			if var newPropertyValue = newProperties[oldPropertyKey] {
-				if var a = newPropertyValue as? Dictionary<String, AnyObject>, var b = oldPropertyValue as? Dictionary<String, AnyObject> {
-					mergeProperties(&a, oldProperties: oldPropertyValue as! Dictionary<String, AnyObject>)
-					newPropertyValue = a
+			if let newPropertyValue = newProperties[oldPropertyKey] {
+				if var a = newPropertyValue as? Dictionary<String, AnyObject>, let b = oldPropertyValue as? Dictionary<String, AnyObject> {
+					mergeProperties(&a, oldProperties: b)
+                    newProperties[oldPropertyKey] = a
 				} else if var a = newPropertyValue as? [AnyObject], let b = oldPropertyValue as? [AnyObject] {
 					C8oFullSyncCbl.mergeArrayProperties(&a, oldArray: b)
-					newPropertyValue = a
+                    newProperties[oldPropertyKey] = a
 				} else {
 					
 				}
@@ -625,7 +627,7 @@ class C8oFullSyncCbl: C8oFullSync {
 	static func mergeArrayProperties(inout newArray: [AnyObject], oldArray: [AnyObject]) {
 		let newArraySize = newArray.count
 		let oldArraySize = oldArray.count
-		for i in 0...oldArraySize {
+		for i in 0..<oldArraySize {
 			var newArrayValue: AnyObject? = nil
 			if (i < newArraySize) {
 				newArrayValue = newArray[i]

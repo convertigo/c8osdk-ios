@@ -327,10 +327,10 @@ public class C8o: C8oBase {
 	
 	public func callJson(requestable: String, parameters: JSON) -> C8oPromise<JSON>? {
 		
-		return callJson(requestable, parameters: (parameters.object as! Dictionary<String, NSObject>))
+		return callJson(requestable, parameters: (parameters.object as! Dictionary<String, AnyObject>))
 	}
 	
-	public func callXml(requestable: String, parameters: Dictionary<String, NSObject>) -> C8oPromise<AEXMLDocument> {
+	public func callXml(requestable: String, parameters: Dictionary<String, AnyObject>) -> C8oPromise<AEXMLDocument> {
 		
 		let promise = C8oPromise<AEXMLDocument>(c8o: self)
 		
@@ -444,15 +444,15 @@ public class C8o: C8oBase {
 		get { return httpInterface!.cookieStore! }
 	}
 	
-	private static func toParameters(parameters: [AnyObject]?) throws -> Dictionary<String, NSObject> {
+	private static func toParameters(parameters: [AnyObject]?) throws -> Dictionary<String, AnyObject> {
 		if (parameters!.count % 2 != 0) {
 			throw C8oException(message: C8oExceptionMessage.invalidParameterValue("parameters", details: "needs pairs of values"))
 		}
 		
-		var newParameters = Dictionary<String, NSObject>()
+		var newParameters = Dictionary<String, AnyObject>()
 		
 		for i in 0.stride(to: parameters!.count, by: 2) {
-			newParameters[String(parameters![i])] = parameters![i + 1] as? NSObject
+			newParameters[String(parameters![i])] = parameters![i + 1]
 		}
 		
 		return newParameters

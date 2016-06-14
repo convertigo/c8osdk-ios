@@ -158,5 +158,57 @@ internal class C8oFullSyncTranslator {
 	internal static func fullSyncDocumentOperationResponseToXml(fullSyncDocumentOperationResponse: FullSyncAbstractResponse) -> AEXMLDocument {
 		return try! fullSyncJsonToXml(fullSyncDocumentOperationResponseToJson(fullSyncDocumentOperationResponse))!
 	}
-	
+    
+    internal static func toAnyObject(obj: AnyObject) -> AnyObject {
+        if let nsSet = obj as? NSSet {
+            let array = NSMutableArray()
+            for item in nsSet {
+                array.addObject(toAnyObject(item))
+            }
+            return array
+        }
+        if let nsArray = obj as? NSArray {
+            let array = NSMutableArray()
+            for item in nsArray {
+                array.addObject(toAnyObject(item))
+            }
+            return array
+        }
+        if let nsDict = obj as? NSDictionary {
+            let dict = NSMutableDictionary()
+            for item in nsDict {
+                if let k = item.key as? NSCopying {
+                    dict[k] = toAnyObject(item.value)
+                }
+            }
+            return dict
+        }
+        let mirror = Mirror(reflecting: obj)
+        if (mirror.children.count > 0) {
+            let dict = NSMutableDictionary()
+            for child in mirror.children {
+                let prop = child.label!
+                dict[prop] = toAnyObject(child.value)
+            }
+            return dict
+        } else {
+            return obj
+        }
+    }
+    
+    internal static func toAnyObject(obj: Any) -> AnyObject {
+        if let nsValue = obj as? NSObject {
+            return toAnyObject(nsValue)
+        }
+        if (obj is AnyObject) {
+            return toAnyObject(obj as! AnyObject)
+        }
+        let mirror = Mirror(reflecting: obj)
+        if (mirror.children.count > 0) {
+            for child in mirror.children {
+                return toAnyObject(child.value)
+            }
+        }
+        return NSNull()
+    }
 }

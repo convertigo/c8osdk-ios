@@ -1017,9 +1017,9 @@ class C8oSDKiOSTests: XCTestCase {
 		json = try! c8o.callJson("fs://.post",
 			parameters: C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
 			"_id", myId,
-			"i", JSON(arrayLiteral: ["5", "6", "7.1", "nil"]).object,
+			"i", (["5", 6, 7.1, NSNull()] as JSON).arrayObject!,
 			"c.f.j", "good",
-			"c.f.h", JSON(arrayLiteral: [true, false]).object
+			"c.f.h", ([true, false] as JSON).arrayObject!
 		)!.sync()!
 		XCTAssert(json["ok"].boolValue)
 		json = try! c8o.callJson("fs://.post",
@@ -1031,11 +1031,93 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssert(json["ok"].boolValue)
 		json = try! c8o.callJson("fs://.get", parameters: "docid", myId)!.sync()!
 		json.dictionaryObject?.removeValueForKey("_rev")
-		XCTAssertEqual(myId, json.dictionaryObject?.removeValueForKey("_id") as? String)
-		let expectedJson = JSON(arrayLiteral: "{\"a\":1,\"i\":[\"5\",6,7.1,null],\"b\":-2,\"c\":{\"d\":3,\"i-j\":\"great\",\"f\":{\"j\":\"good\",\"g\":true,\"h\":[true,false,\"three\",\"four\"]},\"e\":\"four\"}}").stringValue
-		let sJson = json.stringValue
+        XCTAssertEqual(myId, json.dictionaryObject?.removeValueForKey("_id") as? String)
+        let expectedJson = "{\n  \"b\" : -2,\n  \"a\" : 1,\n  \"i\" : [\n    \"5\",\n    6,\n    7.1,\n    null\n  ],\n  \"c\" : {\n    \"f\" : {\n      \"g\" : true,\n      \"j\" : \"good\",\n      \"h\" : [\n        true,\n        false,\n        \"three\",\n        \"four\"\n      ]\n    },\n    \"i-j\" : \"great\",\n    \"e\" : \"four\",\n    \"d\" : 3\n  }\n}"
+		let sJson = json.description
 		XCTAssertEqual(expectedJson, sJson)
 	}
+    
+    internal class PlainObjectA {
+        internal var name: String?
+        internal var bObjects: Array<PlainObjectB>?
+        internal var bObject: PlainObjectB?
+    }
+    
+    internal class PlainObjectB {
+        internal var name: String?
+        internal var num: Int?
+        internal var enabled: Bool?
+    }
+    
+    func testC8oFsMergeObject() {
+        let c8o: C8o = try! self.Get(.C8O_FS)!
+        var json: JSON = try! c8o.callJson("fs://.reset")!.sync()!
+        XCTAssertTrue(json["ok"].boolValue)
+        let myId: String = "C8oFsPostExistingPolicyMergeSub-" + String(NSDate().timeIntervalSince1970 * 1000)
+        
+        let plainObjectA = PlainObjectA()
+        plainObjectA.name = "plain A"
+        plainObjectA.bObjects = []
+        
+        plainObjectA.bObject = PlainObjectB()
+        plainObjectA.bObject?.name = "plain B 1"
+        plainObjectA.bObject?.num = 1
+        plainObjectA.bObject?.enabled = true
+        plainObjectA.bObjects?.append(plainObjectA.bObject!)
+        
+        plainObjectA.bObject = PlainObjectB()
+        plainObjectA.bObject?.name = "plain B 2"
+        plainObjectA.bObject?.num = 2
+        plainObjectA.bObject?.enabled = false
+        plainObjectA.bObjects?.append(plainObjectA.bObject!)
+        
+        plainObjectA.bObject = PlainObjectB()
+        plainObjectA.bObject?.name = "plain B -777"
+        plainObjectA.bObject?.num = -777
+        plainObjectA.bObject?.enabled = true
+        
+        json = try! c8o.callJson("fs://.post",
+                                 parameters: "_id", myId,
+                                 "a obj", plainObjectA
+            )!.sync()!
+        XCTAssert(json["ok"].boolValue)
+        plainObjectA.bObjects![1].name = "plain B 2 bis"
+        
+        json = try! c8o.callJson("fs://.post", parameters:
+            C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
+            "_id", myId,
+            "a obj.bObjects", plainObjectA.bObjects!
+            )!.sync()!
+        XCTAssert(json["ok"].boolValue)
+        
+        plainObjectA.bObject = PlainObjectB()
+        plainObjectA.bObject?.name = "plain B -666"
+        plainObjectA.bObject?.num = -666
+        plainObjectA.bObject?.enabled = false
+        
+        json = try! c8o.callJson("fs://.post", parameters:
+            C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
+            "_id", myId,
+            "a obj.bObject", plainObjectA.bObject!
+            )!.sync()!
+        XCTAssert(json["ok"].boolValue)
+        
+        json = try! c8o.callJson("fs://.post", parameters:
+            C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
+            "_id", myId,
+            "a obj.bObject.enabled", true
+            )!.sync()!
+        XCTAssert(json["ok"].boolValue)
+ 
+        json = try! c8o.callJson("fs://.get", parameters: "docid", myId)!.sync()!
+        json.dictionaryObject?.removeValueForKey("_rev")
+        XCTAssertEqual(myId, json["_id"].stringValue)
+        XCTAssertEqual(myId, json.dictionaryObject?.removeValueForKey("_id") as? String)
+        
+        let expectedJson = "{\n  \"a obj\" : {\n    \"bObject\" : {\n      \"enabled\" : true,\n      \"num\" : -666,\n      \"name\" : \"plain B -666\"\n    },\n    \"bObjects\" : [\n      {\n        \"name\" : \"plain B 1\",\n        \"num\" : 1,\n        \"enabled\" : true\n      },\n      {\n        \"name\" : \"plain B 2 bis\",\n        \"num\" : 2,\n        \"enabled\" : false\n      }\n    ],\n    \"name\" : \"plain A\"\n  }\n}"
+        let sJson = json.description
+        XCTAssertEqual(expectedJson, sJson)
+    }
 	
 	func testC8oFsPostGetMultibase() {
 		let c8o: C8o = try! self.Get(.C8O_FS)!
