@@ -517,7 +517,7 @@ internal class C8oExceptionMessage {
 	}
 	
 	internal static func handleC8oCallRequest() -> String {
-		return "Failed while runnig the c8o call request"
+		return "Failed while running the c8o call request"
 	}
 	
 	internal static func saveResponseToLocalCache() -> String {

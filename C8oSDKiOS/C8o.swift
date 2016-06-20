@@ -292,40 +292,39 @@ public class C8o: C8oBase {
 	 FailUI() methods to handle C8oErrors.
 
 	 */
-	public func callJson (requestable: String, parameters: Dictionary<String, AnyObject>?) -> C8oPromise<JSON>? {
+	public func callJson (requestable: String, parameters: Dictionary<String, AnyObject>?) -> C8oPromise<JSON> {
 		let promise = C8oPromise<JSON>(c8o: self)
 		
 		call(requestable,
 			parameters: parameters,
 			c8oResponseListener: C8oResponseJsonListener(onJsonResponse: {
-				(params: Pair<JSON?, Dictionary<String, AnyObject>?>?) -> () in
+				(response, requestParameters) -> () in
 				
-				if ((params!.key) == nil) {
-					if ((params!.value)!.keys.contains(C8o.ENGINE_PARAMETER_PROGRESS) == true) {
+				if (response == nil) {
+					if (requestParameters!.keys.contains(C8o.ENGINE_PARAMETER_PROGRESS) == true) {
 						
-						promise.onProgress(((((params!.value)! as Dictionary<String, AnyObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
+						promise.onProgress((((requestParameters! as Dictionary<String, AnyObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
 					}
 				} else {
-					promise.onResponse((params?.key)!, parameters: (params!.value)!)
+					promise.onResponse(response, parameters: requestParameters)
 				}
 				
-			})
-			, c8oExceptionListener: C8oExceptionListener(onException: {
+			}),
+			c8oExceptionListener: C8oExceptionListener(onException: {
 				(params: Pair<C8oException, Dictionary<String, AnyObject>?>?) -> () in
 				
 				promise.onFailure(params?.key as C8oException?, parameters: params?.value)
-				
 			}))
 		return promise
 	}
 	
-	public func callJson(requestable: String, parameters: AnyObject...) -> C8oPromise<JSON>? {
+	public func callJson(requestable: String, parameters: AnyObject...) -> C8oPromise<JSON> {
 		
 		return try! callJson(requestable, parameters: C8o.toParameters(parameters))
 		
 	}
 	
-	public func callJson(requestable: String, parameters: JSON) -> C8oPromise<JSON>? {
+	public func callJson(requestable: String, parameters: JSON) -> C8oPromise<JSON> {
 		
 		return callJson(requestable, parameters: (parameters.object as! Dictionary<String, AnyObject>))
 	}
@@ -337,15 +336,15 @@ public class C8o: C8oBase {
 		call(requestable,
 			parameters: parameters,
 			c8oResponseListener: C8oResponseXmlListener(onXmlResponse: {
-				(params: Pair<AnyObject?, Dictionary<String, AnyObject>?>?) -> () in
+				(response, requestParameters) -> () in
 				
-				if ((params!.key) == nil) {
-					if ((params!.value)!.keys.contains(C8o.ENGINE_PARAMETER_PROGRESS) == true) {
+				if (response == nil) {
+					if (requestParameters!.keys.contains(C8o.ENGINE_PARAMETER_PROGRESS) == true) {
 						
-						promise.onProgress(((((params!.value)! as Dictionary<String, AnyObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
+						promise.onProgress((((requestParameters! as Dictionary<String, AnyObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
 					}
 				} else {
-					promise.onResponse((params?.key)! as! AEXMLDocument, parameters: (params?.value)!)
+					promise.onResponse(response as? AEXMLDocument, parameters: requestParameters)
 				}
 				
 			})
@@ -395,15 +394,25 @@ public class C8o: C8oBase {
 		get { return c8oLogger! }
 	}
 	
+	public func isUI () -> Bool {
+		return NSThread.isMainThread()
+	}
+	
 	public func runUI (block: dispatch_block_t) {
-		if (NSThread.isMainThread()) {
+		if (isUI()) {
 			block()
 		} else {
 			dispatch_async(dispatch_get_main_queue(), {
 				block()
 			})
 		}
-		
+	}
+	
+	public func runBG (block: dispatch_block_t) {
+		let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
+		dispatch_async(dispatch_get_global_queue(priority, 0)) {
+			block()
+		}
 	}
 	
 	public override var description: String {

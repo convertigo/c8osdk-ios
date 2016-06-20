@@ -9,9 +9,9 @@
 import Foundation
 
 public class C8oResponseXmlListener: C8oResponseListener {
-	public var onXmlResponse: (Pair<AnyObject?, Dictionary<String, AnyObject>?>?) -> ();
+	public var onXmlResponse: (AnyObject?, Dictionary<String, AnyObject>?) -> ();
 	
-	public init(onXmlResponse: (params: Pair<AnyObject?, Dictionary<String, AnyObject>?>?) -> ()) {
+	public init(onXmlResponse: (AnyObject?, Dictionary<String, AnyObject>?) -> ()) {
 		self.onXmlResponse = onXmlResponse
 	}
 }

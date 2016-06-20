@@ -31,12 +31,9 @@ internal class C8oCallTask {
 	}
 	
 	internal func execute() -> Void {
-		let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
-		dispatch_async(dispatch_get_global_queue(priority, 0)) {
-			
+		c8o.runBG({
 			self.doInBackground()
-			
-		}
+		});
 	}
 	
 	private func doInBackground() -> Void {
@@ -205,11 +202,11 @@ internal class C8oCallTask {
 			if (result is AEXMLDocument) {
 				
 				c8o.c8oLogger!.logC8oCallXMLResponse(result as! AEXMLDocument, url: c8oCallUrl, parameters: self.parameters)
-				(c8oResponseListener as! C8oResponseXmlListener).onXmlResponse(Pair(key: result!, value: parameters))
+				(c8oResponseListener as! C8oResponseXmlListener).onXmlResponse(result!, parameters)
 			} else {
 				if (result is C8oJSON) {
 					c8o.c8oLogger!.logC8oCallJSONResponse((result as!C8oJSON).myJSON!, url: c8oCallUrl, parameters: parameters)
-					(c8oResponseListener as! C8oResponseJsonListener).onJsonResponse(Pair(key: (result as!C8oJSON).myJSON!, value: parameters))
+					(c8oResponseListener as! C8oResponseJsonListener).onJsonResponse((result as!C8oJSON).myJSON!, parameters)
 				} else {
 					if result is C8oException {
 						c8o.handleCallException(c8oExceptionListener, requestParameters: self.parameters, exception: result as! C8oException)

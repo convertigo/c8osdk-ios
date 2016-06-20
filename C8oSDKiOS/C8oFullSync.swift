@@ -60,7 +60,7 @@ internal class C8oFullSync: NSObject {
 		
 		var response: AnyObject?;
 		do {
-			response = try fullSyncRequestable!.handleFullSyncRequest(self, databaseNameName: databaseName!, parameters: parameters, c8oResponseListner: listener);
+			response = try fullSyncRequestable!.handleFullSyncRequest(self as! C8oFullSyncCbl, databaseNameName: databaseName!, parameters: parameters, c8oResponseListner: listener);
 		}
 		catch let e as C8oException {
 			throw e

@@ -76,14 +76,14 @@ public class C8oFileTransfer {
 				while (self.alive) {
 					do {
 						param["skip"] = skip
-						var res: JSON = try self.c8oTask.callJson("fs://.all", parameters: param)!.sync()!
+						var res: JSON = try self.c8oTask.callJson("fs://.all", parameters: param).sync()!
 						
 						if (res["rows"].count > 0) {
 							var task: JSON = res["rows"][0]["doc"]
 							if (task == nil) {
 								task = try self.c8oTask.callJson("fs://.get",
 									parameters: "docid", res["rows"][0]["id"].stringValue
-								)!.sync()!
+								).sync()!
 							}
 							let uuid: String = String(task["_id"])
 							
@@ -121,7 +121,7 @@ public class C8oFileTransfer {
 	
 	private func checkTaskDb() throws {
 		if (!tasksDbCreated) {
-			try c8oTask.callJson("fs://.create")?.sync()
+			try c8oTask.callJson("fs://.create").sync()
 			tasksDbCreated = true
 		}
 	}
@@ -135,7 +135,7 @@ public class C8oFileTransfer {
 			"replicated", false,
 			"assembled", false,
 			"remoteDeleted", false
-		)?.then({ (response, parameters) -> (C8oPromise<JSON>?) in
+		).then({ (response, parameters) -> (C8oPromise<JSON>?) in
 			condition.lock()
 			// C8oFileTransfer.self.Notify(C8oFileTransfer)
 			condition.unlock()
@@ -157,7 +157,7 @@ public class C8oFileTransfer {
 			//
 			if (!task2["replicated"].boolValue || !task2["remoteDeleted"].boolValue) {
 				needRemoveSession = true
-				var json: JSON = try c8o!.callJson(".SelectUuid", parameters: "uuid", transferStatus.uuid)!.sync()!
+				var json: JSON = try c8o!.callJson(".SelectUuid", parameters: "uuid", transferStatus.uuid).sync()!
 				
 				self.debug("SelectUuid:\n" + json.stringValue)
 				
@@ -179,11 +179,11 @@ public class C8oFileTransfer {
 			if (!task2["replicated"].boolValue && fsConnector != nil) {
 				var locker: [Bool] = [Bool]()
 				locker[0] = false
-				try c8o!.callJson("fs://" + fsConnector! + ".create")!.sync()!
+				try c8o!.callJson("fs://" + fsConnector! + ".create").sync()!
 				needRemoveSession = true
 				let condition: NSCondition = NSCondition()
 				
-				c8o!.callJson("fs://" + fsConnector! + ".replicate_pull")?.then({ (response, parameters) -> (C8oPromise<JSON>?) in
+				c8o!.callJson("fs://" + fsConnector! + ".replicate_pull").then({ (response, parameters) -> (C8oPromise<JSON>?) in
 					condition.lock()
 					locker[0] = true
 					condition.signal()
@@ -207,7 +207,7 @@ public class C8oFileTransfer {
 						
 						condition.unlock()
 						
-						var all = try c8o?.callJson("fs://" + fsConnector! + ".all", parameters: allOptions)!.sync()
+						var all = try c8o?.callJson("fs://" + fsConnector! + ".all", parameters: allOptions).sync()
 						let rows = all!["rows"]
 						if (rows != nil) {
 							let current: Int = rows.count
@@ -230,7 +230,7 @@ public class C8oFileTransfer {
 					parameters: C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
 					"_id", task2["_id"].stringValue,
 					"replicated", true
-				)!.sync()
+				).sync()
 				
 				self.debug("replicated true:\n" + (res?.description)!)
 			}
@@ -244,7 +244,7 @@ public class C8oFileTransfer {
 				var createdFileStream = C8oFileTransfer.fileManager.createFile(transferStatus.filepath)
 				
 				for i in 0...transferStatus.total {
-					let meta: JSON = try c8o!.callJson("fs://" + fsConnector! + ".get", parameters: "docid", transferStatus.uuid + "_" + i.description)!.sync()!
+					let meta: JSON = try c8o!.callJson("fs://" + fsConnector! + ".get", parameters: "docid", transferStatus.uuid + "_" + i.description).sync()!
 					self.debug((meta.description))
 					
 					appendChunk(&createdFileStream, contentPath: meta["_attachments"]["chunk"]["content_url"].stringValue)
@@ -256,7 +256,7 @@ public class C8oFileTransfer {
 					parameters: C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
 					"_id", task2["_id"].stringValue,
 					"assembled", true
-				)!.sync()!
+				).sync()!
 				self.debug("assembled true:\n" + res.description)
 			}
 			
@@ -264,11 +264,11 @@ public class C8oFileTransfer {
 				transferStatus.state = C8oFileTransferStatus.stateCleaning
 				self.notify(transferStatus)
 				
-				var res = try c8o!.callJson("fs://" + fsConnector! + ".destroy")!.sync()
+				var res = try c8o!.callJson("fs://" + fsConnector! + ".destroy").sync()
 				self.debug("destroy local true:\n" + (res?.stringValue)!)
 				
 				needRemoveSession = true
-				res = try c8o!.callJson(".DeleteUuid", parameters: "uuid", transferStatus.uuid)!.sync()!
+				res = try c8o!.callJson(".DeleteUuid", parameters: "uuid", transferStatus.uuid).sync()!
 				self.debug("deleteUuid:\n" + (res?.description)!)
 				
 				task2["remoteDeleted"] = true
@@ -278,12 +278,12 @@ public class C8oFileTransfer {
 						C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
 					"_id", task2["_id"].stringValue,
 					"remoteDeleted", true
-				)!.sync()!
+				).sync()!
 				self.debug("remoteDeleted true:\n" + (res?.description)!)
 			}
 			
 			if (task2["replicated"].boolValue && task2["assembled"].boolValue && task2["remoteDeleted"].boolValue) {
-				let res = try c8oTask.callJson("fs://.delete", parameters: "docid", transferStatus.uuid)!.sync()
+				let res = try c8oTask.callJson("fs://.delete", parameters: "docid", transferStatus.uuid).sync()
 				self.debug("local delete:\n" + (res?.description)!)
 				
 				transferStatus.state = C8oFileTransferStatus.stateFinished

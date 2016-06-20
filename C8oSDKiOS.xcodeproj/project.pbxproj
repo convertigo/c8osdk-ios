@@ -969,7 +969,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = Convertigo;
 				TargetAttributes = {
 					623C74381C86DBB600E691B0 = {
@@ -1452,7 +1452,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKiOS;
 				PRODUCT_NAME = C8o;
-				SDKROOT = iphoneos9.2;
+				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/C8oSDKiOS";
 				SWIFT_OBJC_BRIDGING_HEADER = "C8oSDKiOS/Couchbase-Lite-Bridging-Header.h";
@@ -1496,7 +1496,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKiOS;
 				PRODUCT_NAME = C8o;
-				SDKROOT = iphoneos9.2;
+				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/C8oSDKiOS";
 				SWIFT_OBJC_BRIDGING_HEADER = "C8oSDKiOS/Couchbase-Lite-Bridging-Header.h";

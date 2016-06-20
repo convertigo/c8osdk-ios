@@ -153,27 +153,27 @@ public class C8oLogger: NSObject {
 		}
 	}
 	
-	internal func _fatal(message: String, exceptions: C8oException?) -> Void {
+	internal func _fatal(message: String, exceptions: C8oException? = nil) -> Void {
 		_log(C8oLogLevel.FATAL, messages: message, exceptions: exceptions)
 	}
 	
-	internal func _c8oException(message: String, exceptions: C8oException?) -> Void {
+	internal func _error(message: String, exceptions: C8oException? = nil) -> Void {
 		_log(C8oLogLevel.ERROR, messages: message, exceptions: exceptions)
 	}
 	
-	internal func _warn(message: String, exceptions: C8oException?) -> Void {
+	internal func _warn(message: String, exceptions: C8oException? = nil) -> Void {
 		_log(C8oLogLevel.WARN, messages: message, exceptions: exceptions)
 	}
 	
-	internal func _info(message: String, exceptions: C8oException?) -> Void {
+	internal func _info(message: String, exceptions: C8oException? = nil) -> Void {
 		_log(C8oLogLevel.INFO, messages: message, exceptions: exceptions)
 	}
 	
-	internal func _debug(message: String, exceptions: C8oException?) -> Void {
+	internal func _debug(message: String, exceptions: C8oException? = nil) -> Void {
 		_log(C8oLogLevel.DEBUG, messages: message, exceptions: exceptions)
 	}
 	
-	internal func _trace(message: String, exceptions: C8oException?) -> Void {
+	internal func _trace(message: String, exceptions: C8oException? = nil) -> Void {
 		_log(C8oLogLevel.TRACE, messages: message, exceptions: exceptions)
 	}
 	

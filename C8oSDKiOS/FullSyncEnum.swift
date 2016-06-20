@@ -14,14 +14,14 @@ internal class FullSyncRequestable {
 	internal static var GET: FullSyncRequestable = FullSyncRequestable(value: "get", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener) throws -> (AnyObject) in
 		
 		let docid: String = try! C8oUtils.peekParameterStringValue(parameters, name: FullSyncGetDocumentParameter.DOCID.name, exceptionIfMissing: true)!
-		return try (c8oFullSync as! C8oFullSyncCbl).handleGetDocumentRequest(databaseName, docid: docid, parameters: parameters)
+		return try c8oFullSync.handleGetDocumentRequest(databaseName, docid: docid, parameters: parameters)
 	})
 	
 	internal static var DELETE: FullSyncRequestable = FullSyncRequestable(value: "delete", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener) throws -> (AnyObject) in
 		
 		let docid: String = try! C8oUtils.peekParameterStringValue(parameters, name: FullSyncGetDocumentParameter.DOCID.name, exceptionIfMissing: true)!
 		do {
-			return try (c8oFullSync as! C8oFullSyncCbl).handleDeleteDocumentRequest(databaseName, docid: docid, parameters: parameters)!
+			return try c8oFullSync.handleDeleteDocumentRequest(databaseName, docid: docid, parameters: parameters)!
 		}
 		catch let e as NSError {
 			throw e
@@ -37,12 +37,12 @@ internal class FullSyncRequestable {
 		// Finds the policy corresponding to the parameter value if it exists
 		let fullSyncPolicy: FullSyncPolicy = FullSyncPolicy.getFullSyncPolicy(fullSyncPolicyParameter)
 		
-		return try (c8oFullSync as! C8oFullSyncCbl).handlePostDocumentRequest(databaseName, fullSyncPolicy: fullSyncPolicy, parameters: parameters)!
+		return try c8oFullSync.handlePostDocumentRequest(databaseName, fullSyncPolicy: fullSyncPolicy, parameters: parameters)!
 	})
 	
 	internal static var ALL: FullSyncRequestable = FullSyncRequestable(value: "all", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener) -> (AnyObject) in
 		
-		return try! (c8oFullSync as! C8oFullSyncCbl).handleAllDocumentsRequest(databaseName, parameters: parameters)!
+		return try! c8oFullSync.handleAllDocumentsRequest(databaseName, parameters: parameters)!
 	})
 	
 	internal static var VIEW: FullSyncRequestable = FullSyncRequestable(value: "view", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener) throws -> (AnyObject) in
@@ -52,49 +52,56 @@ internal class FullSyncRequestable {
 		// Gets the view name parameter value
 		let view: String = try! C8oUtils.peekParameterStringValue(parameters, name: FullSyncGetViewParameter.VIEW.name, exceptionIfMissing: false)!
 		
-		return try (c8oFullSync as! C8oFullSyncCbl).handleGetViewRequest(databaseName, ddocName: ddoc, viewName: view, parameters: parameters)!
+		return try c8oFullSync.handleGetViewRequest(databaseName, ddocName: ddoc, viewName: view, parameters: parameters)!
 	})
 	
 	internal static var SYNC: FullSyncRequestable = FullSyncRequestable(value: "sync", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener) -> (AnyObject) in
 		let thread: NSThread = NSThread.currentThread()
-		var syncMutex: [Bool] = [Bool]()
-		syncMutex.append(false)
-		var pullFinished: Bool = false
-		var pushFinished: Bool = false
+		var mutex: Bool = false
+		var pullFinish: Bool = false
+		var pushFinish: Bool = false
 		let condition: NSCondition = NSCondition()
 		condition.lock()
 		
-		try! (c8oFullSync as! C8oFullSyncCbl).handleSyncRequest(databaseName, parameters: parameters, c8oResponseListener: C8oResponseProgressListener(onProgressResponse: { (progress, param) -> () in
+		try! c8oFullSync.handleSyncRequest(databaseName, parameters: parameters, c8oResponseListener: C8oResponseProgressListener(onProgressResponse: { (progress, param) -> () in
 			
-			if (progress.pull && progress.finished) {
-				pullFinished = true
-			}
-			
-			if (progress.push && progress.finished) {
-				pushFinished = true
-			}
-			if (pullFinished && pushFinished) {
-				if (NSThread.currentThread() == thread) {
-					syncMutex[0] = true
-				} else {
-					syncMutex[0] = true
-					// condition.lock()
-					condition.signal()
-					// condition.unlock()
+			if (!mutex) {
+				if (!pullFinish && progress.pull && progress.finished) {
+					pullFinish = true
+					c8oFullSync.c8o!.log._debug("handleFullSyncRequest pullFinish = true: " + progress.description)
+				}
+				
+				if (!pushFinish && progress.push && progress.finished) {
+					pushFinish = true
+					c8oFullSync.c8o!.log._debug("handleFullSyncRequest pushFinish = true: " + progress.description)
 				}
 			}
 			
 			if (c8oResponseListener is C8oResponseJsonListener) {
+				c8oFullSync.c8o!.log._debug("handleFullSyncRequest onJsonResponse: " + progress.description)
 				let varNil: C8oJSON? = nil
-				(c8oResponseListener as! C8oResponseJsonListener).onJsonResponse(Pair(key: varNil?.myJSON, value: param))
+				(c8oResponseListener as! C8oResponseJsonListener).onJsonResponse(varNil?.myJSON, param)
 			} else if (c8oResponseListener is C8oResponseXmlListener) {
 				let varNil: AEXMLDocument? = nil
-				(c8oResponseListener as! C8oResponseXmlListener).onXmlResponse(Pair(key: varNil, value: param))
+				(c8oResponseListener as! C8oResponseXmlListener).onXmlResponse(varNil, param)
+			}
+			
+			if (!mutex && pullFinish && pushFinish) {
+				if (NSThread.currentThread() == thread) {
+					mutex = true
+				} else {
+					condition.lock()
+					mutex = true
+					c8oFullSync.c8o!.log._debug("handleFullSyncRequest notify: " + progress.description)
+					condition.signal()
+					condition.unlock()
+				}
 			}
 			}))
-		if (!syncMutex[0]) {
+		if (!mutex) {
 			condition.wait()
 		}
+		c8oFullSync.c8o!.log._debug("handleFullSyncRequest after wait")
 		let myjson: C8oJSON = C8oJSON()
 		let json: JSON = ["ok": true]
 		myjson.myJSON = json
@@ -109,7 +116,7 @@ internal class FullSyncRequestable {
 		var syncMutex: [Bool] = [Bool]()
 		syncMutex.append(false)
 		condition.lock()
-		try! (c8oFullSync as! C8oFullSyncCbl).handleReplicatePullRequest(databaseName, parameters: parameters, c8oResponseListener: C8oResponseProgressListener(onProgressResponse: { (progress, param) -> () in
+		try! c8oFullSync.handleReplicatePullRequest(databaseName, parameters: parameters, c8oResponseListener: C8oResponseProgressListener(onProgressResponse: { (progress, param) -> () in
 			
 			if (progress.finished) {
 				if (NSThread.currentThread() == thread) {
@@ -120,15 +127,14 @@ internal class FullSyncRequestable {
 					condition.signal()
 					// condition.unlock()
 				}
-				
 			}
 			
 			if (c8oResponseListener is C8oResponseJsonListener) {
 				let varNil: C8oJSON? = nil
-				(c8oResponseListener as! C8oResponseJsonListener).onJsonResponse(Pair(key: varNil?.myJSON, value: param))
+				(c8oResponseListener as! C8oResponseJsonListener).onJsonResponse(varNil?.myJSON, param)
 			} else if (c8oResponseListener is C8oResponseXmlListener) {
 				let varNil: AEXMLDocument? = nil
-				(c8oResponseListener as! C8oResponseXmlListener).onXmlResponse(Pair(key: varNil, value: param))
+				(c8oResponseListener as! C8oResponseXmlListener).onXmlResponse(varNil, param)
 			}
 			
 			}))
@@ -151,7 +157,7 @@ internal class FullSyncRequestable {
 		syncMutex.append(false)
 		condition.lock()
 		
-		try! (c8oFullSync as! C8oFullSyncCbl).handleReplicatePushRequest(databaseName, parameters: parameters, c8oResponseListener: C8oResponseProgressListener(onProgressResponse: { (progress, param) -> () in
+		try! c8oFullSync.handleReplicatePushRequest(databaseName, parameters: parameters, c8oResponseListener: C8oResponseProgressListener(onProgressResponse: { (progress, param) -> () in
 			
 			if (progress.finished) {
 				if (NSThread.currentThread() == thread) {
@@ -166,10 +172,10 @@ internal class FullSyncRequestable {
 			
 			if (c8oResponseListener is C8oResponseJsonListener) {
 				let varNil: C8oJSON? = nil
-				(c8oResponseListener as! C8oResponseJsonListener).onJsonResponse(Pair(key: varNil?.myJSON, value: param))
+				(c8oResponseListener as! C8oResponseJsonListener).onJsonResponse(varNil?.myJSON, param)
 			} else if (c8oResponseListener is C8oResponseXmlListener) {
 				let varNil: AEXMLDocument? = nil
-				(c8oResponseListener as! C8oResponseXmlListener).onXmlResponse(Pair(key: varNil, value: param))
+				(c8oResponseListener as! C8oResponseXmlListener).onXmlResponse(varNil, param)
 			}
 			
 			}))
@@ -186,27 +192,27 @@ internal class FullSyncRequestable {
 	
 	internal static var RESET: FullSyncRequestable = FullSyncRequestable(value: "reset", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener) -> (NSObject) in
 		
-		return try! (c8oFullSync as! C8oFullSyncCbl).handleResetDatabaseRequest(databaseName)!
+		return try! c8oFullSync.handleResetDatabaseRequest(databaseName)!
 	})
 	
 	internal static var CREATE: FullSyncRequestable = FullSyncRequestable(value: "create", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener) -> (NSObject) in
 		
-		return try! (c8oFullSync as! C8oFullSyncCbl).handleCreateDatabaseRequest(databaseName)!
+		return try! c8oFullSync.handleCreateDatabaseRequest(databaseName)!
 	})
 	
 	internal static var DESTROY: FullSyncRequestable = FullSyncRequestable(value: "destroy", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener) -> (NSObject) in
-		return try! (c8oFullSync as! C8oFullSyncCbl).handleDestroyDatabaseRequest(databaseName)! // HandleDestroyDatabaseRequest(databaseName)!
+		return try! c8oFullSync.handleDestroyDatabaseRequest(databaseName)! // HandleDestroyDatabaseRequest(databaseName)!
 	})
 	
 	internal var value: String
-	private var handleFullSyncrequestOp: (C8oFullSync, String, Dictionary<String, AnyObject>, C8oResponseListener) throws -> (AnyObject)
+	private var handleFullSyncrequestOp: (C8oFullSyncCbl, String, Dictionary<String, AnyObject>, C8oResponseListener) throws -> (AnyObject)
 	
-	private init(value: String, handleFullSyncrequestOp: (C8oFullSync, String, Dictionary<String, AnyObject>, C8oResponseListener) throws -> (AnyObject)) {
+	private init(value: String, handleFullSyncrequestOp: (C8oFullSyncCbl, String, Dictionary<String, AnyObject>, C8oResponseListener) throws -> (AnyObject)) {
 		self.value = value
 		self.handleFullSyncrequestOp = handleFullSyncrequestOp
 	}
 	
-	internal func handleFullSyncRequest(c8oFullSync: C8oFullSync, databaseNameName: String, parameters: Dictionary<String, AnyObject>, c8oResponseListner: C8oResponseListener) throws -> AnyObject {
+	internal func handleFullSyncRequest(c8oFullSync: C8oFullSyncCbl, databaseNameName: String, parameters: Dictionary<String, AnyObject>, c8oResponseListner: C8oResponseListener) throws -> AnyObject {
 		do {
 			return try handleFullSyncrequestOp(c8oFullSync, databaseNameName, parameters, c8oResponseListner)
 		}
@@ -260,6 +266,9 @@ public class FullSyncRequestParameter {
 		/*let valueStr : String = value as! String
 		 var indexUpdateModeValues =   CBLIndexUpdateMode()
 		 var indexUpdateModeEnumerator =*/
+	})
+	public static let KEY: FullSyncRequestParameter = FullSyncRequestParameter(name: "keys", isJson: true, action: { query, value in
+		query.keys = [value]
 	})
 	public static let KEYS: FullSyncRequestParameter = FullSyncRequestParameter(name: "keys", isJson: true, action: { query, value in
 		query.keys = value as? [AnyObject]

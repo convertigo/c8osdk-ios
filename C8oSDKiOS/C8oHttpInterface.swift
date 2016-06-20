@@ -14,6 +14,8 @@ internal class C8oHttpInterface {
 	var cookieContainer: C8oCookieStorage
 	var alamofire: Manager
 	private var timeout: Int
+	private var firstCall = true
+	private var firstCallMutex = NSCondition()
 	
 	internal init(c8o: C8o) {
 		self.c8o = c8o
@@ -44,6 +46,22 @@ internal class C8oHttpInterface {
 		]
 		let semaphore = dispatch_semaphore_create(0)
 		let queue = dispatch_queue_create("com.convertigo.c8o.queues", DISPATCH_QUEUE_CONCURRENT)
+		
+		firstCallMutex.lock()
+		if (firstCall) {
+			let request = alamofire.upload(.POST, url, headers: headers, data: data!)
+			request.response(
+				queue: queue,
+				completionHandler: { request, response, data, error in
+					myResponse = (data, error)
+					dispatch_semaphore_signal(semaphore)
+			})
+			dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+			firstCall = false
+			firstCallMutex.unlock()
+			return myResponse
+		}
+		firstCallMutex.unlock()
 		
 		let request = alamofire.upload(.POST, url, headers: headers, data: data!)
 		request.response(
