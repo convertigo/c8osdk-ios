@@ -338,8 +338,8 @@ class C8oSDKiOSTests: XCTestCase {
 		c8o.log.info(id)
 		NSThread.sleepForTimeInterval(0.333)
 		let doc = try! c8o.callXml(".GetLogs").sync()
-		let value = doc?.root["line"].value
-		XCTAssertNil(value)
+		let value = doc?.root["line"].error
+		XCTAssertNotNil(value)
 	}
 	
 	func testC8oDefaultPromiseXmlOne() {
