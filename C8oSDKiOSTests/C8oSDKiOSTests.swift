@@ -1030,8 +1030,11 @@ class C8oSDKiOSTests: XCTestCase {
 		json.dictionaryObject?.removeValueForKey("_rev")
 		XCTAssertEqual(myId, json.dictionaryObject?.removeValueForKey("_id") as? String)
 		let expectedJson = "{\n  \"b\" : -2,\n  \"a\" : 1,\n  \"i\" : [\n    \"5\",\n    6,\n    7.1,\n    null\n  ],\n  \"c\" : {\n    \"f\" : {\n      \"g\" : true,\n      \"j\" : \"good\",\n      \"h\" : [\n        true,\n        false,\n        \"three\",\n        \"four\"\n      ]\n    },\n    \"i-j\" : \"great\",\n    \"e\" : \"four\",\n    \"d\" : 3\n  }\n}"
-		let sJson = json.description
-		XCTAssertEqual(expectedJson, sJson)
+
+        if let dataFromString = expectedJson.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
+            let jsonex = JSON(data: dataFromString)
+            XCTAssertEquals(jsonex, actual: json)
+        }
 	}
 	
 	internal class PlainObjectA {
@@ -1112,8 +1115,13 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertEqual(myId, json.dictionaryObject?.removeValueForKey("_id") as? String)
 		
 		let expectedJson = "{\n  \"a obj\" : {\n    \"bObject\" : {\n      \"enabled\" : true,\n      \"num\" : -666,\n      \"name\" : \"plain B -666\"\n    },\n    \"bObjects\" : [\n      {\n        \"name\" : \"plain B 1\",\n        \"num\" : 1,\n        \"enabled\" : true\n      },\n      {\n        \"name\" : \"plain B 2 bis\",\n        \"num\" : 2,\n        \"enabled\" : false\n      }\n    ],\n    \"name\" : \"plain A\"\n  }\n}"
-		let sJson = json.description
-		XCTAssertEqual(expectedJson, sJson)
+        
+        if let dataFromString = expectedJson.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
+            let jsonex = JSON(data: dataFromString)
+            XCTAssertEquals(jsonex, actual: json)
+        }
+        
+		
 	}
 	
 	func testC8oFsPostGetMultibase() {
@@ -1211,7 +1219,7 @@ class C8oSDKiOSTests: XCTestCase {
 				if (NSThread.mainThread() == NSThread.currentThread()) {
 					uiThread[0] = true
 				} else {
-					uiThread[0] = false;
+					uiThread[0] = false
 				}
 				if (first[0] == nil) {
 					first[0] = C8oProgress.description
@@ -1255,7 +1263,7 @@ class C8oSDKiOSTests: XCTestCase {
 					if (NSThread.mainThread() == NSThread.currentThread()) {
 						uiThread[0] = true
 					} else {
-						uiThread[0] = false;
+						uiThread[0] = false
 					}
 					if (first[0] == nil) {
 						first[0] = C8oProgress.description
@@ -1484,7 +1492,7 @@ class C8oSDKiOSTests: XCTestCase {
 				if (NSThread.mainThread() == NSThread.currentThread()) {
 					uiThread[0] = true
 				} else {
-					uiThread[0] = false;
+					uiThread[0] = false
 				}
 				if (first[0] == nil) {
 					first[0] = C8oProgress.description
@@ -1736,59 +1744,52 @@ class C8oSDKiOSTests: XCTestCase {
 		// let c8o : C8o = try! C8o(endpoint: PREFIX + HOST + PORT + "hdhhdhd", c8oSettings: C8oSettings().setTimeout(1000))
 		
 	}
-	
-	func XCTAssertEqualsJsonChild(expectedObject: AnyObject?, actualObject: AnyObject?) {
-		if (expectedObject != nil) {
-			XCTAssertNotNil(actualObject, "must not be null")
-		} else {
-			XCTAssertNil(actualObject, "must be null")
-		}
-	}
-	
-	/*
-	 private void assertEqualsJsonChild(Object expectedObject, Object actualObject) {
-	 if (expectedObject != null) {
-	 assertNotNull("must not be null", actualObject);
-	 assertEquals(expectedObject.getClass(), actualObject.getClass());
-	 if (expectedObject instanceof JSONObject) {
-	 assertEquals((JSONObject) expectedObject, (JSONObject) actualObject);
-	 } else if (expectedObject instanceof JSONArray) {
-	 assertEquals((JSONArray) expectedObject, (JSONArray) actualObject);
-	 } else {
-	 assertEquals(expectedObject, actualObject);
-	 }
-	 } else {
-	 assertNull("must be null", actualObject);
-	 }
-	 }
 
-	 private void assertEquals(JSONObject expected, JSONObject actual) {
-	 try {
-	 JSONArray expectedNames = expected.names();
-	 JSONArray actualNames = actual.names();
-	 assertEquals("missing keys: " + expectedNames + " and " + actualNames, expectedNames.length(), actualNames.length());
+    func XCTAssertEqualsJsonChild(expectedObject : JSON , actualObject :JSON) {
+        if(expectedObject.dictionary?.count >= 0) {
+            XCTAssertNotNil(actualObject, "must not be null")
+            XCTAssertEquals(expectedObject, actual: actualObject)
+        }
+        else if (expectedObject.array?.count >= 0){
+            XCTAssertNotNil(actualObject, "must not be null")
+            XCTAssertEquals(expectedObject, actual: actualObject)
+        }
+        else if (expectedObject.int != nil){
+            XCTAssertNotNil(actualObject, "must not be null")
+            XCTAssertEqual(expectedObject.int, actualObject.int)
+        }
+        else if(expectedObject.string != nil){
+            XCTAssertNotNil(actualObject, "must not be null")
+            XCTAssertEqual(expectedObject.string, actualObject.string)
+        }
+    }
 
-	 for (Iterator<String> i = expected.keys(); i.hasNext(); ) {
-	 String expectedName = i.next();
-	 assertTrue("missing key: " + expectedName, actual.has(expectedName));
-	 assertEqualsJsonChild(expected.get(expectedName), actual.get(expectedName));
-	 }
-	 } catch (Throwable t) {
-	 assertTrue("exception: " + t, false);
-	 }
-	 }
-
-	 private void assertEquals(JSONArray expected, JSONArray actual) {
-	 try {
-	 assertEquals("missing entries", expected.length(), actual.length());
-
-	 for (int i = 0; i < expected.length(); i++) {
-	 assertEqualsJsonChild(expected.get(i), actual.get(i));
-	 }
-	 } catch (Throwable t) {
-	 assertTrue("exception: " + t, false);
-	 }
-	 }
-	 */
+    func XCTAssertEquals(expected : JSON, actual : JSON) {
+        do {
+            if(expected.dictionary?.count >= 0){// || expected.array?.count >= 0 ){
+                let expectedD = expected.dictionary
+                let actualD = actual.dictionary
+                let expectedNames = expectedD?.keys
+                let actualNames = actualD?.keys
+                XCTAssertEqual(expectedNames!.count, actualNames!.count, "missing keys: " + expectedNames.debugDescription + " and " + actualNames.debugDescription)
+                for (key, _) in expectedD! {
+                    XCTAssertTrue(actualD![key] != nil, "missing key: " + key)
+                    XCTAssertEqualsJsonChild(expectedD![key]!, actualObject: actualD![key]!)
+                }
+            }
+            else if (expected.array?.count >= 0){
+                XCTAssertEqual(expected.array!, actual.array!, "array")
+            }
+            else if (expected.int != nil){
+                XCTAssertEqual(expected, actual, "int equals")
+            }
+            else if(expected.string != nil){
+                XCTAssertEqual(expected, actual, "string equals")
+            }
+        } catch let t as NSError {
+            XCTAssertTrue(false, "exception: " + t.description)
+        }
+    }
+	 
 }
 
