@@ -7,12 +7,7 @@
 		<key>C8oSDKTestApp.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
-		</dict>
-		<key>C8oSDKTestApp.xcscheme_^#shared#^_</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>4</integer>
+			<integer>6</integer>
 		</dict>
 		<key>C8oSDKiOS.xcscheme</key>
 		<dict>
@@ -21,10 +16,17 @@
 		</dict>
 		<key>C8oSDKiOS.xcscheme_^#shared#^_</key>
 		<dict>
+			<key>isShown</key>
+			<false/>
 			<key>orderHint</key>
-			<integer>3</integer>
+			<integer>1</integer>
 		</dict>
 		<key>ObjC.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>7</integer>
+		</dict>
+		<key>samplebigfiletransfer.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>7</integer>
@@ -32,6 +34,31 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>621CB0161D267252002E0BA0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>621CB02C1D2672D4002E0BA0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>621CB03F1D26731F002E0BA0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>621CB04A1D2694B1002E0BA0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>621CB0601D26997F002E0BA0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>623C74381C86DBB600E691B0</key>
 		<dict>
 			<key>primary</key>

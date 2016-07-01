@@ -43,7 +43,7 @@ internal class C8oFullSyncTranslator {
 		return xmlDocument
 	}
 	
-	internal static func dictionaryToJson(dictionary: Dictionary<String, NSObject>) -> JSON? {
+	internal static func dictionaryToJson(dictionary: Dictionary<String, AnyObject>) -> JSON? {
 		let json: JSON = JSON(dictionary)
 		return json
 	}
@@ -80,13 +80,14 @@ internal class C8oFullSyncTranslator {
 		
 		var array: [Dictionary<String, AnyObject>] = [Dictionary<String, AnyObject>]()
 		let countQ = queryEnumerator.count
-		for _ in 1...queryEnumerator.count {
+		for _ in 0..<queryEnumerator.count {
 			array.append(C8oFullSyncTranslator.queryRowToDic(queryEnumerator.nextRow()!))
 		}
 		let json: JSON = [FULL_SYNC_RESPONSE_KEY_COUNT: countQ, FULL_SYNC_RESPONSE_KEY_ROWS: array]
 		
 		return json
 	}
+    
 	
 	internal static func queryEnumeratorToXml(queryEnumerator: CBLQueryEnumerator) throws -> AEXMLDocument {
 		let json: JSON

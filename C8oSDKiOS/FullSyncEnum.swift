@@ -39,6 +39,35 @@ internal class FullSyncRequestable {
 		
 		return try c8oFullSync.handlePostDocumentRequest(databaseName, fullSyncPolicy: fullSyncPolicy, parameters: parameters)!
 	})
+    
+    internal static var PUT_ATTACHMENT : FullSyncRequestable = FullSyncRequestable(value: "put_attachment") { (c8oFullSync, databaseName, parameters, c8oResponseListener) -> (AnyObject) in
+        
+        // Gets the docid parameter
+        let docid : String? =  C8oUtils.getParameterStringValue(parameters, name: FullSyncAttachmentParameter.DOCID.name, useName: false)
+        
+        // Gets the attachment name parameter
+        let name : String? = C8oUtils.getParameterStringValue(parameters, name: FullSyncAttachmentParameter.NAME.name, useName: false)
+        
+        // Gets the attachment content_type parameter
+        let contentType : String? = C8oUtils.getParameterStringValue(parameters, name: FullSyncAttachmentParameter.CONTENT_TYPE.name, useName:false)
+        
+        // Gets the attachment content parameter
+        let a = C8oUtils.getParameterObjectValue(parameters, name: FullSyncAttachmentParameter.CONTENT.name, useName: false)
+        let content : NSData? = C8oUtils.getParameterObjectValue(parameters, name: FullSyncAttachmentParameter.CONTENT.name, useName: false) as! NSData?
+        
+        return try c8oFullSync.handlePutAttachmentRequest(databaseName, docid: docid!, attachmentName: name!, attachmentType: contentType!, attachmentContent: content!)
+    }
+    internal static var DELETE_ATTACHMENT : FullSyncRequestable = FullSyncRequestable(value: "delete_attachment") { (c8oFullSync, databaseName, parameters, c8oResponseListener) -> (AnyObject) in
+        
+        // Gets the docid parameter
+        let docid : String = C8oUtils.getParameterStringValue(parameters, name: FullSyncAttachmentParameter.DOCID.name, useName: false)!
+        
+        // Gets the attachment name parameter
+        let name : String = C8oUtils.getParameterStringValue(parameters, name: FullSyncAttachmentParameter.NAME.name, useName: false)!
+        
+        return try c8oFullSync.handleDeleteAttachmentRequest(databaseName, docid: docid, attachmentName: name)
+        
+    }
 	
 	internal static var ALL: FullSyncRequestable = FullSyncRequestable(value: "all", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener) -> (AnyObject) in
 		
@@ -197,7 +226,7 @@ internal class FullSyncRequestable {
 	
 	internal static var CREATE: FullSyncRequestable = FullSyncRequestable(value: "create", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener) -> (NSObject) in
 		
-		return try! c8oFullSync.handleCreateDatabaseRequest(databaseName)!
+		return try c8oFullSync.handleCreateDatabaseRequest(databaseName)!
 	})
 	
 	internal static var DESTROY: FullSyncRequestable = FullSyncRequestable(value: "destroy", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener) -> (NSObject) in
@@ -233,7 +262,7 @@ internal class FullSyncRequestable {
 	}
 	
 	internal static func values() -> [FullSyncRequestable] {
-		let array: [FullSyncRequestable] = [GET, DELETE, POST, ALL, VIEW, SYNC, REPLICATE_PULL, REPLICATE_PUSH, RESET, CREATE, DESTROY]
+		let array: [FullSyncRequestable] = [GET, DELETE, POST, ALL, VIEW, SYNC, REPLICATE_PULL, REPLICATE_PUSH, RESET, CREATE, DESTROY, PUT_ATTACHMENT, DELETE_ATTACHMENT]
 		return array
 	}
 }
@@ -364,6 +393,18 @@ public class FullSyncDeleteDocumentParameter {
 	}
 }
 
+public class FullSyncAttachmentParameter{
+    public static let DOCID : FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "docid")
+    public static let NAME : FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "name")
+    public static let CONTENT_TYPE : FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "content_type")
+    public static let CONTENT : FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "content")
+    
+    public var name : String
+    
+    private init(name : String){
+        self.name = name
+    }
+}
 public class FullSyncPostDocumentParameter {
 	public static let POLICY: FullSyncPostDocumentParameter = FullSyncPostDocumentParameter(name: C8o.FS_POLICY)
 	public static let SUBKEY_SEPARATOR: FullSyncPostDocumentParameter = FullSyncPostDocumentParameter(name: C8o.FS_SUBKEY_SEPARATOR)

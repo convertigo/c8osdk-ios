@@ -14,6 +14,24 @@
 		620F6D141C77666800683D0F /* C8oHttpInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620F6D131C77666800683D0F /* C8oHttpInterface.swift */; };
 		620F6D161C776E0500683D0F /* C8oTranslator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620F6D151C776E0500683D0F /* C8oTranslator.swift */; };
 		620F6D181C7771B300683D0F /* C8oUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620F6D171C7771B300683D0F /* C8oUtils.swift */; };
+		621CB0641D26997F002E0BA0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621CB0631D26997F002E0BA0 /* AppDelegate.swift */; };
+		621CB0661D26997F002E0BA0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621CB0651D26997F002E0BA0 /* ViewController.swift */; };
+		621CB06B1D26997F002E0BA0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 621CB06A1D26997F002E0BA0 /* Assets.xcassets */; };
+		621CB06E1D26997F002E0BA0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 621CB06C1D26997F002E0BA0 /* LaunchScreen.storyboard */; };
+		621CB0741D269B4E002E0BA0 /* FileToUpload10M.gif in Resources */ = {isa = PBXBuildFile; fileRef = 621CB0731D269B4E002E0BA0 /* FileToUpload10M.gif */; };
+		621CB0761D269B56002E0BA0 /* FilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621CB0751D269B56002E0BA0 /* FilesViewController.swift */; };
+		621CB0791D269B5F002E0BA0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 621CB0771D269B5F002E0BA0 /* Main.storyboard */; };
+		621CB07B1D269E4E002E0BA0 /* convertigo_University.png in Resources */ = {isa = PBXBuildFile; fileRef = 621CB07A1D269E4E002E0BA0 /* convertigo_University.png */; };
+		621CB07C1D26AB0A002E0BA0 /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 376688241CBD3C3A004FD9A2 /* AEXML.framework */; };
+		621CB07D1D26AB0A002E0BA0 /* AEXML.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 376688241CBD3C3A004FD9A2 /* AEXML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		621CB0801D26AB23002E0BA0 /* C8o.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2A471C6207AD009E9F7E /* C8o.framework */; };
+		621CB0811D26AB23002E0BA0 /* C8o.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2A471C6207AD009E9F7E /* C8o.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		621CB0851D26AB2E002E0BA0 /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 376688241CBD3C3A004FD9A2 /* AEXML.framework */; };
+		621CB0861D26AB2E002E0BA0 /* AEXML.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 376688241CBD3C3A004FD9A2 /* AEXML.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		621CB0891D26AB2E002E0BA0 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2BF71C635D02009E9F7E /* Alamofire.framework */; };
+		621CB08A1D26AB2E002E0BA0 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 62CD2BF71C635D02009E9F7E /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		621CB08D1D26AB37002E0BA0 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6222327B1C651257001D2EA1 /* SwiftyJSON.framework */; };
+		621CB08E1D26AB37002E0BA0 /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6222327B1C651257001D2EA1 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		622232801C6B29E2001D2EA1 /* C8oBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6222327E1C6B29E2001D2EA1 /* C8oBase.swift */; };
 		622232861C6B2A00001D2EA1 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622232851C6B2A00001D2EA1 /* Queue.swift */; };
 		622CA1661CAD54580074F704 /* FullSyncResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622CA1651CAD54570074F704 /* FullSyncResponse.swift */; };
@@ -90,6 +108,41 @@
 			remoteGlobalIDString = 69CC40B28223F23ED0DB660E6F311D9E;
 			remoteInfo = AEXML;
 		};
+		621CB07E1D26AB0A002E0BA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62CD2BD21C635D02009E9F7E /* Pods.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 6B9813D7E7E5E2BAC2903B82EC58E643;
+			remoteInfo = AEXML;
+		};
+		621CB0821D26AB23002E0BA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62CD2A3E1C6207AC009E9F7E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 62CD2A461C6207AC009E9F7E;
+			remoteInfo = C8oSDKiOS;
+		};
+		621CB0871D26AB2E002E0BA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62CD2BD21C635D02009E9F7E /* Pods.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 6B9813D7E7E5E2BAC2903B82EC58E643;
+			remoteInfo = AEXML;
+		};
+		621CB08B1D26AB2E002E0BA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62CD2BD21C635D02009E9F7E /* Pods.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 432ECC54282C84882B482CCB4CF227FC;
+			remoteInfo = Alamofire;
+		};
+		621CB08F1D26AB37002E0BA0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62CD2BD21C635D02009E9F7E /* Pods.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B1E61185B93E96406729A7198C501CA7;
+			remoteInfo = SwiftyJSON;
+		};
 		6222327A1C651257001D2EA1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 62CD2BD21C635D02009E9F7E /* Pods.xcodeproj */;
@@ -156,6 +209,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		621CB0841D26AB24002E0BA0 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				621CB08E1D26AB37002E0BA0 /* SwiftyJSON.framework in Embed Frameworks */,
+				621CB0861D26AB2E002E0BA0 /* AEXML.framework in Embed Frameworks */,
+				621CB08A1D26AB2E002E0BA0 /* Alamofire.framework in Embed Frameworks */,
+				621CB0811D26AB23002E0BA0 /* C8o.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6268493E1C7B49D900872D34 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -164,9 +231,19 @@
 			files = (
 				6268493B1C7B49D900872D34 /* C8o.framework in Embed Frameworks */,
 				626849431C7B4F7400872D34 /* Alamofire.framework in Embed Frameworks */,
+				621CB07D1D26AB0A002E0BA0 /* AEXML.framework in Embed Frameworks */,
 				626849471C7B4F7A00872D34 /* SwiftyJSON.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		628421A11D252919002C7064 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -180,6 +257,16 @@
 		620F6D131C77666800683D0F /* C8oHttpInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oHttpInterface.swift; sourceTree = "<group>"; };
 		620F6D151C776E0500683D0F /* C8oTranslator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oTranslator.swift; sourceTree = "<group>"; };
 		620F6D171C7771B300683D0F /* C8oUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oUtils.swift; sourceTree = "<group>"; };
+		621CB0611D26997F002E0BA0 /* samplebigfiletransfer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = samplebigfiletransfer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		621CB0631D26997F002E0BA0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		621CB0651D26997F002E0BA0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		621CB06A1D26997F002E0BA0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		621CB06D1D26997F002E0BA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		621CB06F1D26997F002E0BA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		621CB0731D269B4E002E0BA0 /* FileToUpload10M.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = FileToUpload10M.gif; sourceTree = "<group>"; };
+		621CB0751D269B56002E0BA0 /* FilesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilesViewController.swift; sourceTree = "<group>"; };
+		621CB0781D269B5F002E0BA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		621CB07A1D269E4E002E0BA0 /* convertigo_University.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = convertigo_University.png; sourceTree = "<group>"; };
 		6222327E1C6B29E2001D2EA1 /* C8oBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oBase.swift; sourceTree = "<group>"; };
 		622232851C6B2A00001D2EA1 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		622CA1651CAD54570074F704 /* FullSyncResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullSyncResponse.swift; sourceTree = "<group>"; };
@@ -365,6 +452,17 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		621CB05E1D26997F002E0BA0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				621CB08D1D26AB37002E0BA0 /* SwiftyJSON.framework in Frameworks */,
+				621CB0851D26AB2E002E0BA0 /* AEXML.framework in Frameworks */,
+				621CB0891D26AB2E002E0BA0 /* Alamofire.framework in Frameworks */,
+				621CB0801D26AB23002E0BA0 /* C8o.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		623C74361C86DBB600E691B0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -402,6 +500,7 @@
 			files = (
 				6268493A1C7B49D900872D34 /* C8o.framework in Frameworks */,
 				626849421C7B4F7400872D34 /* Alamofire.framework in Frameworks */,
+				621CB07C1D26AB0A002E0BA0 /* AEXML.framework in Frameworks */,
 				626849461C7B4F7A00872D34 /* SwiftyJSON.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -443,6 +542,22 @@
 				661BB53A401A46D0C011BCBC /* Pods_C8oSDKiOS.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		621CB0621D26997F002E0BA0 /* samplebigfiletransfer */ = {
+			isa = PBXGroup;
+			children = (
+				621CB0771D269B5F002E0BA0 /* Main.storyboard */,
+				621CB0751D269B56002E0BA0 /* FilesViewController.swift */,
+				621CB07A1D269E4E002E0BA0 /* convertigo_University.png */,
+				621CB0731D269B4E002E0BA0 /* FileToUpload10M.gif */,
+				621CB0631D26997F002E0BA0 /* AppDelegate.swift */,
+				621CB0651D26997F002E0BA0 /* ViewController.swift */,
+				621CB06A1D26997F002E0BA0 /* Assets.xcassets */,
+				621CB06C1D26997F002E0BA0 /* LaunchScreen.storyboard */,
+				621CB06F1D26997F002E0BA0 /* Info.plist */,
+			);
+			path = samplebigfiletransfer;
 			sourceTree = "<group>";
 		};
 		623C743A1C86DBB600E691B0 /* ObjC */ = {
@@ -526,6 +641,7 @@
 				62CD2A7B1C620961009E9F7E /* C8oSDKTestAppTests */,
 				62CD2A861C620961009E9F7E /* C8oSDKTestAppUITests */,
 				623C743A1C86DBB600E691B0 /* ObjC */,
+				621CB0621D26997F002E0BA0 /* samplebigfiletransfer */,
 				62CD2A481C6207AD009E9F7E /* Products */,
 				E6DF9BBC5E8E811396C19469 /* Pods */,
 				215A697CF11F1CA08CE2E31B /* Frameworks */,
@@ -541,6 +657,7 @@
 				62CD2A781C620961009E9F7E /* C8oSDKTestAppTests.xctest */,
 				62CD2A831C620961009E9F7E /* C8oSDKTestAppUITests.xctest */,
 				623C74391C86DBB600E691B0 /* ObjC.app */,
+				621CB0611D26997F002E0BA0 /* samplebigfiletransfer.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -596,8 +713,8 @@
 			children = (
 				62CD2A671C620960009E9F7E /* AppDelegate.swift */,
 				62CD2A691C620960009E9F7E /* ViewController.swift */,
-				62CD2A6B1C620960009E9F7E /* Main.storyboard */,
 				62CD2A6E1C620961009E9F7E /* Assets.xcassets */,
+				62CD2A6B1C620960009E9F7E /* Main.storyboard */,
 				62CD2A701C620961009E9F7E /* LaunchScreen.storyboard */,
 				62CD2A731C620961009E9F7E /* Info.plist */,
 			);
@@ -850,6 +967,28 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		621CB0601D26997F002E0BA0 /* samplebigfiletransfer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 621CB0701D26997F002E0BA0 /* Build configuration list for PBXNativeTarget "samplebigfiletransfer" */;
+			buildPhases = (
+				621CB05D1D26997F002E0BA0 /* Sources */,
+				621CB05E1D26997F002E0BA0 /* Frameworks */,
+				621CB05F1D26997F002E0BA0 /* Resources */,
+				621CB0841D26AB24002E0BA0 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				621CB0831D26AB23002E0BA0 /* PBXTargetDependency */,
+				621CB0881D26AB2E002E0BA0 /* PBXTargetDependency */,
+				621CB08C1D26AB2E002E0BA0 /* PBXTargetDependency */,
+				621CB0901D26AB37002E0BA0 /* PBXTargetDependency */,
+			);
+			name = samplebigfiletransfer;
+			productName = samplebigfiletransfer;
+			productReference = 621CB0611D26997F002E0BA0 /* samplebigfiletransfer.app */;
+			productType = "com.apple.product-type.application";
+		};
 		623C74381C86DBB600E691B0 /* ObjC */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 623C744D1C86DBB600E691B0 /* Build configuration list for PBXNativeTarget "ObjC" */;
@@ -913,6 +1052,7 @@
 				62CD2A621C620960009E9F7E /* Frameworks */,
 				62CD2A631C620960009E9F7E /* Resources */,
 				6268493E1C7B49D900872D34 /* Embed Frameworks */,
+				628421A11D252919002C7064 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -920,6 +1060,7 @@
 				6268493D1C7B49D900872D34 /* PBXTargetDependency */,
 				626849451C7B4F7400872D34 /* PBXTargetDependency */,
 				626849491C7B4F7A00872D34 /* PBXTargetDependency */,
+				621CB07F1D26AB0A002E0BA0 /* PBXTargetDependency */,
 			);
 			name = C8oSDKTestApp;
 			productName = C8oSDKTestApp;
@@ -968,21 +1109,27 @@
 		62CD2A3E1C6207AC009E9F7E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0720;
+				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = Convertigo;
 				TargetAttributes = {
+					621CB0601D26997F002E0BA0 = {
+						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = FKA4E5M74L;
+					};
 					623C74381C86DBB600E691B0 = {
 						CreatedOnToolsVersion = 7.2.1;
 					};
 					62CD2A461C6207AC009E9F7E = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = FKA4E5M74L;
 					};
 					62CD2A501C6207AD009E9F7E = {
 						CreatedOnToolsVersion = 7.2;
 					};
 					62CD2A641C620960009E9F7E = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = FKA4E5M74L;
 					};
 					62CD2A771C620961009E9F7E = {
 						CreatedOnToolsVersion = 7.2;
@@ -1020,6 +1167,7 @@
 				62CD2A771C620961009E9F7E /* C8oSDKTestAppTests */,
 				62CD2A821C620961009E9F7E /* C8oSDKTestAppUITests */,
 				623C74381C86DBB600E691B0 /* ObjC */,
+				621CB0601D26997F002E0BA0 /* samplebigfiletransfer */,
 			);
 		};
 /* End PBXProject section */
@@ -1056,6 +1204,18 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		621CB05F1D26997F002E0BA0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				621CB0741D269B4E002E0BA0 /* FileToUpload10M.gif in Resources */,
+				621CB07B1D269E4E002E0BA0 /* convertigo_University.png in Resources */,
+				621CB06E1D26997F002E0BA0 /* LaunchScreen.storyboard in Resources */,
+				621CB06B1D26997F002E0BA0 /* Assets.xcassets in Resources */,
+				621CB0791D269B5F002E0BA0 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		623C74371C86DBB600E691B0 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1141,6 +1301,16 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		621CB05D1D26997F002E0BA0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				621CB0661D26997F002E0BA0 /* ViewController.swift in Sources */,
+				621CB0761D269B56002E0BA0 /* FilesViewController.swift in Sources */,
+				621CB0641D26997F002E0BA0 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		623C74351C86DBB600E691B0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1229,6 +1399,31 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		621CB07F1D26AB0A002E0BA0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AEXML;
+			targetProxy = 621CB07E1D26AB0A002E0BA0 /* PBXContainerItemProxy */;
+		};
+		621CB0831D26AB23002E0BA0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 62CD2A461C6207AC009E9F7E /* C8oSDKiOS */;
+			targetProxy = 621CB0821D26AB23002E0BA0 /* PBXContainerItemProxy */;
+		};
+		621CB0881D26AB2E002E0BA0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AEXML;
+			targetProxy = 621CB0871D26AB2E002E0BA0 /* PBXContainerItemProxy */;
+		};
+		621CB08C1D26AB2E002E0BA0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Alamofire;
+			targetProxy = 621CB08B1D26AB2E002E0BA0 /* PBXContainerItemProxy */;
+		};
+		621CB0901D26AB37002E0BA0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SwiftyJSON;
+			targetProxy = 621CB08F1D26AB37002E0BA0 /* PBXContainerItemProxy */;
+		};
 		6268493D1C7B49D900872D34 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 62CD2A461C6207AC009E9F7E /* C8oSDKiOS */;
@@ -1262,6 +1457,22 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		621CB06C1D26997F002E0BA0 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				621CB06D1D26997F002E0BA0 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		621CB0771D269B5F002E0BA0 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				621CB0781D269B5F002E0BA0 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
 		623C74441C86DBB600E691B0 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1297,6 +1508,44 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		621CB0711D26997F002E0BA0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = samplebigfiletransfer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.samplebigfiletransfer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		621CB0721D26997F002E0BA0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = samplebigfiletransfer/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.samplebigfiletransfer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		623C744E1C86DBB600E691B0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1425,6 +1674,8 @@
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1468,6 +1719,8 @@
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1531,6 +1784,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1543,6 +1798,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1554,6 +1810,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1566,6 +1824,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 			};
@@ -1628,6 +1887,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		621CB0701D26997F002E0BA0 /* Build configuration list for PBXNativeTarget "samplebigfiletransfer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				621CB0711D26997F002E0BA0 /* Debug */,
+				621CB0721D26997F002E0BA0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		623C744D1C86DBB600E691B0 /* Build configuration list for PBXNativeTarget "ObjC" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

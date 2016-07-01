@@ -11,13 +11,14 @@ import Foundation
 public class C8oFileTransferStatus {
 	public static var stateQueued: DownloadState = DownloadState(description: "queued")
 	public static var stateAuthenticated: DownloadState = DownloadState(description: "authenticated")
+    public static var stateSplitting : DownloadState = DownloadState(description: "splitting")
 	public static var stateReplicate: DownloadState = DownloadState(description: "replicating")
 	public static var stateAssembling: DownloadState = DownloadState(description: "assembling")
 	public static var stateCleaning: DownloadState = DownloadState(description: "cleaning")
 	public static var stateFinished: DownloadState = DownloadState(description: "finished")
 	
 	public class DownloadState {
-		var description: String
+		public var description: String
 		
 		internal init (description: String) {
 			self.description = description
@@ -25,50 +26,76 @@ public class C8oFileTransferStatus {
 		}
 		
 	}
-	
+    
+    private var _state : DownloadState? = nil
+    private var _uuid : String? = ""
+    private var _filepath : String? = ""
+    private var _current : Int? = 0
+    private var _total : Int? = 0
+    private var _serverFilepath : String = ""
+    private var _download : Bool? = nil
+    
 	public var state: DownloadState {
 		get {
-			return self.state
+			return self._state!
 		}
 		set(value) {
-			self.state = value
+			self._state = value
 		}
 	}
 	
+    public var download : Bool{
+        get{
+            return self._download!
+        }
+        set(value){
+            self._download = value
+            if(value == true){
+                tot()
+            }
+        }
+    }
 	public private(set) var uuid: String {
 		get {
-			return self.uuid
+			return self._uuid!
 		}
 		set(value) {
-			self.uuid = value
+			self._uuid = value
 		}
 	}
-	
+    public var serverFilepath : String{
+        get{
+            return self._serverFilepath
+        }
+        set(value){
+            self._serverFilepath = value
+        }
+    }
 	public private(set) var filepath: String {
 		get {
-			return self.filepath
+			return self._filepath!
 		}
 		set(value) {
-			self.filepath = value
+			self._filepath = value
 		}
 	}
 	
 	public var current: Int {
 		get {
-			return self.current
+			return self._current!
 		}
 		
 		set(value) {
-			self.current = value
+			self._current = value
 		}
 	}
 	
-	public private(set) var total: Int {
+	public var total: Int {
 		get {
-			return self.total
+			return self._total!
 		}
 		set(value) {
-			self.total = value
+			self._total = value
 		}
 	}
 	
@@ -79,15 +106,28 @@ public class C8oFileTransferStatus {
 	}
 	
 	internal init (uuid: String, filepath: String) {
-		self.state = C8oFileTransferStatus.stateQueued
-		self.uuid = uuid
+        self.state = C8oFileTransferStatus.stateQueued
+        
+        self.uuid = uuid
+				
 		self.filepath = filepath
+        self.total = 0
 		
-		let r = uuid.indexOf("-")
-		
-		let range: Range<String.Index> = uuid.rangeOfString("-")!
-		
-		total = Int(uuid.substringWithRange(range))!
-	}
+		//let r = uuid.indexOf("-")
+        /*let range2 : Range<String.Index> = uuid.rangeOfString("-", options: .BackwardsSearch)!
+        var start_index : Int = uuid.startIndex.distanceTo(range2.startIndex)
+        start_index += 1
+        let end_index : Int = start_index + 1*/
+        
+        //self.total = Int(uuid.substringWithRange(Range<String.Index>(start: uuid.startIndex.advancedBy(start_index), end: uuid.endIndex)))!
+    }
+    func tot(){
+        let range2 : Range<String.Index> = uuid.rangeOfString("-", options: .BackwardsSearch)!
+        var start_index : Int = uuid.startIndex.distanceTo(range2.startIndex)
+        start_index += 1
+        let end_index : Int = start_index + 1
+        
+        self.total = Int(uuid.substringWithRange(Range<String.Index>(start: uuid.startIndex.advancedBy(start_index), end: uuid.endIndex)))!
+    }
 	
 }

@@ -68,10 +68,11 @@ class C8oFullSyncCbl: C8oFullSync {
 	
 	private func getOrCreateFullSyncDatabase(databaseName: String) throws -> C8oFullSyncDatabase {
 		let localDatabaseName: String = databaseName + localSuffix!
-		if let _ = fullSyncDatabases?[localDatabaseName] {
+        
+        if let _ = fullSyncDatabases?[localDatabaseName] {
 			
 		} else {
-			fullSyncDatabases![localDatabaseName] = try! C8oFullSyncDatabase(c8o: self.c8o!, manager: self.manager!, databaseName: databaseName, fullSyncDatabases: fullSyncDatabaseUrlBase!, localSuffix: localSuffix!)
+			fullSyncDatabases![localDatabaseName] = try C8oFullSyncDatabase(c8o: self.c8o!, manager: self.manager!, databaseName: databaseName, fullSyncDatabases: fullSyncDatabaseUrlBase!, localSuffix: localSuffix!)
 		}
 		return fullSyncDatabases![localDatabaseName]!
 	}
@@ -117,7 +118,29 @@ class C8oFullSyncCbl: C8oFullSync {
 				return maVar
 			} else if (response.isMemberOfClass(C8oJSON)) {
 				return response
-			} else {
+			}
+            else if(response is Dictionary<String, AnyObject>){
+                do {
+                    var err: NSError? = nil
+                    (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+                        do {
+                            maVar.myJSON = C8oFullSyncTranslator.dictionaryToJson(response as! Dictionary<String, AnyObject>)
+                            
+                        }
+                        catch let e as NSError {
+                            err = e
+                        }
+                    }
+                    if (err != nil) {
+                        throw err!
+                    } else {
+                        return maVar
+                    }
+                }
+                catch let e as C8oException {
+                    throw C8oException(message: C8oExceptionMessage.queryEnumeratorToJSON(), exception: e)
+                }
+            }else {
 				
 				throw C8oException(message: C8oExceptionMessage.illegalArgumentIncompatibleListener(String(listener), responseType: String(response)))
 			}
@@ -153,9 +176,10 @@ class C8oFullSyncCbl: C8oFullSync {
 		}
 	}
 	
-	func handleGetDocumentRequest(fullSyncDatatbaseName: String, docid: String, parameters: Dictionary<String, AnyObject>) throws -> CBLDocument {
+	func handleGetDocumentRequest(fullSyncDatatbaseName: String, docid: String, parameters: Dictionary<String, AnyObject>) throws -> Dictionary<String, AnyObject> {
 		var fullSyncDatabase: C8oFullSyncDatabase? = nil
 		var document: CBLDocument?
+        var dictDoc : Dictionary<String, AnyObject>? = nil
 		var exep: Bool = false
 		(c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
 			fullSyncDatabase = try! self.getOrCreateFullSyncDatabase(fullSyncDatatbaseName)
@@ -163,11 +187,11 @@ class C8oFullSyncCbl: C8oFullSync {
 			// Gets the document from the local database
 			
 			document = fullSyncDatabase!.getDatabase()?.existingDocumentWithID(docid)
-			
+			dictDoc = document?.properties
 			// If there are attachments, compute for each one the url to local storage and add it to the attachment descriptor
 			if (document != nil) {
 				
-				let attachments: Dictionary<String, AnyObject>? = document?.propertyForKey(C8oFullSync.FULL_SYNC__ATTACHMENTS) as? Dictionary<String, AnyObject>
+				var attachments: Dictionary<String, AnyObject>? = document?.propertyForKey(C8oFullSync.FULL_SYNC__ATTACHMENTS) as? Dictionary<String, AnyObject>
 				// let att = document?.properties
 				
 				if (attachments != nil) {
@@ -177,18 +201,24 @@ class C8oFullSyncCbl: C8oFullSync {
 						let attachment: CBLAttachment = rev.attachmentNamed(attachmentName)!
 						let url: NSURL = attachment.contentURL!
 						var attachmentDesc: Dictionary<String, AnyObject>? = (attachments![attachmentName] as? Dictionary<String, AnyObject>)!
-						attachmentDesc![C8oFullSyncCbl.ATTACHMENT_PROPERTY_KEY_CONTENT_URL] = String(url).stringByRemovingPercentEncoding
+                        attachmentDesc![C8oFullSyncCbl.ATTACHMENT_PROPERTY_KEY_CONTENT_URL] = String(url).stringByRemovingPercentEncoding
+                        var dictAny : Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
+                        dictAny[attachmentName] = attachmentDesc
+                        dictDoc![C8oFullSync.FULL_SYNC__ATTACHMENTS] = dictAny
+
 					}
 				}
 			} else {
 				exep = true
-				// throw C8oRessourceNotFoundException(message: C8oExceptionMessage.ressourceNotFound("requested document \"" + docid + "\""))
 			}
 		}
 		if (exep) {
 			throw C8oRessourceNotFoundException(message: C8oExceptionMessage.ressourceNotFound("requested document \"" + docid + "\""))
 		}
-		return document!
+        if(dictDoc == nil){
+            dictDoc = Dictionary<String, AnyObject>()
+        }
+		return dictDoc!
 	}
 	
 	func handleDeleteDocumentRequest(DatatbaseName: String, docid: String, parameters: Dictionary<String, AnyObject>) throws -> FullSyncDocumentOperationResponse? {
@@ -352,7 +382,82 @@ class C8oFullSyncCbl: C8oFullSync {
 		return FullSyncDocumentOperationResponse(documentId: documentId!, documentRevision: currentRevision!, operationStatus: true)
 		
 	}
-	
+    func handlePutAttachmentRequest(databaseName : String, docid : String, attachmentName : String, attachmentType : String, attachmentContent : NSData) throws -> AnyObject {
+        var document : CBLDocument? = nil
+        var newRev : CBLUnsavedRevision? = nil
+        var error : NSError? = nil
+
+        (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+            do{
+                let fullSyncDatabase : C8oFullSyncDatabase = try self.getOrCreateFullSyncDatabase(databaseName)
+                
+                // Gets the document from the local database
+                document = fullSyncDatabase.getDatabase()?.existingDocumentWithID(docid)
+                
+                if(document !=  nil){
+                    newRev = (document!.currentRevision?.createRevision())!
+                    newRev!.setAttachmentNamed(attachmentName, withContentType: attachmentType, content: attachmentContent)
+                    do{
+                        try newRev!.save()
+                    }
+                    catch let e as NSError{
+                        throw c8oCouchbaseLiteException(message: "Unable to put the attachment " + attachmentName + " to the document " + docid + ".", exception: e)
+                    }
+                }
+                else{
+                    throw C8oRessourceNotFoundException(message: C8oExceptionMessage.toDo())
+                }
+            }
+            catch let e as NSError{
+                error = e
+            }
+            
+        }
+        if(error != nil){
+           throw error!
+        }
+
+
+        return FullSyncDocumentOperationResponse(documentId: (document?.documentID)!, documentRevision: (document?.currentRevisionID)!, operationStatus: true)
+        
+    }
+    
+    func handleDeleteAttachmentRequest(databaseName : String, docid : String, attachmentName : String) throws ->AnyObject{
+        var document : CBLDocument? = nil
+        var newRev : CBLUnsavedRevision? = nil
+        var error : NSError? = nil
+
+        (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+            do{
+                let fullSyncDatabase : C8oFullSyncDatabase = try self.getOrCreateFullSyncDatabase(databaseName)
+                
+                // Gets the document from the local database
+                document = fullSyncDatabase.getDatabase()?.existingDocumentWithID(docid)
+                
+                if(document !=  nil){
+                    newRev = (document!.currentRevision?.createRevision())!
+                    newRev!.removeAttachmentNamed(attachmentName)
+                    do{
+                        try newRev!.save()
+                    }
+                    catch let e as NSError{
+                        throw c8oCouchbaseLiteException(message: "Unable to delete the attachment " + attachmentName + " to the document " + docid + ".", exception: e)
+                    }
+                }
+                else{
+                    throw C8oRessourceNotFoundException(message: C8oExceptionMessage.toDo())
+                }
+            }
+            catch let e as NSError{
+                error = e
+            }
+            
+        }
+        if(error != nil){
+            throw error!
+        }
+        return FullSyncDocumentOperationResponse(documentId: (document?.documentID)!, documentRevision: (document?.currentRevisionID)!, operationStatus: true)
+    }
 	func handleAllDocumentsRequest(databaseName: String, parameters: Dictionary<String, AnyObject>) throws -> AnyObject? {
 		var fullSyncDatabase: C8oFullSyncDatabase? = nil
 		var query: CBLQuery? = nil
@@ -482,7 +587,7 @@ class C8oFullSyncCbl: C8oFullSync {
 	}
 	
 	func handleCreateDatabaseRequest(databaseName: String) throws -> FullSyncDefaultResponse? {
-		let _: C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
+		let _: C8oFullSyncDatabase = try getOrCreateFullSyncDatabase(databaseName)
 		return FullSyncDefaultResponse(operationStatus: true)
 	}
 	
