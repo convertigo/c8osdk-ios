@@ -11,24 +11,24 @@ import Alamofire
 import SwiftyJSON
 import AEXML
 
-//import CouchbaseLite
 
+/**
+ Allows to send requests to a Convertigo Server (or Studio), these requests are called c8o calls.
+ 
+ C8o calls are done thanks to a HTTP request or a CouchbaseLite usage.
+ 
+ An instance of C8o is connected to only one Convertigo and can't change it.
+ 
+ To use it, you have to first initialize the C8o instance with the Convertigo endpoint, then use call methods with Convertigo variables as parameter.
+ */
 public class C8o: C8oBase {
 	
-	/** Regular Expression */
-	
-	/**
-	 The regex used to handle the c8o requestable syntax ("<project>.<sequence>" or "<project>.<connector>.<transaction>")
-	 */
+	/* Regular Expression */
 	private static let RE_REQUESTABLE: NSRegularExpression = try! NSRegularExpression(pattern: "^([^.]*)\\.(?:([^.]+)|(?:([^.]+)\\.([^.]+)))$", options: [])
 	
-	/**
-	 The regex used to get the part of the endpoint before '/projects/'
-	 */
-	public static let RE_ENDPOINT: NSRegularExpression = try! NSRegularExpression(pattern: "^(http(s)?://([^:]+)(:[0-9]+)?/?.*?)/projects/([^/]+)$", options: [])
+	private static let RE_ENDPOINT: NSRegularExpression = try! NSRegularExpression(pattern: "^(http(s)?://([^:]+)(:[0-9]+)?/?.*?)/projects/([^/]+)$", options: [])
 	
-	/** Engine reserved parameters */
-	
+	/* Engine reserved parameters */
 	internal static var ENGINE_PARAMETER_PROJECT: String = "__project"
 	internal static var ENGINE_PARAMETER_SEQUENCE: String = "__sequence"
 	internal static var ENGINE_PARAMETER_CONNECTOR: String = "__connector"
@@ -37,55 +37,76 @@ public class C8o: C8oBase {
 	internal static var ENGINE_PARAMETER_DEVICE_UUID: String = "__uuid"
 	internal static var ENGINE_PARAMETER_PROGRESS: String = "__progress"
 	
-	/** FULLSYNC parameters */
-	
-	public static var FS_POLICY: String = "_use_policy"
-	public static var FS_POLICY_NONE: String = "none"
-	public static var FS_POLICY_CREATE: String = "create"
-	public static var FS_POLICY_OVERRIDE: String = "override"
-	public static var FS_POLICY_MERGE: String = "merge"
+	/* FULLSYNC parameters */
+    
+    /**
+     Constant to use as a parameter for a Call of "fs://.post" and must be followed by a FS_POLICY_* constant.
+ 
+         c8o.callJson("fs://.post", parameters:
+           C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
+           "docid", myid,
+           "mykey", myvalue
+         ).sync();
+     */
+    public static var FS_POLICY: String = "_use_policy"
+    /**
+     Use it with "fs://.post" and C8o.FS_POLICY.
+     
+     This is the default post policy that don't alter the document before the CouchbaseLite's insertion.
+     */
+    public static var FS_POLICY_NONE: String = "none"
+    /**
+     Use it with "fs://.post" and C8o.FS_POLICY.
+     
+     This post policy remove the "_id" and "_rev" of the document before the CouchbaseLite's insertion.
+     */
+    public static var FS_POLICY_CREATE: String = "create"
+    /**
+     Use it with "fs://.post" and C8o.FS_POLICY.
+     
+     This post policy inserts the document in CouchbaseLite even if a document with the same "_id" already exists.
+     */
+    public static var FS_POLICY_OVERRIDE: String = "override"
+    /**
+     Use it with "fs://.post" and C8o.FS_POLICY.
+     
+     This post policy merge the document with an existing document with the same "_id" before the CouchbaseLite's insertion.
+     */
+    public static var FS_POLICY_MERGE: String = "merge"
+    /**
+     Use it with "fs://.post". Default value is ".".
+     
+     This key allow to override the sub key separator in case of document depth modification.
+     */
 	public static var FS_SUBKEY_SEPARATOR: String = "_use_subkey_separator"
 	
-	/** Local cache keys */
+	/* Local cache keys */
 	
 	internal static var LOCAL_CACHE_DOCUMENT_KEY_RESPONSE: String = "response"
 	internal static var LOCAL_CACHE_DOCUMENT_KEY_RESPONSE_TYPE: String = "responseType"
 	internal static var LOCAL_CACHE_DOCUMENT_KEY_EXPIRATION_DATE: String = "expirationDate"
 	
-	public static var LOCAL_CACHE_DATABASE_NAME: String = "c8olocalcache"
+	internal static var LOCAL_CACHE_DATABASE_NAME: String = "c8olocalcache"
 	
-	/** Response type */
+	/* Response type */
 	
 	internal static var RESPONSE_TYPE_XML: String = "pxml"
 	internal static var RESPONSE_TYPE_JSON: String = "json"
 	
-	/** Static configuration */
+	/* Static configuration */
 	internal static var defaultUiDispatcher: AnyObject?// ACTION<ACTION>?
 	internal static var deviceUUID: String = UIDevice.currentDevice().identifierForVendor!.UUIDString
 	
 	/**
-	 Gets the SDK version.
-	 Example usage:
-	 @code
-	 myc8o : C8o = C8o()
-	 sdkVersion : String = myC8o.GetSdkVersion()
-	 @endcode
-	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
-	 @param nil
-	 @return A string containing the sdk version.
+     Returns the current version of the SDK as "x.y.z".
+	 - returns: Current version of the SDK as "x.y.z".
 	 */
 	public static func getSdkVersion() -> String {
 		return "2.0.4"
 	}
 	
-	/** Attributes */
+	/* Attributes */
 	
-	/** The Convertigo endpoint
-	 @code
-	 <protocol>://<server>:<port>/<Convertigo web app path>/projects/<project name>
-	 http://127.0.0.1:18080/convertigo/projects/MyProject
-	 @endcode
-	 */
 	private var _endpoint: String?
 	private var _endpointConvertigo: String?
 	private var _endpointIsSecure: Bool?
@@ -93,48 +114,23 @@ public class C8o: C8oBase {
 	private var _endpointPort: String?
 	private var _endpointProject: String?
 	
-	/** Used to run HTTP requests.*/
+	/* Used to run HTTP requests.*/
 	internal var httpInterface: C8oHttpInterface?
 	
-	/** Allows to log locally and remotely to the Convertigo server.*/
+	/* Allows to log locally and remotely to the Convertigo server.*/
 	internal var c8oLogger: C8oLogger?
 	
-	/** Allows to make fullSync calls. */
+	/* Allows to make fullSync calls. */
 	internal var c8oFullSync: C8oFullSync?
 	
-	/** Constructors */
-	
-	/**
-	 This is the base object representing a Convertigo Server end point. This object should be instanciated
-	 when the apps starts and be accessible from any class of the app. Although this is not common , you may have
-	 several C8o objects instanciated in your app.
-	 Example usage:
-	 @code
-	 myc8o : C8o = C8o()
-	 @endcode
-	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
-	 */
-	public override init() {
-		super.init()
-	}
-	
-	/**
-	 This is the base object representing a Convertigo Server end point. This object should be instanciated
-	 when the apps starts and be accessible from any class of the app. Although this is not common , you may have
-	 several C8o objects instanciated in your app.
-	 Example usage:
-	 @code
-	 myc8o : C8o = C8o()
-	 @endcode
-	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
-	 @param endpoint : String
-	 The End point url to you convertigo server. Can be :
-	 - http(s)://your_server_address/convertigo/projects/your_project_name (if using an on premises server)
-	 - http(s)://your_cloud_server.convertigo.net/cems/projects/your_project_name (if using a Convertigo cloud server)
-	 @param c8oSettings : C8oSettings?
-	 A C8oSettings object describing the endpoint configuration parameters such as authorizations credentials,
-	 cookies, client certificates and various other settings.
-	 */
+	/* Constructors */
+    /**
+     This is the base object representing a Convertigo Server end point. This object should be instanciated when the apps starts and be accessible from any class of the app. Although this is not common, you may have several C8o objects instantiated in your app.
+     
+     - parameter endpoint : The Convertigo endpoint, syntax : {protocol}://{server}:{port}/{Convertigo web app path}/projects/{project name}
+         Example : http://computerName:18080/convertigo/projects/MyProject
+     - parameter c8oSettings : Initialization options. Example : new C8oSettings().setLogRemote(false).setDefaultDatabaseName("sample")
+     */
 	public init(endpoint: String, c8oSettings: C8oSettings? = nil) throws {
 		super.init()
 		// Checks the URL validity
