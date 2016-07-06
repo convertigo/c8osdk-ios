@@ -37,14 +37,17 @@ class C8oFullSyncCbl: C8oFullSync {
 		}
 	}
 	internal func performOnCblThread(block: dispatch_block_t) {
-		self.block.enqueue(block)
-		self.performSelector(#selector(C8oFullSyncCbl.doBlock), onThread: C8oFullSyncCbl.th!, withObject: errorFs, waitUntilDone: true)
+        
+            self.block.enqueue(block)
+            self.performSelector(#selector(C8oFullSyncCbl.doBlock), onThread: C8oFullSyncCbl.th!, withObject: errorFs, waitUntilDone: true)
+        
+		
 		
 	}
 	
 	@objc private func doBlock() {
 		do {
-			try (self.block.dequeue()! as dispatch_block_t)()
+            try (self.block.dequeue()! as dispatch_block_t)()
 		}
 		catch let e as NSError {
 			self.errorFs.append(e)
@@ -56,7 +59,7 @@ class C8oFullSyncCbl: C8oFullSync {
 		condition.signal()
 		
 	}
-	@objc internal func cbl() {
+	@objc internal func cbl(){
 		NSThread.currentThread().name = "CBLThread"
 		self.manager = CBLManager()
 		condition.signal()

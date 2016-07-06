@@ -14,8 +14,6 @@ C8oSDKiOS.xcodeproj/project.xcworkspace/contents.xcworkspacedata -text
 C8oSDKiOS.xcodeproj/project.xcworkspace/xcshareddata/C8oSDKiOS.xcscmblueprint -text
 C8oSDKiOS.xcodeproj/project.xcworkspace/xcuserdata/charlesgMac.xcuserdatad/UserInterfaceState.xcuserstate -text
 C8oSDKiOS.xcodeproj/xcshareddata/xcschemes/C8oSDKiOS.xcscheme -text
-C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/C8oSDKTestApp.xcscheme -text
-C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/C8oSDKiOS.xcscheme -text
 C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/samplebigfiletransfer.xcscheme -text
 C8oSDKiOS.xcodeproj/xcuserdata/charlesgMac.xcuserdatad/xcschemes/xcschememanagement.plist -text
 C8oSDKiOS.xcworkspace/contents.xcworkspacedata -text
@@ -78,6 +76,7 @@ ObjC/main.m -text
 /PodFile -text
 Pods/Target[!!-~]Support[!!-~]Files/Pods/Pods.debug.xcconfig -text
 Pods/Target[!!-~]Support[!!-~]Files/Pods/Pods.release.xcconfig -text
+samplebigfiletransfer/20Mo.png -text
 samplebigfiletransfer/AppDelegate.swift -text
 samplebigfiletransfer/Assets.xcassets/AppIcon.appiconset/Contents.json -text
 samplebigfiletransfer/Assets.xcassets/AppIcon.appiconset/iconConv1.png -text

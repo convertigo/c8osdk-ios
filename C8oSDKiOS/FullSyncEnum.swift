@@ -474,10 +474,12 @@ public class FullSyncPolicy {
 		var createdDocument: CBLDocument
 		var newPropertiesMutable = newProperties
 		do {
-			let documentId = C8oUtils.getParameterStringValue(newPropertiesMutable, name: C8oFullSync.FULL_SYNC__ID, useName: false)
+			var documentId = C8oUtils.getParameterStringValue(newPropertiesMutable, name: C8oFullSync.FULL_SYNC__ID, useName: false)
 			
 			newPropertiesMutable.removeValueForKey(C8oFullSync.FULL_SYNC__ID)
-			
+            if(documentId == ""){
+                documentId = nil
+            }
 			createdDocument = (documentId == nil) ? database.createDocument() : database.documentWithID(documentId!)!
 			
 			try createdDocument.putProperties(newPropertiesMutable)

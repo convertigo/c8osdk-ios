@@ -254,12 +254,13 @@ public class C8oFileTransfer {
 				// 2 : Gets the document describing the chunks list
 				//
                 
-				var createdFileStream = NSInputStream(fileAtPath: transferStatus.filepath)
+				var createdFileStream = NSOutputStream(toFileAtPath: transferStatus.filepath, append: false)//  (fileAtPath: transferStatus.filepath)
+                createdFileStream?.open()
+                createdFileStream?.scheduleInRunLoop(.mainRunLoop(), forMode: NSDefaultRunLoopMode)
 				for i in 0..<transferStatus.total {
-                    print(String(i))
 					let meta: JSON = try c8o!.callJson("fs://" + fsConnector! + ".get", parameters: "docid", transferStatus.uuid + "_" + String(i)).sync()!
 					self.debug((meta.description))
-					appendChunk(&createdFileStream!, contentPath: meta["_attachments"]["chunk"]["content_url"].stringValue)
+                    appendChunk(&createdFileStream, contentPath: meta["_attachments"]["chunk"]["content_url"].stringValue)
 				}
 				createdFileStream!.close()
 				
@@ -317,12 +318,17 @@ public class C8oFileTransfer {
 		self.condition.unlock()
 	}
 	
-	private func appendChunk(inout createdFileStream: NSInputStream , contentPath: String) -> Void {
+	private func appendChunk(inout outputStream: NSOutputStream? , contentPath: String) -> Void {
 		var str = contentPath
-		let regex = try! NSRegularExpression(pattern: "^file:", options: .CaseInsensitive)
+		let regex = try! NSRegularExpression(pattern: "^file://", options: .CaseInsensitive)
 		str = regex.stringByReplacingMatchesInString(contentPath, options: [], range: NSRange(0..<str.utf16.count), withTemplate: "")
 		let chunkStream = NSInputStream(fileAtPath: str)
-		createdFileStream = chunkStream!
+        var buffer = [UInt8](count: chunkSize, repeatedValue: 0)
+        chunkStream!.open()
+        if chunkStream!.hasBytesAvailable {
+            let read = chunkStream!.read(&buffer, maxLength: buffer.count)
+            outputStream!.write(&buffer, maxLength: chunkSize)
+        }
 		chunkStream?.close()
 	}
 	
@@ -409,7 +415,6 @@ public class C8oFileTransfer {
                 //fileStream.reset
                 var buffer = [UInt8](count: chunkSize, repeatedValue: 0)
                 let uuid : String = transferStatus.uuid
-                /************** TRY **************/
                 var countTot : Int = -1
                 var read : Int = 1
                 
@@ -418,7 +423,6 @@ public class C8oFileTransfer {
                     while (read > 0) {
                         countTot += 1
                         read = fileStream!.read(&buffer, maxLength: buffer.count)
-                        /*******/
                         let docid : String = uuid + "_" + countTot.description
                         try c8o.callJson("fs://.post", parameters:
                             "_id", docid,
