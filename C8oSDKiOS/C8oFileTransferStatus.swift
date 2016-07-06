@@ -107,27 +107,16 @@ public class C8oFileTransferStatus {
 	
 	internal init (uuid: String, filepath: String) {
         self.state = C8oFileTransferStatus.stateQueued
-        
         self.uuid = uuid
 				
 		self.filepath = filepath
         self.total = 0
-		
-		//let r = uuid.indexOf("-")
-        /*let range2 : Range<String.Index> = uuid.rangeOfString("-", options: .BackwardsSearch)!
-        var start_index : Int = uuid.startIndex.distanceTo(range2.startIndex)
-        start_index += 1
-        let end_index : Int = start_index + 1*/
-        
-        //self.total = Int(uuid.substringWithRange(Range<String.Index>(start: uuid.startIndex.advancedBy(start_index), end: uuid.endIndex)))!
     }
     func tot(){
         let range2 : Range<String.Index> = uuid.rangeOfString("-", options: .BackwardsSearch)!
         var start_index : Int = uuid.startIndex.distanceTo(range2.startIndex)
         start_index += 1
-        let end_index : Int = start_index + 1
-        
-        self.total = Int(uuid.substringWithRange(Range<String.Index>(start: uuid.startIndex.advancedBy(start_index), end: uuid.endIndex)))!
+        self.total = Int(uuid.substringWithRange(Range<String.Index>(uuid.startIndex.advancedBy(start_index)..<uuid.endIndex)))!
     }
 	
 }

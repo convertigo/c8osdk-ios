@@ -219,7 +219,7 @@ public class C8oFileTransfer {
 						var all = try c8o?.callJson("fs://" + fsConnector! + ".all", parameters: allOptions).sync()
 						let rows = all!["rows"]
 						if (rows != nil) {
-							var current: Int = rows.count
+							let current: Int = rows.count
                             if (current != transferStatus.current) {
 								transferStatus.current = current
 								self.notify(transferStatus)
@@ -326,7 +326,7 @@ public class C8oFileTransfer {
         var buffer = [UInt8](count: chunkSize, repeatedValue: 0)
         chunkStream!.open()
         if chunkStream!.hasBytesAvailable {
-            let read = chunkStream!.read(&buffer, maxLength: buffer.count)
+            chunkStream!.read(&buffer, maxLength: buffer.count)
             outputStream!.write(&buffer, maxLength: chunkSize)
         }
 		chunkStream?.close()
@@ -358,7 +358,7 @@ public class C8oFileTransfer {
         
         // Initializes the uuid ending with the number of chunks
         
-        var uuid : String = NSUUID().UUIDString.lowercaseString
+        let uuid : String = NSUUID().UUIDString.lowercaseString
         
         c8oTask.callJson("fs://.post", parameters:
                     "_id", uuid,
@@ -379,7 +379,6 @@ public class C8oFileTransfer {
     
     func uploadFile(transferStatus : C8oFileTransferStatus, inout task: JSON){
         do{
-            let cond = NSCondition()
             var res : JSON = nil
             let fileName : String = transferStatus.filepath
             var locker : Bool = false
@@ -474,7 +473,7 @@ public class C8oFileTransfer {
                 
                 locker = false
                 
-                try c8o.callJson("fs://.replicate_push")
+                c8o.callJson("fs://.replicate_push")
                     .then({ (response, parameters) -> (C8oPromise<JSON>?) in
                         self.condition.lock()
                         locker = true

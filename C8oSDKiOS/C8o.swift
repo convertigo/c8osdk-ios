@@ -240,7 +240,7 @@ public class C8o: C8oBase {
 	public func call(parameters: Dictionary<String, AnyObject>? = nil, c8oResponseListener: C8oResponseListener? = nil, c8oExceptionListener: C8oExceptionListener? = nil) throws {
 		var parameters = parameters
 		// IMPORTANT : all c8o calls have to end here !
-		do {
+
 			c8oLogger!.logMethodCall("Call", parameters: parameters!)
 			
 			// Checks parameters validity
@@ -256,10 +256,7 @@ public class C8o: C8oBase {
 			// Exceptions have to be handled by the C8oExceptionListener
 			let task = C8oCallTask(c8o: self, parameters: parameters!, c8oResponseListener: c8oResponseListener!, c8oExceptionListener: c8oExceptionListener!)
 			task.execute()
-		}
-		catch let e as C8oException {
-			handleCallException(c8oExceptionListener, requestParameters: parameters!, exception: e)
-		}
+		
 	}
 	
 	/**

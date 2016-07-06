@@ -91,12 +91,9 @@ internal class C8oFullSyncTranslator {
 	
 	internal static func queryEnumeratorToXml(queryEnumerator: CBLQueryEnumerator) throws -> AEXMLDocument {
 		let json: JSON
-		do {
-			json = try queryEnumeratorToJson(queryEnumerator)
-		}
-		catch let e as NSError {
-			throw C8oException(message: C8oExceptionMessage.queryEnumeratorToJSON(), exception: e)
-		}
+
+			json = queryEnumeratorToJson(queryEnumerator)
+
 		return try fullSyncJsonToXml(json)!
 	}
 	internal static func fullSyncDefaultResponseToJson(fullSyncDefaultResponse: FullSyncDefaultResponse) -> JSON {
