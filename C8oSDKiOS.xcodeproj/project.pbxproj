@@ -37,6 +37,8 @@
 		622CA1661CAD54580074F704 /* FullSyncResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622CA1651CAD54570074F704 /* FullSyncResponse.swift */; };
 		622CA1731CAEB8340074F704 /* C8o.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622CA1721CAEB8340074F704 /* C8o.swift */; };
 		622CA1751CAEBED10074F704 /* C8oResponseCblListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 622CA1741CAEBED10074F704 /* C8oResponseCblListener.swift */; };
+		62314C6B1D36892C00F200B8 /* C8oFileTransferSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62314C6A1D36892C00F200B8 /* C8oFileTransferSettings.swift */; };
+		62314C6D1D36894D00F200B8 /* C8oFileTransferBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62314C6C1D36894D00F200B8 /* C8oFileTransferBase.swift */; };
 		623C740B1C7C932900E691B0 /* C8oFullSyncCbl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C740A1C7C932900E691B0 /* C8oFullSyncCbl.swift */; };
 		623C740E1C7C94E900E691B0 /* C8oFullSyncDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C740D1C7C94E900E691B0 /* C8oFullSyncDatabase.swift */; };
 		623C74101C7CD02100E691B0 /* C8oLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C740F1C7CD02100E691B0 /* C8oLogger.swift */; };
@@ -273,6 +275,8 @@
 		622CA1651CAD54570074F704 /* FullSyncResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullSyncResponse.swift; sourceTree = "<group>"; };
 		622CA1721CAEB8340074F704 /* C8o.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8o.swift; sourceTree = "<group>"; };
 		622CA1741CAEBED10074F704 /* C8oResponseCblListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oResponseCblListener.swift; sourceTree = "<group>"; };
+		62314C6A1D36892C00F200B8 /* C8oFileTransferSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFileTransferSettings.swift; sourceTree = "<group>"; };
+		62314C6C1D36894D00F200B8 /* C8oFileTransferBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFileTransferBase.swift; sourceTree = "<group>"; };
 		623C740A1C7C932900E691B0 /* C8oFullSyncCbl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFullSyncCbl.swift; sourceTree = "<group>"; };
 		623C740D1C7C94E900E691B0 /* C8oFullSyncDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFullSyncDatabase.swift; sourceTree = "<group>"; };
 		623C740F1C7CD02100E691B0 /* C8oLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oLogger.swift; sourceTree = "<group>"; };
@@ -698,6 +702,8 @@
 				62057A201CB53DA0004AE521 /* FullSyncEnum.swift */,
 				62057A251CB63E7B004AE521 /* VoidResponse.swift */,
 				62DE2D171CB6B4130026C3B1 /* C8oLocalCacheResponse.swift */,
+				62314C6A1D36892C00F200B8 /* C8oFileTransferSettings.swift */,
+				62314C6C1D36894D00F200B8 /* C8oFileTransferBase.swift */,
 			);
 			path = C8oSDKiOS;
 			sourceTree = "<group>";
@@ -1337,6 +1343,7 @@
 				62EDE9231C76153000D9213F /* C8oSettings.swift in Sources */,
 				622CA1751CAEBED10074F704 /* C8oResponseCblListener.swift in Sources */,
 				62EDE92A1C76239000D9213F /* C8oCallTask.swift in Sources */,
+				62314C6B1D36892C00F200B8 /* C8oFileTransferSettings.swift in Sources */,
 				62EDE9041C7481ED00D9213F /* C8oExceptionListener.swift in Sources */,
 				62EDE9171C75FF3700D9213F /* C8oPromiseSync.swift in Sources */,
 				62EDE9331C76314200D9213F /* C8oFullSync.swift in Sources */,
@@ -1350,6 +1357,7 @@
 				62EDE9251C761BF700D9213F /* Delegates.swift in Sources */,
 				62EDE9191C75FF5100D9213F /* C8oPromiseFailSync.swift in Sources */,
 				62EDE91B1C76114B00D9213F /* C8oResponseJsonListener.swift in Sources */,
+				62314C6D1D36894D00F200B8 /* C8oFileTransferBase.swift in Sources */,
 				37F523B41C9ABE19007952C3 /* C8oCookieStorage.swift in Sources */,
 				620F6D161C776E0500683D0F /* C8oTranslator.swift in Sources */,
 				62EDE90D1C74D88000D9213F /* C8oFullSyncTranslator.swift in Sources */,
