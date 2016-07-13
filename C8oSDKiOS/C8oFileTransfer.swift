@@ -9,7 +9,7 @@
 import Foundation
 import SwiftyJSON
 
-public class C8oFileTransfer {
+public class C8oFileTransfer : C8oFileTransferBase {
     
 	private var tasksDbCreated: Bool = false
 	private var alive: Bool = true
@@ -23,16 +23,24 @@ public class C8oFileTransfer {
     private var streamToUpload : Dictionary<String, NSInputStream>
 	
 	public convenience init(c8o: C8o) throws {
-		try self.init(c8o: c8o, projectName: "lib_FileTransfer")
+        try self.init(c8o: c8o, c8oFileTransferSettings: C8oFileTransferSettings(), projectName: "lib_FileTransfer")
+	}
+    public convenience init(c8o: C8o, c8oFileTransferSettings: C8oFileTransferSettings?) throws {
+        try self.init(c8o: c8o, c8oFileTransferSettings: c8oFileTransferSettings, projectName: "lib_FileTransfer", taskDb: "c8ofiletransfer_tasks")
+    }
+
+	public convenience init(c8o: C8o, c8oFileTransferSettings: C8oFileTransferSettings?, projectName: String) throws {
+        try self.init(c8o: c8o, c8oFileTransferSettings: c8oFileTransferSettings, projectName: projectName, taskDb: "c8ofiletransfer_tasks")
 	}
 	
-	public convenience init(c8o: C8o, projectName: String) throws {
-		try self.init(c8o: c8o, projectName: projectName, taskDb: "c8ofiletransfer_tasks")
-	}
-	
-	public init(c8o: C8o, projectName: String, taskDb: String) throws {
-		c8oTask = try C8o(endpoint: c8o.endpointConvertigo + "/projects/" + projectName, c8oSettings: C8oSettings(c8oSettings: c8o).setDefaultDatabaseName(taskDb))
+	public init(c8o: C8o, c8oFileTransferSettings : C8oFileTransferSettings?, projectName: String, taskDb: String) throws {
+        c8oTask = try C8o(endpoint: c8o.endpointConvertigo + "/projects/" + projectName, c8oSettings: C8oSettings(c8oSettings: c8o).setDefaultDatabaseName(taskDb))
         self.streamToUpload = Dictionary<String, NSInputStream>()
+        super.init()
+        if(c8oFileTransferSettings != nil){
+            copy(c8oFileTransferSettings!)
+        }
+
 	}
 	
 	public func raiseTransferStatus(handler: (C8oFileTransfer, C8oFileTransferStatus)->()) -> C8oFileTransfer {
@@ -158,7 +166,17 @@ public class C8oFileTransfer {
 	public func downloadFile(transferStatus: C8oFileTransferStatus, inout task: JSON) {
 		var needRemoveSession: Bool = false
 		var c8o: C8o? = nil
+        print(maxRunning)
+        let conditionRunning : NSCondition = NSCondition()
 		do {
+            conditionRunning.lock()
+            if(maxRunning <= 0){
+                conditionRunning.wait()
+            }
+            maxRunning = maxRunning - 1
+            print(maxRunning.description)
+            conditionRunning.unlock()
+            
 			c8o = try C8o(endpoint: c8oTask.endpoint, c8oSettings: C8oSettings(c8oSettings: c8oTask).setFullSyncLocalSuffix("_" + transferStatus.uuid))
 			var fsConnector: String? = nil
 			
@@ -304,9 +322,12 @@ public class C8oFileTransfer {
 			}
 		}
 		catch let e as NSError {
-			self.notify(e)
+            finnaly(conditionRunning)
+            self.notify(e)
 		}
-		
+        
+		finnaly(conditionRunning)
+        
 		if (needRemoveSession && c8o != nil) {
 			c8o!.callJson(".RemoveSession")
 		}
@@ -317,6 +338,13 @@ public class C8oFileTransfer {
 		self.condition.signal()
 		self.condition.unlock()
 	}
+    
+    private func finnaly(cond : NSCondition){
+        cond.lock()
+        maxRunning = maxRunning + 1
+        cond.signal()
+        cond.unlock()
+    }
 	
 	private func appendChunk(inout outputStream: NSOutputStream? , contentPath: String) -> Void {
 		var str = contentPath
@@ -378,7 +406,14 @@ public class C8oFileTransfer {
     }
     
     func uploadFile(transferStatus : C8oFileTransferStatus, inout task: JSON){
+        let conditionRunning : NSCondition = NSCondition()
         do{
+            conditionRunning.lock()
+            if(maxRunning <= 0){
+                conditionRunning.wait()
+            }
+            maxRunning -= 1
+            conditionRunning.unlock()
             var res : JSON = nil
             let fileName : String = transferStatus.filepath
             var locker : Bool = false
@@ -597,7 +632,9 @@ public class C8oFileTransfer {
             notify(transferStatus)
         }
         catch let e as NSError{
+            finnaly(conditionRunning)
             print(e.description)
         }
+        finnaly(conditionRunning)
     }
 }

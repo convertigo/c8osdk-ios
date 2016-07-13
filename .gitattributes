@@ -29,6 +29,8 @@ C8oSDKiOS/C8oExceptionListener.swift -text
 C8oSDKiOS/C8oExceptionMessage.swift -text
 C8oSDKiOS/C8oFileManager.swift -text
 C8oSDKiOS/C8oFileTransfer.swift -text
+C8oSDKiOS/C8oFileTransferBase.swift -text
+C8oSDKiOS/C8oFileTransferSettings.swift -text
 C8oSDKiOS/C8oFileTransferStatus.swift -text
 C8oSDKiOS/C8oFullSync.swift -text
 C8oSDKiOS/C8oFullSyncCbl.swift -text
