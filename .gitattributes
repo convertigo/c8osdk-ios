@@ -1,4 +1,5 @@
 * text=auto !eol
+/C8oSDK.podspec.json -text
 C8oSDKTestApp/AppDelegate.swift -text
 C8oSDKTestApp/Assets.xcassets/AppIcon.appiconset/Contents.json -text
 C8oSDKTestApp/Base.lproj/LaunchScreen.storyboard -text
@@ -64,6 +65,7 @@ C8oSDKiOS/VoidResponse.swift -text
 C8oSDKiOSTests/C8ioSDKIOSTestsNotUI.swift -text
 C8oSDKiOSTests/C8oSDKiOSTests.swift -text
 C8oSDKiOSTests/Info.plist -text
+/LICENSE.txt -text
 ObjC/AppDelegate.h -text
 ObjC/AppDelegate.m -text
 ObjC/Assets.xcassets/AppIcon.appiconset/Contents.json -text
