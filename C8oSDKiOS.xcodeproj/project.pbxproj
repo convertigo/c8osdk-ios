@@ -67,7 +67,6 @@
 		62CD2A721C620961009E9F7E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 62CD2A701C620961009E9F7E /* LaunchScreen.storyboard */; };
 		62CD2A7D1C620961009E9F7E /* C8oSDKTestAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CD2A7C1C620961009E9F7E /* C8oSDKTestAppTests.swift */; };
 		62CD2A881C620961009E9F7E /* C8oSDKTestAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CD2A871C620961009E9F7E /* C8oSDKTestAppUITests.swift */; };
-		62CD2A971C6210D6009E9F7E /* PodFile in Resources */ = {isa = PBXBuildFile; fileRef = 62CD2A961C6210D6009E9F7E /* PodFile */; };
 		62CD2B231C6254E4009E9F7E /* CouchbaseLite.framework in Headers */ = {isa = PBXBuildFile; fileRef = 62CD2A9A1C621652009E9F7E /* CouchbaseLite.framework */; settings = {ATTRIBUTES = (Public, ); }; };
 		62CD2B241C625542009E9F7E /* SystemConfiguration.framework in Headers */ = {isa = PBXBuildFile; fileRef = 62CD2AA11C6217E7009E9F7E /* SystemConfiguration.framework */; settings = {ATTRIBUTES = (Public, ); }; };
 		62CD2B251C625547009E9F7E /* CFNetwork.framework in Headers */ = {isa = PBXBuildFile; fileRef = 62CD2A9D1C6217D0009E9F7E /* CFNetwork.framework */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1240,7 +1239,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				62CD2A971C6210D6009E9F7E /* PodFile in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
