@@ -1,5 +1,5 @@
 * text=auto !eol
-/C8oSDK.podspec.json -text
+/C8oSDK.podspec -text
 C8oSDKTestApp/AppDelegate.swift -text
 C8oSDKTestApp/Assets.xcassets/AppIcon.appiconset/Contents.json -text
 C8oSDKTestApp/Base.lproj/LaunchScreen.storyboard -text
