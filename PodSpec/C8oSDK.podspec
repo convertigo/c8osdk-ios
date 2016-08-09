@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
     Convertigo Client SDK is a set of native libraries used by iOS applications to access Convertigo mBaaS services.
     An application using the SDK can easily access Convertigo services such as Sequences and Transactions.
     
-    The Client SDK will abstract the programmer from handling the communication protocols, local cache, FullSync off line data managment, UI thread management and remote logging.
+    Enterprises will use the Client SDK to abstract the programmer from handling the communication protocols, local cache, FullSync offline data managment, UI thread management and remote logging.
     So the developer can focus on building the application.
     DESC
     
