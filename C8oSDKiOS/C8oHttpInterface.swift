@@ -80,12 +80,12 @@ internal class C8oHttpInterface {
 		return handleRequest(url, parameters: parameters);
 	}
 	
-	/// <summary>
-	/// Add a cookie to the cookie store.<br/>
-	/// Automatically set the domain and secure flag using the c8o endpoint.
-	/// </summary>
-	/// <param name="name">The name.</param>
-	/// <param name="value">The value.</param>
+	/** <summary>
+	 Add a cookie to the cookie store.<br/>
+	 Automatically set the domain and secure flag using the c8o endpoint.
+	 </summary>
+	 <param name="name">The name.</param>
+	 <param name="value">The value.</param> */
 	
 	internal func addCookie(name: String, value: String) -> NSObject? {
 		// cookieContainer.Add(Uri(c8o.Endpoint), Cookie(name, value));

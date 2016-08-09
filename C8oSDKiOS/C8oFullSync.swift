@@ -12,9 +12,9 @@ import SwiftyJSON
 
 internal class C8oFullSync: NSObject {
 	internal static var FULL_SYNC_URL_PATH: String = "/fullsync/";
-	/// <summary>
-	/// The project requestable value to execute a fullSync request.
-	/// </summary>
+	/**
+    The project requestable value to execute a fullSync request.
+	*/
 	internal static var FULL_SYNC_PROJECT: String = "fs://";
 	internal static var FULL_SYNC__ID: String = "_id";
 	internal static var FULL_SYNC__REV: String = "_rev";

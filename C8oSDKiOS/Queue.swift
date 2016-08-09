@@ -57,9 +57,9 @@ class _QueueItem<T> {
 	}
 }
 
-///
-/// A standard queue (FIFO - First In First Out). Supports simultaneous adding and removing, but only one item can be added at a time, and only one item can be removed at a time.
-///
+/**
+    A standard queue (FIFO - First In First Out). Supports simultaneous adding and removing, but only one item can be added at a time, and only one item can be removed at a time.
+*/
 public class Queue<T> {
 	
 	public typealias Element = T
@@ -75,7 +75,7 @@ public class Queue<T> {
 		count = 0
 	}
 	
-	/// Add a new item to the back of the queue.
+	// Add a new item to the back of the queue.
 	public func enqueue (value: Element) {
 		_back.next = _QueueItem(value)
         _back = _back.next!
@@ -84,7 +84,7 @@ public class Queue<T> {
 		count += 1
 	}
 	
-	/// Return and remove the item at the front of the queue.
+	// Return and remove the item at the front of the queue.
 	public func dequeue () -> Element? {
 		if let newhead = _front.next {
 			_front = newhead

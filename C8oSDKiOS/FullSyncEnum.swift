@@ -422,9 +422,9 @@ public class FullSyncPostDocumentParameter {
 	
 }
 
-/// <summary>
-/// Specific parameters for the fullSync's replicateDatabase request (push or pull).
-/// </summary>
+/** <summary>
+ Specific parameters for the fullSync's replicateDatabase request (push or pull).
+</summary> */
 
 //TODO... add types
 public class FullSyncReplicationParameter {
@@ -458,9 +458,9 @@ public class FullSyncReplicationParameter {
 
 //*** Policy ***//
 
-/// <summary>
-/// The policies of the fullSync's postDocument request.
-/// </summary>
+/** <summary>
+ The policies of the fullSync's postDocument request.
+ </summary>*/
 public class FullSyncPolicy {
 	/*private var c8o : Queue<C8o>? = Queue<C8o>()
 	 public func setC8o(c8o : C8o){
