@@ -169,7 +169,7 @@
 		620F6D131C77666800683D0F /* C8oHttpInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oHttpInterface.swift; sourceTree = "<group>"; };
 		620F6D151C776E0500683D0F /* C8oTranslator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oTranslator.swift; sourceTree = "<group>"; };
 		620F6D171C7771B300683D0F /* C8oUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oUtils.swift; sourceTree = "<group>"; };
-		6219E82B1D58DB1E00BEC521 /* C8oSDK.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = C8oSDK.podspec; sourceTree = "<group>"; };
+		6219E82B1D58DB1E00BEC521 /* C8oSDK.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = C8oSDK.podspec; sourceTree = "<group>"; };
 		621CB0611D26997F002E0BA0 /* samplebigfiletransfer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = samplebigfiletransfer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		621CB0631D26997F002E0BA0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		621CB0651D26997F002E0BA0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
