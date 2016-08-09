@@ -1,5 +1,4 @@
 * text=auto !eol
-/C8oSDK.podspec -text
 C8oSDKTestApp/AppDelegate.swift -text
 C8oSDKTestApp/Assets.xcassets/AppIcon.appiconset/Contents.json -text
 C8oSDKTestApp/Base.lproj/LaunchScreen.storyboard -text
@@ -77,6 +76,7 @@ ObjC/ViewController.m -text
 ObjC/libCBLJSViewCompiler.a -text
 ObjC/main.m -text
 /PodFile -text
+PodSpec/C8oSDK.podspec -text
 Pods/Target[!!-~]Support[!!-~]Files/Pods/Pods.debug.xcconfig -text
 Pods/Target[!!-~]Support[!!-~]Files/Pods/Pods.release.xcconfig -text
 samplebigfiletransfer/20Mo.png -text
