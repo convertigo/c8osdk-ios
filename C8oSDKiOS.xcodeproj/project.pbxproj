@@ -15,6 +15,7 @@
 		620F6D161C776E0500683D0F /* C8oTranslator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620F6D151C776E0500683D0F /* C8oTranslator.swift */; };
 		620F6D181C7771B300683D0F /* C8oUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 620F6D171C7771B300683D0F /* C8oUtils.swift */; };
 		621C066E1D5A08F100192E90 /* C8oSDK.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 621C066D1D5A08F100192E90 /* C8oSDK.podspec */; };
+		621C06741D5A0D3200192E90 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 621C06731D5A0D3200192E90 /* README.md */; };
 		621CB0641D26997F002E0BA0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621CB0631D26997F002E0BA0 /* AppDelegate.swift */; };
 		621CB0661D26997F002E0BA0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621CB0651D26997F002E0BA0 /* ViewController.swift */; };
 		621CB06B1D26997F002E0BA0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 621CB06A1D26997F002E0BA0 /* Assets.xcassets */; };
@@ -171,6 +172,7 @@
 		620F6D151C776E0500683D0F /* C8oTranslator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oTranslator.swift; sourceTree = "<group>"; };
 		620F6D171C7771B300683D0F /* C8oUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oUtils.swift; sourceTree = "<group>"; };
 		621C066D1D5A08F100192E90 /* C8oSDK.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; fileEncoding = 4; path = C8oSDK.podspec; sourceTree = "<group>"; };
+		621C06731D5A0D3200192E90 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		621CB0611D26997F002E0BA0 /* samplebigfiletransfer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = samplebigfiletransfer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		621CB0631D26997F002E0BA0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		621CB0651D26997F002E0BA0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -347,6 +349,7 @@
 			isa = PBXGroup;
 			children = (
 				621C066D1D5A08F100192E90 /* C8oSDK.podspec */,
+				621C06731D5A0D3200192E90 /* README.md */,
 			);
 			path = PodSpec;
 			sourceTree = "<group>";
@@ -897,6 +900,7 @@
 				62EDE90F1C75C5BD00D9213F /* C8oLocalCache.swift in Sources */,
 				62EDE9111C75DA0200D9213F /* C8oProgress.swift in Sources */,
 				622232801C6B29E2001D2EA1 /* C8oBase.swift in Sources */,
+				621C06741D5A0D3200192E90 /* README.md in Sources */,
 				623C740B1C7C932900E691B0 /* C8oFullSyncCbl.swift in Sources */,
 				622232861C6B2A00001D2EA1 /* Queue.swift in Sources */,
 				62EDE9091C7482B300D9213F /* C8oFileTransfer.swift in Sources */,

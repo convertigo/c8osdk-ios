@@ -58,11 +58,11 @@ public class C8oLogger: NSObject {
 	}
 	
 	private func isLoggableRemote(logLevel: C8oLogLevel?) -> Bool {
-		return c8o.logRemote && logLevel != nil && C8oLogLevel.TRACE.priority <= remoteLogLevel!.priority && remoteLogLevel!.priority <= logLevel!.priority
+		return c8o.logRemote && logLevel != nil && C8oLogLevel.TRACE.rawValue <= remoteLogLevel!.rawValue && remoteLogLevel!.rawValue <= logLevel!.rawValue
 	}
 	
 	private func isLoggableConsole(logLevel: C8oLogLevel?) -> Bool {
-		return logLevel != nil && C8oLogLevel.TRACE.priority <= c8o.logLevelLocal.priority && c8o.logLevelLocal.priority <= logLevel!.priority
+		return logLevel != nil && C8oLogLevel.TRACE.rawValue <= c8o.logLevelLocal.rawValue && c8o.logLevelLocal.rawValue <= logLevel!.rawValue
 	}
 	
 	/** Basics log */
@@ -110,14 +110,14 @@ public class C8oLogger: NSObject {
 			if (isLogRemote) {
 				remoteLogs!.enqueue(JSON(
 					[C8oLogger.JSON_KEY_TIME: time,
-						C8oLogger.JSON_KEY_LEVEL: logLevel.name,
+						C8oLogger.JSON_KEY_LEVEL: logLevel.name(),
 						C8oLogger.JSON_KEY_MESSAGE: message
 					]))
 				logRemote()
 			}
 			
 			if (isLogConsole) {
-				debugPrint("(" + time + ") [" + logLevel.name + "] " + message)
+				debugPrint("(" + time + ") [" + logLevel.name() + "] " + message)
 				
 			}
 		}
@@ -312,36 +312,33 @@ public class C8oLogger: NSObject {
 	}
 }
 
-public class C8oLogLevel: NSObject {
-	//
-	private static var JSON_KEY_REMOTE_LOG_LEVEL: String = "remoteLogLevel"
-	//
-	
-	internal static var NULL: C8oLogLevel = C8oLogLevel(name: "", priority: 0)
-	public static var NONE: C8oLogLevel = C8oLogLevel(name: "none", priority: 1)
-	public static var TRACE: C8oLogLevel = C8oLogLevel(name: "trace", priority: 2)
-	public static var DEBUG: C8oLogLevel = C8oLogLevel(name: "debug", priority: 3)
-	public static var INFO: C8oLogLevel = C8oLogLevel(name: "info", priority: 4)
-	public static var WARN: C8oLogLevel = C8oLogLevel(name: "warn", priority: 5)
-	public static var ERROR: C8oLogLevel = C8oLogLevel(name: "error", priority: 6)
-	public static var FATAL: C8oLogLevel = C8oLogLevel(name: "fatal", priority: 7)
-	
-	internal static var C8O_LOG_LEVELS: [C8oLogLevel] = [NULL, NONE, TRACE, DEBUG, INFO, WARN, ERROR, FATAL]
-	
-	internal var name: String
-	internal var priority: Int
-	
-	private init(name: String, priority: Int) {
-		self.name = name
-		self.priority = priority
-	}
-	
-	internal static func getC8oLogLevel(name: String) -> C8oLogLevel? {
-		for c8oLogLevel in C8oLogLevel.C8O_LOG_LEVELS {
-			if (c8oLogLevel.name == name) {
-				return c8oLogLevel
-			}
-		}
-		return nil
-	}
+public enum C8oLogLevel : UInt {
+    case NULL, NONE, TRACE, DEBUG, INFO, WARN, ERROR, FATAL
+    
+    internal static func getC8oLogLevel(name: String) -> C8oLogLevel? {
+        switch name.uppercaseString {
+        case "NULL":
+            return .NULL
+        case "NONE":
+            return .NONE
+        case "TRACE":
+            return .TRACE
+        case "DEBUG":
+            return .DEBUG
+        case "INFO":
+            return .INFO
+        case "WARN":
+            return .WARN
+        case "ERROR":
+            return .ERROR
+        case "FATAL":
+            return .FATAL
+        default:
+            return nil
+        }
+    }
+    
+    public func name()->String{
+        return String(self)
+    }
 }

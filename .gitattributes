@@ -77,6 +77,7 @@ ObjC/libCBLJSViewCompiler.a -text
 ObjC/main.m -text
 /PodFile -text
 PodSpec/C8oSDK.podspec -text
+PodSpec/README.md -text
 Pods/Target[!!-~]Support[!!-~]Files/Pods/Pods.debug.xcconfig -text
 Pods/Target[!!-~]Support[!!-~]Files/Pods/Pods.release.xcconfig -text
 samplebigfiletransfer/20Mo.png -text
