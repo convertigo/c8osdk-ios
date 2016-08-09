@@ -169,7 +169,6 @@
 		620F6D131C77666800683D0F /* C8oHttpInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oHttpInterface.swift; sourceTree = "<group>"; };
 		620F6D151C776E0500683D0F /* C8oTranslator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oTranslator.swift; sourceTree = "<group>"; };
 		620F6D171C7771B300683D0F /* C8oUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oUtils.swift; sourceTree = "<group>"; };
-		6219E8291D58DA9A00BEC521 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		6219E82B1D58DB1E00BEC521 /* C8oSDK.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = C8oSDK.podspec; sourceTree = "<group>"; };
 		621CB0611D26997F002E0BA0 /* samplebigfiletransfer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = samplebigfiletransfer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		621CB0631D26997F002E0BA0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -389,7 +388,6 @@
 			children = (
 				62CD2A961C6210D6009E9F7E /* PodFile */,
 				6219E82B1D58DB1E00BEC521 /* C8oSDK.podspec */,
-				6219E8291D58DA9A00BEC521 /* LICENSE.txt */,
 				62CD2A491C6207AD009E9F7E /* C8oSDKiOS */,
 				62CD2A551C6207AD009E9F7E /* C8oSDKiOSTests */,
 				62CD2A661C620960009E9F7E /* C8oSDKTestApp */,

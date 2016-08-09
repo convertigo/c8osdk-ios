@@ -65,7 +65,6 @@ C8oSDKiOS/VoidResponse.swift -text
 C8oSDKiOSTests/C8ioSDKIOSTestsNotUI.swift -text
 C8oSDKiOSTests/C8oSDKiOSTests.swift -text
 C8oSDKiOSTests/Info.plist -text
-/LICENSE.txt -text
 ObjC/AppDelegate.h -text
 ObjC/AppDelegate.m -text
 ObjC/Assets.xcassets/AppIcon.appiconset/Contents.json -text
