@@ -224,6 +224,7 @@ One fail handler per promise chain is allowed. The fail callback provide the obj
 
 ## More information ##
 <img src='http://www.convertigo.com/wp-content/uploads/2015/11/convertigoClientSDK-300x203.png' style='float:right'>
+
 Please see about other SDKs:
 
 - [.NET (Xamarin)](https://components.xamarin.com/view/convertigo-mbaas "Xamarin")
