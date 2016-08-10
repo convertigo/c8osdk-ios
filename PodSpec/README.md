@@ -26,7 +26,7 @@ Create a PodFile with :
 
     use_frameworks!
 
-	target 'C8oSDKiOS' do
+	target 'MyApp' do
 	  pod 'C8oSDK', '2.0.4'
 	end
 
@@ -45,11 +45,11 @@ Initializing a Convertigo Enpoint:
 	// In swift there is two ways to handle errors :
 	// We can either choose to don't care about errors using the following syntax (this may produce in case of error an "EXC_BAD_INSTRUCTION")
 
-	let c8o : C8o = try! C8o(endpoint: "https://demo.convertigo.net/cems/projects/sampleMobileCtfGallery", c8oSettings: nil)
+	let c8o : C8o = try! C8o(endpoint: "https://demo.convertigo.net/cems/projects/sampleMobileCtfGallery")
 	
 	// or we can choose to use do/catch syntax that will allow us to catch errors
 	do{
-		let c8o : C8o = try C8o(endpoint: "https://demo.convertigo.net/cems/projects/sampleMobileCtfGallery", c8oSettings: nil)
+		let c8o : C8o = try C8o(endpoint: "https://demo.convertigo.net/cems/projects/sampleMobileCtfGallery")
 	}
 	catch let e as NSError{
 		print(e.description)
@@ -62,9 +62,9 @@ Calling a Convertigo Requestable:
 	import SwiftyJSON
 
 	// c8o is a C8o instance
-	let JObject : JSON = try! c8o.callJson(".getSimpleData")!.sync()!
+	let jObject : JSON = try! c8o.callJson(".getSimpleData")!.sync()!
 
-	// You now have JSON objecct that you can use in your app!
+	// You now have JSON object that you can use in your app!
 
 ## More information ##
 Please see about other SDKs for .NET (Xamarin):
