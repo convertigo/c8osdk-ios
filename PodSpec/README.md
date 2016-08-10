@@ -1,3 +1,4 @@
+![](http://www.convertigo.com/wp-content/uploads/2015/05/logofix.png)
 # Convertigo SDK for iOS #
 Convertigo Mobility Platform supports native iOS developpers. Services brought by the platform are available for iOS clients applications thanks to the Convertigo MBaaS SDK. SDK provides a iOS framework you can use to access Convertigo Server’s services such as:
 
@@ -222,10 +223,20 @@ One fail handler per promise chain is allowed. The fail callback provide the obj
 	})
 
 ## More information ##
+<img src='http://www.convertigo.com/wp-content/uploads/2015/11/convertigoClientSDK-300x203.png' style='float:right'>
 Please see about other SDKs:
 
 - [.NET (Xamarin)](https://components.xamarin.com/view/convertigo-mbaas "Xamarin")
 
 - [.NET](https://www.nuget.org/packages/C8oFullSyncExtensions/)
 
+<br><br><br><br><br>
+
+##About Convertigo##
+
+<div style="text-align:center">  
+
+<img src='http://image.slidesharecdn.com/convertigompjuill2015usglobal-newversion-150820100604-lva1-app6891/95/convertigo-mobility-platform-mobile-application-development-for-enterprises-madp-mbaas-4-638.jpg'>
+
+</div>
     
