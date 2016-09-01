@@ -1273,6 +1273,7 @@
 		};
 		62CD2A5F1C6207AD009E9F7E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7CE1A3C0E60462F140575CFB /* Pods-C8oSDKiOS.debug.xcconfig */;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = C8oSDKiOSTests/Info.plist;
@@ -1284,6 +1285,7 @@
 		};
 		62CD2A601C6207AD009E9F7E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F1F795A1F44565BEA6556CA1 /* Pods-C8oSDKiOS.release.xcconfig */;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = C8oSDKiOSTests/Info.plist;

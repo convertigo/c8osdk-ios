@@ -1453,7 +1453,7 @@ class C8oSDKiOSTests: XCTestCase {
 			XCTAssertEqual("777", value as? String)
 			value = json["document"]["couchdb_output"]["int"].intValue
 			XCTAssertEqual(777, value as? Int)
-			value = json["document"]["couchdb_output"]["_c8oAcl"].stringValue
+			value = json["document"]["couchdb_output"]["~c8oAcl"].stringValue
 			XCTAssertEqual("testing_user", value as? String)
 			
 		}
@@ -1505,14 +1505,14 @@ class C8oSDKiOSTests: XCTestCase {
 				parameters: "startkey", id,
 				"endkey", id + "z"
 			).sync()!
-			let array: JSON = json["document"]["couchdb_output"]["rows"]["item"]
+			let array: JSON = json["document"]["couchdb_output"]["rows"]
 			XCTAssertEqual(10, array.count)
 			for index in 0...9 {
 				value = array[index]["doc"]["_id"].stringValue
 				XCTAssertEqual(id + "-" + index.description, value as? String)
 				value = array[index]["doc"]["index"].intValue
 				XCTAssertEqual(index, value as? Int)
-				value = array[index]["doc"]["_c8oAcl"].stringValue
+				value = array[index]["doc"]["~c8oAcl"].stringValue
 				XCTAssertEqual("testing_user", value as? String)
 			}
 			XCTAssertFalse(uiThread[0], "uiThread must be False")
@@ -1593,7 +1593,7 @@ class C8oSDKiOSTests: XCTestCase {
 				parameters: "startkey", id,
 				"endkey", id + "z"
 			).sync()!
-			let array: JSON = json["document"]["couchdb_output"]["rows"]["item"]
+			let array: JSON = json["document"]["couchdb_output"]["rows"]
 			XCTAssertEqual(3, array.count)
 			for index in 0...2 {
 				value = array[index]["doc"]["_id"].stringValue
