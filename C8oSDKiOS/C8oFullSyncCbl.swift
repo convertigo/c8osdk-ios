@@ -536,21 +536,8 @@ class C8oFullSyncCbl: C8oFullSync {
     }
     
     func handleResetDatabaseRequest(databaseName: String) throws -> FullSyncDefaultResponse? {
-        let localDatabaseName = databaseName + localSuffix!
-        if let _ = fullSyncDatabases![localDatabaseName] {
-            fullSyncDatabases?.removeValueForKey(localDatabaseName)
-        }
-        
-        do {
-            let db: CBLDatabase? = try self.manager!.databaseNamed(databaseName + localSuffix!)
-            if (db != nil) {
-                try db?.deleteDatabase()
-            }
-        }
-        catch let e as NSError {
-            throw C8oException(message: "TODO", exception: e)
-        }
-        return FullSyncDefaultResponse(operationStatus: true)
+        try handleDestroyDatabaseRequest(databaseName)
+        return try handleCreateDatabaseRequest(databaseName)
     }
     
     func handleCreateDatabaseRequest(databaseName: String) throws -> FullSyncDefaultResponse? {
