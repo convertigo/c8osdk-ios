@@ -156,7 +156,19 @@ public class C8oSettings: C8oBase {
 	public func setFullSyncLocalSuffix(fullSyncLocalSuffix: String) -> C8oSettings {
 		_fullSyncLocalSuffix = fullSyncLocalSuffix
 		return self
-	}
+    }
+    
+    public func setFullSyncStorageEngine(fullSyncStorageEngine: String) -> C8oSettings {
+        if (C8o.FS_STORAGE_SQL == fullSyncStorageEngine || C8o.FS_STORAGE_FORESTDB == fullSyncStorageEngine) {
+            _fullSyncStorageEngine = fullSyncStorageEngine
+        }
+        return self
+    }
+    
+    public func setFullSyncEncryptionKey(fullSyncEncryptionKey: String) -> C8oSettings {
+        _fullSyncEncryptionKey = fullSyncEncryptionKey
+        return self
+    }
 	
 	public func setUseEncryption(useEncryption: Bool) -> C8oSettings {
 		_useEncryption = useEncryption

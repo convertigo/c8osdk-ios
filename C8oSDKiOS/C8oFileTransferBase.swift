@@ -9,12 +9,25 @@
 import Foundation
 
 public class C8oFileTransferBase{
-    internal var maxRunning : Int = 4
+    internal var _projectName : String = "lib_FileTransfer"
+    internal var _taskDb : String = "c8ofiletransfer_tasks"
+    internal var _maxRunning : Int = 4
     
-    public func getMaxRunning()->Int{
-        return maxRunning
+    public var projectName : String {
+        get { return _projectName }
     }
-    public func copy(c8oFileTransferSettings : C8oFileTransferSettings){
-        maxRunning = c8oFileTransferSettings.getMaxRunning()
+    
+    public var taskDb : String {
+        get { return _taskDb }
+    }
+    
+    public var maxRunning : Int {
+        get { return _maxRunning }
+    }
+    
+    public func copy(settings : C8oFileTransferSettings) {
+        _projectName = settings._projectName
+        _taskDb = settings._taskDb
+        _maxRunning = settings._maxRunning
     }
 }

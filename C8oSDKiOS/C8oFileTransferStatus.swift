@@ -9,23 +9,23 @@
 import Foundation
 
 public class C8oFileTransferStatus {
-	public static var stateQueued: DownloadState = DownloadState(description: "queued")
-	public static var stateAuthenticated: DownloadState = DownloadState(description: "authenticated")
-    public static var stateSplitting : DownloadState = DownloadState(description: "splitting")
-	public static var stateReplicate: DownloadState = DownloadState(description: "replicating")
-	public static var stateAssembling: DownloadState = DownloadState(description: "assembling")
-	public static var stateCleaning: DownloadState = DownloadState(description: "cleaning")
-	public static var stateFinished: DownloadState = DownloadState(description: "finished")
+	public static let StateQueued: DownloadState = DownloadState.Queued
+	public static let StateAuthenticated: DownloadState = DownloadState.Authenticated
+    public static let StateSplitting: DownloadState = DownloadState.Splitting
+	public static let StateReplicate: DownloadState = DownloadState.Replicate
+	public static let StateAssembling: DownloadState = DownloadState.Assembling
+	public static let StateCleaning: DownloadState = DownloadState.Cleaning
+	public static let StateFinished: DownloadState = DownloadState.Finished
 	
-	public class DownloadState {
-		public var description: String
-		
-		internal init (description: String) {
-			self.description = description
-			
-		}
-		
-	}
+    public enum DownloadState: String {
+        case Queued
+        case Authenticated
+        case Splitting
+        case Replicate
+        case Assembling
+        case Cleaning
+        case Finished
+    }
     
     private var _state : DownloadState? = nil
     private var _uuid : String? = ""
@@ -106,7 +106,7 @@ public class C8oFileTransferStatus {
 	}
 	
 	internal init (uuid: String, filepath: String) {
-        self.state = C8oFileTransferStatus.stateQueued
+        self.state = C8oFileTransferStatus.StateQueued
         self.uuid = uuid
 				
 		self.filepath = filepath

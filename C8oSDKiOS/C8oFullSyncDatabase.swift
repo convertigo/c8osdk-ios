@@ -40,7 +40,18 @@ public class C8oFullSyncDatabase: NSObject {
 			var er: NSError? = nil
 			(c8o.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
 				do {
-					self.database = try manager.databaseNamed(databaseNameMutable)
+                    
+                    let options = CBLDatabaseOptions()
+                    options.create = true
+                    if (c8o.fullSyncEncryptionKey != nil) {
+                        options.encryptionKey = c8o.fullSyncEncryptionKey
+                    }
+                    if (C8o.FS_STORAGE_SQL == c8o.fullSyncStorageEngine) {
+                        options.storageType = kCBLSQLiteStorage
+                    } else {
+                        options.storageType = kCBLForestDBStorage
+                    }
+                    self.database = try manager.openDatabaseNamed(databaseNameMutable, withOptions: options)
 				}
 				catch let e as NSError {
 					er = e
@@ -62,6 +73,17 @@ public class C8oFullSyncDatabase: NSObject {
 		
 	}
 	
+    func deleteDb() {
+        if (database != nil) {
+            do {
+                try database!.deleteDatabase()
+            } catch let e as NSError {
+                c8o.log._debug("Failed to close DB: " + e.description)
+            }
+            database = nil
+        }
+    }
+    
 	private func getReplication(fsReplication: FullSyncReplication?) -> CBLReplication {
 		
 		if (fsReplication?.replication != nil) {
@@ -77,7 +99,8 @@ public class C8oFullSyncDatabase: NSObject {
 		replication = fsReplication!.replication!
 		
 		for cookie in c8o.cookieStore.cookies! {
-			replication!.setCookieNamed(cookie.name, withValue: cookie.value, path: cookie.path, expirationDate: cookie.expiresDate, secure: cookie.secure)
+            let date = NSDate(timeInterval: 3600, sinceDate: NSDate())
+			replication!.setCookieNamed(cookie.name, withValue: cookie.value, path: cookie.path, expirationDate: date, secure: cookie.secure)
 		}
 		
 		return replication!
@@ -136,11 +159,24 @@ public class C8oFullSyncDatabase: NSObject {
 		
 		var count = false
 		NSNotificationCenter.defaultCenter().addObserverForName(kCBLReplicationChangeNotification, object: rep!, queue: nil, usingBlock: { _ in
-			if (count) {
+            if (count) {
 				progress.total = rep!.changesCount.hashValue
 				progress.current = rep!.completedChangesCount.hashValue
 				progress.taskInfo = ("n/a")
-				progress.status = String(rep!.status)
+                switch (rep!.status) {
+                case .Active:
+                    progress.status = "Active"
+                    break
+                case .Idle:
+                    progress.status = "Idle"
+                    break
+                case .Offline:
+                    progress.status = "Offline"
+                    break
+                case .Stopped:
+                    progress.status = "Stopped"
+                    break
+                }
 				progress.finished = !(rep!.status == CBLReplicationStatus.Active)
 				
 				if (progress.changed) {

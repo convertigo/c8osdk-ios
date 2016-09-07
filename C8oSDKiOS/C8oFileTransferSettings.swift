@@ -12,19 +12,25 @@ public class C8oFileTransferSettings : C8oFileTransferBase{
     public override init() {
         super.init()
     }
+    
     public init(c8oFileTransferSettings : C8oFileTransferSettings) {
         super.init()
         copy(c8oFileTransferSettings)
     }
-    public func clone()->C8oFileTransferSettings{
-        return C8oFileTransferSettings(c8oFileTransferSettings: self)
+    
+    public func setProjectName(projectName: String) throws -> C8oFileTransferSettings {
+        _projectName = projectName
+        return self
     }
-    public func setMaxRunning(maxRunning:Int)throws ->C8oFileTransferSettings{
-        if(maxRunning <= 0 || maxRunning > 4){
-            throw C8oException(message: "maxRunning must be between 1 and 4")
-        }
-        else{
-            self.maxRunning = maxRunning
+    
+    public func setTaskDb(taskDb: String) throws -> C8oFileTransferSettings {
+        _taskDb = taskDb
+        return self
+    }
+    
+    public func setMaxRunning(maxRunning: Int) throws -> C8oFileTransferSettings {
+        if (maxRunning > 0) {
+            _maxRunning = maxRunning
         }
         return self
     }

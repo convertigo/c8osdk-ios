@@ -80,6 +80,9 @@ public class C8o: C8oBase {
      */
 	public static var FS_SUBKEY_SEPARATOR: String = "_use_subkey_separator"
 	
+    public static var FS_STORAGE_SQL: String = "SQL"
+    public static var FS_STORAGE_FORESTDB: String = "FORESTDB"
+    
 	/* Local cache keys */
 	
 	internal static var LOCAL_CACHE_DOCUMENT_KEY_RESPONSE: String = "response"
@@ -382,6 +385,20 @@ public class C8o: C8oBase {
 		get { return _logLevelLocal }
 		set(value) { _logLevelLocal = value }
 	}
+    
+    public override var fullSyncStorageEngine: String {
+        get { return _fullSyncStorageEngine }
+        set(value) {
+            if (C8o.FS_STORAGE_SQL == value || C8o.FS_STORAGE_FORESTDB == value) {
+                _fullSyncStorageEngine = value
+            }
+        }
+    }
+    
+    public override var fullSyncEncryptionKey: String? {
+        get { return _fullSyncEncryptionKey }
+        set(value) { _fullSyncEncryptionKey = value }
+    }
 	
 	public var log: C8oLogger {
 		get { return c8oLogger! }

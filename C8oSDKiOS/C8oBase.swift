@@ -31,6 +31,8 @@ public class C8oBase: NSObject {
 	internal var _defaultDatabaseName: String?
 	internal var _authenticationCookieValue: String?
 	internal var _fullSyncLocalSuffix: String?
+    internal var _fullSyncStorageEngine: String = C8o.FS_STORAGE_SQL
+    internal var _fullSyncEncryptionKey: String?
 	internal var _fullSyncServerUrl: String = "http://localhost:5984"
 	internal var _fullSyncUsername: String?
 	internal var _fullSyncPassword: String?
@@ -211,6 +213,14 @@ public class C8oBase: NSObject {
 		get { return _fullSyncLocalSuffix }
 	}
 	
+    public var fullSyncStorageEngine: String {
+        get { return _fullSyncStorageEngine }
+    }
+    
+    public var fullSyncEncryptionKey: String? {
+        get { return _fullSyncEncryptionKey }
+    }
+    
 	/**
 	 Gets the fullSync server url.
 	 Example usage:
@@ -312,7 +322,9 @@ public class C8oBase: NSObject {
 		_defaultDatabaseName = c8oBase._defaultDatabaseName
 		_authenticationCookieValue = c8oBase._authenticationCookieValue
 		_fullSyncLocalSuffix = c8oBase._fullSyncLocalSuffix
-		
+        _fullSyncStorageEngine = c8oBase._fullSyncStorageEngine
+        _fullSyncEncryptionKey = c8oBase._fullSyncEncryptionKey
+        
 		_fullSyncServerUrl = c8oBase._fullSyncServerUrl
 		_fullSyncUsername = c8oBase._fullSyncUsername
 		_fullSyncPassword = c8oBase._fullSyncPassword

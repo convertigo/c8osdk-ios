@@ -1030,11 +1030,11 @@ class C8oSDKiOSTests: XCTestCase {
 		json.dictionaryObject?.removeValueForKey("_rev")
 		XCTAssertEqual(myId, json.dictionaryObject?.removeValueForKey("_id") as? String)
 		let expectedJson = "{\n  \"b\" : -2,\n  \"a\" : 1,\n  \"i\" : [\n    \"5\",\n    6,\n    7.1,\n    null\n  ],\n  \"c\" : {\n    \"f\" : {\n      \"g\" : true,\n      \"j\" : \"good\",\n      \"h\" : [\n        true,\n        false,\n        \"three\",\n        \"four\"\n      ]\n    },\n    \"i-j\" : \"great\",\n    \"e\" : \"four\",\n    \"d\" : 3\n  }\n}"
-
-        if let dataFromString = expectedJson.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
-            let jsonex = JSON(data: dataFromString)
-            XCTAssertEquals(jsonex, actual: json)
-        }
+		
+		if let dataFromString = expectedJson.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
+			let jsonex = JSON(data: dataFromString)
+			XCTAssertEquals(jsonex, actual: json)
+		}
 	}
 	
 	internal class PlainObjectA {
@@ -1115,12 +1115,11 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertEqual(myId, json.dictionaryObject?.removeValueForKey("_id") as? String)
 		
 		let expectedJson = "{\n  \"a obj\" : {\n    \"bObject\" : {\n      \"enabled\" : true,\n      \"num\" : -666,\n      \"name\" : \"plain B -666\"\n    },\n    \"bObjects\" : [\n      {\n        \"name\" : \"plain B 1\",\n        \"num\" : 1,\n        \"enabled\" : true\n      },\n      {\n        \"name\" : \"plain B 2 bis\",\n        \"num\" : 2,\n        \"enabled\" : false\n      }\n    ],\n    \"name\" : \"plain A\"\n  }\n}"
-        
-        if let dataFromString = expectedJson.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
-            let jsonex = JSON(data: dataFromString)
-            XCTAssertEquals(jsonex, actual: json)
-        }
-        
+		
+		if let dataFromString = expectedJson.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
+			let jsonex = JSON(data: dataFromString)
+			XCTAssertEquals(jsonex, actual: json)
+		}
 		
 	}
 	
@@ -1152,6 +1151,22 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertEqual(myId, id)
 	}
 	
+	 func testC8oCBLpull() {
+	 let manager = CBLManager()
+	 let options = CBLDatabaseOptions()
+	 options.create = true
+	 //options.storageType = kCBLForestDBStorage
+     options.storageType = kCBLSQLiteStorage
+	 let db = try! manager.openDatabaseNamed("testing4", withOptions: options)
+        //let url = NSURL(string: "http://buildus.twinsoft.fr:28080/convertigo/fullsync/qa_fs_pull")
+        let url = NSURL(string: "http://buildus.twinsoft.fr:5984/qa_fs_pull")
+	 let rep = db.createPullReplication(url!)
+	 rep.start()
+	 sleep(4)
+	 let changes = rep.completedChangesCount
+	 XCTAssertNotEqual(0, changes)
+	 }
+ 
 	func testC8oFsReplicateAnoAndAuth() {
 		
 		let c8o = try! get(.C8O_FS_PULL)
@@ -1709,6 +1724,99 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertNotEqual(signature, signature2)
 	}
 	
+	func testC8oFileTransferDownloadSimple() {
+		let c8o = try! get(.C8O)
+		let ft = try! C8oFileTransfer(c8o: c8o, c8oFileTransferSettings: C8oFileTransferSettings())
+		try! c8o.callJson(ft.taskDb + ".destroy").sync()
+		var status: [C8oFileTransferStatus?] = [nil]
+		let __status: NSCondition = NSCondition()
+		var error: [NSError?] = [nil]
+		ft.raiseTransferStatus({ (source, event) in
+			if (event.state == C8oFileTransferStatus.StateFinished) {
+				__status.lock()
+				status[0] = event
+				__status.signal()
+				__status.unlock()
+			}
+		})
+		ft.raiseException({ (source, event) in
+			__status.lock()
+			error[0] = event
+			__status.signal()
+			__status.unlock()
+		})
+		ft.start()
+		let uuid = try! c8o.callXml(".PrepareDownload4M").sync()!["document"]["uuid"].stringValue
+		XCTAssertNotNil(uuid)
+		let file = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0] + "4m.jpg"
+		let fm = NSFileManager.defaultManager()
+        do {
+            try fm.removeItemAtPath(file)
+        } catch {}
+		do {
+			__status.lock()
+			try ft.downloadFile(uuid, filePath: file)
+			__status.waitUntilDate(NSDate(timeIntervalSinceNow: 20.0))
+			__status.unlock()
+			if (error[0] != nil) {
+				throw error[0]!
+			}
+			XCTAssertNotNil(status[0])
+			XCTAssertTrue(fm.fileExistsAtPath(file))
+			let length: Int = 4237409
+			XCTAssertEqual(4237409, length)
+		} catch {
+            do {
+                try fm.removeItemAtPath(file)
+            } catch {}
+		}
+    }
+    
+    func ntestC8oFileTransferUploadSimple() {
+        let c8o = try! get(.C8O)
+        let path = NSBundle.mainBundle().pathForResource("4m", ofType: "jpg")
+        let ins : NSInputStream = NSInputStream(fileAtPath: path!)!
+        let ft = try! C8oFileTransfer(c8o: c8o, c8oFileTransferSettings: C8oFileTransferSettings())
+        try! c8o.callJson(ft.taskDb + ".destroy").sync()
+        var status: [C8oFileTransferStatus?] = [nil]
+        let __status: NSCondition = NSCondition()
+        var error: [NSError?] = [nil]
+        ft.raiseTransferStatus({ (source, event) in
+            if (event.state == C8oFileTransferStatus.StateFinished) {
+                __status.lock()
+                status[0] = event
+                __status.signal()
+                __status.unlock()
+            }
+        })
+        ft.raiseException({ (source, event) in
+            __status.lock()
+            error[0] = event
+            __status.signal()
+            __status.unlock()
+        })
+        ft.start()
+        
+        let uuid = try! c8o.callXml(".PrepareDownload4M").sync()!["document"]["uuid"].stringValue
+        XCTAssertNotNil(uuid)
+        let file = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0] + "4m.jpg"
+        let fm = NSFileManager.defaultManager()
+        do {
+            try fm.removeItemAtPath(file)
+        } catch {}
+            __status.lock()
+            try! ft.uploadFile("4m.jpg", fileStream: ins)
+            __status.waitUntilDate(NSDate(timeIntervalSinceNow: 20.0))
+            __status.unlock()
+            if (error[0] != nil) {
+                //throw error[0]!
+            }
+            XCTAssertNotNil(status[0])
+            XCTAssertTrue(fm.fileExistsAtPath(file))
+            let length: Int = 4237409
+            XCTAssertEqual(4237409, length)
+    }
+	
 	// TODO...
 	/*
 	 func testC8oSslValid(){
@@ -1744,52 +1852,52 @@ class C8oSDKiOSTests: XCTestCase {
 		// let c8o : C8o = try! C8o(endpoint: PREFIX + HOST + PORT + "hdhhdhd", c8oSettings: C8oSettings().setTimeout(1000))
 		
 	}
-
-    func XCTAssertEqualsJsonChild(expectedObject : JSON , actualObject :JSON) {
-        if(expectedObject.dictionary?.count >= 0) {
-            XCTAssertNotNil(actualObject, "must not be null")
-            XCTAssertEquals(expectedObject, actual: actualObject)
-        }
-        else if (expectedObject.array?.count >= 0){
-            XCTAssertNotNil(actualObject, "must not be null")
-            XCTAssertEquals(expectedObject, actual: actualObject)
-        }
-        else if (expectedObject.int != nil){
-            XCTAssertNotNil(actualObject, "must not be null")
-            XCTAssertEqual(expectedObject.int, actualObject.int)
-        }
-        else if(expectedObject.string != nil){
-            XCTAssertNotNil(actualObject, "must not be null")
-            XCTAssertEqual(expectedObject.string, actualObject.string)
-        }
-    }
-
-    func XCTAssertEquals(expected : JSON, actual : JSON) {
-        do {
-            if(expected.dictionary?.count >= 0){// || expected.array?.count >= 0 ){
-                let expectedD = expected.dictionary
-                let actualD = actual.dictionary
-                let expectedNames = expectedD?.keys
-                let actualNames = actualD?.keys
-                XCTAssertEqual(expectedNames!.count, actualNames!.count, "missing keys: " + expectedNames.debugDescription + " and " + actualNames.debugDescription)
-                for (key, _) in expectedD! {
-                    XCTAssertTrue(actualD![key] != nil, "missing key: " + key)
-                    XCTAssertEqualsJsonChild(expectedD![key]!, actualObject: actualD![key]!)
-                }
-            }
-            else if (expected.array?.count >= 0){
-                XCTAssertEqual(expected.array!, actual.array!, "array")
-            }
-            else if (expected.int != nil){
-                XCTAssertEqual(expected, actual, "int equals")
-            }
-            else if(expected.string != nil){
-                XCTAssertEqual(expected, actual, "string equals")
-            }
-        } catch let t as NSError {
-            XCTAssertTrue(false, "exception: " + t.description)
-        }
-    }
-	 
+	
+	func XCTAssertEqualsJsonChild(expectedObject: JSON, actualObject: JSON) {
+		if (expectedObject.dictionary?.count >= 0) {
+			XCTAssertNotNil(actualObject, "must not be null")
+			XCTAssertEquals(expectedObject, actual: actualObject)
+		}
+		else if (expectedObject.array?.count >= 0) {
+			XCTAssertNotNil(actualObject, "must not be null")
+			XCTAssertEquals(expectedObject, actual: actualObject)
+		}
+		else if (expectedObject.int != nil) {
+			XCTAssertNotNil(actualObject, "must not be null")
+			XCTAssertEqual(expectedObject.int, actualObject.int)
+		}
+		else if (expectedObject.string != nil) {
+			XCTAssertNotNil(actualObject, "must not be null")
+			XCTAssertEqual(expectedObject.string, actualObject.string)
+		}
+	}
+	
+	func XCTAssertEquals(expected: JSON, actual: JSON) {
+		do {
+			if (expected.dictionary?.count >= 0) { // || expected.array?.count >= 0 ){
+				let expectedD = expected.dictionary
+				let actualD = actual.dictionary
+				let expectedNames = expectedD?.keys
+				let actualNames = actualD?.keys
+				XCTAssertEqual(expectedNames!.count, actualNames!.count, "missing keys: " + expectedNames.debugDescription + " and " + actualNames.debugDescription)
+				for (key, _) in expectedD! {
+					XCTAssertTrue(actualD![key] != nil, "missing key: " + key)
+					XCTAssertEqualsJsonChild(expectedD![key]!, actualObject: actualD![key]!)
+				}
+			}
+			else if (expected.array?.count >= 0) {
+				XCTAssertEqual(expected.array!, actual.array!, "array")
+			}
+			else if (expected.int != nil) {
+				XCTAssertEqual(expected, actual, "int equals")
+			}
+			else if (expected.string != nil) {
+				XCTAssertEqual(expected, actual, "string equals")
+			}
+		} catch let t as NSError {
+			XCTAssertTrue(false, "exception: " + t.description)
+		}
+	}
+	
 }
 
