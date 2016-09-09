@@ -11,14 +11,13 @@ import Alamofire
 import SwiftyJSON
 import AEXML
 
-
 /**
  Allows to send requests to a Convertigo Server (or Studio), these requests are called c8o calls.
- 
+
  C8o calls are done thanks to a HTTP request or a CouchbaseLite usage.
- 
+
  An instance of C8o is connected to only one Convertigo and can't change it.
- 
+
  To use it, you have to first initialize the C8o instance with the Convertigo endpoint, then use call methods with Convertigo variables as parameter.
  */
 public class C8o: C8oBase {
@@ -38,51 +37,51 @@ public class C8o: C8oBase {
 	internal static var ENGINE_PARAMETER_PROGRESS: String = "__progress"
 	
 	/* FULLSYNC parameters */
-    
-    /**
-     Constant to use as a parameter for a Call of "fs://.post" and must be followed by a FS_POLICY_* constant.
- 
-         c8o.callJson("fs://.post", parameters:
-           C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
-           "docid", myid,
-           "mykey", myvalue
-         ).sync();
-     */
-    public static var FS_POLICY: String = "_use_policy"
-    /**
-     Use it with "fs://.post" and C8o.FS_POLICY.
-     
-     This is the default post policy that don't alter the document before the CouchbaseLite's insertion.
-     */
-    public static var FS_POLICY_NONE: String = "none"
-    /**
-     Use it with "fs://.post" and C8o.FS_POLICY.
-     
-     This post policy remove the "_id" and "_rev" of the document before the CouchbaseLite's insertion.
-     */
-    public static var FS_POLICY_CREATE: String = "create"
-    /**
-     Use it with "fs://.post" and C8o.FS_POLICY.
-     
-     This post policy inserts the document in CouchbaseLite even if a document with the same "_id" already exists.
-     */
-    public static var FS_POLICY_OVERRIDE: String = "override"
-    /**
-     Use it with "fs://.post" and C8o.FS_POLICY.
-     
-     This post policy merge the document with an existing document with the same "_id" before the CouchbaseLite's insertion.
-     */
-    public static var FS_POLICY_MERGE: String = "merge"
-    /**
-     Use it with "fs://.post". Default value is ".".
-     
-     This key allow to override the sub key separator in case of document depth modification.
-     */
+	
+	/**
+	 Constant to use as a parameter for a Call of "fs://.post" and must be followed by a FS_POLICY_* constant.
+
+	 c8o.callJson("fs://.post", parameters:
+	 C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
+	 "docid", myid,
+	 "mykey", myvalue
+	 ).sync();
+	 */
+	public static var FS_POLICY: String = "_use_policy"
+	/**
+	 Use it with "fs://.post" and C8o.FS_POLICY.
+
+	 This is the default post policy that don't alter the document before the CouchbaseLite's insertion.
+	 */
+	public static var FS_POLICY_NONE: String = "none"
+	/**
+	 Use it with "fs://.post" and C8o.FS_POLICY.
+
+	 This post policy remove the "_id" and "_rev" of the document before the CouchbaseLite's insertion.
+	 */
+	public static var FS_POLICY_CREATE: String = "create"
+	/**
+	 Use it with "fs://.post" and C8o.FS_POLICY.
+
+	 This post policy inserts the document in CouchbaseLite even if a document with the same "_id" already exists.
+	 */
+	public static var FS_POLICY_OVERRIDE: String = "override"
+	/**
+	 Use it with "fs://.post" and C8o.FS_POLICY.
+
+	 This post policy merge the document with an existing document with the same "_id" before the CouchbaseLite's insertion.
+	 */
+	public static var FS_POLICY_MERGE: String = "merge"
+	/**
+	 Use it with "fs://.post". Default value is ".".
+
+	 This key allow to override the sub key separator in case of document depth modification.
+	 */
 	public static var FS_SUBKEY_SEPARATOR: String = "_use_subkey_separator"
 	
-    public static var FS_STORAGE_SQL: String = "SQL"
-    public static var FS_STORAGE_FORESTDB: String = "FORESTDB"
-    
+	public static var FS_STORAGE_SQL: String = "SQL"
+	public static var FS_STORAGE_FORESTDB: String = "FORESTDB"
+	
 	/* Local cache keys */
 	
 	internal static var LOCAL_CACHE_DOCUMENT_KEY_RESPONSE: String = "response"
@@ -101,7 +100,7 @@ public class C8o: C8oBase {
 	internal static var deviceUUID: String = UIDevice.currentDevice().identifierForVendor!.UUIDString
 	
 	/**
-     Returns the current version of the SDK as "x.y.z".
+	 Returns the current version of the SDK as "x.y.z".
 	 - returns: Current version of the SDK as "x.y.z".
 	 */
 	public static func getSdkVersion() -> String {
@@ -127,13 +126,13 @@ public class C8o: C8oBase {
 	internal var c8oFullSync: C8oFullSync?
 	
 	/* Constructors */
-    /**
-     This is the base object representing a Convertigo Server end point. This object should be instanciated when the apps starts and be accessible from any class of the app. Although this is not common, you may have several C8o objects instantiated in your app.
-     
-     - parameter endpoint : The Convertigo endpoint, syntax : {protocol}://{server}:{port}/{Convertigo web app path}/projects/{project name}
-         Example : http://computerName:18080/convertigo/projects/MyProject
-     - parameter c8oSettings : Initialization options. Example : new C8oSettings().setLogRemote(false).setDefaultDatabaseName("sample")
-     */
+	/**
+	 This is the base object representing a Convertigo Server end point. This object should be instanciated when the apps starts and be accessible from any class of the app. Although this is not common, you may have several C8o objects instantiated in your app.
+
+	 - parameter endpoint : The Convertigo endpoint, syntax : {protocol}://{server}:{port}/{Convertigo web app path}/projects/{project name}
+	 Example : http://computerName:18080/convertigo/projects/MyProject
+	 - parameter c8oSettings : Initialization options. Example : new C8oSettings().setLogRemote(false).setDefaultDatabaseName("sample")
+	 */
 	public init(endpoint: String, c8oSettings: C8oSettings? = nil) throws {
 		super.init()
 		// Checks the URL validity
@@ -243,22 +242,22 @@ public class C8o: C8oBase {
 	public func call(parameters: Dictionary<String, AnyObject>? = nil, c8oResponseListener: C8oResponseListener? = nil, c8oExceptionListener: C8oExceptionListener? = nil) throws {
 		var parameters = parameters
 		// IMPORTANT : all c8o calls have to end here !
-
-			c8oLogger!.logMethodCall("Call", parameters: parameters!)
-			
-			// Checks parameters validity
-			if (parameters == nil) {
-				parameters = Dictionary<String, AnyObject>()
-			} else {
-				// Clones parameters in order to modify them
-				// parameters = parameters
-				parameters = Dictionary<String, AnyObject>?(parameters!)
-			}
-			
-			// Creates a async task running on another thread
-			// Exceptions have to be handled by the C8oExceptionListener
-			let task = C8oCallTask(c8o: self, parameters: parameters!, c8oResponseListener: c8oResponseListener!, c8oExceptionListener: c8oExceptionListener!)
-			task.execute()
+		
+		c8oLogger!.logMethodCall("Call", parameters: parameters!)
+		
+		// Checks parameters validity
+		if (parameters == nil) {
+			parameters = Dictionary<String, AnyObject>()
+		} else {
+			// Clones parameters in order to modify them
+			// parameters = parameters
+			parameters = Dictionary<String, AnyObject>?(parameters!)
+		}
+		
+		// Creates a async task running on another thread
+		// Exceptions have to be handled by the C8oExceptionListener
+		let task = C8oCallTask(c8o: self, parameters: parameters!, c8oResponseListener: c8oResponseListener!, c8oExceptionListener: c8oExceptionListener!)
+		task.execute()
 		
 	}
 	
@@ -385,20 +384,20 @@ public class C8o: C8oBase {
 		get { return _logLevelLocal }
 		set(value) { _logLevelLocal = value }
 	}
-    
-    public override var fullSyncStorageEngine: String {
-        get { return _fullSyncStorageEngine }
-        set(value) {
-            if (C8o.FS_STORAGE_SQL == value || C8o.FS_STORAGE_FORESTDB == value) {
-                _fullSyncStorageEngine = value
-            }
-        }
-    }
-    
-    public override var fullSyncEncryptionKey: String? {
-        get { return _fullSyncEncryptionKey }
-        set(value) { _fullSyncEncryptionKey = value }
-    }
+	
+	public override var fullSyncStorageEngine: String {
+		get { return _fullSyncStorageEngine }
+		set(value) {
+			if (C8o.FS_STORAGE_SQL == value || C8o.FS_STORAGE_FORESTDB == value) {
+				_fullSyncStorageEngine = value
+			}
+		}
+	}
+	
+	public override var fullSyncEncryptionKey: String? {
+		get { return _fullSyncEncryptionKey }
+		set(value) { _fullSyncEncryptionKey = value }
+	}
 	
 	public var log: C8oLogger {
 		get { return c8oLogger! }

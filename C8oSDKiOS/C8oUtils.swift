@@ -8,7 +8,6 @@
 
 import Foundation
 
-import Alamofire
 import SwiftyJSON
 
 internal class C8oUtils {

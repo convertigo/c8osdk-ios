@@ -55,7 +55,7 @@ public class C8oFileTransferStatus {
 			}
 		}
 	}
-    
+	
 	public private(set) var uuid: String {
 		get {
 			return self._uuid!
@@ -64,7 +64,7 @@ public class C8oFileTransferStatus {
 			self._uuid = value
 		}
 	}
-    
+	
 	public var serverFilepath: String {
 		get {
 			return self._serverFilepath
@@ -73,7 +73,7 @@ public class C8oFileTransferStatus {
 			self._serverFilepath = value
 		}
 	}
-    
+	
 	public private(set) var filepath: String {
 		get {
 			return self._filepath!
