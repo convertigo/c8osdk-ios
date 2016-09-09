@@ -521,8 +521,7 @@ public class C8oFileTransfer: C8oFileTransferBase {
 					
 					let rows = json["document"]["couchdb_output"]["rows"]
 					if (rows != nil) {
-						let currentStr: String = rows["item"]["value"].stringValue
-						let current: Int = Int(currentStr)!
+						let current: Int = rows[0]["value"].intValue
 						if (current != transferStatus.current) {
 							transferStatus.current = current
 							notify(transferStatus)

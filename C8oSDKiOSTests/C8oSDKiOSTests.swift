@@ -1151,25 +1151,28 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertEqual(myId, id)
 	}
 	
+	/*
 	 func testC8oCBLpull() {
 	 let manager = CBLManager()
 	 let options = CBLDatabaseOptions()
 	 options.create = true
 	 //options.storageType = kCBLForestDBStorage
-     options.storageType = kCBLSQLiteStorage
+	 options.storageType = kCBLSQLiteStorage
 	 let db = try! manager.openDatabaseNamed("testing4", withOptions: options)
-        //let url = NSURL(string: "http://buildus.twinsoft.fr:28080/convertigo/fullsync/qa_fs_pull")
-        let url = NSURL(string: "http://buildus.twinsoft.fr:5984/qa_fs_pull")
+	 //let url = NSURL(string: "http://buildus.twinsoft.fr:28080/convertigo/fullsync/qa_fs_pull")
+	 let url = NSURL(string: "http://buildus.twinsoft.fr:5984/qa_fs_pull")
 	 let rep = db.createPullReplication(url!)
 	 rep.start()
 	 sleep(4)
 	 let changes = rep.completedChangesCount
 	 XCTAssertNotEqual(0, changes)
 	 }
- 
+	 */
+	
 	func testC8oFsReplicateAnoAndAuth() {
 		
 		let c8o = try! get(.C8O_FS_PULL)
+		c8o.fullSyncStorageEngine = C8o.FS_STORAGE_SQL
 		let condition: NSCondition = NSCondition()
 		condition.lock()
 		do {
@@ -1727,7 +1730,7 @@ class C8oSDKiOSTests: XCTestCase {
 	func testC8oFileTransferDownloadSimple() {
 		let c8o = try! get(.C8O)
 		let ft = try! C8oFileTransfer(c8o: c8o, c8oFileTransferSettings: C8oFileTransferSettings())
-		try! c8o.callJson(ft.taskDb + ".destroy").sync()
+		try! c8o.callJson("fs://" + ft.taskDb + ".destroy").sync()
 		var status: [C8oFileTransferStatus?] = [nil]
 		let __status: NSCondition = NSCondition()
 		var error: [NSError?] = [nil]
@@ -1750,9 +1753,9 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertNotNil(uuid)
 		let file = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0] + "4m.jpg"
 		let fm = NSFileManager.defaultManager()
-        do {
-            try fm.removeItemAtPath(file)
-        } catch {}
+		do {
+			try fm.removeItemAtPath(file)
+		} catch { }
 		do {
 			__status.lock()
 			try ft.downloadFile(uuid, filePath: file)
@@ -1763,59 +1766,54 @@ class C8oSDKiOSTests: XCTestCase {
 			}
 			XCTAssertNotNil(status[0])
 			XCTAssertTrue(fm.fileExistsAtPath(file))
-			let length: Int = 4237409
-			XCTAssertEqual(4237409, length)
+			let length: Int = try fm.attributesOfItemAtPath(file)[NSFileSize] as! Int
+			XCTAssertEqual(5120000, length)
+			do {
+				try fm.removeItemAtPath(file)
+			} catch { }
 		} catch {
-            do {
-                try fm.removeItemAtPath(file)
-            } catch {}
+			do {
+				try fm.removeItemAtPath(file)
+			} catch { }
 		}
-    }
-    
-    func ntestC8oFileTransferUploadSimple() {
-        let c8o = try! get(.C8O)
-        let path = NSBundle.mainBundle().pathForResource("4m", ofType: "jpg")
-        let ins : NSInputStream = NSInputStream(fileAtPath: path!)!
-        let ft = try! C8oFileTransfer(c8o: c8o, c8oFileTransferSettings: C8oFileTransferSettings())
-        try! c8o.callJson(ft.taskDb + ".destroy").sync()
-        var status: [C8oFileTransferStatus?] = [nil]
-        let __status: NSCondition = NSCondition()
-        var error: [NSError?] = [nil]
-        ft.raiseTransferStatus({ (source, event) in
-            if (event.state == C8oFileTransferStatus.StateFinished) {
-                __status.lock()
-                status[0] = event
-                __status.signal()
-                __status.unlock()
-            }
-        })
-        ft.raiseException({ (source, event) in
-            __status.lock()
-            error[0] = event
-            __status.signal()
-            __status.unlock()
-        })
-        ft.start()
-        
-        let uuid = try! c8o.callXml(".PrepareDownload4M").sync()!["document"]["uuid"].stringValue
-        XCTAssertNotNil(uuid)
-        let file = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0] + "4m.jpg"
-        let fm = NSFileManager.defaultManager()
-        do {
-            try fm.removeItemAtPath(file)
-        } catch {}
-            __status.lock()
-            try! ft.uploadFile("4m.jpg", fileStream: ins)
-            __status.waitUntilDate(NSDate(timeIntervalSinceNow: 20.0))
-            __status.unlock()
-            if (error[0] != nil) {
-                //throw error[0]!
-            }
-            XCTAssertNotNil(status[0])
-            XCTAssertTrue(fm.fileExistsAtPath(file))
-            let length: Int = 4237409
-            XCTAssertEqual(4237409, length)
-    }
+	}
+	
+	func testC8oFileTransferUploadSimple() {
+		let c8o = try! get(.C8O)
+		let ft = try! C8oFileTransfer(c8o: c8o, c8oFileTransferSettings: C8oFileTransferSettings())
+		try! c8o.callJson("fs://" + ft.taskDb + ".destroy").sync()
+		var status: [C8oFileTransferStatus?] = [nil]
+		let __status: NSCondition = NSCondition()
+		var error: [NSError?] = [nil]
+		ft.raiseTransferStatus({ (source, event) in
+			if (event.state == C8oFileTransferStatus.StateFinished) {
+				__status.lock()
+				status[0] = event
+				__status.signal()
+				__status.unlock()
+			}
+		})
+		ft.raiseException({ (source, event) in
+			__status.lock()
+			error[0] = event
+			__status.signal()
+			__status.unlock()
+		})
+		ft.start()
+		__status.lock()
+		let path = NSBundle(forClass: C8oSDKiOSTests.self).pathForResource("4m", ofType: "jpg")
+		let ins: NSInputStream = NSInputStream(fileAtPath: path!)!
+		try! ft.uploadFile("4m.jpg", fileStream: ins)
+		__status.waitUntilDate(NSDate(timeIntervalSinceNow: 20.0))
+		__status.unlock()
+		if (error[0] != nil) {
+			// throw error[0]!
+		}
+		XCTAssertNotNil(status[0])
+		let filepath = status[0]?.serverFilepath
+		let length = try! c8o.callXml(".GetSizeAndDelete", parameters: "filepath", filepath!).sync()!["document"]["length"].stringValue
+		XCTAssertEqual("5120000", length)
+	}
 	
 	// TODO...
 	/*

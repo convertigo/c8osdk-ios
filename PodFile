@@ -3,8 +3,8 @@ platform :ios, '8.0'
 target 'C8oSDKiOS' do
   use_frameworks!
   
-  pod 'couchbase-lite-ios', '1.3.0'
-  pod 'couchbase-lite-ios/ForestDB', '1.3.0'
+  pod 'couchbase-lite-ios', '1.2.1'
+  pod 'couchbase-lite-ios/ForestDB', '1.2.1'
   pod 'SwiftyJSON', '2.3.2'
   pod 'Alamofire', '3.4.1'
   pod 'AEXML', '3.0.0'

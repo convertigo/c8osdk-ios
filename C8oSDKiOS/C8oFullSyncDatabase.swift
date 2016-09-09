@@ -44,7 +44,7 @@ public class C8oFullSyncDatabase: NSObject {
                     let options = CBLDatabaseOptions()
                     options.create = true
                     if (c8o.fullSyncEncryptionKey != nil) {
-                        options.encryptionKey = c8o.fullSyncEncryptionKey
+                        options.encryptionKey = c8o.fullSyncEncryptionKey!
                     }
                     if (C8o.FS_STORAGE_SQL == c8o.fullSyncStorageEngine) {
                         options.storageType = kCBLSQLiteStorage

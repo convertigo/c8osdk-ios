@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3766883B1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 3766883A1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h */; };
-		378BA7A91D7860A200204B6E /* libCBLForestDBStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 378BA7A81D7860A200204B6E /* libCBLForestDBStorage.a */; };
+		376A96061D81B0F600F023D8 /* 4m.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 376A96041D81AD3E00F023D8 /* 4m.jpg */; };
+		378BA7A91D7860A200204B6E /* libCBLForestDBStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 378BA7A81D7860A200204B6E /* libCBLForestDBStorage.a */; settings = {ATTRIBUTES = (Required, ); }; };
 		37F523B41C9ABE19007952C3 /* C8oCookieStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37F523B31C9ABE19007952C3 /* C8oCookieStorage.swift */; };
 		62057A211CB53DA0004AE521 /* FullSyncEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62057A201CB53DA0004AE521 /* FullSyncEnum.swift */; };
 		62057A261CB63E7B004AE521 /* VoidResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62057A251CB63E7B004AE521 /* VoidResponse.swift */; };
@@ -168,6 +169,7 @@
 		0C3E5BD0EBF463712FB28622 /* Pods-C8oSDKiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-C8oSDKiOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-C8oSDKiOS/Pods-C8oSDKiOS.debug.xcconfig"; sourceTree = "<group>"; };
 		16476D7CCD1A6B30286D3D33 /* Pods-C8oSDKiOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-C8oSDKiOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-C8oSDKiOSTests/Pods-C8oSDKiOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		3766883A1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Couchbase-Lite-Bridging-Header.h"; sourceTree = "<group>"; };
+		376A96041D81AD3E00F023D8 /* 4m.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 4m.jpg; sourceTree = "<group>"; };
 		378BA7A81D7860A200204B6E /* libCBLForestDBStorage.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCBLForestDBStorage.a; path = "Pods/couchbase-lite-ios/Extras/libCBLForestDBStorage.a"; sourceTree = "<group>"; };
 		37F523B31C9ABE19007952C3 /* C8oCookieStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oCookieStorage.swift; sourceTree = "<group>"; };
 		62057A201CB53DA0004AE521 /* FullSyncEnum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullSyncEnum.swift; sourceTree = "<group>"; };
@@ -478,6 +480,7 @@
 		62CD2A551C6207AD009E9F7E /* C8oSDKiOSTests */ = {
 			isa = PBXGroup;
 			children = (
+				376A96041D81AD3E00F023D8 /* 4m.jpg */,
 				62CD2A561C6207AD009E9F7E /* C8oSDKiOSTests.swift */,
 				62CD2A581C6207AD009E9F7E /* Info.plist */,
 			);
@@ -795,6 +798,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				376A96061D81B0F600F023D8 /* 4m.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
