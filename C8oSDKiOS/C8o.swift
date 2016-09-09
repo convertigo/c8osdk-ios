@@ -105,7 +105,7 @@ public class C8o: C8oBase {
 	 - returns: Current version of the SDK as "x.y.z".
 	 */
 	public static func getSdkVersion() -> String {
-		return "2.0.4"
+		return "2.0.5"
 	}
 	
 	/* Attributes */
