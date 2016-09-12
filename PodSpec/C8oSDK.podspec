@@ -33,6 +33,6 @@ Pod::Spec.new do |s|
     s.user_target_xcconfig = { 'ENABLE_BITCODE' => 'NO' }
     
     s.dependency 'SwiftyJSON', '2.3.2'
-    s.dependency 'Alamofire', '3.4.1'
+    s.dependency 'Alamofire', '3.5.0'
     s.dependency 'AEXML', '3.0.0'
 end
