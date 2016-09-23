@@ -84,25 +84,34 @@ public class C8oFullSyncDatabase: NSObject {
         }
     }
     
-	private func getReplication(fsReplication: FullSyncReplication?) -> CBLReplication {
-		
-		if (fsReplication?.replication != nil) {
-			fsReplication!.replication!.stop()
-			if (fsReplication?.changeListener != nil) {
-				
-				fsReplication?.replication?.removeObserver(self, forKeyPath: c8oFullSyncDatabaseUrl.absoluteString) // (c8oFullSyncDatabaseUrl)
-			}
-		}
-		var replication: CBLReplication? = nil
-		
-		fsReplication!.replication = fsReplication!.pull ? self.database?.createPullReplication(self.c8oFullSyncDatabaseUrl) : self.database?.createPushReplication(self.c8oFullSyncDatabaseUrl)
-		replication = fsReplication!.replication!
-		
-		for cookie in c8o.cookieStore.cookies! {
+    private func createReplication(fsReplication: FullSyncReplication?) -> CBLReplication {
+        var replication: CBLReplication? = nil
+        
+        fsReplication!.replication = fsReplication!.pull ? self.database?.createPullReplication(self.c8oFullSyncDatabaseUrl) : self.database?.createPushReplication(self.c8oFullSyncDatabaseUrl)
+        replication = fsReplication!.replication!
+        
+        for cookie in c8o.cookieStore.cookies! {
             let date = NSDate(timeInterval: 3600, sinceDate: NSDate())
-			replication!.setCookieNamed(cookie.name, withValue: cookie.value, path: cookie.path, expirationDate: date, secure: cookie.secure)
-		}
-		
+            replication!.setCookieNamed(cookie.name, withValue: cookie.value, path: cookie.path, expirationDate: date, secure: cookie.secure)
+        }
+        
+        return replication!
+    }
+    
+    private func stopReplication(fsReplication: FullSyncReplication?) {
+        if (fsReplication?.replication != nil) {
+            fsReplication!.replication!.stop()
+            if (fsReplication?.changeListener != nil) {
+                fsReplication?.replication?.removeObserver(self, forKeyPath: c8oFullSyncDatabaseUrl.absoluteString) // (c8oFullSyncDatabaseUrl)
+                fsReplication?.changeListener = nil
+            }
+            fsReplication?.replication = nil
+        }
+    }
+    
+	private func getReplication(fsReplication: FullSyncReplication?) -> CBLReplication {
+		stopReplication(fsReplication)
+		let replication: CBLReplication? = createReplication(fsReplication)
 		return replication!
 		
 	}
@@ -125,7 +134,6 @@ public class C8oFullSyncDatabase: NSObject {
 		var cancel: Bool = false
 		
 		if let _ = parameters["continuous"] {
-			// if(String(parameters["continuous"]).caseInsensitiveCompare("true") == NSComparisonResult.OrderedSame){
 			if (parameters["continuous"] as! Bool == true) {
 				continuous = true
 			} else {
@@ -134,36 +142,38 @@ public class C8oFullSyncDatabase: NSObject {
 		}
 		
 		if let _ = parameters["cancel"] {
-			if (String(parameters["cancel"]).caseInsensitiveCompare("true") == NSComparisonResult.OrderedSame) {
+			if (parameters["cancel"] as! Bool == true) {
 				cancel = true
 			} else {
 				cancel = false
 			}
 		}
-		var rep: CBLReplication?
-		
-		rep = self.getReplication(fullSyncReplication)
+        
+        let rep = self.getReplication(fullSyncReplication)
+        let progress: C8oProgress = C8oProgress()
+        progress.raw = rep
+        progress.pull = rep.pull
 		
 		if (cancel) {
-			if (rep != nil) {
-				rep!.stop()
-			}
+            stopReplication(fullSyncReplication)
+            progress.finished = true;
+            
+            if let _ = c8oResponseListener as? C8oResponseProgressListener where c8oResponseListener != nil {
+                (c8oResponseListener as! C8oResponseProgressListener).onProgressResponse(progress, parameters)
+            }
 			return
 		}
 		
 		var param = parameters
-		let progress: C8oProgress = C8oProgress()
 		var _progress: [C8oProgress] = [progress]
-		progress.raw = rep!
-		progress.pull = rep!.pull
 		
 		var count = false
-		NSNotificationCenter.defaultCenter().addObserverForName(kCBLReplicationChangeNotification, object: rep!, queue: nil, usingBlock: { _ in
+		NSNotificationCenter.defaultCenter().addObserverForName(kCBLReplicationChangeNotification, object: rep, queue: nil, usingBlock: { _ in
             if (count) {
-				progress.total = rep!.changesCount.hashValue
-				progress.current = rep!.completedChangesCount.hashValue
+				progress.total = rep.changesCount.hashValue
+				progress.current = rep.completedChangesCount.hashValue
 				progress.taskInfo = ("n/a")
-                switch (rep!.status) {
+                switch (rep.status) {
                 case .Active:
                     progress.status = "Active"
                     break
@@ -177,7 +187,7 @@ public class C8oFullSyncDatabase: NSObject {
                     progress.status = "Stopped"
                     break
                 }
-				progress.finished = !(rep!.status == CBLReplicationStatus.Active)
+				progress.finished = !(rep.status == CBLReplicationStatus.Active)
 				
 				if (progress.changed) {
 					_progress[0] = C8oProgress(progress: progress)
@@ -189,7 +199,7 @@ public class C8oFullSyncDatabase: NSObject {
 				}
 				
 				if (progress.finished) {
-					rep!.stop()
+					self.stopReplication(fullSyncReplication)
 					if (continuous) {
 						let replication: CBLReplication = self.getReplication(fullSyncReplication)
 						_progress[0].raw = replication
@@ -219,7 +229,7 @@ public class C8oFullSyncDatabase: NSObject {
 			count = true
 		})
 		(c8o.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
-			rep!.start()
+			rep.start()
 		}
 	}
 	
@@ -228,24 +238,7 @@ public class C8oFullSyncDatabase: NSObject {
 		// fullSyncReplication.changeListener
 		// let active = pullFullSyncReplication?.replication?.status == CBLReplicationStatus.Active || pushFullSyncReplication?.replication?.status == CBLReplicationStatus.Active
 	}
-	
-	public func destroyReplications() {
-		if (pullFullSyncReplication?.replication != nil) {
-			pullFullSyncReplication!.replication!.stop()
-			pullFullSyncReplication!.replication!.deleteCookieNamed(C8oFullSyncDatabase.AUTHENTICATION_COOKIE_NAME)
-			pullFullSyncReplication!.replication = nil
-		}
-		pullFullSyncReplication = nil
 		
-		if (pushFullSyncReplication?.replication != nil) {
-			pushFullSyncReplication!.replication!.stop()
-			pushFullSyncReplication!.replication!.deleteCookieNamed(C8oFullSyncDatabase.AUTHENTICATION_COOKIE_NAME)
-			pushFullSyncReplication!.replication = nil
-		}
-		pushFullSyncReplication = nil
-		
-	}
-	
 	public func getDatabaseName() -> String { return self.databaseName }
 	
 	public func getDatabase() -> CBLDatabase? { return self.database }
@@ -258,6 +251,5 @@ public class C8oFullSyncDatabase: NSObject {
 		private init(pull: Bool) {
 			self.pull = pull
 		}
-		
 	}
 }

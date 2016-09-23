@@ -39,35 +39,35 @@ internal class FullSyncRequestable {
 		
 		return try c8oFullSync.handlePostDocumentRequest(databaseName, fullSyncPolicy: fullSyncPolicy, parameters: parameters)!
 	})
-    
-    internal static var PUT_ATTACHMENT : FullSyncRequestable = FullSyncRequestable(value: "put_attachment") { (c8oFullSync, databaseName, parameters, c8oResponseListener) -> (AnyObject) in
-        
-        // Gets the docid parameter
-        let docid : String? =  C8oUtils.getParameterStringValue(parameters, name: FullSyncAttachmentParameter.DOCID.name, useName: false)
-        
-        // Gets the attachment name parameter
-        let name : String? = C8oUtils.getParameterStringValue(parameters, name: FullSyncAttachmentParameter.NAME.name, useName: false)
-        
-        // Gets the attachment content_type parameter
-        let contentType : String? = C8oUtils.getParameterStringValue(parameters, name: FullSyncAttachmentParameter.CONTENT_TYPE.name, useName:false)
-        
-        // Gets the attachment content parameter
-        let a = C8oUtils.getParameterObjectValue(parameters, name: FullSyncAttachmentParameter.CONTENT.name, useName: false)
-        let content : NSData? = C8oUtils.getParameterObjectValue(parameters, name: FullSyncAttachmentParameter.CONTENT.name, useName: false) as! NSData?
-        
-        return try c8oFullSync.handlePutAttachmentRequest(databaseName, docid: docid!, attachmentName: name!, attachmentType: contentType!, attachmentContent: content!)
-    }
-    internal static var DELETE_ATTACHMENT : FullSyncRequestable = FullSyncRequestable(value: "delete_attachment") { (c8oFullSync, databaseName, parameters, c8oResponseListener) -> (AnyObject) in
-        
-        // Gets the docid parameter
-        let docid : String = C8oUtils.getParameterStringValue(parameters, name: FullSyncAttachmentParameter.DOCID.name, useName: false)!
-        
-        // Gets the attachment name parameter
-        let name : String = C8oUtils.getParameterStringValue(parameters, name: FullSyncAttachmentParameter.NAME.name, useName: false)!
-        
-        return try c8oFullSync.handleDeleteAttachmentRequest(databaseName, docid: docid, attachmentName: name)
-        
-    }
+	
+	internal static var PUT_ATTACHMENT: FullSyncRequestable = FullSyncRequestable(value: "put_attachment") { (c8oFullSync, databaseName, parameters, c8oResponseListener) -> (AnyObject) in
+		
+		// Gets the docid parameter
+		let docid: String? = C8oUtils.getParameterStringValue(parameters, name: FullSyncAttachmentParameter.DOCID.name, useName: false)
+		
+		// Gets the attachment name parameter
+		let name: String? = C8oUtils.getParameterStringValue(parameters, name: FullSyncAttachmentParameter.NAME.name, useName: false)
+		
+		// Gets the attachment content_type parameter
+		let contentType: String? = C8oUtils.getParameterStringValue(parameters, name: FullSyncAttachmentParameter.CONTENT_TYPE.name, useName: false)
+		
+		// Gets the attachment content parameter
+		let a = C8oUtils.getParameterObjectValue(parameters, name: FullSyncAttachmentParameter.CONTENT.name, useName: false)
+		let content: NSData? = C8oUtils.getParameterObjectValue(parameters, name: FullSyncAttachmentParameter.CONTENT.name, useName: false) as! NSData?
+		
+		return try c8oFullSync.handlePutAttachmentRequest(databaseName, docid: docid!, attachmentName: name!, attachmentType: contentType!, attachmentContent: content!)
+	}
+	internal static var DELETE_ATTACHMENT: FullSyncRequestable = FullSyncRequestable(value: "delete_attachment") { (c8oFullSync, databaseName, parameters, c8oResponseListener) -> (AnyObject) in
+		
+		// Gets the docid parameter
+		let docid: String = C8oUtils.getParameterStringValue(parameters, name: FullSyncAttachmentParameter.DOCID.name, useName: false)!
+		
+		// Gets the attachment name parameter
+		let name: String = C8oUtils.getParameterStringValue(parameters, name: FullSyncAttachmentParameter.NAME.name, useName: false)!
+		
+		return try c8oFullSync.handleDeleteAttachmentRequest(databaseName, docid: docid, attachmentName: name)
+		
+	}
 	
 	internal static var ALL: FullSyncRequestable = FullSyncRequestable(value: "all", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener) -> (AnyObject) in
 		
@@ -106,13 +106,15 @@ internal class FullSyncRequestable {
 				}
 			}
 			
-			if (c8oResponseListener is C8oResponseJsonListener) {
-				c8oFullSync.c8o!.log._debug("handleFullSyncRequest onJsonResponse: " + progress.description)
-				let varNil: C8oJSON? = nil
-				(c8oResponseListener as! C8oResponseJsonListener).onJsonResponse(varNil?.myJSON, param)
-			} else if (c8oResponseListener is C8oResponseXmlListener) {
-				let varNil: AEXMLDocument? = nil
-				(c8oResponseListener as! C8oResponseXmlListener).onXmlResponse(varNil, param)
+			if (progress.total != -1) {
+				if (c8oResponseListener is C8oResponseJsonListener) {
+					c8oFullSync.c8o!.log._debug("handleFullSyncRequest onJsonResponse: " + progress.description)
+					let varNil: C8oJSON? = nil
+					(c8oResponseListener as! C8oResponseJsonListener).onJsonResponse(varNil?.myJSON, param)
+				} else if (c8oResponseListener is C8oResponseXmlListener) {
+					let varNil: AEXMLDocument? = nil
+					(c8oResponseListener as! C8oResponseXmlListener).onXmlResponse(varNil, param)
+				}
 			}
 			
 			if (!mutex && pullFinish && pushFinish) {
@@ -158,12 +160,14 @@ internal class FullSyncRequestable {
 				}
 			}
 			
-			if (c8oResponseListener is C8oResponseJsonListener) {
-				let varNil: C8oJSON? = nil
-				(c8oResponseListener as! C8oResponseJsonListener).onJsonResponse(varNil?.myJSON, param)
-			} else if (c8oResponseListener is C8oResponseXmlListener) {
-				let varNil: AEXMLDocument? = nil
-				(c8oResponseListener as! C8oResponseXmlListener).onXmlResponse(varNil, param)
+			if (progress.total != -1) {
+				if (c8oResponseListener is C8oResponseJsonListener) {
+					let varNil: C8oJSON? = nil
+					(c8oResponseListener as! C8oResponseJsonListener).onJsonResponse(varNil?.myJSON, param)
+				} else if (c8oResponseListener is C8oResponseXmlListener) {
+					let varNil: AEXMLDocument? = nil
+					(c8oResponseListener as! C8oResponseXmlListener).onXmlResponse(varNil, param)
+				}
 			}
 			
 			}))
@@ -199,14 +203,15 @@ internal class FullSyncRequestable {
 				}
 			}
 			
-			if (c8oResponseListener is C8oResponseJsonListener) {
-				let varNil: C8oJSON? = nil
-				(c8oResponseListener as! C8oResponseJsonListener).onJsonResponse(varNil?.myJSON, param)
-			} else if (c8oResponseListener is C8oResponseXmlListener) {
-				let varNil: AEXMLDocument? = nil
-				(c8oResponseListener as! C8oResponseXmlListener).onXmlResponse(varNil, param)
+			if (progress.total != -1) {
+				if (c8oResponseListener is C8oResponseJsonListener) {
+					let varNil: C8oJSON? = nil
+					(c8oResponseListener as! C8oResponseJsonListener).onJsonResponse(varNil?.myJSON, param)
+				} else if (c8oResponseListener is C8oResponseXmlListener) {
+					let varNil: AEXMLDocument? = nil
+					(c8oResponseListener as! C8oResponseXmlListener).onXmlResponse(varNil, param)
+				}
 			}
-			
 			}))
 		if (!syncMutex[0]) {
 			condition.wait()
@@ -393,17 +398,17 @@ public class FullSyncDeleteDocumentParameter {
 	}
 }
 
-public class FullSyncAttachmentParameter{
-    public static let DOCID : FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "docid")
-    public static let NAME : FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "name")
-    public static let CONTENT_TYPE : FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "content_type")
-    public static let CONTENT : FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "content")
-    
-    public var name : String
-    
-    private init(name : String){
-        self.name = name
-    }
+public class FullSyncAttachmentParameter {
+	public static let DOCID: FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "docid")
+	public static let NAME: FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "name")
+	public static let CONTENT_TYPE: FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "content_type")
+	public static let CONTENT: FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "content")
+	
+	public var name: String
+	
+	private init(name: String) {
+		self.name = name
+	}
 }
 public class FullSyncPostDocumentParameter {
 	public static let POLICY: FullSyncPostDocumentParameter = FullSyncPostDocumentParameter(name: C8o.FS_POLICY)
@@ -424,7 +429,7 @@ public class FullSyncPostDocumentParameter {
 
 /** <summary>
  Specific parameters for the fullSync's replicateDatabase request (push or pull).
-</summary> */
+ </summary> */
 
 //TODO... add types
 public class FullSyncReplicationParameter {
@@ -477,9 +482,9 @@ public class FullSyncPolicy {
 			var documentId = C8oUtils.getParameterStringValue(newPropertiesMutable, name: C8oFullSync.FULL_SYNC__ID, useName: false)
 			
 			newPropertiesMutable.removeValueForKey(C8oFullSync.FULL_SYNC__ID)
-            if(documentId == ""){
-                documentId = nil
-            }
+			if (documentId == "") {
+				documentId = nil
+			}
 			createdDocument = (documentId == nil) ? database.createDocument() : database.documentWithID(documentId!)!
 			
 			try createdDocument.putProperties(newPropertiesMutable)

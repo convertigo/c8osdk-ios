@@ -1648,6 +1648,22 @@ class C8oSDKiOSTests: XCTestCase {
 		try! c8o.callJson(".LogoutTesting").sync()!
 	}
 	
+    func testC8oFsReplicateCancel() {
+        let c8o = try! get(.C8O_FS)
+        do {
+            var json: JSON = try c8o.callJson("fs://.reset").sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            json = try c8o.callJson("fs://.replicate_push", parameters: "cancel", true).sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            json = try c8o.callJson("fs://.replicate_pull", parameters: "cancel", true).sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            json = try c8o.callJson("fs://.sync", parameters: "cancel", true).sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+        } catch let e as NSError {
+           XCTFail(e.description)
+        }
+    }
+    
 	func testC8oLocalCacheXmlPriorityLocal() {
 		let c8o = try! get(.C8O_FS_PUSH)
 		let id: String = "C8oFsReplidateFormattercateSyncContinuousProgress-" + String(NSDate().timeIntervalSince1970 * 1000)
