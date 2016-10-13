@@ -9,15 +9,18 @@
 import Foundation
 
 public class C8oFileTransferStatus {
+    public static let StateNotQueued: DownloadState = DownloadState.NotQueued
 	public static let StateQueued: DownloadState = DownloadState.Queued
 	public static let StateAuthenticated: DownloadState = DownloadState.Authenticated
 	public static let StateSplitting: DownloadState = DownloadState.Splitting
 	public static let StateReplicate: DownloadState = DownloadState.Replicate
 	public static let StateAssembling: DownloadState = DownloadState.Assembling
 	public static let StateCleaning: DownloadState = DownloadState.Cleaning
-	public static let StateFinished: DownloadState = DownloadState.Finished
+    public static let StateFinished: DownloadState = DownloadState.Finished
+    public static let StateCanceled: DownloadState = DownloadState.Canceled
 	
 	public enum DownloadState: String {
+        case NotQueued
 		case Queued
 		case Authenticated
 		case Splitting
@@ -25,6 +28,7 @@ public class C8oFileTransferStatus {
 		case Assembling
 		case Cleaning
 		case Finished
+        case Canceled
 	}
 	
 	private var _state: DownloadState? = nil
@@ -109,7 +113,7 @@ public class C8oFileTransferStatus {
 	}
 	
 	internal init (uuid: String, filepath: String) {
-		self.state = C8oFileTransferStatus.StateQueued
+		self.state = C8oFileTransferStatus.StateNotQueued
 		self.uuid = uuid
 		
 		self.filepath = filepath

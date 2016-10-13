@@ -1767,7 +1767,7 @@ class C8oSDKiOSTests: XCTestCase {
 		ft.start()
 		let uuid = try! c8o.callXml(".PrepareDownload4M").sync()!["document"]["uuid"].stringValue
 		XCTAssertNotNil(uuid)
-		let file = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0] + "4m.jpg"
+		let file = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)[0] + "/4m.jpg"
 		let fm = NSFileManager.defaultManager()
 		do {
 			try fm.removeItemAtPath(file)
@@ -1783,7 +1783,7 @@ class C8oSDKiOSTests: XCTestCase {
 			XCTAssertNotNil(status[0])
 			XCTAssertTrue(fm.fileExistsAtPath(file))
 			let length: Int = try fm.attributesOfItemAtPath(file)[NSFileSize] as! Int
-			XCTAssertEqual(5120000, length)
+			XCTAssertEqual(4237409, length)
 			do {
 				try fm.removeItemAtPath(file)
 			} catch { }

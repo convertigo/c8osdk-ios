@@ -11,6 +11,7 @@ import Foundation
 public class C8oFileTransferBase{
     internal var _projectName : String = "lib_FileTransfer"
     internal var _taskDb : String = "c8ofiletransfer_tasks"
+    internal var _maxDurationForTransferAttempt : NSTimeInterval = 60 * 20
     internal var _maxRunning : Int = 4
     
     public var projectName : String {
@@ -25,9 +26,14 @@ public class C8oFileTransferBase{
         get { return _maxRunning }
     }
     
+    public var maxDurationForTransferAttempt : NSTimeInterval {
+        get { return _maxDurationForTransferAttempt }
+    }
+    
     public func copy(settings : C8oFileTransferSettings) {
         _projectName = settings._projectName
         _taskDb = settings._taskDb
         _maxRunning = settings._maxRunning
+        _maxDurationForTransferAttempt = settings._maxDurationForTransferAttempt
     }
 }

@@ -13,5 +13,10 @@ target 'C8oSDKiOS' do
     inherit! :search_paths
     # Pods for testing
   end
+  
+  target 'samplebigfiletransfer' do
+      inherit! :search_paths
+      # Pods for testing
+  end
 
 end

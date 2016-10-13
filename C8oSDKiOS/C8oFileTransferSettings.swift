@@ -18,20 +18,25 @@ public class C8oFileTransferSettings : C8oFileTransferBase{
         copy(c8oFileTransferSettings)
     }
     
-    public func setProjectName(projectName: String) throws -> C8oFileTransferSettings {
+    public func setProjectName(projectName: String) -> C8oFileTransferSettings {
         _projectName = projectName
         return self
     }
     
-    public func setTaskDb(taskDb: String) throws -> C8oFileTransferSettings {
+    public func setTaskDb(taskDb: String) -> C8oFileTransferSettings {
         _taskDb = taskDb
         return self
     }
     
-    public func setMaxRunning(maxRunning: Int) throws -> C8oFileTransferSettings {
+    public func setMaxRunning(maxRunning: Int) -> C8oFileTransferSettings {
         if (maxRunning > 0) {
             _maxRunning = maxRunning
         }
+        return self
+    }
+    
+    public func setMaxDurationForTransferAttempt(maxDurationForTransferAttempt: NSTimeInterval) -> C8oFileTransferSettings {
+        _maxDurationForTransferAttempt = maxDurationForTransferAttempt
         return self
     }
 }

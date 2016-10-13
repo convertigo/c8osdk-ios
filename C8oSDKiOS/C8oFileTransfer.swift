@@ -18,6 +18,7 @@ public class C8oFileTransfer: C8oFileTransferBase {
 	private var __maxRunning__: NSCondition = NSCondition()
 	private var c8oTask: C8o
 	private var tasks: Dictionary<String, C8oFileTransferStatus>? = nil
+    private var canceledTasks: NSMutableSet = NSMutableSet()
 	public var raiseTransferStatus: ((C8oFileTransfer, C8oFileTransferStatus) -> ())?
 	public var raiseDebug: ((C8oFileTransfer, String) -> ())?
 	public var raiseException: ((C8oFileTransfer, NSError) -> ())?
@@ -100,7 +101,9 @@ public class C8oFileTransfer: C8oFileTransferBase {
 								let filePath: String = task["filePath"].stringValue
 								let transferStatus: C8oFileTransferStatus = C8oFileTransferStatus(uuid: uuid, filepath: filePath)
 								self.tasks![uuid] = transferStatus
+                                transferStatus.state = C8oFileTransferStatus.StateQueued
 								self.notify(transferStatus)
+                                
 								if (Bdown) {
 									transferStatus.download = true
 									self.downloadFile(transferStatus, task: &task)
@@ -156,6 +159,7 @@ public class C8oFileTransfer: C8oFileTransferBase {
 	}
 	
 	public func downloadFile(transferStatus: C8oFileTransferStatus, inout task: JSON) {
+        let uuid = transferStatus.uuid
 		var needRemoveSession: Bool = false
 		var c8o: C8o? = nil
 		
@@ -167,7 +171,7 @@ public class C8oFileTransfer: C8oFileTransferBase {
 			__maxRunning = __maxRunning - 1
 			__maxRunning__.unlock()
 			
-			c8o = try C8o(endpoint: c8oTask.endpoint, c8oSettings: C8oSettings(c8oSettings: c8oTask).setFullSyncLocalSuffix("_" + transferStatus.uuid))
+			c8o = try C8o(endpoint: c8oTask.endpoint, c8oSettings: C8oSettings(c8oSettings: c8oTask).setFullSyncLocalSuffix("_" + uuid))
 			var fsConnector: String? = nil
 			
 			//
@@ -175,7 +179,7 @@ public class C8oFileTransfer: C8oFileTransferBase {
 			//
 			if (!task["replicated"].boolValue || !task["remoteDeleted"].boolValue) {
 				needRemoveSession = true
-				var json: JSON = try c8o!.callJson(".SelectUuid", parameters: "uuid", transferStatus.uuid).sync()!
+				var json: JSON = try c8o!.callJson(".SelectUuid", parameters: "uuid", uuid).sync()!
 				
 				self.debug("SelectUuid:\n" + json["document"].description)
 				if (json["document"]["selected"].stringValue != "true") {
@@ -195,6 +199,7 @@ public class C8oFileTransfer: C8oFileTransferBase {
 			
 			if (!task["replicated"].boolValue && fsConnector != nil) {
 				var locker: Bool
+                let expireTransfer = NSDate(timeIntervalSinceNow: maxDurationForTransferAttempt)
 				locker = false
 				try c8o!.callJson("fs://" + fsConnector! + ".create").sync()!
 				needRemoveSession = true
@@ -212,18 +217,23 @@ public class C8oFileTransfer: C8oFileTransferBase {
 				notify(transferStatus)
 				
 				var allOptions: Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
-				allOptions["startkey"] = transferStatus.uuid + "_"
-				allOptions["endkey"] = transferStatus.uuid + "__"
+				allOptions["startkey"] = uuid + "_"
+				allOptions["endkey"] = uuid + "__"
 				
 				// Waits the end of the replication if it is not finished
-				while (!locker) {
+				while (!locker && !canceledTasks.containsObject(uuid)) {
 					do {
 						condition.lock()
 						
-						condition.wait()
-						
-						condition.unlock()
-						
+                        if (NSDate().compare(expireTransfer) == .OrderedDescending) {
+                            locker = true
+                            condition.unlock()
+                            throw C8oException(message: "expireTransfer of " + maxDurationForTransferAttempt.description + " sec : retry soon")
+                        } else {
+                            condition.waitUntilDate(NSDate(timeIntervalSinceNow: 1))
+                            condition.unlock()
+                        }
+												
 						var all = try c8o?.callJson("fs://" + fsConnector! + ".all", parameters: allOptions).sync()
 						let rows = all!["rows"]
 						if (rows != nil) {
@@ -235,27 +245,34 @@ public class C8oFileTransfer: C8oFileTransferBase {
 						}
 					}
 					catch let e as NSError {
+                        notify(e)
 						self.debug(e.description)
 					}
 				}
-				
-				if (transferStatus.current < transferStatus.total) {
-					throw C8oException(message: "replication not completed")
+                
+                try c8o?.callJson("fs://" + fsConnector! + ".replicate_pull", parameters: "cancel", true).sync()
+                
+                if (!canceledTasks.containsObject(uuid)) {
+					if (transferStatus.current < transferStatus.total) {
+						throw C8oException(message: "replication not completed")
+					}
+					
+					task["replicated"] = true
+					
+					let res = try c8oTask.callJson("fs://.post",
+						parameters:
+							C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
+						"_id", task["_id"].stringValue,
+						"replicated", true
+					).sync()!
+					
+					self.debug("replicated true:\n" + (res.description))
 				}
-				
-				task["replicated"] = true
-				
-				let res = try c8oTask.callJson("fs://.post",
-					parameters:
-						C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
-					"_id", task["_id"].stringValue,
-					"replicated", true
-				).sync()!
-				
-				self.debug("replicated true:\n" + (res.description))
 			}
 			
-			if (!task["assembled"].boolValue && fsConnector != nil) {
+            let isCanceling = canceledTasks.containsObject(uuid)
+            
+			if (!task["assembled"].boolValue && fsConnector != nil && !isCanceling) {
 				transferStatus.state = C8oFileTransferStatus.StateAssembling
 				self.notify(transferStatus)
 				//
@@ -266,7 +283,7 @@ public class C8oFileTransfer: C8oFileTransferBase {
 				createdFileStream?.open()
 				createdFileStream?.scheduleInRunLoop(.mainRunLoop(), forMode: NSDefaultRunLoopMode)
 				for i in 0..<transferStatus.total {
-					let meta: JSON = try c8o!.callJson("fs://" + fsConnector! + ".get", parameters: "docid", transferStatus.uuid + "_" + String(i)).sync()!
+					let meta: JSON = try c8o!.callJson("fs://" + fsConnector! + ".get", parameters: "docid", uuid + "_" + String(i)).sync()!
 					self.debug((meta.description))
 					appendChunk(&createdFileStream, contentPath: meta["_attachments"]["chunk"]["content_url"].stringValue)
 				}
@@ -289,7 +306,7 @@ public class C8oFileTransfer: C8oFileTransferBase {
 				self.debug("destroy local true:\n" + (res?.stringValue)!)
 				
 				needRemoveSession = true
-				res = try c8o!.callJson(".DeleteUuid", parameters: "uuid", transferStatus.uuid).sync()!
+				res = try c8o!.callJson(".DeleteUuid", parameters: "uuid", uuid).sync()!
 				self.debug("deleteUuid:\n" + (res?.description)!)
 				
 				task["remoteDeleted"] = true
@@ -303,13 +320,19 @@ public class C8oFileTransfer: C8oFileTransferBase {
 				self.debug("remoteDeleted true:\n" + (res?.description)!)
 			}
 			
-			if (task["replicated"].boolValue && task["assembled"].boolValue && task["remoteDeleted"].boolValue) {
-				let res = try c8oTask.callJson("fs://.delete", parameters: "docid", transferStatus.uuid).sync()
+			if ((task["replicated"].boolValue && task["assembled"].boolValue && task["remoteDeleted"].boolValue) || isCanceling) {
+				let res = try c8oTask.callJson("fs://.delete", parameters: "docid", uuid).sync()
 				self.debug("local delete:\n" + (res?.description)!)
 				
 				transferStatus.state = C8oFileTransferStatus.StateFinished
 				self.notify(transferStatus)
 			}
+            
+            if (isCanceling) {
+                transferStatus.state = C8oFileTransferStatus.StateCanceled
+                notify(transferStatus)
+                canceledTasks.removeObject(uuid)
+            }
 			finally(__maxRunning__)
 		}
 		catch let e as NSError {
@@ -321,7 +344,7 @@ public class C8oFileTransfer: C8oFileTransferBase {
 			c8o!.callJson(".RemoveSession")
 		}
 		
-		tasks?.removeValueForKey(transferStatus.uuid)
+		tasks?.removeValueForKey(uuid)
 		
 		self.condition.lock()
 		self.condition.signal()
@@ -342,9 +365,9 @@ public class C8oFileTransfer: C8oFileTransferBase {
 		let chunkStream = NSInputStream(fileAtPath: str)
 		var buffer = [UInt8](count: chunkSize, repeatedValue: 0)
 		chunkStream!.open()
-		if chunkStream!.hasBytesAvailable {
-			chunkStream!.read(&buffer, maxLength: buffer.count)
-			outputStream!.write(&buffer, maxLength: chunkSize)
+		while chunkStream!.hasBytesAvailable {
+			let count = chunkStream!.read(&buffer, maxLength: buffer.count)
+			outputStream!.write(&buffer, maxLength: count)
 		}
 		chunkStream?.close()
 	}
@@ -394,7 +417,8 @@ public class C8oFileTransfer: C8oFileTransferBase {
 		streamToUpload[uuid] = fileStream
 	}
 	
-	func uploadFile(transferStatus: C8oFileTransferStatus, inout task: JSON) {
+    func uploadFile(transferStatus: C8oFileTransferStatus, inout task: JSON) {
+        let uuid = transferStatus.uuid
 		do {
 			__maxRunning__.lock()
 			if (__maxRunning <= 0) {
@@ -404,29 +428,29 @@ public class C8oFileTransfer: C8oFileTransferBase {
 			__maxRunning__.unlock()
 			
 			var res: JSON = nil
-			let fileName: String = transferStatus.filepath
-			var locker: Bool = false
+            var locker: Bool = false
+            let fileName: String = transferStatus.filepath
 			
 			// Creates a c8o instance with a specific fullsync local suffix in order to store chunks in a specific database
-			let c8o: C8o = try C8o(endpoint: c8oTask.endpoint, c8oSettings: C8oSettings(c8oSettings: c8oTask).setFullSyncLocalSuffix("_" + transferStatus.uuid).setDefaultDatabaseName("c8ofiletransfer"))
+			let c8o: C8o = try C8o(endpoint: c8oTask.endpoint, c8oSettings: C8oSettings(c8oSettings: c8oTask).setFullSyncLocalSuffix("_" + uuid).setDefaultDatabaseName("c8ofiletransfer"))
 			
 			// Creates the local db
 			try c8o.callJson("fs://.create").sync()
 			
 			// If the file is not already splitted and stored in the local database
-			if (!task["splitted"].boolValue) {
+			if (!task["splitted"].boolValue && !canceledTasks.containsObject(uuid)) {
 				transferStatus.state = C8oFileTransferStatus.StateSplitting
 				notify(transferStatus)
 				
 				// Checks if the stream is still stored
-				if let _ = streamToUpload[transferStatus.uuid] {
+				if let _ = streamToUpload[uuid] {
 					
 				}
 				else {
 					// Removes the local database
 					try c8o.callJson("fs://.reset").sync()
 					// Removes the task doc
-					try c8oTask.callJson("fs://.delete", parameters: "docid", transferStatus.uuid).sync()
+					try c8oTask.callJson("fs://.delete", parameters: "docid", uuid).sync()
 					throw C8oException(message: "The file '" + task["filePath"].stringValue + "' can't be upload because it was stopped before the file content was handled")
 					
 				}
@@ -434,10 +458,10 @@ public class C8oFileTransfer: C8oFileTransferBase {
 				//
 				// 1 : Split the file and store it locally
 				//
-				fileStream = streamToUpload[transferStatus.uuid]
+				fileStream = streamToUpload[uuid]
 				// fileStream.reset
 				var buffer = [UInt8](count: chunkSize, repeatedValue: 0)
-				let uuid: String = transferStatus.uuid
+				let uuid: String = uuid
 				var countTot: Int = -1
 				var read: Int = 1
 				
@@ -475,14 +499,14 @@ public class C8oFileTransfer: C8oFileTransferBase {
 				).sync()!
 				debug("splitted true:\n" + res.description)
 			}
-			streamToUpload.removeValueForKey(transferStatus.uuid)
+			streamToUpload.removeValueForKey(uuid)
 			
 			// If the local database is not replecated to the server
-			if (!task["replicated"].boolValue) {
+			if (!task["replicated"].boolValue && !canceledTasks.containsObject(uuid)) {
 				//
 				// 2 : Authenticates
 				//
-				res = try c8o.callJson(".SetAuthenticatedUser", parameters: "userId", transferStatus.uuid).sync()!
+				res = try c8o.callJson(".SetAuthenticatedUser", parameters: "userId", uuid).sync()!
 				debug("SetAuthenticatedUser:\n" + res.description)
 				
 				transferStatus.state = C8oFileTransferStatus.StateAuthenticated
@@ -508,7 +532,7 @@ public class C8oFileTransfer: C8oFileTransferBase {
 				
 				// Waits the end of the replication if it is not finished
 				
-				while (!locker) {
+				while (!locker && !canceledTasks.containsObject(uuid)) {
 					self.condition.lock()
 					self.condition.wait()
 					self.condition.unlock()
@@ -516,7 +540,7 @@ public class C8oFileTransfer: C8oFileTransferBase {
 					// Asks how many documents are in the server database with this uuid
 					let json: JSON = try c8o.callJson(".c8ofiletransfer.GetViewCountByUuid",
 						parameters:
-							"_use_key", transferStatus.uuid
+							"_use_key", uuid
 					).sync()!
 					
 					let rows = json["document"]["couchdb_output"]["rows"]
@@ -528,14 +552,19 @@ public class C8oFileTransfer: C8oFileTransferBase {
 						}
 					}
 				}
-				// Updates the state document in the task database
-				task["replicated"] = true
-				res = try c8oTask.callJson("fs://.post", parameters:
-						C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
-					"_id", task["_id"].stringValue,
-					"replicated", task["replicated"].boolValue
-				).sync()!
-				debug("replicated true:\n" + res.description)
+                
+                try c8o.callJson("fs://.replicate_push", parameters: "cancel", true).sync()
+                
+                if (!canceledTasks.containsObject(uuid)) {
+					// Updates the state document in the task database
+					task["replicated"] = true
+					res = try c8oTask.callJson("fs://.post", parameters:
+							C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
+						"_id", task["_id"].stringValue,
+						"replicated", task["replicated"].boolValue
+					).sync()!
+					debug("replicated true:\n" + res.description)
+				}
 			}
 			
 			// If the local database containing chunks is not deleted
@@ -568,8 +597,10 @@ public class C8oFileTransfer: C8oFileTransferBase {
 				
 			}
 			
+            let isCanceling = canceledTasks.containsObject(uuid)
+            
 			// If the file is not assembled in the server
-			if (!task["assembled"].boolValue) {
+			if (!task["assembled"].boolValue && !isCanceling) {
 				transferStatus.state = C8oFileTransferStatus.StateAssembling
 				notify(transferStatus)
 				
@@ -577,7 +608,7 @@ public class C8oFileTransfer: C8oFileTransferBase {
 				// 5 : Request the server to assemble chunks to the initial file
 				//
 				res = try c8o.callJson(".StoreDatabaseFileToLocal", parameters:
-						"uuid", transferStatus.uuid,
+						"uuid", uuid,
 					"numberOfChunks", transferStatus.total
 				).sync()!
 				
@@ -598,31 +629,77 @@ public class C8oFileTransfer: C8oFileTransferBase {
 				
 				debug("assembled true:\n" + res.description)
 			}
+            
+            if (!isCanceling) {
 			transferStatus.serverFilepath = task["serverFilePath"].stringValue
-			
-			// Waits the local database is deleted
-			while (!locker) {
-				self.condition.lock()
-				self.condition.wait()
-				self.condition.unlock()
-			}
+				
+				// Waits the local database is deleted
+				while (!locker) {
+					self.condition.lock()
+					self.condition.waitUntilDate(NSDate(timeIntervalSinceNow: 0.5))
+					self.condition.unlock()
+				}
+            }
 			
 			//
 			// 6 : Remove the task document
 			//
 			res = try c8oTask.callJson("fs://.delete", parameters:
-					"docid", transferStatus.uuid
+					"docid", uuid
 			).sync()!
 			
 			debug("local delete:\n" + res.description)
 			
-			transferStatus.state = C8oFileTransferStatus.StateFinished
+            if (isCanceling) {
+                canceledTasks.removeObject(uuid)
+                transferStatus.state = C8oFileTransferStatus.StateCanceled
+            } else {
+                transferStatus.state = C8oFileTransferStatus.StateFinished
+            }
 			notify(transferStatus)
 			finally(__maxRunning__)
 		}
 		catch let e as NSError {
 			finally(__maxRunning__)
+            notify(e)
 			print(e.description)
+		}
+	}
+    
+	public func getAllFiletransferStatus() -> Array<C8oFileTransferStatus> {
+		var list = Array<C8oFileTransferStatus>()
+		do {
+			let res = try c8oTask.callJson("fs://.all", parameters: "include_docs", true).sync()
+			let rows = res!["rows"]
+			for (_, row) in rows {
+				let task = row["doc"]
+				let uuid = task["_id"].string!
+				
+				// If this document id is not already in the tasks list
+				if (tasks![uuid] != nil) {
+                    list.append(tasks![uuid]!)
+				} else {
+					let filePath = task["filePath"].string
+					list.append(C8oFileTransferStatus(uuid: uuid, filepath: filePath!))
+				}
+			}
+		} catch let e as NSError {
+			print(e.description)
+		}
+		return list
+	}
+	
+	public func cancelFiletransfer(filetransferStatus: C8oFileTransferStatus) -> Void {
+		cancelFiletransfer(filetransferStatus.uuid)
+	}
+	
+	public func cancelFiletransfer(uuid: String) -> Void {
+		canceledTasks.addObject(uuid)
+	}
+	
+	public func cancelFiletransfers() {
+		for filetransferStatus in getAllFiletransferStatus() {
+			cancelFiletransfer(filetransferStatus)
 		}
 	}
 }
