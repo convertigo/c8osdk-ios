@@ -86,11 +86,11 @@ public class C8oPromise<T>: C8oPromiseFailSync<T> {
 		}
 	}
 	
-	public func fail(c8oOnFail: (C8oException, Dictionary<String, AnyObject>?) throws -> ()) -> C8oPromiseSync<T> {
+	public override func fail(c8oOnFail: (C8oException, Dictionary<String, AnyObject>?) throws -> ()) -> C8oPromiseSync<T> {
 		return fail(c8oOnFail, ui: false)
 	}
 	
-	public func failUI(c8oOnFail: (C8oException, Dictionary<String, AnyObject>?) throws -> ()) -> C8oPromiseSync<T> {
+	public override func failUI(c8oOnFail: (C8oException, Dictionary<String, AnyObject>?) throws -> ()) -> C8oPromiseSync<T> {
 		return fail(c8oOnFail, ui: true)
 	}
 	
@@ -202,7 +202,7 @@ public class C8oPromise<T>: C8oPromiseFailSync<T> {
 	}
 	
 	internal func onResponse(response: T?, parameters: Dictionary<String, AnyObject>?) -> Void {
-		if (lastResponse != nil) {
+		if (lastResponse != nil && (parameters == nil || parameters![C8o.ENGINE_PARAMETER_FROM_LIVE] == nil)) {
 			if (nextPromise != nil) {
 				nextPromise?.onResponse(response, parameters: parameters)
 			} else {
@@ -264,7 +264,7 @@ public class C8oPromise<T>: C8oPromiseFailSync<T> {
 					condition.lock()
 					
 					do {
-						try self.c8oFail?.key(exception!, parameters!)
+						try self.c8oFail?.key(exception!, parameters)
 					}
 					catch let e as C8oException {
 						self.lastFailure = e

@@ -35,6 +35,12 @@ internal class C8oCallTask {
 			self.doInBackground()
 		});
 	}
+    
+    internal func executeFromLive() {
+        parameters.removeValueForKey(C8o.FS_LIVE)
+        parameters[C8o.ENGINE_PARAMETER_FROM_LIVE] = true
+        execute()
+    }
 	
 	private func doInBackground() -> Void {
 		do {
@@ -42,7 +48,7 @@ internal class C8oCallTask {
 			handleResponse(response!)
 		}
 		catch let e as C8oException {
-			c8oExceptionListener.onException(Pair<C8oException, Dictionary<String, AnyObject>?>(key: e, value: nil))
+			c8oExceptionListener.onException(Pair<C8oException, Dictionary<String, AnyObject>?>(key: e, value: parameters))
 		}
 		catch {
 		}
@@ -54,6 +60,12 @@ internal class C8oCallTask {
 		
 		if (isFullSyncRequest) {
 			c8o.log._debug("Is FullSync request", exceptions: nil)
+            
+            let liveid = C8oUtils.getParameterStringValue(parameters, name: C8o.FS_LIVE)
+            if (liveid != nil) {
+                let dbName = C8oUtils.getParameterStringValue(parameters, name: C8o.ENGINE_PARAMETER_PROJECT)?.substringFromIndex(C8oFullSync.FULL_SYNC_PROJECT.endIndex)
+                try c8o.addLive(liveid!, db: dbName!, task: self)
+            }
 			// The result cannot be handled here because it can be different depending to the platform
 			// But it can be useful bor debug
 			var fullSyncResult: AnyObject? = nil

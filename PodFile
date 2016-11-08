@@ -18,5 +18,10 @@ target 'C8oSDKiOS' do
       inherit! :search_paths
       # Pods for testing
   end
+  
+  target 'Sample05' do
+      inherit! :search_paths
+      # Pods for testing
+  end
 
 end

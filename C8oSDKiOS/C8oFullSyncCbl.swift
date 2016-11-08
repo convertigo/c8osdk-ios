@@ -13,16 +13,19 @@ import SwiftyJSON
 class C8oFullSyncCbl: C8oFullSync {
     private static let ATTACHMENT_PROPERTY_KEY_CONTENT_URL: String = "content_url"
     internal var manager: CBLManager?
-    private var fullSyncDatabases: Dictionary<String, C8oFullSyncDatabase>?
+    private var fullSyncDatabases: Dictionary<String, C8oFullSyncDatabase>
+    private var fullSyncChangeListeners: Dictionary<String, Set<C8oFullSyncChangeListener>>
+    private var cblChangeListeners: Dictionary<String, (notification: NSNotification) -> ()>
     private var condition: NSCondition = NSCondition()
     internal static var th: NSThread? = nil
     private var block: Queue<dispatch_block_t> = Queue<dispatch_block_t>()
     internal var errorFs: [NSError] = [NSError]()
     
     internal override init(c8o: C8o) {
-        
+        fullSyncDatabases = Dictionary<String, C8oFullSyncDatabase>()
+        fullSyncChangeListeners = Dictionary()
+        cblChangeListeners = Dictionary()
         super.init(c8o: c8o)
-        self.fullSyncDatabases = Dictionary<String, C8oFullSyncDatabase>()
         if (C8oFullSyncCbl.th == nil) {
             condition.lock()
             C8oFullSyncCbl.th = NSThread(target: self, selector: #selector(C8oFullSyncCbl.cbl), object: nil)
@@ -37,12 +40,8 @@ class C8oFullSyncCbl: C8oFullSync {
         }
     }
     internal func performOnCblThread(block: dispatch_block_t) {
-        
         self.block.enqueue(block)
         self.performSelector(#selector(C8oFullSyncCbl.doBlock), onThread: C8oFullSyncCbl.th!, withObject: errorFs, waitUntilDone: true)
-        
-        
-        
     }
     
     @objc private func doBlock() {
@@ -67,12 +66,15 @@ class C8oFullSyncCbl: C8oFullSync {
     private func getOrCreateFullSyncDatabase(databaseName: String) throws -> C8oFullSyncDatabase {
         let localDatabaseName: String = databaseName + localSuffix!
         
-        if let _ = fullSyncDatabases?[localDatabaseName] {
+        if let _ = fullSyncDatabases[localDatabaseName] {
             
         } else {
-            fullSyncDatabases![localDatabaseName] = try C8oFullSyncDatabase(c8o: self.c8o!, manager: self.manager!, databaseName: databaseName, fullSyncDatabases: fullSyncDatabaseUrlBase!, localSuffix: localSuffix!)
+            fullSyncDatabases[localDatabaseName] = try C8oFullSyncDatabase(c8o: self.c8o!, manager: self.manager!, databaseName: databaseName, fullSyncDatabases: fullSyncDatabaseUrlBase!, localSuffix: localSuffix!)
+            if let listener = cblChangeListeners[databaseName] {
+                NSNotificationCenter.defaultCenter().addObserverForName(kCBLDatabaseChangeNotification, object: fullSyncDatabases[localDatabaseName]?.getDatabase(), queue: nil, usingBlock: listener)
+            }
         }
-        return fullSyncDatabases![localDatabaseName]!
+        return fullSyncDatabases[localDatabaseName]!
     }
     
     internal override func handleFullSyncResponse(response: AnyObject, listener: C8oResponseListener) throws -> AnyObject {
@@ -549,8 +551,8 @@ class C8oFullSyncCbl: C8oFullSync {
         try getOrCreateFullSyncDatabase(databaseName).deleteDb()
         
         let localDatabaseName: String = databaseName + localSuffix!
-        if let _ = fullSyncDatabases![localDatabaseName] {
-            fullSyncDatabases?.removeValueForKey(localDatabaseName)
+        if let _ = fullSyncDatabases[localDatabaseName] {
+            fullSyncDatabases.removeValueForKey(localDatabaseName)
         }
         
         return FullSyncDefaultResponse(operationStatus: true)
@@ -801,5 +803,56 @@ class C8oFullSyncCbl: C8oFullSync {
         /*} catch {
          throw C8oException(message: "TODO")
          }*/
+    }
+    
+    internal override func addFullSyncChangeListener(db: String?, listener: C8oFullSyncChangeListener) throws {
+        var _db = db
+        if (_db == nil || _db!.isEmpty) {
+            _db = c8o!.defaultDatabaseName
+        }
+        
+        if let _ = fullSyncChangeListeners[_db!] {
+        } else {
+            fullSyncChangeListeners[_db!] = Set<C8oFullSyncChangeListener>()
+            let evtHandler = {(notification: NSNotification) -> () in
+                var changes: JSON = [:]
+                var docs = Array<JSON>()
+                changes["isExternal"].boolValue = notification.userInfo!["external"] as! Bool
+                
+                for change in notification.userInfo!["changes"] as! Array<CBLDatabaseChange> {
+                    var doc: JSON = [:]
+                    doc["id"].stringValue = change.documentID
+                    doc["isConflict"].boolValue = change.inConflict
+                    doc["isCurrentRevision"].boolValue = change.isCurrentRevision
+                    doc["revisionId"].stringValue = change.revisionID
+                    if (change.source != nil) {
+                        doc["sourceUrl"].stringValue = change.source!.absoluteString
+                    }
+                    docs.append(doc)
+                }
+                changes["changes"] = JSON(docs)
+                for handler in self.fullSyncChangeListeners[_db!]! {
+                    handler.handler(changes: changes)
+                }
+            }
+            NSNotificationCenter.defaultCenter().addObserverForName(kCBLDatabaseChangeNotification, object: try getOrCreateFullSyncDatabase(_db!).getDatabase(), queue: nil, usingBlock: evtHandler)
+            cblChangeListeners[_db!] = evtHandler
+        }
+        
+        fullSyncChangeListeners[_db!]!.insert(listener)
+    }
+    
+    internal override func removeFullSyncChangeListener(db: String?, listener: C8oFullSyncChangeListener) throws {
+        var _db = db
+        if (_db == nil || _db!.isEmpty) {
+            _db = c8o!.defaultDatabaseName
+        }
+        
+        if var listeners = fullSyncChangeListeners[_db!] {
+            listeners.remove(listener)
+            if (listeners.isEmpty) {
+                try getOrCreateFullSyncDatabase(_db!).getDatabase()?.removeObserver(kCBLDatabaseChangeNotification, forKeyPath: "")
+            }
+        }
     }
 }

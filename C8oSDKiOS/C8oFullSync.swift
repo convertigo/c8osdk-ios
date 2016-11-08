@@ -33,7 +33,9 @@ internal class C8oFullSync: NSObject {
 		localSuffix = (c8o.fullSyncLocalSuffix != nil) ? c8o.fullSyncLocalSuffix : "_device";
 	}
 	
-	internal func handleFullSyncRequest(parameters: Dictionary<String, AnyObject>, listener: C8oResponseListener) throws -> AnyObject? {
+	internal func handleFullSyncRequest(parameters_: Dictionary<String, AnyObject>, listener: C8oResponseListener) throws -> AnyObject? {
+        let parameters = parameters_
+        
 		// Checks if this is really a fullSync request (even if this is normally already checked)
 		let projectParameterValue = try! C8oUtils.peekParameterStringValue(parameters, name: C8o.ENGINE_PARAMETER_PROJECT, exceptionIfMissing: true);
 		
@@ -102,4 +104,10 @@ internal class C8oFullSync: NSObject {
 		return false;
 		
 	}
+    
+    internal func addFullSyncChangeListener(db: String, listener: C8oFullSyncChangeListener) throws {
+    }
+    
+    internal func removeFullSyncChangeListener(db: String, listener: C8oFullSyncChangeListener) throws {
+    }
 }

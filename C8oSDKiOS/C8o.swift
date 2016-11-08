@@ -34,7 +34,8 @@ public class C8o: C8oBase {
 	internal static var ENGINE_PARAMETER_TRANSACTION: String = "__transaction"
 	internal static var ENGINE_PARAMETER_ENCODED: String = "__encoded"
 	internal static var ENGINE_PARAMETER_DEVICE_UUID: String = "__uuid"
-	internal static var ENGINE_PARAMETER_PROGRESS: String = "__progress"
+    internal static var ENGINE_PARAMETER_PROGRESS: String = "__progress"
+    internal static var ENGINE_PARAMETER_FROM_LIVE: String = "__fromLive"
 	
 	/* FULLSYNC parameters */
 	
@@ -81,6 +82,7 @@ public class C8o: C8oBase {
 	
 	public static var FS_STORAGE_SQL: String = "SQL"
 	public static var FS_STORAGE_FORESTDB: String = "FORESTDB"
+    public static var FS_LIVE: String = "__live"
 	
 	/* Local cache keys */
 	
@@ -124,6 +126,11 @@ public class C8o: C8oBase {
 	
 	/* Allows to make fullSync calls. */
 	internal var c8oFullSync: C8oFullSync?
+    
+    var lives = Dictionary<String, C8oCallTask>()
+    var livesDb = Dictionary<String, String>()
+    
+    var handleFullSyncLive: C8oFullSyncChangeListener?
 	
 	/* Constructors */
 	/**
@@ -133,7 +140,7 @@ public class C8o: C8oBase {
 	 Example : http://computerName:18080/convertigo/projects/MyProject
 	 - parameter c8oSettings : Initialization options. Example : new C8oSettings().setLogRemote(false).setDefaultDatabaseName("sample")
 	 */
-	public init(endpoint: String, c8oSettings: C8oSettings? = nil) throws {
+    public init(endpoint: String, c8oSettings: C8oSettings? = nil) throws {
 		super.init()
 		// Checks the URL validity
 		if (!C8oUtils.isValidUrl(endpoint)) {
@@ -169,7 +176,12 @@ public class C8o: C8oBase {
 		self.httpInterface = C8oHttpInterface(c8o: self)
 		self.c8oLogger = C8oLogger(c8o: self)
 		self.c8oLogger!.logMethodCall("C8o constructor")
-		self.c8oFullSync = C8oFullSyncCbl(c8o: self)
+        self.c8oFullSync = C8oFullSyncCbl(c8o: self)
+        self.handleFullSyncLive = C8oFullSyncChangeListener(handler: {(changes: JSON) -> () in
+            for task in self.lives.values {
+                task.executeFromLive()
+            }
+        })
 	}
 	
 	/**
@@ -462,6 +474,31 @@ public class C8o: C8oBase {
 		get { return httpInterface!.cookieStore! }
 	}
 	
+    public func addFullSyncChangeListener(db: String, listener: C8oFullSyncChangeListener) throws {
+        try c8oFullSync!.addFullSyncChangeListener(db, listener: listener)
+    }
+    
+    public func removeFullSyncChangeListener(db: String, listener: C8oFullSyncChangeListener) throws {
+        try c8oFullSync!.removeFullSyncChangeListener(db, listener: listener)
+    }
+    
+    func addLive(liveid: String, db: String, task: C8oCallTask) throws {
+        try cancelLive(liveid)
+        lives[liveid] = task
+        livesDb[liveid] = db
+        try addFullSyncChangeListener(db, listener: handleFullSyncLive!)
+    }
+    
+    public func cancelLive(liveid: String) throws {
+        if let db = livesDb[liveid] {
+            livesDb.removeValueForKey(liveid)
+            if (!livesDb.values.contains(db)) {
+                try removeFullSyncChangeListener(db, listener: handleFullSyncLive!)
+            }
+        }
+        lives.removeValueForKey(liveid)
+    }
+    
 	private static func toParameters(parameters: [AnyObject]?) throws -> Dictionary<String, AnyObject> {
 		if (parameters!.count % 2 != 0) {
 			throw C8oException(message: C8oExceptionMessage.invalidParameterValue("parameters", details: "needs pairs of values"))
@@ -482,6 +519,6 @@ public class C8o: C8oBase {
 		if (c8oExceptionListener != nil) {
 			c8oExceptionListener!.onException(Pair<C8oException, Dictionary<String, AnyObject>?>(key: exception, value: requestParameters))
 		}
-	}
+    }
 }
 
