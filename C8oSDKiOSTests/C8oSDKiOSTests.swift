@@ -1232,7 +1232,7 @@ class C8oSDKiOSTests: XCTestCase {
 			var first: [String?] = [nil]
 			var last: [String?] = [nil]
 			var uiThread: [Bool] = [false]
-			json = try! c8o.callJson("fs://.replicate_pull").progress({ (C8oProgress) in
+			let doc = try! c8o.callXml("fs://.replicate_pull").progress({ (C8oProgress) in
 				count[0] += 1
 				if (NSThread.mainThread() == NSThread.currentThread()) {
 					uiThread[0] = true
@@ -1245,7 +1245,8 @@ class C8oSDKiOSTests: XCTestCase {
 				last[0] = C8oProgress.description
 				
 			}).sync()!
-			XCTAssertTrue(json["ok"].boolValue)
+            
+			XCTAssertEqual("true", doc["document"]["couchdb_output"]["ok"].stringValue)
 			json = try! c8o.callJson("fs://.get", parameters: "docid", "456").sync()!
 			value = json["data"].stringValue
 			XCTAssertEqual("456", value)
@@ -1831,6 +1832,77 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertEqual("5120000", length)
 	}
 	
+    func testC8oFsLiveChanges() {
+        let c8o = try! get(.C8O_FS_PUSH)
+        var lastChanges: JSON? = nil
+        let _lastChanges = NSCondition()
+        
+        let changeListener = C8oFullSyncChangeListener(handler: {(changes: JSON) -> () in
+            _lastChanges.lock()
+            lastChanges = changes
+            _lastChanges.signal()
+            _lastChanges.unlock()
+        })
+        
+        let condition: NSCondition = NSCondition()
+        condition.lock()
+        do {
+            var json: JSON = try! c8o.callJson("fs://.reset").sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            json = try! c8o.callJson("fs://.replicate_pull", parameters: "continuous", true).sync()!
+            XCTAssertTrue(json["ok"].boolValue)
+            var cptlive: Int = 0
+            let _cptlive = NSCondition()
+            try! c8o.callJson("fs://.get", parameters: "docid", "abc", C8o.FS_LIVE, "getabc").then({ (response, parameters) -> (C8oPromise<JSON>?) in
+                _cptlive.lock()
+                if (response["_id"].stringValue == "abc") {
+                    cptlive = cptlive + 1
+                }
+                _cptlive.signal()
+                _cptlive.unlock()
+                return nil
+            }).sync()
+            XCTAssertEqual(1, cptlive)
+            _cptlive.lock()
+            json = try! c8o.callJson(".qa_fs_push.PostDocument", parameters: "_id", "ghi").sync()!
+            XCTAssertTrue(json["document"]["couchdb_output"]["ok"].boolValue)
+            _cptlive.waitUntilDate(NSDate(timeIntervalSinceNow: 1.0))
+            XCTAssertEqual(2, cptlive)
+            _cptlive.unlock()
+            
+            try! c8o.addFullSyncChangeListener("", listener: changeListener)
+            _lastChanges.lock()
+            _cptlive.lock()
+            json = try! c8o.callJson(".qa_fs_push.PostDocument", parameters: "_id", "jkl").sync()!
+            XCTAssertTrue(json["document"]["couchdb_output"]["ok"].boolValue)
+            _lastChanges.waitUntilDate(NSDate(timeIntervalSinceNow: 3.0))
+            _cptlive.waitUntilDate(NSDate(timeIntervalSinceNow: 1.0))
+            XCTAssertEqual(3, cptlive)
+            XCTAssertNotNil(lastChanges)
+            XCTAssertEqual(1, lastChanges!["changes"].arrayValue.count)
+            XCTAssertEqual("jkl", lastChanges!["changes"][0]["id"].stringValue)
+            _cptlive.unlock()
+            _lastChanges.unlock()
+            
+            _lastChanges.lock()
+            _cptlive.lock()
+            try! c8o.cancelLive("getabc")
+            json = try! c8o.callJson(".qa_fs_push.PostDocument", parameters: "_id", "mno").sync()!
+            XCTAssertTrue(json["document"]["couchdb_output"]["ok"].boolValue)
+            _lastChanges.waitUntilDate(NSDate(timeIntervalSinceNow: 3.0))
+            _cptlive.waitUntilDate(NSDate(timeIntervalSinceNow: 1.0))
+            XCTAssertEqual(3, cptlive)
+            XCTAssertNotNil(lastChanges)
+            XCTAssertEqual(1, lastChanges!["changes"].arrayValue.count)
+            XCTAssertEqual("mno", lastChanges!["changes"][0]["id"].stringValue)
+            _cptlive.unlock()
+            _lastChanges.unlock()
+        }
+        try! c8o.cancelLive("getabc")
+        try! c8o.removeFullSyncChangeListener("", listener: changeListener)
+    }
+
+    
 	// TODO...
 	/*
 	 func testC8oSslValid(){

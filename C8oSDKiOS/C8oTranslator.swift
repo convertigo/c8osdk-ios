@@ -25,11 +25,9 @@ internal class C8oTranslator {
 		if (json.type == .Dictionary) {
 			var jsonObject = json;
 			// Gets all the elements of the JSON object and sorts them
-			var keys: [String] = [String]();
-			var index: Int = 0;
+			var keys = [String]()
 			for jsonChild in jsonObject {
-				keys[index] = jsonChild.0;
-				index += 1;
+                keys.append(jsonChild.0)
 			}
 			keys.sortInPlace()
 			
@@ -48,14 +46,9 @@ internal class C8oTranslator {
 				parentElement.value = String(jsonItem.1)
 				// JsonToXml(jsonItem, parentElement: item);
 			}
-		}
-		/*else if (json is JValue){
-		 var jsonValue = (JValue) json;
-		 if (jsonValue.Value != null)
-		 {
-		 parentElement.Value = jsonValue.Value.ToString();
-		 }
-		 }*/
+		} else {
+            parentElement.value = json.description;
+        }
 	}
 	
 	internal static func jsonKeyToXml(jsonKey: String, jsonValue: JSON/*JToken*/, parentElement: AEXMLElement/*XElement*/) -> Void {

@@ -109,9 +109,6 @@ class C8oFullSyncCbl: C8oFullSync {
                     maVar.myJSON = C8oFullSyncTranslator.dictionaryToJson(response as! Dictionary<String, AnyObject>)
                 }
                 return maVar
-            }else {
-                
-                throw C8oException(message: C8oExceptionMessage.illegalArgumentIncompatibleListener(String(listener), responseType: String(response)))
             }
         } else if (listener is C8oResponseXmlListener) {
             if (response.isMemberOfClass(CBLDocument)) {
@@ -129,20 +126,13 @@ class C8oFullSyncCbl: C8oFullSync {
             } else if (response.isMemberOfClass(FullSyncDefaultResponse)) {
                 maVar.myJSON = C8oFullSyncTranslator.fullSyncDefaultResponseToJson(response as! FullSyncDefaultResponse)
                 return maVar
-            } else {
-                throw C8oException(message: C8oExceptionMessage.illegalArgumentIncompatibleListener(String(listener), responseType: String(response)))
             }
         } else if (listener is C8oResponseCblListener) {
             if (response.isMemberOfClass(CBLDocument) || response.isMemberOfClass(CBLQueryEnumerator)) {
                 return response
-            } else {
-                throw C8oException(message: C8oExceptionMessage.illegalArgumentIncompatibleListener(String(listener), responseType: String(response)))
             }
-            
-        } else {
-            throw C8oException(message: C8oExceptionMessage.unhandledListenerType(String(listener)))
-            
         }
+        return response
     }
     
     func handleGetDocumentRequest(fullSyncDatatbaseName: String, docid: String, parameters: Dictionary<String, AnyObject>) throws -> Dictionary<String, AnyObject> {
