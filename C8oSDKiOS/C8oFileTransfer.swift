@@ -279,15 +279,16 @@ public class C8oFileTransfer: C8oFileTransferBase {
 				// 2 : Gets the document describing the chunks list
 				//
 				
-				var createdFileStream = NSOutputStream(toFileAtPath: transferStatus.filepath, append: false) // (fileAtPath: transferStatus.filepath)
-				createdFileStream?.open()
-				createdFileStream?.scheduleInRunLoop(.mainRunLoop(), forMode: NSDefaultRunLoopMode)
-				for i in 0..<transferStatus.total {
-					let meta: JSON = try c8o!.callJson("fs://" + fsConnector! + ".get", parameters: "docid", uuid + "_" + String(i)).sync()!
-					self.debug((meta.description))
-					appendChunk(&createdFileStream, contentPath: meta["_attachments"]["chunk"]["content_url"].stringValue)
+                if let createdFileStream = NSOutputStream(toFileAtPath: transferStatus.filepath, append: false) { // (fileAtPath: transferStatus.filepath)
+					createdFileStream.open()
+					createdFileStream.scheduleInRunLoop(.mainRunLoop(), forMode: NSDefaultRunLoopMode)
+					for i in 0..<transferStatus.total {
+						let meta: JSON = try c8o!.callJson("fs://" + fsConnector! + ".get", parameters: "docid", uuid + "_" + String(i)).sync()!
+						self.debug((meta.description))
+						appendChunk(createdFileStream, contentPath: meta["_attachments"]["chunk"]["content_url"].stringValue)
+					}
+					createdFileStream.close()
 				}
-				createdFileStream!.close()
 				
 				task["assembled"] = true
 				let res = try c8oTask.callJson("fs://.post",
@@ -358,7 +359,7 @@ public class C8oFileTransfer: C8oFileTransferBase {
 		cond.unlock()
 	}
 	
-	private func appendChunk(inout outputStream: NSOutputStream?, contentPath: String) -> Void {
+	private func appendChunk(outputStream: NSOutputStream, contentPath: String) -> Void {
 		var str = contentPath
 		let regex = try! NSRegularExpression(pattern: "^file://", options: .CaseInsensitive)
 		str = regex.stringByReplacingMatchesInString(contentPath, options: [], range: NSRange(0..<str.utf16.count), withTemplate: "")
@@ -367,7 +368,9 @@ public class C8oFileTransfer: C8oFileTransferBase {
 		chunkStream!.open()
 		while chunkStream!.hasBytesAvailable {
 			let count = chunkStream!.read(&buffer, maxLength: buffer.count)
-			outputStream!.write(&buffer, maxLength: count)
+            if (count > 0) {
+                outputStream!.write(&buffer, maxLength: count)
+            }
 		}
 		chunkStream?.close()
 	}
