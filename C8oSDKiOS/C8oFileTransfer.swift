@@ -369,7 +369,7 @@ public class C8oFileTransfer: C8oFileTransferBase {
 		while chunkStream!.hasBytesAvailable {
 			let count = chunkStream!.read(&buffer, maxLength: buffer.count)
             if (count > 0) {
-                outputStream!.write(&buffer, maxLength: count)
+                outputStream.write(&buffer, maxLength: count)
             }
 		}
 		chunkStream?.close()
