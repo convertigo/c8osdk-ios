@@ -78,10 +78,21 @@ public class C8o: C8oBase {
 
 	 This key allow to override the sub key separator in case of document depth modification.
 	 */
-	public static var FS_SUBKEY_SEPARATOR: String = "_use_subkey_separator"
-	
-	public static var FS_STORAGE_SQL: String = "SQL"
-	public static var FS_STORAGE_FORESTDB: String = "FORESTDB"
+    public static var FS_SUBKEY_SEPARATOR: String = "_use_subkey_separator"
+    /**
+     Use it with "c8oSettings.setFullSyncStorageEngine" to choose the SQL fullsync storage engine.
+     */
+    public static var FS_STORAGE_SQL: String = "SQL"
+    /**
+     Use it with "c8oSettings.setFullSyncStorageEngine" to choose the FORESTDB fullsync storage engine.
+     */
+    public static var FS_STORAGE_FORESTDB: String = "FORESTDB"
+    /**
+     Use it with "fs://" request as parameter to enable the live request feature.<br/>
+     Must be followed by a string parameter, the 'liveid' that can be use to cancel the live
+     request using c8o.cancelLive(liveid) method.<br/>
+     A live request automatically recall the then or thenUI handler when the database changed.
+     */
     public static var FS_LIVE: String = "__live"
 	
 	/* Local cache keys */
@@ -188,8 +199,8 @@ public class C8o: C8oBase {
 	 This calls a Convertigo requestable.
 	 Example usage:
 	 @code
-	 myc8o : C8o = C8o()
-	 myC8o.Call(requestable, parameters, c8oResponseXmlListener, c8oExceptionListener)
+	 myc8o = C8o()
+	 myC8o.call(requestable, parameters, c8oResponseXmlListener, c8oExceptionListener)
 	 @endcode
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 */
@@ -278,8 +289,8 @@ public class C8o: C8oBase {
 	 CallJSON will asynchrously call a "requestable" (Sequence, transaction or FullSync database) and return a C8oPromise object.
 	 Example usage:
 	 @code
-	 myc8o : C8o = C8o()
-	 myC8o.CallJSON(requestable, parameters)
+	 myc8o = C8o()
+	 myC8o.callJson(requestable, parameters)
 	 @endcode
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @param requestable : String
@@ -323,19 +334,97 @@ public class C8o: C8oBase {
 				promise.onFailure(params?.key as C8oException?, parameters: params?.value)
 			}))
 		return promise
-	}
-	
+    }
+    
+    /**
+     Call a Convertigo Server backend service and return data in a JSON Object.
+     CallJSON will asynchrously call a "requestable" (Sequence, transaction or FullSync database) and return a C8oPromise object.
+     Example usage:
+     @code
+     myc8o = C8o()
+     myC8o.callJson(requestable, parameters)
+     @endcode
+     @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
+     @param requestable : String
+     A "requestable" object of this form :
+     <list type ="bullet">
+     <item>project.sequence to call a Sequence in the convertigo server. If project is not specified explicitly here,
+     (.sequence) the default project specified in the enpoint will be used.</item>
+     <item>
+     project.connector.transaction to call a transaction in the convertigo server. if project is not specified explicitly here,
+     (.connector.transaction) the default project specified in the enpoint will be used. If
+     connector is not specified (..transaction) the default connector will be used.</item>
+     <item>fs://database.fullsync_verb   to call the local NoSQL database for quering, updating and syncing according to the full_sync
+     verb used. See FullSync documentation for a list of verbs and parameters.</item>
+     </list>
+     @return A C8oPromise object on which you can chain other requests to get the data with the Then(), ThenUI() methods or
+     use the Async() to wait for the server response without blocking the request thread. You can also use the .Fail() and
+     FailUI() methods to handle C8oErrors.
+     
+     */
 	public func callJson(requestable: String, parameters: AnyObject...) -> C8oPromise<JSON> {
 		
 		return try! callJson(requestable, parameters: C8o.toParameters(parameters))
 		
 	}
-	
+    
+    /**
+     Call a Convertigo Server backend service and return data in a JSON Object.
+     CallJSON will asynchrously call a "requestable" (Sequence, transaction or FullSync database) and return a C8oPromise object.
+     Example usage:
+     @code
+     myc8o = C8o()
+     myC8o.callJson(requestable, parameters)
+     @endcode
+     @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
+     @param requestable : String
+     A "requestable" object of this form :
+     <list type ="bullet">
+     <item>project.sequence to call a Sequence in the convertigo server. If project is not specified explicitly here,
+     (.sequence) the default project specified in the enpoint will be used.</item>
+     <item>
+     project.connector.transaction to call a transaction in the convertigo server. if project is not specified explicitly here,
+     (.connector.transaction) the default project specified in the enpoint will be used. If
+     connector is not specified (..transaction) the default connector will be used.</item>
+     <item>fs://database.fullsync_verb   to call the local NoSQL database for quering, updating and syncing according to the full_sync
+     verb used. See FullSync documentation for a list of verbs and parameters.</item>
+     </list>
+     @return A C8oPromise object on which you can chain other requests to get the data with the Then(), ThenUI() methods or
+     use the Async() to wait for the server response without blocking the request thread. You can also use the .Fail() and
+     FailUI() methods to handle C8oErrors.
+     
+     */
 	public func callJson(requestable: String, parameters: JSON) -> C8oPromise<JSON> {
 		
 		return callJson(requestable, parameters: (parameters.object as! Dictionary<String, AnyObject>))
-	}
-	
+    }
+    
+    /**
+     Call a Convertigo Server backend service and return data in a XML Document.
+     CallJSON will asynchrously call a "requestable" (Sequence, transaction or FullSync database) and return a C8oPromise object.
+     Example usage:
+     @code
+     myc8o = C8o()
+     myC8o.callXml(requestable, parameters)
+     @endcode
+     @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
+     @param requestable : String
+     A "requestable" object of this form :
+     <list type ="bullet">
+     <item>project.sequence to call a Sequence in the convertigo server. If project is not specified explicitly here,
+     (.sequence) the default project specified in the enpoint will be used.</item>
+     <item>
+     project.connector.transaction to call a transaction in the convertigo server. if project is not specified explicitly here,
+     (.connector.transaction) the default project specified in the enpoint will be used. If
+     connector is not specified (..transaction) the default connector will be used.</item>
+     <item>fs://database.fullsync_verb   to call the local NoSQL database for quering, updating and syncing according to the full_sync
+     verb used. See FullSync documentation for a list of verbs and parameters.</item>
+     </list>
+     @return A C8oPromise object on which you can chain other requests to get the data with the then(), thenUI() methods to wait for the
+     server response without blocking the request thread. You can also use the .fail() and
+     failUI() methods to handle C8oErrors.
+     
+     */
 	public func callXml(requestable: String, parameters: Dictionary<String, AnyObject>) -> C8oPromise<AEXMLDocument> {
 		
 		let promise = C8oPromise<AEXMLDocument>(c8o: self)
@@ -364,7 +453,33 @@ public class C8o: C8oBase {
 		return promise
 		
 	}
-	
+    
+    /**
+     Call a Convertigo Server backend service and return data in a XML Document.
+     CallJSON will asynchrously call a "requestable" (Sequence, transaction or FullSync database) and return a C8oPromise object.
+     Example usage:
+     @code
+     myc8o = C8o()
+     myC8o.callXml(requestable, parameters)
+     @endcode
+     @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
+     @param requestable : String
+     A "requestable" object of this form :
+     <list type ="bullet">
+     <item>project.sequence to call a Sequence in the convertigo server. If project is not specified explicitly here,
+     (.sequence) the default project specified in the enpoint will be used.</item>
+     <item>
+     project.connector.transaction to call a transaction in the convertigo server. if project is not specified explicitly here,
+     (.connector.transaction) the default project specified in the enpoint will be used. If
+     connector is not specified (..transaction) the default connector will be used.</item>
+     <item>fs://database.fullsync_verb   to call the local NoSQL database for quering, updating and syncing according to the full_sync
+     verb used. See FullSync documentation for a list of verbs and parameters.</item>
+     </list>
+     @return A C8oPromise object on which you can chain other requests to get the data with the then(), thenUI() methods to wait for the
+     server response without blocking the request thread. You can also use the .fail() and
+     failUI() methods to handle C8oErrors.
+     
+     */
 	public func callXml(requestable: String, parameters: AnyObject...) -> C8oPromise<AEXMLDocument> {
 		return try! callXml(requestable, parameters: C8o.toParameters(parameters))
 	}
@@ -382,11 +497,20 @@ public class C8o: C8oBase {
 		httpInterface!.addCookie(name, value: value)
 	}
 	
+    /**
+     Enable the internal SDK log.<br/>
+     Add to the application log (generated using the c8o.log object) the logs generated internally
+     by the SDK. Useful for debugging the SDK.
+     */
 	public override var logC8o: Bool {
 		get { return _logC8o! }
 		set(value) { _logC8o = value }
 	}
 	
+    /**
+     Sets a value indicating if logs are sent to the Convertigo server.<br/>
+     Default is <b>true</b>.
+     */
 	public override var logRemote: Bool {
 		get { return _logRemote! }
 		set(value) { _logRemote = value }
@@ -397,6 +521,9 @@ public class C8o: C8oBase {
 		set(value) { _logLevelLocal = value }
 	}
 	
+    /**
+     Set the storage engine for local FullSync databases. Use C8o.FS_STORAGE_SQL or C8o.FS_STORAGE_FORESTDB.
+     */
 	public override var fullSyncStorageEngine: String {
 		get { return _fullSyncStorageEngine }
 		set(value) {
@@ -406,6 +533,9 @@ public class C8o: C8oBase {
 		}
 	}
 	
+    /**
+     Set the encryption key for local FullSync databases encryption.
+     */
 	public override var fullSyncEncryptionKey: String? {
 		get { return _fullSyncEncryptionKey }
 		set(value) { _fullSyncEncryptionKey = value }
@@ -414,11 +544,18 @@ public class C8o: C8oBase {
 	public var log: C8oLogger {
 		get { return c8oLogger! }
 	}
-	
+    
+    /**
+     Is the current thread is the UI thread.
+     */
 	public func isUI () -> Bool {
 		return NSThread.isMainThread()
 	}
 	
+    /**
+     Run a block of code in the UI Thread.<br/>
+     Run the code directly if already in the UI thread.
+     */
 	public func runUI (block: dispatch_block_t) {
 		if (isUI()) {
 			block()
@@ -428,7 +565,10 @@ public class C8o: C8oBase {
 			})
 		}
 	}
-	
+    
+    /**
+     Run a block of code in a background Thread.
+     */
 	public func runBG (block: dispatch_block_t) {
 		let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
 		dispatch_async(dispatch_get_global_queue(priority, 0)) {
@@ -474,10 +614,22 @@ public class C8o: C8oBase {
 		get { return httpInterface!.cookieStore! }
 	}
 	
+    /**
+     Add a listener to monitor all changes of the 'db'.
+     
+     @param db the name of the fullsync database to monitor. Use the default database for a blank or a null value.
+     @param listener the listener to trigger on change.
+     */
     public func addFullSyncChangeListener(db: String, listener: C8oFullSyncChangeListener) throws {
         try c8oFullSync!.addFullSyncChangeListener(db, listener: listener)
     }
     
+    /**
+     Remove a listener for changes of the 'db'.
+     
+     @param db the name of the fullsync database to monitor. Use the default database for a blank or a null value.
+     @param listener the listener instance to remove.
+     */
     public func removeFullSyncChangeListener(db: String, listener: C8oFullSyncChangeListener) throws {
         try c8oFullSync!.removeFullSyncChangeListener(db, listener: listener)
     }
@@ -489,6 +641,11 @@ public class C8o: C8oBase {
         try addFullSyncChangeListener(db, listener: handleFullSyncLive!)
     }
     
+    /**
+     Cancel a live request previously enabled by the C8o.FS_LIVE parameter.
+     
+     @param liveid The value associated with the C8o.FS_LIVE parameter.
+     */
     public func cancelLive(liveid: String) throws {
         if let db = livesDb[liveid] {
             livesDb.removeValueForKey(liveid)
