@@ -102,7 +102,7 @@ public class C8oFullSyncDatabase: NSObject {
         if (fsReplication?.replication != nil) {
             fsReplication!.replication!.stop()
             if (fsReplication?.changeListener != nil) {
-                fsReplication?.replication?.removeObserver(self, forKeyPath: c8oFullSyncDatabaseUrl.absoluteString) // (c8oFullSyncDatabaseUrl)
+                fsReplication?.replication?.removeObserver(self, forKeyPath: c8oFullSyncDatabaseUrl.absoluteString!) // (c8oFullSyncDatabaseUrl)
                 fsReplication?.changeListener = nil
             }
             fsReplication?.replication = nil

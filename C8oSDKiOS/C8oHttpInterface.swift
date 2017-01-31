@@ -76,8 +76,8 @@ internal class C8oHttpInterface {
 	}
 	
 	internal func handleC8oCallRequest(url: String, parameters: Dictionary<String, NSObject>) -> (NSData?, NSError?) {
-		c8o.c8oLogger!.logC8oCall(url, parameters: parameters);
-		return handleRequest(url, parameters: parameters);
+		c8o.c8oLogger!.logC8oCall(url, parameters: parameters)
+		return handleRequest(url, parameters: parameters)
 	}
 	
 	/** <summary>
@@ -102,15 +102,17 @@ internal class C8oHttpInterface {
 		// And adds to it parameters
 		
 		if (parameters != nil && parameters!.count > 0) {
-			var postData: String = "";
+			var postData: String = ""
 			
 			for parameter in parameters! {
 				if let downcastStrings = parameter.1 as? [String] {
 					for item in downcastStrings {
-						postData += String(parameter.0) + "=" + String(item) + "&";
+                        postData += String(parameter.0).stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())!
+                            + "=" + String(item).stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())! + "&"
 					}
 				} else {
-					postData += String(parameter.0) + "=" + String(parameter.1) + "&";
+					postData += String(parameter.0).stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())!
+                        + "=" + String(parameter.1).stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())! + "&"
 				}
 				
 			}

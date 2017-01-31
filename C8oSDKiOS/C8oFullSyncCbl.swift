@@ -16,6 +16,8 @@ class C8oFullSyncCbl: C8oFullSync {
     private var fullSyncDatabases: Dictionary<String, C8oFullSyncDatabase>
     private var fullSyncChangeListeners: Dictionary<String, Set<C8oFullSyncChangeListener>>
     private var cblChangeListeners: Dictionary<String, (notification: NSNotification) -> ()>
+    private var viewDDocRev: Dictionary<String, String>
+    private var mapVersions: Dictionary<String, String>
     private var condition: NSCondition = NSCondition()
     internal static var th: NSThread? = nil
     private var block: Queue<dispatch_block_t> = Queue<dispatch_block_t>()
@@ -25,6 +27,8 @@ class C8oFullSyncCbl: C8oFullSync {
         fullSyncDatabases = Dictionary<String, C8oFullSyncDatabase>()
         fullSyncChangeListeners = Dictionary()
         cblChangeListeners = Dictionary()
+        viewDDocRev = Dictionary()
+        mapVersions = Dictionary()
         super.init(c8o: c8o)
         if (C8oFullSyncCbl.th == nil) {
             condition.lock()
@@ -569,6 +573,8 @@ class C8oFullSyncCbl: C8oFullSync {
             return nil
         }
         
+        var mapID = db.name + ":" + viewName + ":" + String(mapSource!.hash)
+        
         let reduceSource: String? = viewProps!["reduce"] as? String
         var reduceBlock: CBLReduceBlock? = nil
         if (reduceSource != nil) {
@@ -578,12 +584,15 @@ class C8oFullSyncCbl: C8oFullSync {
             if (reduceBlock == nil) {
                 return nil
             }
+            mapID = mapID + ":" + String(reduceSource!.hash)
         }
+        
         var view: CBLView?
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             view = db.viewNamed(viewName)
             
-            view!.setMapBlock(mapBlock!, reduceBlock: reduceBlock, version: "1")
+            view!.setMapBlock(mapBlock!, reduceBlock: reduceBlock, version: mapID)
+            self.mapVersions[db.name + ":" + viewName] = mapID
         }
         let collation: String? = viewProps!["collation"] as? String
         if ("raw" == collation) {
@@ -599,17 +608,27 @@ class C8oFullSyncCbl: C8oFullSync {
         var view: CBLView? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             view = database.existingViewNamed(tdViewName)
-            
         }
+        
+        var rev: CBLRevision? = nil
+        (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+            rev = database.existingDocumentWithID(String(format: "_design/%@", ddocName))?.currentRevision
+        }
+        
+        if (rev == nil) {
+            return nil
+        }
+        
+        let revID = rev!.revisionID!
+        
+        if (view != nil) {
+            let mapVersion = mapVersions[database.name + ":" + tdViewName]
+            if (mapVersion == nil || revID != viewDDocRev[mapVersion!]) {
+                view = nil
+            }
+        }
+        
         if (view == nil || view!.mapBlock == nil) {
-            var rev: CBLRevision? = nil
-            (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
-                rev = database.existingDocumentWithID(String(format: "_design/%@", ddocName))?.currentRevision
-            }
-            
-            if (rev == nil) {
-                return nil
-            }
             
             let views: Dictionary<String, NSObject>? = rev?.properties!["views"] as? Dictionary<String, NSObject>
             let viewProps: Dictionary<String, NSObject>? = views![viewName] as? Dictionary<String, NSObject>
@@ -617,11 +636,10 @@ class C8oFullSyncCbl: C8oFullSync {
                 return nil
             }
             view = self.compileView(database, viewName: tdViewName, viewProps: viewProps)
-            if (view == nil) {
-                return nil
+            if (view != nil) {
+                let mapVersion = mapVersions[database.name + ":" + tdViewName]!
+                viewDDocRev[mapVersion] = revID
             }
-            
-            return view
         }
         return view
     }
@@ -816,7 +834,7 @@ class C8oFullSyncCbl: C8oFullSync {
                     doc["isCurrentRevision"].boolValue = change.isCurrentRevision
                     doc["revisionId"].stringValue = change.revisionID
                     if (change.source != nil) {
-                        doc["sourceUrl"].stringValue = change.source!.absoluteString
+                        doc["sourceUrl"].stringValue = change.source!.absoluteString!
                     }
                     docs.append(doc)
                 }

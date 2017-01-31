@@ -201,7 +201,10 @@ public class C8oLogger: NSObject {
 				var logsArray = Array<JSON>()
 				
 				while (count < listSize && count < C8oLogger.REMOTE_LOG_LIMIT) {
-					logsArray.append(self.remoteLogs!.dequeue()!)
+                    let log = self.remoteLogs!.dequeue()
+                    if (log != nil) {
+                        logsArray.append(log!)
+                    }
 					count = count + 1
 				}
 				
