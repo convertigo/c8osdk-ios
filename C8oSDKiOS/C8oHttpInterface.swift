@@ -24,8 +24,14 @@ internal class C8oHttpInterface {
 		let cfg = NSURLSessionConfiguration.defaultSessionConfiguration()
 		cookieContainer = C8oCookieStorage()
 		cfg.HTTPCookieStorage = cookieContainer
-		alamofire = Alamofire.Manager(configuration: cfg)
-		
+        
+        if (c8o.trustAllCertificates) {
+            let secu = ServerTrustPolicyManager(policies: [c8o.endpointHost: .DisableEvaluation])
+            alamofire = Alamofire.Manager(configuration: cfg, serverTrustPolicyManager: secu)
+        } else {
+            alamofire = Alamofire.Manager(configuration: cfg)
+        }
+        
 		if (c8o.cookies != nil) {
 			for a in c8o.cookies! {
 				addCookie(a.0, value: a.1)

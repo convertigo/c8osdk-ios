@@ -1227,6 +1227,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.Sample05;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -1244,6 +1245,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.Sample05;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
@@ -1263,6 +1265,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.samplebigfiletransfer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1283,6 +1286,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.samplebigfiletransfer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -1419,6 +1423,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "C8oSDKiOS/Couchbase-Lite-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "C8oSDKiOS-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -1465,6 +1470,7 @@
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/C8oSDKiOS";
 				SWIFT_OBJC_BRIDGING_HEADER = "C8oSDKiOS/Couchbase-Lite-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "C8oSDKiOS-Swift.h";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
@@ -1477,6 +1483,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKiOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -1489,6 +1496,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKiOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
@@ -1515,6 +1523,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -1540,6 +1549,7 @@
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
@@ -1551,6 +1561,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKTestAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/C8oSDKTestApp.app/C8oSDKTestApp";
 			};
 			name = Debug;
@@ -1563,6 +1574,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKTestAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/C8oSDKTestApp.app/C8oSDKTestApp";
 			};
 			name = Release;
@@ -1577,6 +1589,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKTestAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 2.3;
 				TEST_TARGET_NAME = C8oSDKTestApp;
 				USES_XCTRUNNER = YES;
 			};
@@ -1592,6 +1605,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKTestAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 2.3;
 				TEST_TARGET_NAME = C8oSDKTestApp;
 				USES_XCTRUNNER = YES;
 			};

@@ -1832,7 +1832,7 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertEqual("5120000", length)
 	}
 	
-    func testC8oFsLiveChanges() {
+    func disable_testC8oFsLiveChanges() {
         let c8o = try! get(.C8O_FS_PUSH)
         var lastChanges: JSON? = nil
         let _lastChanges = NSCondition()
@@ -1915,6 +1915,27 @@ class C8oSDKiOSTests: XCTestCase {
 
 	 }*/
 	
+    func testSslTrustAllClientFail() {
+        do {
+            let c8o = try C8o(endpoint: PREFIXS + HOST + ":444" + PROJECT_PATH, c8oSettings: C8oSettings().setTrustAllCertificates(false))
+            _ = try c8o.callXml(".Ping", parameters: "var1", "value one").sync()
+            XCTAssertTrue(false, "not possible")
+        }
+        catch let _ as C8oException {
+            XCTAssertTrue(true, "should happen")
+        }
+        catch {
+            XCTAssertTrue(false, "must no happen")
+        }
+    }
+
+    func testSslTrustAllClientOk() {
+        let c8o = try! C8o(endpoint: PREFIXS + HOST + ":444" + PROJECT_PATH, c8oSettings: C8oSettings().setTrustAllCertificates(true))
+        let doc = try! c8o.callXml(".Ping", parameters: "var1", "value one").sync()
+        let value = doc?.root["pong"]["var1"].stringValue
+        XCTAssertEqual("value one", value)
+    }
+    
 	func testC8oWithTimeout() {
 		let c8o = try! C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: C8oSettings().setTimeout(1000))
 		let doc: AEXMLDocument = try! c8o.callXml(".Sleep2sec").sync()!
