@@ -115,6 +115,8 @@ class C8oSDKiOSTests: XCTestCase {
 		}
 		
 	}
+    
+    /*
 	
 	func testC8oDefaultPingWait() {
 		do {
@@ -2004,7 +2006,7 @@ class C8oSDKiOSTests: XCTestCase {
 		} catch let t as NSError {
 			XCTAssertTrue(false, "exception: " + t.description)
 		}
-	}
+	}*/
 	
 }
 
