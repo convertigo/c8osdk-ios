@@ -1930,14 +1930,14 @@ class C8oSDKiOSTests: XCTestCase {
             XCTAssertTrue(false, "must no happen")
         }
     }
-
+*/
     func testSslTrustAllClientOk() {
         let c8o = try! C8o(endpoint: PREFIXS + HOST + ":444" + PROJECT_PATH, c8oSettings: C8oSettings().setTrustAllCertificates(true))
         let doc = try! c8o.callXml(".Ping", parameters: "var1", "value one").sync()
         let value = doc?.root["pong"]["var1"].stringValue
         XCTAssertEqual("value one", value)
     }
-    
+    /*
 	func testC8oWithTimeout() {
 		let c8o = try! C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: C8oSettings().setTimeout(1000))
 		let doc: AEXMLDocument = try! c8o.callXml(".Sleep2sec").sync()!
