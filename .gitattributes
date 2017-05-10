@@ -1,4 +1,5 @@
 * text=auto !eol
+/.swiftversion -text
 C8oSDKTestApp/AppDelegate.swift -text
 C8oSDKTestApp/Assets.xcassets/AppIcon.appiconset/Contents.json -text
 C8oSDKTestApp/Base.lproj/LaunchScreen.storyboard -text
