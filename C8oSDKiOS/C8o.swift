@@ -25,7 +25,7 @@ public class C8o: C8oBase {
 	/* Regular Expression */
 	private static let RE_REQUESTABLE: NSRegularExpression = try! NSRegularExpression(pattern: "^([^.]*)\\.(?:([^.]+)|(?:([^.]+)\\.([^.]+)))$", options: [])
 	
-	private static let RE_ENDPOINT: NSRegularExpression = try! NSRegularExpression(pattern: "^(http(s)?://([^:]+)(:[0-9]+)?/?.*?)/projects/([^/]+)$", options: [])
+	private static let RE_ENDPOINT: NSRegularExpression = try! NSRegularExpression(pattern: "^(http(s)?://([^:/]+)(:[0-9]+)?/?.*?)/projects/([^/]+)$", options: [])
 	
 	/* Engine reserved parameters */
 	internal static var ENGINE_PARAMETER_PROJECT: String = "__project"
