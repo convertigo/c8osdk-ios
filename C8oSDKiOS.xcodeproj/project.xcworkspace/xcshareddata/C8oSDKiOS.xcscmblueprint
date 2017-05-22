@@ -1,16 +1,16 @@
 {
-  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "7949138c-6454-42f2-aea7-b883945bd933++8009",
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "6DF14DA14882526B965623D3991DAAD4301A2B04",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
-    "7949138c-6454-42f2-aea7-b883945bd933++8009" : {
+    "6DF14DA14882526B965623D3991DAAD4301A2B04" : {
 
     }
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
-    "7949138c-6454-42f2-aea7-b883945bd933++8009" : 0
+    "6DF14DA14882526B965623D3991DAAD4301A2B04" : 9223372036854775807
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "55B26BA1-FE45-420A-8390-EFF8DA01258F",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "7949138c-6454-42f2-aea7-b883945bd933++8009" : "C8oSDKiOS\/"
+    "6DF14DA14882526B965623D3991DAAD4301A2B04" : "C8oSDKiOS\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "C8oSDKiOS",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
@@ -19,7 +19,7 @@
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/devus.twinsoft.fr\/svn\/convertigo",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7949138c-6454-42f2-aea7-b883945bd933++8009"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "6DF14DA14882526B965623D3991DAAD4301A2B04"
     }
   ]
 }
