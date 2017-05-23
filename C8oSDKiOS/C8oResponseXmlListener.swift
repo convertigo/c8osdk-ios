@@ -9,9 +9,9 @@
 import Foundation
 
 open class C8oResponseXmlListener: C8oResponseListener {
-	open var onXmlResponse: (AnyObject?, Dictionary<String, AnyObject>?) -> ();
+	open var onXmlResponse: (Any?, Dictionary<String, Any>?) -> ();
 	
-	public init(onXmlResponse: @escaping (AnyObject?, Dictionary<String, AnyObject>?) -> ()) {
+	public init(onXmlResponse: @escaping (Any?, Dictionary<String, Any>?) -> ()) {
 		self.onXmlResponse = onXmlResponse
 	}
 }

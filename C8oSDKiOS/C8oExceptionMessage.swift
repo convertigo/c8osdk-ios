@@ -232,7 +232,7 @@ internal class C8oExceptionMessage {
 		return "Delete the Couch document failed"
 	}
 	
-	internal static func fullSyncPutProperties(_ properties: Dictionary<String, AnyObject>) -> String {
+	internal static func fullSyncPutProperties(_ properties: Dictionary<String, Any>) -> String {
 		return "Unable to put the following properties in the fullSync Document : " + String(describing: properties)
 	}
 	
@@ -287,7 +287,7 @@ internal class C8oExceptionMessage {
 		return "" // "The C8oListener class " + C8oUtils.GetObjectClassName(c8oListener) + " is not handled"
 	}
 	
-	internal static func wrongResult(_ result: AnyObject) -> String {
+	internal static func wrongResult(_ result: Any) -> String {
 		return "The response class " + C8oUtils.getObjectClassName(result) + " is not handled"
 	}
 	

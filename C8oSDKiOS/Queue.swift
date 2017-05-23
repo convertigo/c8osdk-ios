@@ -9,7 +9,7 @@
 import Foundation
 import SwiftyJSON
 
-internal class C8oJSON: AnyObject {
+internal class C8oJSON: Any {
 	internal init() {
 		myJSON = nil
 	}

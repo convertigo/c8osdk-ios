@@ -54,7 +54,7 @@ open class C8oLogger: NSObject {
 		startTimeRemoteLog = currentTime
 		uidRemoteLogs = C8oTranslator.doubleToHexString(C8oUtils.getUnixEpochTime()!)
 		let envJSON: JSON = ["uid": uidRemoteLogs!, "uuid": c8o.deviceUUID, "project": c8o.endpointProject]
-		env = String(envJSON)
+		env = String(describing: envJSON)
 	}
 	
 	fileprivate func isLoggableRemote(_ logLevel: C8oLogLevel?) -> Bool {
@@ -214,9 +214,9 @@ open class C8oLogger: NSObject {
 				uidS += "\"}"
 				var parameters = Dictionary<String, NSObject>()
 				parameters =
-					[C8oLogger.JSON_KEY_LOGS: String(logsArray),
-						C8oLogger.JSON_KEY_ENV: self.env,
-						C8o.ENGINE_PARAMETER_DEVICE_UUID: self.c8o.deviceUUID]
+					[C8oLogger.JSON_KEY_LOGS: String(describing: logsArray) as NSObject,
+						C8oLogger.JSON_KEY_ENV: self.env as NSObject,
+						C8o.ENGINE_PARAMETER_DEVICE_UUID: self.c8o.deviceUUID as NSObject]
 				
 				var jsonResponse: JSON
 				do {
@@ -228,7 +228,7 @@ open class C8oLogger: NSObject {
 						}
 						return
 					} else {
-						jsonResponse = C8oTranslator.dataToJson(webResponse.data!)!
+						jsonResponse = C8oTranslator.dataToJson(webResponse.data! as NSData)!
 					}
 					
 				}
@@ -287,15 +287,15 @@ open class C8oLogger: NSObject {
 		}
 	}
 	
-	internal func logC8oCallXMLResponse(_ response: AEXMLDocument, url: String?, parameters: Dictionary<String, AnyObject>) -> Void {
+	internal func logC8oCallXMLResponse(_ response: AEXMLDocument, url: String?, parameters: Dictionary<String, Any>) -> Void {
 		logC8oCallResponse(C8oTranslator.xmlToString(response)!, responseType: "XML", url: url, parameters: parameters)
 	}
 	
-	internal func logC8oCallJSONResponse(_ response: JSON, url: String?, parameters: Dictionary<String, AnyObject>) -> Void {
+	internal func logC8oCallJSONResponse(_ response: JSON, url: String?, parameters: Dictionary<String, Any>) -> Void {
 		logC8oCallResponse(C8oTranslator.jsonToString(response)!, responseType: "JSON", url: url, parameters: parameters)
 	}
 	
-	internal func logC8oCallResponse(_ responseStr: String, responseType: String, url: String?, parameters: Dictionary<String, AnyObject>) -> Void {
+	internal func logC8oCallResponse(_ responseStr: String, responseType: String, url: String?, parameters: Dictionary<String, Any>) -> Void {
 		if (c8o.logC8o && isTrace) {
 			var c8oCallResponseLogMessage: String
 			if (url == nil) {

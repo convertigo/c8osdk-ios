@@ -102,13 +102,13 @@ open class C8oFileTransfer: C8oFileTransferBase {
 				}
 				var skip: Int = 0
 				
-				var param: Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
-				param["limit"] = 1 as AnyObject
-				param["include_docs"] = true as AnyObject
+				var param: Dictionary<String, Any> = Dictionary<String, Any>()
+				param["limit"] = 1 as Any
+				param["include_docs"] = true as Any
 				
 				while (self.alive) {
 					do {
-						param["skip"] = skip as AnyObject
+						param["skip"] = skip as Any
 						var res: JSON = try self.c8oTask.callJson("fs://.all", parameters: param).sync()!
 						
 						let rows: JSON = res["rows"]
@@ -186,8 +186,8 @@ open class C8oFileTransfer: C8oFileTransferBase {
 		try checkTaskDb()
 		c8oTask.callJson("fs://.post",
 			parameters:
-				"_id", uuid,
-			"filePath", filePath,
+				"_id" as Any, uuid as Any,
+			"filePath" as Any, filePath,
 			"replicated", false,
 			"assembled", false,
 			"remoteDeleted", false,
@@ -259,9 +259,9 @@ open class C8oFileTransfer: C8oFileTransferBase {
 				transferStatus.state = C8oFileTransferStatus.StateReplicate
 				notify(transferStatus)
 				
-				var allOptions: Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
-				allOptions["startkey"] = uuid + "_" as AnyObject
-				allOptions["endkey"] = uuid + "__" as AnyObject
+				var allOptions: Dictionary<String, Any> = Dictionary<String, Any>()
+				allOptions["startkey"] = uuid + "_" as Any
+				allOptions["endkey"] = uuid + "__" as Any
 				
 				// Waits the end of the replication if it is not finished
 				while (!locker && !canceledTasks.contains(uuid)) {
@@ -490,7 +490,7 @@ open class C8oFileTransfer: C8oFileTransferBase {
 			try c8o.callJson("fs://.create").sync()
 			
 			// If the file is not already splitted and stored in the local database
-			if (!task["splitted"].boolValue && !canceledTasks.containsObject(uuid)) {
+			if (!task["splitted"].boolValue && !canceledTasks.contains(uuid)) {
 				transferStatus.state = C8oFileTransferStatus.StateSplitting
 				notify(transferStatus)
 				
@@ -530,7 +530,7 @@ open class C8oFileTransfer: C8oFileTransferBase {
 							"uuid", uuid
 						).sync()
 						
-						let data = Data(bytes: UnsafePointer<UInt8>(&buffer), count: read)
+						let data = Data(bytes: &buffer, count: read)
 						try c8o.callJson("fs://.put_attachment", parameters:
 								"docid", docid,
 							"name", "chunk",
@@ -554,7 +554,7 @@ open class C8oFileTransfer: C8oFileTransferBase {
 			streamToUpload.removeValue(forKey: uuid)
 			
 			// If the local database is not replecated to the server
-			if (!task["replicated"].boolValue && !canceledTasks.containsObject(uuid)) {
+			if (!task["replicated"].boolValue && !canceledTasks.contains(uuid)) {
 				//
 				// 2 : Authenticates
 				//
@@ -628,24 +628,28 @@ open class C8oFileTransfer: C8oFileTransferBase {
 				//
 				// 4 : Delete the local database containing chunks
 				//
-				c8o.callJson("fs://.reset")
-					.then({ (response, parameters) -> (C8oPromise<JSON>?) in
-						task["localDeleted"] = true
-						self.c8oTask.callJson("fs://.post", parameters:
-								C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
-							"_id", task["_id"].stringValue,
-							"localDeleted", task["localDeleted"].boolValue
-							
-						).then({ (response, parameters) -> (C8oPromise<JSON>?) in
-							self.debug("localDeleted true :\n" + response.description)
-							return nil
-						})
-						self.condition.lock()
-						locker = true
-						self.condition.signal()
-						self.condition.unlock()
-						return nil
-				})
+                DispatchQueue.main.async {[task] in // copies val
+                    var task = task
+                    c8o.callJson("fs://.reset")
+                        .then({ (response, parameters) -> (C8oPromise<JSON>?) in
+                            task["localDeleted"] = true
+                            self.c8oTask.callJson("fs://.post", parameters:
+                                C8o.FS_POLICY, C8o.FS_POLICY_MERGE,
+                                               "_id", task["_id"].stringValue,
+                                               "localDeleted", task["localDeleted"].boolValue
+                                
+                                ).then({ (response, parameters) -> (C8oPromise<JSON>?) in
+                                    self.debug("localDeleted true :\n" + response.description)
+                                    return nil
+                                })
+                            self.condition.lock()
+                            locker = true
+                            self.condition.signal()
+                            self.condition.unlock()
+                            return nil
+                        })
+                }
+				
 				
 			}
 			

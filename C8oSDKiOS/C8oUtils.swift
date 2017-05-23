@@ -14,7 +14,7 @@ internal class C8oUtils {
 	
 	fileprivate static var USE_PARAMETER_IDENTIFIER: String = "_use_";
 	
-	internal static func getObjectClassName(_ obj: AnyObject?) -> String {
+	internal static func getObjectClassName(_ obj: Any?) -> String {
 		
 		var className = "nil";
 		if (obj != nil) {
@@ -25,12 +25,12 @@ internal class C8oUtils {
 		
 	}
 	
-	internal static func getParameter(_ parameters: Dictionary<String, AnyObject>, name: String, useName: Bool = false) -> Pair<String?, Any?> {
+	internal static func getParameter(_ parameters: Dictionary<String, Any>, name: String, useName: Bool = false) -> Pair<String?, Any?> {
 		
 		for parameter in parameters {
 			let parameterName: String = parameter.0;
 			if ((name == parameterName) || (useName && name == (C8oUtils.USE_PARAMETER_IDENTIFIER + parameterName))) {
-				return Pair<String?, Any?>(key: parameter.0, value: parameter.1) // (key: parameter.0, value: parameter.1 as AnyObject);
+				return Pair<String?, Any?>(key: parameter.0, value: parameter.1) // (key: parameter.0, value: parameter.1 as Any);
 			}
 		}
 		let stringNil: String? = nil
@@ -39,7 +39,7 @@ internal class C8oUtils {
 		
 	}
 	
-	internal static func getParameterObjectValue(_ parameters: Dictionary<String, AnyObject>, name: String, useName: Bool = false) -> Any? {
+	internal static func getParameterObjectValue(_ parameters: Dictionary<String, Any>, name: String, useName: Bool = false) -> Any? {
 		let parameter: Pair<String?, Any?> = getParameter(parameters, name: name, useName: useName);
 		if (parameter.key != nil) {
 			return parameter.value as Any
@@ -47,7 +47,7 @@ internal class C8oUtils {
 		return nil;
 	}
 	
-	internal static func getParameterStringValue(_ parameters: Dictionary<String, AnyObject>, name: String, useName: Bool = false) -> String? {
+	internal static func getParameterStringValue(_ parameters: Dictionary<String, Any>, name: String, useName: Bool = false) -> String? {
 		let parameter = getParameter(parameters, name: name, useName: useName);
 		if (parameter.key != nil) {
 			if (parameter.value == nil) {
@@ -63,7 +63,7 @@ internal class C8oUtils {
 		return nil;
 	}
 	
-	internal static func peekParameterStringValue(_ parameters: Dictionary<String, AnyObject>, name: String, exceptionIfMissing: Bool = false) throws -> String? {
+	internal static func peekParameterStringValue(_ parameters: Dictionary<String, Any>, name: String, exceptionIfMissing: Bool = false) throws -> String? {
 		var parameters = parameters
 		let value: String? = getParameterStringValue(parameters, name: name, useName: false);
 		if (value == nil) {
@@ -76,7 +76,7 @@ internal class C8oUtils {
 		return value;
 	}
 	
-	internal static func getParameterJsonValue(_ parameters: Dictionary<String, AnyObject>, name: Bool, useName: Bool = false) -> NSObject? {
+	internal static func getParameterJsonValue(_ parameters: Dictionary<String, Any>, name: Bool, useName: Bool = false) -> NSObject? {
 		/*
 		 var parameter = GetParameter(parameters, name, useName);
 		 if (parameter.Key != null)
@@ -97,7 +97,7 @@ internal class C8oUtils {
 		return nil;
 	}
 	
-	internal static func tryGetParameterObjectValue<T>(_ parameters: Dictionary<String, AnyObject>, name: String, value: T, useName: Bool = false, defaultValue: T) -> Bool? {
+	internal static func tryGetParameterObjectValue<T>(_ parameters: Dictionary<String, Any>, name: String, value: T, useName: Bool = false, defaultValue: T) -> Bool? {
 		/*KeyValuePair<string, object> parameter = GetParameter(parameters, name, useName);
 		 if (parameter.Key != null && parameter.Value != null)
 		 {
@@ -181,7 +181,7 @@ internal class C8oUtils {
 		 return false;*/
 	}
 	
-	internal static func identifyC8oCallRequest(_ parameters: Dictionary<String, AnyObject>, responseType: String) -> String? {
+	internal static func identifyC8oCallRequest(_ parameters: Dictionary<String, Any>, responseType: String) -> String? {
 		/*
 		 let json : JSON
 		 let dict = new Di

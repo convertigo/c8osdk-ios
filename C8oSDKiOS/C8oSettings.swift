@@ -59,7 +59,7 @@ open class C8oSettings: C8oBase {
 	
 	open func addClientCertificate(_ certificate: Byte, password: String) -> C8oSettings {
 		if (_clientCertificateBinaries == nil) {
-			_clientCertificateBinaries = Dictionary<UInt8, String>?(certificate as! Byte, password)
+			//_clientCertificateBinaries = Dictionary<AnyHashable, String>?(certificate , password)
 		}
 		// clientCertificateBinaries = [certificate! as NSObject: password]
 		

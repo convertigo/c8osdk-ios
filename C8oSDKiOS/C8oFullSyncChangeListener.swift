@@ -15,7 +15,7 @@ open class C8oFullSyncChangeListener : Hashable {
     
     let handler: (_ changes: JSON) -> ()
     
-    public init(handler: (_ changes: JSON) -> ()) {
+    public init(handler: @escaping (_ changes: JSON) -> ()) {
         C8oFullSyncChangeListener.c = C8oFullSyncChangeListener.c + 1
         self.handler = handler
     }

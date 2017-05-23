@@ -14,12 +14,12 @@ import AEXML
 
 internal class C8oCallTask {
 	fileprivate var c8o: C8o
-	fileprivate var parameters: Dictionary<String, AnyObject>
+	fileprivate var parameters: Dictionary<String, Any>
 	fileprivate var c8oResponseListener: C8oResponseListener?
 	fileprivate var c8oExceptionListener: C8oExceptionListener
 	fileprivate var c8oCallUrl: String?
 	
-	internal init(c8o: C8o, parameters: Dictionary<String, AnyObject>, c8oResponseListener: C8oResponseListener, c8oExceptionListener: C8oExceptionListener) {
+	internal init(c8o: C8o, parameters: Dictionary<String, Any>, c8oResponseListener: C8oResponseListener, c8oExceptionListener: C8oExceptionListener) {
 		self.c8o = c8o
 		self.parameters = parameters
 		
@@ -31,14 +31,14 @@ internal class C8oCallTask {
 	}
 	
 	internal func execute() -> Void {
-		c8o.runBG({
+        c8o.runBG(DispatchWorkItem{
 			self.doInBackground()
 		});
 	}
     
     internal func executeFromLive() {
         parameters.removeValue(forKey: C8o.FS_LIVE)
-        parameters[C8o.ENGINE_PARAMETER_FROM_LIVE] = true as AnyObject
+        parameters[C8o.ENGINE_PARAMETER_FROM_LIVE] = true as Any
         execute()
     }
 	
@@ -48,14 +48,14 @@ internal class C8oCallTask {
 			handleResponse(response!)
 		}
 		catch let e as C8oException {
-			c8oExceptionListener.onException(Pair<C8oException, Dictionary<String, AnyObject>?>(key: e, value: parameters))
+			c8oExceptionListener.onException(Pair<C8oException, Dictionary<String, Any>?>(key: e, value: parameters))
 		}
 		catch {
 		}
 		
 	}
 	
-	fileprivate func handleRequest() throws -> AnyObject? {
+	fileprivate func handleRequest() throws -> Any? {
 		let isFullSyncRequest: Bool = C8oFullSync.isFullSyncRequest(parameters)
 		
 		if (isFullSyncRequest) {
@@ -68,7 +68,7 @@ internal class C8oCallTask {
             }
 			// The result cannot be handled here because it can be different depending to the platform
 			// But it can be useful bor debug
-			var fullSyncResult: AnyObject? = nil
+			var fullSyncResult: Any? = nil
 			do {
 				fullSyncResult = try self.c8o.c8oFullSync!.handleFullSyncRequest(self.parameters, listener: self.c8oResponseListener!)
 				
@@ -129,7 +129,7 @@ internal class C8oCallTask {
 			
 			/** Get response */
 			
-			parameters[C8o.ENGINE_PARAMETER_DEVICE_UUID] = c8o.deviceUUID as AnyObject
+			parameters[C8o.ENGINE_PARAMETER_DEVICE_UUID] = c8o.deviceUUID as Any
 			
 			// Build the c8o call URL
 			c8oCallUrl = c8o.endpoint + "/." + responseType
@@ -166,7 +166,7 @@ internal class C8oCallTask {
 				
 			}
 			
-			var response: AnyObject? = nil
+			var response: Any? = nil
 			var responseString: String? = nil
 			if (c8oResponseListener is C8oResponseXmlListener) {
 				
@@ -199,7 +199,7 @@ internal class C8oCallTask {
 		}
 	}
 	
-	internal func handleResponse(_ result: AnyObject?) -> Void {
+	internal func handleResponse(_ result: Any?) -> Void {
 		do {
 			
 			if (result == nil) {

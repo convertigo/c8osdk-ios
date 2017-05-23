@@ -10,9 +10,9 @@ import Foundation
 import SwiftyJSON
 
 open class C8oResponseJsonListener: C8oResponseListener {
-	open var onJsonResponse: (JSON?, Dictionary<String, AnyObject>?) -> ()
+	open var onJsonResponse: (JSON?, Dictionary<String, Any>?) -> ()
 	
-	public init(onJsonResponse: (JSON?, Dictionary<String, AnyObject>?) -> ()) {
+	public init(onJsonResponse: @escaping (JSON?, Dictionary<String, Any>?) -> ()) {
 		self.onJsonResponse = onJsonResponse
 	}
 }

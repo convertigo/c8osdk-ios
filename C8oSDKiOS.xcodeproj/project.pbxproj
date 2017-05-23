@@ -94,7 +94,7 @@
 		627259C31ED31C38004A3769 /* C8o.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = C8o.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		627259C41ED31C38004A3769 /* C8oSDKiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = C8oSDKiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		62CD2A4C1C6207AD009E9F7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		62CD2A561C6207AD009E9F7E /* C8oSDKiOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oSDKiOSTests.swift; sourceTree = "<group>"; };
+		62CD2A561C6207AD009E9F7E /* C8oSDKiOSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = C8oSDKiOSTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		62CD2A581C6207AD009E9F7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		62CD2A961C6210D6009E9F7E /* PodFile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PodFile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		62DE2D171CB6B4130026C3B1 /* C8oLocalCacheResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oLocalCacheResponse.swift; sourceTree = "<group>"; };

@@ -43,7 +43,7 @@ internal class C8oHttpInterface {
 		
 	}
 	
-	internal func handleRequest(_ url: String, parameters: Dictionary<String, AnyObject>) -> (Data?, NSError?) {
+	internal func handleRequest(_ url: String, parameters: Dictionary<String, Any>) -> (Data?, NSError?) {
 		var myResponse: (Data?, NSError?)
 		let data: Data? = setRequestEntity(url as NSObject, parameters: parameters)
 		let headers = [
@@ -59,7 +59,7 @@ internal class C8oHttpInterface {
             let request = alamofire.upload(data!, to: url, method: .post, headers: headers)
                 .response(queue:queue,
                           completionHandler:{ response in
-                          myResponse = (response.data, response.error! as NSError)
+                          myResponse = (response.data, response.error as! NSError?)
                           semaphore.signal()
             })
             
@@ -104,7 +104,7 @@ internal class C8oHttpInterface {
 		get { return cookieContainer }
 	}
 	
-	fileprivate func setRequestEntity(_ request: NSObject?, parameters: Dictionary<String, AnyObject>?) -> Data? {
+	fileprivate func setRequestEntity(_ request: NSObject?, parameters: Dictionary<String, Any>?) -> Data? {
 		
 		// request.ContentType = "application/x-www-form-urlencoded";
 		// And adds to it parameters

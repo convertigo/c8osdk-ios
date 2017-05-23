@@ -30,9 +30,9 @@ internal class C8oFullSyncTranslator {
 		
 		let xmlDocument: AEXMLDocument = AEXMLDocument()
 		// Create the root element node
-		let rootElement: AEXMLElement = AEXMLElement(C8oFullSyncTranslator.XML_KEY_DOCUMENT) // try! XMLDocument(string: C8oFullSyncTranslator.XML_KEY_DOCUMENT)
+		let rootElement: AEXMLElement = AEXMLElement(name: C8oFullSyncTranslator.XML_KEY_DOCUMENT) // try! XMLDocument(string: C8oFullSyncTranslator.XML_KEY_DOCUMENT)
 		xmlDocument.addChild(rootElement)
-		let couchdb_output: AEXMLElement = AEXMLElement(C8oFullSyncTranslator.XML_KEY_COUCHDB_OUTPUT)
+		let couchdb_output: AEXMLElement = AEXMLElement(name: C8oFullSyncTranslator.XML_KEY_COUCHDB_OUTPUT)
 		
 		// Translates the JSON document
 		do {
@@ -43,7 +43,7 @@ internal class C8oFullSyncTranslator {
 		return xmlDocument
 	}
 	
-	internal static func dictionaryToJson(_ dictionary: Dictionary<String, AnyObject>) -> JSON? {
+	internal static func dictionaryToJson(_ dictionary: Dictionary<String, Any>) -> JSON? {
 		let json: JSON = JSON(dictionary)
 		return json
 	}
@@ -52,25 +52,25 @@ internal class C8oFullSyncTranslator {
 		return JSON(document.properties!)
 	}
 	
-	internal static func documentToXml(_ document: CBLDocument) -> AnyObject {
+	internal static func documentToXml(_ document: CBLDocument) -> Any {
 		let json: JSON = documentToJson(document)
 		return try! fullSyncJsonToXml(json)!
 	}
 	
-	internal static func queryRowToDic(_ queryRow: CBLQueryRow) -> Dictionary<String, AnyObject> {
-		var result: Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
+	internal static func queryRowToDic(_ queryRow: CBLQueryRow) -> Dictionary<String, Any> {
+		var result: Dictionary<String, Any> = Dictionary<String, Any>()
 		if (queryRow.value == nil && queryRow.sourceDocumentID == nil) {
-			result["key"] = queryRow.key
-			result["error"] = "not_found" as AnyObject
+			result["key"] = queryRow.key as Any
+			result["error"] = "not_found" as Any
 		} else {
-			result["key"] = queryRow.key
+			result["key"] = queryRow.key as Any
 			if (queryRow.value != nil) {
-				result["value"] = queryRow.value
+				result["value"] = queryRow.value as Any
 			}
 			
-			result["id"] = queryRow.sourceDocumentID
+			result["id"] = queryRow.sourceDocumentID as Any
 			if (queryRow.documentProperties != nil) {
-				result["doc"] = queryRow.documentProperties
+				result["doc"] = queryRow.documentProperties as Any
 			}
 		}
 		return result
@@ -78,7 +78,7 @@ internal class C8oFullSyncTranslator {
 	
 	internal static func queryEnumeratorToJson(_ queryEnumerator: CBLQueryEnumerator) -> JSON {
 		
-		var array: [Dictionary<String, AnyObject>] = [Dictionary<String, AnyObject>]()
+		var array: [Dictionary<String, Any>] = [Dictionary<String, Any>]()
 		let countQ = queryEnumerator.count
 		for _ in 0..<queryEnumerator.count {
 			array.append(C8oFullSyncTranslator.queryRowToDic(queryEnumerator.nextRow()!))
@@ -157,18 +157,18 @@ internal class C8oFullSyncTranslator {
 		return try! fullSyncJsonToXml(fullSyncDocumentOperationResponseToJson(fullSyncDocumentOperationResponse))!
 	}
     
-    internal static func toAnyObject(_ obj: AnyObject) -> AnyObject {
+    internal static func toAny(_ obj: Any) -> Any {
         if let nsSet = obj as? NSSet {
             let array = NSMutableArray()
             for item in nsSet {
-                array.add(toAnyObject(item))
+                array.add(toAny(item))
             }
             return array
         }
         if let nsArray = obj as? NSArray {
             let array = NSMutableArray()
             for item in nsArray {
-                array.add(toAnyObject(item))
+                array.add(toAny(item))
             }
             return array
         }
@@ -176,7 +176,7 @@ internal class C8oFullSyncTranslator {
             let dict = NSMutableDictionary()
             for item in nsDict {
                 if let k = item.key as? NSCopying {
-                    dict[k] = toAnyObject(item.value)
+                    dict[k] = toAny(item.value)
                 }
             }
             return dict
@@ -186,7 +186,7 @@ internal class C8oFullSyncTranslator {
             let dict = NSMutableDictionary()
             for child in mirror.children {
                 let prop = child.label!
-                dict[prop] = toAnyObject(child.value)
+                dict[prop] = toAny(child.value)
             }
             return dict
         } else {
@@ -194,17 +194,17 @@ internal class C8oFullSyncTranslator {
         }
     }
     
-    internal static func toAnyObject(_ obj: Any) -> AnyObject {
+    internal static func toAnyObject(_ obj: Any) -> Any {
         if let nsValue = obj as? NSObject {
-            return toAnyObject(nsValue)
+            return toAny(nsValue)
         }
-        if (obj is AnyObject) {
-            return toAnyObject(obj as AnyObject)
+        if (obj is Any) {
+            return toAny(obj as Any)
         }
         let mirror = Mirror(reflecting: obj)
         if (mirror.children.count > 0) {
             for child in mirror.children {
-                return toAnyObject(child.value)
+                return toAny(child.value)
             }
         }
         return NSNull()

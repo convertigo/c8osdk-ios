@@ -9,9 +9,9 @@
 import Foundation
 
 internal class C8oResponseProgressListener: C8oResponseListener {
-	internal var onProgressResponse: (C8oProgress, Dictionary<String, AnyObject>) -> ()
+	internal var onProgressResponse: (C8oProgress, Dictionary<String, Any>) -> ()
 	
-	internal init(onProgressResponse: @escaping (C8oProgress, Dictionary<String, AnyObject>) -> ()) {
+	internal init(onProgressResponse: @escaping (C8oProgress, Dictionary<String, Any>) -> ()) {
 		self.onProgressResponse = onProgressResponse;
 	}
 	

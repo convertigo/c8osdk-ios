@@ -122,8 +122,8 @@ open class C8o: C8oBase {
 	internal static var RESPONSE_TYPE_JSON: String = "json"
 	
 	/* Static configuration */
-	internal static var defaultUiDispatcher: AnyObject?// ACTION<ACTION>?
-	internal static var deviceUUID: String = UIDevice.currentDevice().identifierForVendor!.UUIDString
+	internal static var defaultUiDispatcher: Any?// ACTION<ACTION>?
+	internal static var deviceUUID: String = UIDevice.current.identifierForVendor!.uuidString
 	
 	/**
 	 Returns the current version of the SDK as "x.y.z".
@@ -217,7 +217,7 @@ open class C8o: C8oBase {
 	 @endcode
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 */
-	open func call(_ requestable: String?, parameters: Dictionary<String, AnyObject>? = nil, c8oResponseListener: C8oResponseListener, c8oExceptionListener: C8oExceptionListener) -> Void {
+	open func call(_ requestable: String?, parameters: Dictionary<String, Any>? = nil, c8oResponseListener: C8oResponseListener, c8oExceptionListener: C8oExceptionListener) -> Void {
 		var parameters = parameters
 		do {
 			if (requestable == nil) {
@@ -226,10 +226,10 @@ open class C8o: C8oBase {
 			
 			// Checks parameters validity
 			if (parameters == nil) {
-				parameters = Dictionary<String, AnyObject>()
+				parameters = Dictionary<String, Any>()
 			} else {
 				// Clone parameters in order to modify them
-				parameters = Dictionary<String, AnyObject>?(parameters!)
+				parameters = Dictionary<String, Any>?(parameters!)
 			}
 			
 			// Use the requestable string to add parameters corresponding to the c8o project, sequence, connector and transaction (<project>.<sequence> or <project>.<connector>.<transaction>)
@@ -242,7 +242,7 @@ open class C8o: C8oBase {
 			
 			// If the project name is specified
 			if ((requestable! as NSString).substring(with: regexV[0].rangeAt(1)) != "") {
-				parameters![C8o.ENGINE_PARAMETER_PROJECT] = (requestable! as NSString).substring(with: regexV[0].rangeAt(1)) as AnyObject
+				parameters![C8o.ENGINE_PARAMETER_PROJECT] = (requestable! as NSString).substring(with: regexV[0].rangeAt(1)) as Any
 			}
 			
 			// If the C8o call use a sequence
@@ -251,18 +251,18 @@ open class C8o: C8oBase {
 			if (rangeLenght < requestableLenght && rangeLenght > 0) {
 				
 				if (((requestable! as NSString?)!.substring(with: regexV[0].rangeAt(2)) as String?) != "") {
-					parameters![C8o.ENGINE_PARAMETER_SEQUENCE] = (requestable! as NSString).substring(with: regexV[0].rangeAt(2)) as AnyObject
+					parameters![C8o.ENGINE_PARAMETER_SEQUENCE] = (requestable! as NSString).substring(with: regexV[0].rangeAt(2)) as Any
 				} else {
-					parameters![C8o.ENGINE_PARAMETER_CONNECTOR] = (requestable! as NSString).substring(with: regexV[0].rangeAt(3)) as AnyObject
+					parameters![C8o.ENGINE_PARAMETER_CONNECTOR] = (requestable! as NSString).substring(with: regexV[0].rangeAt(3)) as Any
 					
-					parameters![C8o.ENGINE_PARAMETER_TRANSACTION] = (requestable! as NSString).substring(with: regexV[0].rangeAt(4)) as AnyObject
+					parameters![C8o.ENGINE_PARAMETER_TRANSACTION] = (requestable! as NSString).substring(with: regexV[0].rangeAt(4)) as Any
 					
 				}
 				
 			} else {
-				parameters![C8o.ENGINE_PARAMETER_CONNECTOR] = (requestable! as NSString).substring(with: regexV[0].rangeAt(3)) as AnyObject
+				parameters![C8o.ENGINE_PARAMETER_CONNECTOR] = (requestable! as NSString).substring(with: regexV[0].rangeAt(3)) as Any
 				
-				parameters![C8o.ENGINE_PARAMETER_TRANSACTION] = (requestable! as NSString).substring(with: regexV[0].rangeAt(4)) as AnyObject
+				parameters![C8o.ENGINE_PARAMETER_TRANSACTION] = (requestable! as NSString).substring(with: regexV[0].rangeAt(4)) as Any
 			}
 			
 			try! call(parameters, c8oResponseListener: c8oResponseListener, c8oExceptionListener: c8oExceptionListener)
@@ -275,7 +275,7 @@ open class C8o: C8oBase {
 		}
 	}
 	
-	open func call(_ parameters: Dictionary<String, AnyObject>? = nil, c8oResponseListener: C8oResponseListener? = nil, c8oExceptionListener: C8oExceptionListener? = nil) throws {
+	open func call(_ parameters: Dictionary<String, Any>? = nil, c8oResponseListener: C8oResponseListener? = nil, c8oExceptionListener: C8oExceptionListener? = nil) throws {
 		var parameters = parameters
 		// IMPORTANT : all c8o calls have to end here !
 		
@@ -283,11 +283,11 @@ open class C8o: C8oBase {
 		
 		// Checks parameters validity
 		if (parameters == nil) {
-			parameters = Dictionary<String, AnyObject>()
+			parameters = Dictionary<String, Any>()
 		} else {
 			// Clones parameters in order to modify them
 			// parameters = parameters
-			parameters = Dictionary<String, AnyObject>?(parameters!)
+			parameters = Dictionary<String, Any>?(parameters!)
 		}
 		
 		// Creates a async task running on another thread
@@ -323,7 +323,7 @@ open class C8o: C8oBase {
 	 FailUI() methods to handle C8oErrors.
 
 	 */
-	open func callJson (_ requestable: String, parameters: Dictionary<String, AnyObject>?) -> C8oPromise<JSON> {
+	open func callJson (_ requestable: String, parameters: Dictionary<String, Any>?) -> C8oPromise<JSON> {
 		let promise = C8oPromise<JSON>(c8o: self)
 		
 		call(requestable,
@@ -334,7 +334,7 @@ open class C8o: C8oBase {
 				if (response == nil) {
 					if (requestParameters!.keys.contains(C8o.ENGINE_PARAMETER_PROGRESS) == true) {
 						
-						promise.onProgress((((requestParameters! as Dictionary<String, AnyObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
+						promise.onProgress((((requestParameters! as Dictionary<String, Any>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
 					}
 				} else {
 					promise.onResponse(response, parameters: requestParameters)
@@ -342,7 +342,7 @@ open class C8o: C8oBase {
 				
 			}),
 			c8oExceptionListener: C8oExceptionListener(onException: {
-				(params: Pair<C8oException, Dictionary<String, AnyObject>?>?) -> () in
+				(params: Pair<C8oException, Dictionary<String, Any>?>?) -> () in
 				
 				promise.onFailure(params?.key as C8oException?, parameters: params?.value)
 			}))
@@ -375,7 +375,7 @@ open class C8o: C8oBase {
      FailUI() methods to handle C8oErrors.
      
      */
-	open func callJson(_ requestable: String, parameters: AnyObject...) -> C8oPromise<JSON> {
+	open func callJson(_ requestable: String, parameters: Any...) -> C8oPromise<JSON> {
 		
 		return try! callJson(requestable, parameters: C8o.toParameters(parameters))
 		
@@ -409,7 +409,7 @@ open class C8o: C8oBase {
      */
 	open func callJson(_ requestable: String, parameters: JSON) -> C8oPromise<JSON> {
 		
-		return callJson(requestable, parameters: (parameters.object as! Dictionary<String, AnyObject>))
+		return callJson(requestable, parameters: (parameters.object as! Dictionary<String, Any>))
     }
     
     /**
@@ -438,7 +438,7 @@ open class C8o: C8oBase {
      failUI() methods to handle C8oErrors.
      
      */
-	open func callXml(_ requestable: String, parameters: Dictionary<String, AnyObject>) -> C8oPromise<AEXMLDocument> {
+	open func callXml(_ requestable: String, parameters: Dictionary<String, Any>) -> C8oPromise<AEXMLDocument> {
 		
 		let promise = C8oPromise<AEXMLDocument>(c8o: self)
 		
@@ -450,7 +450,7 @@ open class C8o: C8oBase {
 				if (response == nil) {
 					if (requestParameters!.keys.contains(C8o.ENGINE_PARAMETER_PROGRESS) == true) {
 						
-						promise.onProgress((((requestParameters! as Dictionary<String, AnyObject>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
+						promise.onProgress((((requestParameters! as Dictionary<String, Any>?)![C8o.ENGINE_PARAMETER_PROGRESS]) as? C8oProgress)!)
 					}
 				} else {
 					promise.onResponse(response as? AEXMLDocument, parameters: requestParameters)
@@ -458,7 +458,7 @@ open class C8o: C8oBase {
 				
 			})
 			, c8oExceptionListener: C8oExceptionListener(onException: {
-				(params: Pair<C8oException, Dictionary<String, AnyObject>?>?) -> () in
+				(params: Pair<C8oException, Dictionary<String, Any>?>?) -> () in
 				
 				promise.onFailure((params?.key) as C8oException?, parameters: params?.value)
 				
@@ -493,7 +493,7 @@ open class C8o: C8oBase {
      failUI() methods to handle C8oErrors.
      
      */
-	open func callXml(_ requestable: String, parameters: AnyObject...) -> C8oPromise<AEXMLDocument> {
+	open func callXml(_ requestable: String, parameters: Any...) -> C8oPromise<AEXMLDocument> {
 		return try! callXml(requestable, parameters: C8o.toParameters(parameters))
 	}
 	
@@ -569,25 +569,17 @@ open class C8o: C8oBase {
      Run a block of code in the UI Thread.<br/>
      Run the code directly if already in the UI thread.
      */
-	open func runUI (_ block: @escaping ()->()) {
-		if (isUI()) {
-			block()
-		} else {
-			DispatchQueue.main.async(execute: {
-				block()
-			})
-		}
+	open func runUI (_ block: DispatchWorkItem) {
+		DispatchQueue.main.async(execute: block)
+		
 	}
     
     /**
      Run a block of code in a background Thread.
      */
-	open func runBG (_ block: @escaping ()->()) {
-		let priority = DispatchQueue.GlobalQueuePriority.default
-		DispatchQueue.global(priority: priority).async {
-			block()
-		}
-	}
+	open func runBG (_ block: DispatchWorkItem) {
+			DispatchQueue.global(qos: .userInitiated).async(execute: block)
+    }
 	
 	open override var description: String {
 		get {
@@ -669,12 +661,12 @@ open class C8o: C8oBase {
         lives.removeValue(forKey: liveid)
     }
     
-	fileprivate static func toParameters(_ parameters: [AnyObject]?) throws -> Dictionary<String, AnyObject> {
+	fileprivate static func toParameters(_ parameters: [Any]?) throws -> Dictionary<String, Any> {
 		if (parameters!.count % 2 != 0) {
 			throw C8oException(message: C8oExceptionMessage.invalidParameterValue("parameters", details: "needs pairs of values"))
 		}
 		
-		var newParameters = Dictionary<String, AnyObject>()
+		var newParameters = Dictionary<String, Any>()
 		
 		for i in stride(from: 0, to: parameters!.count, by: 2) {
 			newParameters[String(describing: parameters![i])] = parameters![i + 1]
@@ -683,11 +675,11 @@ open class C8o: C8oBase {
 		return newParameters
 	}
 	
-	internal func handleCallException(_ c8oExceptionListener: C8oExceptionListener?, requestParameters: Dictionary<String, AnyObject>, exception: C8oException) {
+	internal func handleCallException(_ c8oExceptionListener: C8oExceptionListener?, requestParameters: Dictionary<String, Any>, exception: C8oException) {
 		c8oLogger!._warn("Handle a call exception", exceptions: exception)
 		
 		if (c8oExceptionListener != nil) {
-			c8oExceptionListener!.onException(Pair<C8oException, Dictionary<String, AnyObject>?>(key: exception, value: requestParameters))
+			c8oExceptionListener!.onException(Pair<C8oException, Dictionary<String, Any>?>(key: exception, value: requestParameters))
 		}
     }
 }

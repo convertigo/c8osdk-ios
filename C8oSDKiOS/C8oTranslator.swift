@@ -22,7 +22,7 @@ internal class C8oTranslator {
 		
 		// Translates the JSON object depending to its type
 		
-		if (json.type == .Dictionary) {
+		if (json.type == .dictionary) {
 			var jsonObject = json;
 			// Gets all the elements of the JSON object and sorts them
 			var keys = [String]()
@@ -36,14 +36,14 @@ internal class C8oTranslator {
 				let keyValue = jsonObject[key]
 				jsonKeyToXml(key, jsonValue: keyValue, parentElement: parentElement);
 			}
-		} else if (json.type == .Array) {
+		} else if (json.type == .array) {
 			let jsonArray = json
 			// Translates each items of the JSON array
 			for jsonItem in jsonArray {
 				// Create the XML element
-				let item = AEXMLElement(XML_KEY_ITEM);
+				let item = AEXMLElement(name: XML_KEY_ITEM);
 				parentElement.addChild(item)
-				parentElement.value = String(jsonItem.1)
+				parentElement.value = String(describing: jsonItem.1)
 				// JsonToXml(jsonItem, parentElement: item);
 			}
 		} else {
@@ -62,8 +62,8 @@ internal class C8oTranslator {
 		// TODO why ???
 		if (C8oTranslator.XML_KEY__ATTACHMENTS == parentElement.name) {
 			// Creates the attachment element and its child elements containing the attachment name
-			let attachmentElement: AEXMLElement = AEXMLElement(XML_KEY_ATTACHMENT);
-			let attachmentNameElement: AEXMLElement = AEXMLElement(XML_KEY_NAME);
+			let attachmentElement: AEXMLElement = AEXMLElement(name: XML_KEY_ATTACHMENT);
+			let attachmentNameElement: AEXMLElement = AEXMLElement(name: XML_KEY_NAME);
 			attachmentNameElement.value = jsonKeyMutable;
 			attachmentElement.addChild(attachmentNameElement);
 			parentElement.addChild(attachmentElement);
@@ -73,7 +73,7 @@ internal class C8oTranslator {
 		} else {
 			// Creates the XML child element with its normalized name
 			let normalizedKey: String = jsonKeyMutable
-			let childElement = AEXMLElement(normalizedKey);
+			let childElement = AEXMLElement(name: normalizedKey);
 			parentElement.addChild(childElement);
 			
 			// Translates the JSON value
@@ -84,12 +84,12 @@ internal class C8oTranslator {
 	// *** XML / JSON / Stream to string ***//
 	
 	internal static func xmlToString(_ xmlDocument: AEXMLDocument) -> String? {
-		return String(xmlDocument)
+		return String(describing: xmlDocument)
 		
 	}
 	
 	internal static func jsonToString(_ jsonObject: JSON) -> String? {
-		return String(jsonObject)
+		return String(describing: jsonObject)
 	}
 	
 	internal static func streamToString(_ stream: Stream) -> String? {
@@ -103,7 +103,7 @@ internal class C8oTranslator {
 		fatalError("Function \"StreamToJson\" must be defined")
 	}
 	internal static func dataToJson(_ data: NSData) -> JSON? {
-		let json = JSON(data: data)
+		let json = JSON(data: data as Data)
 		return json
 	}
 	
@@ -112,7 +112,7 @@ internal class C8oTranslator {
 	}
 	internal static func dataToXml(_ data: NSData) -> AEXMLDocument? {
 		do {
-			let doc = try AEXMLDocument(xmlData: data)
+            let doc = try AEXMLDocument(xml: (data as Data?)!)
 			return doc
 		}
 		catch {
@@ -123,11 +123,11 @@ internal class C8oTranslator {
 	// *** string to XML / JSON / object ***//
 	
 	internal static func stringToXml(_ xmlString: String) throws -> AEXMLElement {
-		return try AEXMLDocument(xmlData: xmlString.dataUsingEncoding(NSUTF8StringEncoding)!)
+        return try AEXMLDocument(xml: xmlString.data(using: String.Encoding.utf8)!)
 	}
 	
 	internal static func stringToJson(_ jsonValueString: String) -> JSON {
-		return JSON(data: jsonValueString.dataUsingEncoding(NSUTF8StringEncoding)!)
+		return JSON(data: jsonValueString.data(using: String.Encoding.utf8)!)
 	}
 	
 	internal static func stringToObject(_ objectValue: String, type: Type) -> NSObject? {

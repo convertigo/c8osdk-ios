@@ -29,7 +29,7 @@ open class C8oFullSyncDatabase: NSObject {
 	public init (c8o: C8o, manager: CBLManager, databaseName: String, fullSyncDatabases: String, localSuffix: String) throws {
 		var databaseNameMutable = databaseName
 		self.c8o = c8o
-		c8oFullSyncDatabaseUrl = NSURL(string: fullSyncDatabases + databaseNameMutable)!
+		c8oFullSyncDatabaseUrl = NSURL(string: fullSyncDatabases + databaseNameMutable)! as URL
 		
 		databaseNameMutable = databaseNameMutable + localSuffix
 		self.databaseName = databaseNameMutable
@@ -51,7 +51,7 @@ open class C8oFullSyncDatabase: NSObject {
                     } else {
                         options.storageType = kCBLForestDBStorage
                     }
-                    self.database = try manager.openDatabaseNamed(databaseNameMutable, withOptions: options)
+                    self.database = try manager.openDatabaseNamed(databaseNameMutable, with: options)
 				}
 				catch let e as NSError {
 					er = e
@@ -76,7 +76,7 @@ open class C8oFullSyncDatabase: NSObject {
     func deleteDb() {
         if (database != nil) {
             do {
-                try database!.deleteDatabase()
+                try database!.delete()
             } catch let e as NSError {
                 c8o.log._debug("Failed to close DB: " + e.description)
             }
@@ -92,7 +92,7 @@ open class C8oFullSyncDatabase: NSObject {
         
         for cookie in c8o.cookieStore.cookies! {
             let date = Date(timeInterval: 3600, since: Date())
-            replication!.setCookieNamed(cookie.name, withValue: cookie.value, path: cookie.path, expirationDate: date, secure: cookie.secure)
+            replication!.setCookieNamed(cookie.name, withValue: cookie.value, path: cookie.path, expirationDate: date, secure: cookie.isSecure)
         }
         
         return replication!
@@ -102,7 +102,7 @@ open class C8oFullSyncDatabase: NSObject {
         if (fsReplication?.replication != nil) {
             fsReplication!.replication!.stop()
             if (fsReplication?.changeListener != nil) {
-                fsReplication?.replication?.removeObserver(self, forKeyPath: c8oFullSyncDatabaseUrl.absoluteString!) // (c8oFullSyncDatabaseUrl)
+                fsReplication?.replication?.removeObserver(self, forKeyPath: c8oFullSyncDatabaseUrl.absoluteString) // (c8oFullSyncDatabaseUrl)
                 fsReplication?.changeListener = nil
             }
             fsReplication?.replication = nil
@@ -116,20 +116,20 @@ open class C8oFullSyncDatabase: NSObject {
 		
 	}
 	
-	open func startAllReplications(_ parameters: Dictionary<String, AnyObject>, c8oResponseListener: C8oResponseListener) throws {
+	open func startAllReplications(_ parameters: Dictionary<String, Any>, c8oResponseListener: C8oResponseListener) throws {
 		try! startPullReplication(parameters, c8oResponseListener: c8oResponseListener)
 		try! startPushReplication(parameters, c8oResponseListener: c8oResponseListener)
 	}
 	
-	open func startPullReplication(_ parameters: Dictionary<String, AnyObject>, c8oResponseListener: C8oResponseListener) throws {
+	open func startPullReplication(_ parameters: Dictionary<String, Any>, c8oResponseListener: C8oResponseListener) throws {
 		try! startReplication(pullFullSyncReplication!, parameters: parameters, c8oResponseListener: c8oResponseListener)
 	}
 	
-	open func startPushReplication(_ parameters: Dictionary<String, AnyObject>, c8oResponseListener: C8oResponseListener) throws {
+	open func startPushReplication(_ parameters: Dictionary<String, Any>, c8oResponseListener: C8oResponseListener) throws {
 		try! startReplication(pushFullSyncReplication!, parameters: parameters, c8oResponseListener: c8oResponseListener)
 	}
 	
-	fileprivate func startReplication(_ fullSyncReplication: FullSyncReplication, parameters: Dictionary<String, AnyObject>, c8oResponseListener: C8oResponseListener?) throws {
+	fileprivate func startReplication(_ fullSyncReplication: FullSyncReplication, parameters: Dictionary<String, Any>, c8oResponseListener: C8oResponseListener?) throws {
 		var continuous: Bool = false
 		var cancel: Bool = false
 		
@@ -168,26 +168,26 @@ open class C8oFullSyncDatabase: NSObject {
 		var _progress: [C8oProgress] = [progress]
 		
 		var count = false
-		NotificationCenter.defaultCenter().addObserverForName(kCBLReplicationChangeNotification, object: rep, queue: nil, usingBlock: { _ in
+		NotificationCenter.default.addObserver(forName: NSNotification.Name.cblReplicationChange, object: rep, queue: nil, using: { _ in
             if (count) {
 				progress.total = rep.changesCount.hashValue
 				progress.current = rep.completedChangesCount.hashValue
 				progress.taskInfo = ("n/a")
                 switch (rep.status) {
-                case .Active:
+                case .active:
                     progress.status = "Active"
                     break
-                case .Idle:
+                case .idle:
                     progress.status = "Idle"
                     break
-                case .Offline:
+                case .offline:
                     progress.status = "Offline"
                     break
-                case .Stopped:
+                case .stopped:
                     progress.status = "Stopped"
                     break
                 }
-				progress.finished = !(rep.status == CBLReplicationStatus.Active)
+				progress.finished = !(rep.status == CBLReplicationStatus.active)
 				
 				if (progress.changed) {
 					_progress[0] = C8oProgress(progress: progress)
@@ -205,12 +205,12 @@ open class C8oFullSyncDatabase: NSObject {
 						_progress[0].raw = replication
 						_progress[0].continuous = true
 						replication.continuous = true
-						NSNotificationCenter.defaultCenter().addObserverForName(kCBLReplicationChangeNotification, object: replication, queue: nil, usingBlock: { _ in
+						NotificationCenter.default.addObserver(forName: NSNotification.Name.cblReplicationChange, object: replication, queue: nil, using: { _ in
 							let progress: C8oProgress = _progress[0]
 							progress.total = replication.changesCount.hashValue
 							progress.current = replication.completedChangesCount.hashValue
 							progress.taskInfo = "n/a"
-							progress.status = String(replication.status)
+							progress.status = String(describing: replication.status)
 							if (progress.changed) {
 								_progress[0] = C8oProgress(progress: progress)
 								if let _ = c8oResponseListener as? C8oResponseProgressListener, c8oResponseListener != nil {

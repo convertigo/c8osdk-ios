@@ -33,7 +33,7 @@ internal class C8oFullSync: NSObject {
 		localSuffix = (c8o.fullSyncLocalSuffix != nil) ? c8o.fullSyncLocalSuffix : "_device";
 	}
 	
-	internal func handleFullSyncRequest(_ parameters_: Dictionary<String, AnyObject>, listener: C8oResponseListener) throws -> AnyObject? {
+	internal func handleFullSyncRequest(_ parameters_: Dictionary<String, Any>, listener: C8oResponseListener) throws -> Any? {
         let parameters = parameters_
         
 		// Checks if this is really a fullSync request (even if this is normally already checked)
@@ -60,7 +60,7 @@ internal class C8oFullSync: NSObject {
 			}
 		}
 		
-		var response: AnyObject?;
+		var response: Any?;
 		do {
 			response = try fullSyncRequestable!.handleFullSyncRequest(self as! C8oFullSyncCbl, databaseNameName: databaseName!, parameters: parameters, c8oResponseListner: listener);
 		}
@@ -79,7 +79,7 @@ internal class C8oFullSync: NSObject {
 		return response;
 	}
 	
-	internal func handleFullSyncResponse(_ response: AnyObject, listener: C8oResponseListener) throws -> AnyObject {
+	internal func handleFullSyncResponse(_ response: Any, listener: C8oResponseListener) throws -> Any {
 		var responseMutable = response
 		if (responseMutable is JSON) {
 			if (listener is C8oResponseXmlListener) {
@@ -96,7 +96,7 @@ internal class C8oFullSync: NSObject {
 		
 	}
 	
-	internal static func isFullSyncRequest(_ requestParameters: Dictionary<String, AnyObject>) -> Bool {
+	internal static func isFullSyncRequest(_ requestParameters: Dictionary<String, Any>) -> Bool {
 		// Check if there is one parameter named "__project" and if its value starts with "fs://"
 		if let parameterValue: String = C8oUtils.getParameterStringValue(requestParameters, name: C8o.ENGINE_PARAMETER_PROJECT, useName: false) {
 			return parameterValue.hasPrefix(C8oFullSync.FULL_SYNC_PROJECT);
