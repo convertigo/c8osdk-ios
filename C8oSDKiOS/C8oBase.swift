@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class C8oBase: NSObject {
+open class C8oBase: NSObject {
 	override init() {
 		super.init()
 	}
@@ -23,9 +23,9 @@ public class C8oBase: NSObject {
 	
 	// *** Log ***//
 	internal var _logRemote: Bool? = true
-	internal var _logLevelLocal: C8oLogLevel = C8oLogLevel.NONE
+	internal var _logLevelLocal: C8oLogLevel = C8oLogLevel.none
 	internal var _logC8o: Bool? = true
-	internal var _logOnFail: ((exception: C8oException, parameters: Dictionary<String, NSObject>?) -> (Void))? = nil
+	internal var _logOnFail: ((_ exception: C8oException, _ parameters: Dictionary<String, NSObject>?) -> (Void))? = nil
 	
 	// *** FullSync ***//
 	internal var _defaultDatabaseName: String?
@@ -53,7 +53,7 @@ public class C8oBase: NSObject {
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @return The timeout.
 	 */
-	public var timeout: Int {
+	open var timeout: Int {
 		get { return _timeout! }
 	}
 	
@@ -67,7 +67,7 @@ public class C8oBase: NSObject {
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @return <c>true</c> if https calls trust all certificates otherwise, <c>false</c>.
 	 */
-	public var trustAllCertificates: Bool {
+	open var trustAllCertificates: Bool {
 		get { return _trustAllCertificates! }
 	}
 	
@@ -81,7 +81,7 @@ public class C8oBase: NSObject {
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @return A collection of cookies.
 	 */
-	public var cookies: Dictionary<String, String>? {
+	open var cookies: Dictionary<String, String>? {
 		get { return _cookies }
 	}
 	
@@ -95,7 +95,7 @@ public class C8oBase: NSObject {
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @return A Dictionary of client certificate binaries
 	 */
-	public var clientCertificateBinaries: Dictionary<UInt8, String>? {
+	open var clientCertificateBinaries: Dictionary<UInt8, String>? {
 		get { return _clientCertificateBinaries! }
 	}
 	
@@ -109,7 +109,7 @@ public class C8oBase: NSObject {
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @return A Dictionary of client certificate files
 	 */
-	public var clientCertificateFiles: Dictionary<String, String>? {
+	open var clientCertificateFiles: Dictionary<String, String>? {
 		get { return _clientCertificateFiles }
 	}
 	
@@ -123,7 +123,7 @@ public class C8oBase: NSObject {
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @return <c>true</c> if logs are sent to the Convertigo server otherwise, <c>false</c>
 	 */
-	public var logRemote: Bool {
+	open var logRemote: Bool {
 		get { return _logRemote! }
 	}
 	
@@ -137,7 +137,7 @@ public class C8oBase: NSObject {
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @return <c>true</c> if logs are sent to the Convertigo server otherwise, <c>false</c>.
 	 */
-	public var logLevelLocal: C8oLogLevel {
+	open var logLevelLocal: C8oLogLevel {
 		get { return _logLevelLocal }
 	}
 	
@@ -151,7 +151,7 @@ public class C8oBase: NSObject {
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @return <c>true</c> if c8o is log otherwise, <c>false</c>.
 	 */
-	public var logC8o: Bool {
+	open var logC8o: Bool {
 		get { return _logC8o! }
 	}
 	
@@ -165,7 +165,7 @@ public class C8oBase: NSObject {
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @return NSObject.
 	 */
-	public var logOnFail: ((exception: C8oException, parameters: Dictionary<String, NSObject>?) -> (Void))? {
+	open var logOnFail: ((_ exception: C8oException, _ parameters: Dictionary<String, NSObject>?) -> (Void))? {
 		get { return _logOnFail }
 	}
 	
@@ -179,7 +179,7 @@ public class C8oBase: NSObject {
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @return A string containing the default database's name.
 	 */
-	public var defaultDatabaseName: String {
+	open var defaultDatabaseName: String {
 		get {
 			return _defaultDatabaseName!
 		}
@@ -195,7 +195,7 @@ public class C8oBase: NSObject {
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @return A string containing the authentification cookie value.
 	 */
-	public var authenticationCookieValue: String {
+	open var authenticationCookieValue: String {
 		get { return _authenticationCookieValue! }
 	}
 	
@@ -209,15 +209,15 @@ public class C8oBase: NSObject {
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @return A string containing the fullSync local suffix.
 	 */
-	public var fullSyncLocalSuffix: String? {
+	open var fullSyncLocalSuffix: String? {
 		get { return _fullSyncLocalSuffix }
 	}
 	
-    public var fullSyncStorageEngine: String {
+    open var fullSyncStorageEngine: String {
         get { return _fullSyncStorageEngine }
     }
     
-    public var fullSyncEncryptionKey: String? {
+    open var fullSyncEncryptionKey: String? {
         get { return _fullSyncEncryptionKey }
     }
     
@@ -231,7 +231,7 @@ public class C8oBase: NSObject {
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @return A string containing the fullSync server url.
 	 */
-	public var fullSyncServerUrl: String {
+	open var fullSyncServerUrl: String {
 		get { return _fullSyncServerUrl }
 	}
 	
@@ -245,7 +245,7 @@ public class C8oBase: NSObject {
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @return A string containing the fullSync username.
 	 */
-	public var fullSyncUsername: String {
+	open var fullSyncUsername: String {
 		get { return _fullSyncUsername! }
 	}
 	
@@ -259,7 +259,7 @@ public class C8oBase: NSObject {
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @return A string containing the fullSync password.
 	 */
-	public var fullSyncPassword: String {
+	open var fullSyncPassword: String {
 		get { return _fullSyncPassword! }
 	}
 	
@@ -276,7 +276,7 @@ public class C8oBase: NSObject {
 	 any C8oBase object that yout wants to copy
 	 @return Void.
 	 */
-	internal func copyProperties (c8oBase: C8oBase) -> Void {
+	internal func copyProperties (_ c8oBase: C8oBase) -> Void {
 		// *** HTTP ***//
 		
 		_timeout = c8oBase._timeout

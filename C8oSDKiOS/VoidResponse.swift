@@ -9,9 +9,9 @@
 import Foundation
 
 class VoidResponse {
-	private static let VOID_RESPONSE_INSTANCE: VoidResponse = VoidResponse()
+	fileprivate static let VOID_RESPONSE_INSTANCE: VoidResponse = VoidResponse()
 	
-	private init() {
+	fileprivate init() {
 		
 	}
 	

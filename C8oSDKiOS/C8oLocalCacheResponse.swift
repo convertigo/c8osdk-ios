@@ -10,9 +10,9 @@ import Foundation
 
 class C8oLocalCacheResponse {
 	
-	private var response: String
-	private var responseType: String
-	private var expirationDate: Double
+	fileprivate var response: String
+	fileprivate var responseType: String
+	fileprivate var expirationDate: Double
 	
 	internal init(response: String, responseType: String, expirationDate: Double) {
 		self.response = response
@@ -24,7 +24,7 @@ class C8oLocalCacheResponse {
 		if (expirationDate <= 0) {
 			return false
 		} else {
-			let currentDate = NSDate().timeIntervalSince1970 * 1000
+			let currentDate = Date().timeIntervalSince1970 * 1000
 			return Double(expirationDate) < currentDate
 		}
 	}

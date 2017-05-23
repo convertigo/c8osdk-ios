@@ -24,9 +24,9 @@ class C8oSDKiOSTests: XCTestCase {
 	let PREFIXS = "https://"
 	
 	enum Stuff {
-		case C8O, C8O_BIS, C8O_FS, C8O_FS_PULL, C8O_FS_PUSH, C8O_LC, SetGetInSession
+		case c8O, c8O_BIS, c8O_FS, c8O_FS_PULL, c8O_FS_PUSH, c8O_LC, setGetInSession
 	}
-	func get(enu: Stuff) throws -> C8o {
+	func get(_ enu: Stuff) throws -> C8o {
 		switch (enu) {
 		case .C8O:
 			let c8o = try C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: C8oSettings().setLogRemote(false).setLogLevelLocal(C8oLogLevel.ERROR))

@@ -8,15 +8,15 @@
 
 import Foundation
 
-public class C8oCookieStorage: NSHTTPCookieStorage {
-	var _cookies: [NSHTTPCookie] = []
+open class C8oCookieStorage: HTTPCookieStorage {
+	var _cookies: [HTTPCookie] = []
 	
 	/*!
 	 @method cookies
 	 @abstract Get all the cookies
 	 @result An NSArray of NSHTTPCookies
 	 */
-	public override var cookies: [NSHTTPCookie]? {
+	open override var cookies: [HTTPCookie]? {
 		get {
 			return _cookies
 		}
@@ -28,7 +28,7 @@ public class C8oCookieStorage: NSHTTPCookieStorage {
 	 @discussion The cookie will override an existing cookie with the
 	 same name, domain and path, if any.
 	 */
-	public override func setCookie(cookie: NSHTTPCookie) {
+	open override func setCookie(_ cookie: HTTPCookie) {
 		_cookies.append(cookie)
 	}
 	
@@ -36,7 +36,7 @@ public class C8oCookieStorage: NSHTTPCookieStorage {
 	 @method deleteCookie:
 	 @abstract Delete the specified cookie
 	 */
-	public override func deleteCookie(cookie: NSHTTPCookie) {
+	open override func deleteCookie(_ cookie: HTTPCookie) {
 		
 	}
 	
@@ -50,7 +50,7 @@ public class C8oCookieStorage: NSHTTPCookieStorage {
 	 <tt>+[NSCookie requestHeaderFieldsWithCookies:]</tt> to turn this array
 	 into a set of header fields to add to a request.
 	 */
-	public override func cookiesForURL(URL: NSURL) -> [NSHTTPCookie]? {
+	open override func cookies(for URL: URL) -> [HTTPCookie]? {
 		return _cookies
 	}
 	
@@ -71,8 +71,8 @@ public class C8oCookieStorage: NSHTTPCookieStorage {
 	 dictionary and then use this method to store the resulting cookies
 	 in accordance with policy settings.
 	 */
-	public override func setCookies(cookies: [NSHTTPCookie], forURL URL: NSURL?, mainDocumentURL: NSURL?) {
-		_cookies.appendContentsOf(cookies)
+	open override func setCookies(_ cookies: [HTTPCookie], for URL: URL?, mainDocumentURL: URL?) {
+		_cookies.append(contentsOf: cookies)
 	}
 	
 	/*!
@@ -82,15 +82,15 @@ public class C8oCookieStorage: NSHTTPCookieStorage {
 	 @discussion proper sorting of cookies may require extensive string conversion, which can be avoided by allowing the system to perform the sorting.  This API is to be preferred over the more generic -[NSHTTPCookieStorage cookies] API, if sorting is going to be performed.
 	 */
 	@available(iOS 5.0, *)
-	public override func sortedCookiesUsingDescriptors(sortOrder: [NSSortDescriptor]) -> [NSHTTPCookie] {
+	open override func sortedCookies(using sortOrder: [NSSortDescriptor]) -> [HTTPCookie] {
 		return _cookies
 	}
 	@available(iOS 8.0, *)
-	public override func storeCookies(cookies: [NSHTTPCookie], forTask task: NSURLSessionTask) {
-		_cookies.appendContentsOf(cookies)
+	open override func storeCookies(_ cookies: [HTTPCookie], for task: URLSessionTask) {
+		_cookies.append(contentsOf: cookies)
 	}
 	@available(iOS 8.0, *)
-	public override func getCookiesForTask(task: NSURLSessionTask, completionHandler: ([NSHTTPCookie]?) -> Void) {
+	open override func getCookiesFor(_ task: URLSessionTask, completionHandler: @escaping ([HTTPCookie]?) -> Void) {
 		completionHandler(_cookies)
 	}
 }

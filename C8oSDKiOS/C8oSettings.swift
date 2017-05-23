@@ -10,7 +10,7 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-public class C8oSettings: C8oBase {
+open class C8oSettings: C8oBase {
 	public override init() {
 	}
 	
@@ -19,7 +19,7 @@ public class C8oSettings: C8oBase {
 		copyProperties(c8oSettings)
 	}
 	
-	public func clone() -> C8oSettings {
+	open func clone() -> C8oSettings {
 		return C8oSettings(c8oSettings: self)
 	}
 	
@@ -33,7 +33,7 @@ public class C8oSettings: C8oBase {
 	 @return The current <b>C8oSettings</b>, for chaining.
 
 	 */
-	public func setTimeout(timeout: Int) -> C8oSettings {
+	open func setTimeout(_ timeout: Int) -> C8oSettings {
 		var timeout = timeout
 		if (timeout <= 0) {
 			timeout = -1
@@ -52,21 +52,21 @@ public class C8oSettings: C8oBase {
 	 @return The current <b>C8oSettings</b>, for chaining.
 
 	 */
-	public func setTrustAllCertificates(trustAllCertificates: Bool) -> C8oSettings {
+	open func setTrustAllCertificates(_ trustAllCertificates: Bool) -> C8oSettings {
 		_trustAllCertificates = trustAllCertificates
 		return self
 	}
 	
-	public func addClientCertificate(certificate: Byte, password: String) -> C8oSettings {
+	open func addClientCertificate(_ certificate: Byte, password: String) -> C8oSettings {
 		if (_clientCertificateBinaries == nil) {
-			_clientCertificateBinaries = Dictionary<UInt8, String>?()
+			_clientCertificateBinaries = Dictionary<UInt8, String>?(certificate as! Byte, password)
 		}
 		// clientCertificateBinaries = [certificate! as NSObject: password]
 		
 		return self
 	}
 	
-	public func addClientCertificate(certificatePath: String, password: String) -> C8oSettings {
+	open func addClientCertificate(_ certificatePath: String, password: String) -> C8oSettings {
 		if (_clientCertificateFiles == nil) {
 			_clientCertificateFiles = Dictionary<String, String>()
 		}
@@ -85,7 +85,7 @@ public class C8oSettings: C8oBase {
 	 @return The current <b>C8oSettings</b>, for chaining.
 
 	 */
-	public func addCookie(name: String, value: String) -> C8oSettings {
+	open func addCookie(_ name: String, value: String) -> C8oSettings {
 		
 		if (_cookies == nil) {
 			_cookies = Dictionary<String, String>()
@@ -105,22 +105,22 @@ public class C8oSettings: C8oBase {
 	 @return The current <b>C8oSettings</b>, for chaining.
 
 	 */
-	public func setLogRemote(logRemote: Bool) -> C8oSettings {
+	open func setLogRemote(_ logRemote: Bool) -> C8oSettings {
 		_logRemote = logRemote
 		return self
 	}
 	
-	public func setLogLevelLocal(logLevelLocal: C8oLogLevel) -> C8oSettings {
+	open func setLogLevelLocal(_ logLevelLocal: C8oLogLevel) -> C8oSettings {
 		_logLevelLocal = logLevelLocal
 		return self
 	}
 	
-	public func setLogC8o(logC8o: Bool) -> C8oSettings {
+	open func setLogC8o(_ logC8o: Bool) -> C8oSettings {
 		_logC8o = logC8o
 		return self
 	}
 	
-	public func setLogOnFail(logOnFail: ((exception: C8oException, parameters: Dictionary<String, NSObject>?) -> (Void))?) -> C8oSettings {
+	open func setLogOnFail(_ logOnFail: ((_ exception: C8oException, _ parameters: Dictionary<String, NSObject>?) -> (Void))?) -> C8oSettings {
 		_logOnFail = logOnFail
 		return self
 	}
@@ -128,49 +128,49 @@ public class C8oSettings: C8oBase {
 	 pecify the default FullSync database name. Must match a Convertigo Server
 	 FullSync connector name
 	 */
-	public func setDefaultDatabaseName(defaultDatabaseName: String) -> C8oSettings {
+	open func setDefaultDatabaseName(_ defaultDatabaseName: String) -> C8oSettings {
 		_defaultDatabaseName = defaultDatabaseName
 		return self
 	}
 	
-	public func setAuthenticationCookieValue(authenticationCookieValue: String) -> C8oSettings {
+	open func setAuthenticationCookieValue(_ authenticationCookieValue: String) -> C8oSettings {
 		_authenticationCookieValue = authenticationCookieValue
 		return self
 	}
 	
-	public func setFullSyncServerUrl(fullSyncServerUrl: String) -> C8oSettings {
+	open func setFullSyncServerUrl(_ fullSyncServerUrl: String) -> C8oSettings {
 		_fullSyncServerUrl = fullSyncServerUrl
 		return self
 	}
 	
-	public func setFullSyncUsername(fullSyncUsername: String) -> C8oSettings {
+	open func setFullSyncUsername(_ fullSyncUsername: String) -> C8oSettings {
 		_fullSyncUsername = fullSyncUsername
 		return self
 	}
 	
-	public func setFullSyncPassword(fullSyncPassword: String) -> C8oSettings {
+	open func setFullSyncPassword(_ fullSyncPassword: String) -> C8oSettings {
 		_fullSyncPassword = fullSyncPassword
 		return self
 	}
 	
-	public func setFullSyncLocalSuffix(fullSyncLocalSuffix: String) -> C8oSettings {
+	open func setFullSyncLocalSuffix(_ fullSyncLocalSuffix: String) -> C8oSettings {
 		_fullSyncLocalSuffix = fullSyncLocalSuffix
 		return self
     }
     
-    public func setFullSyncStorageEngine(fullSyncStorageEngine: String) -> C8oSettings {
+    open func setFullSyncStorageEngine(_ fullSyncStorageEngine: String) -> C8oSettings {
         if (C8o.FS_STORAGE_SQL == fullSyncStorageEngine || C8o.FS_STORAGE_FORESTDB == fullSyncStorageEngine) {
             _fullSyncStorageEngine = fullSyncStorageEngine
         }
         return self
     }
     
-    public func setFullSyncEncryptionKey(fullSyncEncryptionKey: String) -> C8oSettings {
+    open func setFullSyncEncryptionKey(_ fullSyncEncryptionKey: String) -> C8oSettings {
         _fullSyncEncryptionKey = fullSyncEncryptionKey
         return self
     }
 	
-	public func setUseEncryption(useEncryption: Bool) -> C8oSettings {
+	open func setUseEncryption(_ useEncryption: Bool) -> C8oSettings {
 		_useEncryption = useEncryption
 		return self
 	}

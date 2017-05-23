@@ -9,18 +9,18 @@
 import Foundation
 import SwiftyJSON
 
-public class C8oFullSyncChangeListener : Hashable {
-    private static var c = 0
-    private let i = c
+open class C8oFullSyncChangeListener : Hashable {
+    fileprivate static var c = 0
+    fileprivate let i = c
     
-    let handler: (changes: JSON) -> ()
+    let handler: (_ changes: JSON) -> ()
     
-    public init(handler: (changes: JSON) -> ()) {
+    public init(handler: (_ changes: JSON) -> ()) {
         C8oFullSyncChangeListener.c = C8oFullSyncChangeListener.c + 1
         self.handler = handler
     }
     
-    public var hashValue: Int {
+    open var hashValue: Int {
         get {
             return i
         }

@@ -12,58 +12,58 @@ import SwiftyJSON
 
 internal class C8oUtils {
 	
-	private static var USE_PARAMETER_IDENTIFIER: String = "_use_";
+	fileprivate static var USE_PARAMETER_IDENTIFIER: String = "_use_";
 	
-	internal static func getObjectClassName(obj: AnyObject?) -> String {
+	internal static func getObjectClassName(_ obj: AnyObject?) -> String {
 		
 		var className = "nil";
 		if (obj != nil) {
-			className = String(obj.dynamicType)
+			className = String(describing: type(of: obj))
 			
 		}
 		return className;
 		
 	}
 	
-	internal static func getParameter(parameters: Dictionary<String, AnyObject>, name: String, useName: Bool = false) -> Pair<String?, AnyObject?> {
+	internal static func getParameter(_ parameters: Dictionary<String, AnyObject>, name: String, useName: Bool = false) -> Pair<String?, Any?> {
 		
 		for parameter in parameters {
 			let parameterName: String = parameter.0;
 			if ((name == parameterName) || (useName && name == (C8oUtils.USE_PARAMETER_IDENTIFIER + parameterName))) {
-				return Pair<String?, AnyObject?>(key: parameter.0, value: parameter.1) // (key: parameter.0, value: parameter.1 as AnyObject);
+				return Pair<String?, Any?>(key: parameter.0, value: parameter.1) // (key: parameter.0, value: parameter.1 as AnyObject);
 			}
 		}
 		let stringNil: String? = nil
 		let nsobjectnil: String? = nil
-		return Pair<String?, AnyObject?>(key: stringNil, value: nsobjectnil);
+		return Pair<String?, Any?>(key: stringNil, value: nsobjectnil);
 		
 	}
 	
-	internal static func getParameterObjectValue(parameters: Dictionary<String, AnyObject>, name: String, useName: Bool = false) -> AnyObject? {
-		let parameter: Pair<String?, AnyObject?> = getParameter(parameters, name: name, useName: useName);
+	internal static func getParameterObjectValue(_ parameters: Dictionary<String, AnyObject>, name: String, useName: Bool = false) -> Any? {
+		let parameter: Pair<String?, Any?> = getParameter(parameters, name: name, useName: useName);
 		if (parameter.key != nil) {
-			return parameter.value
+			return parameter.value as Any
 		}
 		return nil;
 	}
 	
-	internal static func getParameterStringValue(parameters: Dictionary<String, AnyObject>, name: String, useName: Bool = false) -> String? {
+	internal static func getParameterStringValue(_ parameters: Dictionary<String, AnyObject>, name: String, useName: Bool = false) -> String? {
 		let parameter = getParameter(parameters, name: name, useName: useName);
 		if (parameter.key != nil) {
 			if (parameter.value == nil) {
 				return nil
 			} else if (parameter.value is C8oJSON) {
 				
-				return String((parameter.value as! C8oJSON).myJSON)
+				return String(describing: (parameter.value as! C8oJSON).myJSON)
 			} else {
-				return String(parameter.value!);
+				return String(describing: parameter.value!);
 			}
 			
 		}
 		return nil;
 	}
 	
-	internal static func peekParameterStringValue(parameters: Dictionary<String, AnyObject>, name: String, exceptionIfMissing: Bool = false) throws -> String? {
+	internal static func peekParameterStringValue(_ parameters: Dictionary<String, AnyObject>, name: String, exceptionIfMissing: Bool = false) throws -> String? {
 		var parameters = parameters
 		let value: String? = getParameterStringValue(parameters, name: name, useName: false);
 		if (value == nil) {
@@ -71,12 +71,12 @@ internal class C8oUtils {
 				throw C8oException(message: C8oExceptionMessage.MissParameter(name));
 			}
 		} else {
-			parameters.removeValueForKey(name);
+			parameters.removeValue(forKey: name);
 		}
 		return value;
 	}
 	
-	internal static func getParameterJsonValue(parameters: Dictionary<String, AnyObject>, name: Bool, useName: Bool = false) -> NSObject? {
+	internal static func getParameterJsonValue(_ parameters: Dictionary<String, AnyObject>, name: Bool, useName: Bool = false) -> NSObject? {
 		/*
 		 var parameter = GetParameter(parameters, name, useName);
 		 if (parameter.Key != null)
@@ -88,7 +88,7 @@ internal class C8oUtils {
 		return nil;
 	}
 	
-	internal static func getParameterJsonValue(parameter: Dictionary<String, NSObject>) -> NSObject? {
+	internal static func getParameterJsonValue(_ parameter: Dictionary<String, NSObject>) -> NSObject? {
 		/* if (parameter.Value is string)
 		 {
 		 return C8oTranslator.StringToJson(parameter.Value as string);
@@ -97,7 +97,7 @@ internal class C8oUtils {
 		return nil;
 	}
 	
-	internal static func tryGetParameterObjectValue<T>(parameters: Dictionary<String, AnyObject>, name: String, value: T, useName: Bool = false, defaultValue: T) -> Bool? {
+	internal static func tryGetParameterObjectValue<T>(_ parameters: Dictionary<String, AnyObject>, name: String, value: T, useName: Bool = false, defaultValue: T) -> Bool? {
 		/*KeyValuePair<string, object> parameter = GetParameter(parameters, name, useName);
 		 if (parameter.Key != null && parameter.Value != null)
 		 {
@@ -122,8 +122,8 @@ internal class C8oUtils {
 
 	 @return Bool value.
 	 */
-	internal static func isValidUrl(url: String) -> Bool {
-		let uriResult: NSURL? = NSURL(string: url)
+	internal static func isValidUrl(_ url: String) -> Bool {
+		let uriResult: URL? = URL(string: url)
 		
 		if (uriResult?.scheme == "http" || uriResult?.scheme == "https") {
 			return true
@@ -134,7 +134,7 @@ internal class C8oUtils {
 	}
 	
 	internal static func getUnixEpochTime() -> Double? {
-		return Double(NSDate().timeIntervalSince1970 * 1000)
+		return Double(Date().timeIntervalSince1970 * 1000)
 	}
 	
 	// public static T GetParameterAndCheckType<T>(IDictionary<string, object> parameters, String name, T defaultValue = default(T))
@@ -161,7 +161,7 @@ internal class C8oUtils {
 	// return defaultValue;
 	// }
 	
-	internal static func tryGetValueAndCheckType<T>(jObject: JSON, key: String, value: T) -> Bool? {
+	internal static func tryGetValueAndCheckType<T>(_ jObject: JSON, key: String, value: T) -> Bool? {
 		fatalError()
 		/*
 		 JToken foundValue;
@@ -181,7 +181,7 @@ internal class C8oUtils {
 		 return false;*/
 	}
 	
-	internal static func identifyC8oCallRequest(parameters: Dictionary<String, AnyObject>, responseType: String) -> String? {
+	internal static func identifyC8oCallRequest(_ parameters: Dictionary<String, AnyObject>, responseType: String) -> String? {
 		/*
 		 let json : JSON
 		 let dict = new Di
@@ -194,7 +194,7 @@ internal class C8oUtils {
 		return responseType + json.dictionaryObject!.description
 	}
 	
-	internal static func UrlDecode(str: String) -> String {
+	internal static func UrlDecode(_ str: String) -> String {
 		fatalError()
 		// return Uri.UnescapeDataString(str)
 	}

@@ -9,11 +9,11 @@
 import Foundation
 import SwiftyJSON
 
-public class C8oPromiseFailSync<T>: C8oPromiseSync<T> {    
-    public func fail(c8oOnFail: (C8oException, Dictionary<String, AnyObject>?) throws -> ()) -> C8oPromiseSync<T> {
+open class C8oPromiseFailSync<T>: C8oPromiseSync<T> {    
+    open func fail(_ c8oOnFail: (C8oException, Dictionary<String, AnyObject>?) throws -> ()) -> C8oPromiseSync<T> {
         return self
     }
-    public func failUI(c8oOnFail: (C8oException, Dictionary<String, AnyObject>?) throws -> ()) -> C8oPromiseSync<T> {
+    open func failUI(_ c8oOnFail: (C8oException, Dictionary<String, AnyObject>?) throws -> ()) -> C8oPromiseSync<T> {
         return self
     }
 }

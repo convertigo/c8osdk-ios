@@ -26,7 +26,7 @@ internal class C8oFullSyncTranslator {
 	internal static var XML_KEY_DOCUMENT: String = "document"
 	internal static var XML_KEY_COUCHDB_OUTPUT: String = "couchdb_output"
 	
-	internal static func fullSyncJsonToXml(json: JSON) throws -> AEXMLDocument? {
+	internal static func fullSyncJsonToXml(_ json: JSON) throws -> AEXMLDocument? {
 		
 		let xmlDocument: AEXMLDocument = AEXMLDocument()
 		// Create the root element node
@@ -43,25 +43,25 @@ internal class C8oFullSyncTranslator {
 		return xmlDocument
 	}
 	
-	internal static func dictionaryToJson(dictionary: Dictionary<String, AnyObject>) -> JSON? {
+	internal static func dictionaryToJson(_ dictionary: Dictionary<String, AnyObject>) -> JSON? {
 		let json: JSON = JSON(dictionary)
 		return json
 	}
 	
-	internal static func documentToJson(document: CBLDocument) -> JSON {
+	internal static func documentToJson(_ document: CBLDocument) -> JSON {
 		return JSON(document.properties!)
 	}
 	
-	internal static func documentToXml(document: CBLDocument) -> AnyObject {
+	internal static func documentToXml(_ document: CBLDocument) -> AnyObject {
 		let json: JSON = documentToJson(document)
 		return try! fullSyncJsonToXml(json)!
 	}
 	
-	internal static func queryRowToDic(queryRow: CBLQueryRow) -> Dictionary<String, AnyObject> {
+	internal static func queryRowToDic(_ queryRow: CBLQueryRow) -> Dictionary<String, AnyObject> {
 		var result: Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
 		if (queryRow.value == nil && queryRow.sourceDocumentID == nil) {
 			result["key"] = queryRow.key
-			result["error"] = "not_found"
+			result["error"] = "not_found" as AnyObject
 		} else {
 			result["key"] = queryRow.key
 			if (queryRow.value != nil) {
@@ -76,7 +76,7 @@ internal class C8oFullSyncTranslator {
 		return result
 	}
 	
-	internal static func queryEnumeratorToJson(queryEnumerator: CBLQueryEnumerator) -> JSON {
+	internal static func queryEnumeratorToJson(_ queryEnumerator: CBLQueryEnumerator) -> JSON {
 		
 		var array: [Dictionary<String, AnyObject>] = [Dictionary<String, AnyObject>]()
 		let countQ = queryEnumerator.count
@@ -89,18 +89,18 @@ internal class C8oFullSyncTranslator {
 	}
     
 	
-	internal static func queryEnumeratorToXml(queryEnumerator: CBLQueryEnumerator) throws -> AEXMLDocument {
+	internal static func queryEnumeratorToXml(_ queryEnumerator: CBLQueryEnumerator) throws -> AEXMLDocument {
 		let json: JSON
 
 			json = queryEnumeratorToJson(queryEnumerator)
 
 		return try fullSyncJsonToXml(json)!
 	}
-	internal static func fullSyncDefaultResponseToJson(fullSyncDefaultResponse: FullSyncDefaultResponse) -> JSON {
+	internal static func fullSyncDefaultResponseToJson(_ fullSyncDefaultResponse: FullSyncDefaultResponse) -> JSON {
 		let json: JSON = JSON(fullSyncDefaultResponse.getProperties())
 		return json
 	}
-	internal static func fullSyncDefaultResponseToXml(fullSyncDefaultResponse: FullSyncDefaultResponse) throws -> AEXMLDocument {
+	internal static func fullSyncDefaultResponseToXml(_ fullSyncDefaultResponse: FullSyncDefaultResponse) throws -> AEXMLDocument {
 		do {
 			return try fullSyncJsonToXml(fullSyncDefaultResponseToJson(fullSyncDefaultResponse))!
 		}
@@ -109,7 +109,7 @@ internal class C8oFullSyncTranslator {
 		}
 	}
 	
-	internal static func dictionaryToString(dict: Dictionary<String, NSObject>) -> String {
+	internal static func dictionaryToString(_ dict: Dictionary<String, NSObject>) -> String {
 		// Becarefull here this function may not work propely
 		var str: String = "{ ";
 		
@@ -123,8 +123,8 @@ internal class C8oFullSyncTranslator {
 		
 		if (dict.count > 0) {
 			
-			let desiredLength = str.startIndex.advancedBy(((str.characters.count) - 2))
-			str = str.substringToIndex(desiredLength)
+			let desiredLength = str.characters.index(str.startIndex, offsetBy: ((str.characters.count) - 2))
+			str = str.substring(to: desiredLength)
 		}
 		
 		str += " }"
@@ -132,15 +132,15 @@ internal class C8oFullSyncTranslator {
 		return str
 	}
 	
-	internal static func listToString(list: Array<NSObject>) -> String {
+	internal static func listToString(_ list: Array<NSObject>) -> String {
 		var str: String = "["
 		for item in list {
-			str = str + String(item) + ", "
+			str = str + String(describing: item) + ", "
 		}
 		
 		if (list.count > 0) {
-			let desiredLength = str.startIndex.advancedBy(((str.characters.count) - 2))
-			str = str.substringToIndex(desiredLength)
+			let desiredLength = str.characters.index(str.startIndex, offsetBy: ((str.characters.count) - 2))
+			str = str.substring(to: desiredLength)
 		}
 		
 		str = str + "]"
@@ -148,27 +148,27 @@ internal class C8oFullSyncTranslator {
 		return str
 	}
 	
-	internal static func fullSyncDocumentOperationResponseToJson(fullSyncDocumentOperationResponse: FullSyncAbstractResponse) -> JSON {
+	internal static func fullSyncDocumentOperationResponseToJson(_ fullSyncDocumentOperationResponse: FullSyncAbstractResponse) -> JSON {
 		let json: JSON = JSON(fullSyncDocumentOperationResponse.getProperties())
 		return json
 	}
 	
-	internal static func fullSyncDocumentOperationResponseToXml(fullSyncDocumentOperationResponse: FullSyncAbstractResponse) -> AEXMLDocument {
+	internal static func fullSyncDocumentOperationResponseToXml(_ fullSyncDocumentOperationResponse: FullSyncAbstractResponse) -> AEXMLDocument {
 		return try! fullSyncJsonToXml(fullSyncDocumentOperationResponseToJson(fullSyncDocumentOperationResponse))!
 	}
     
-    internal static func toAnyObject(obj: AnyObject) -> AnyObject {
+    internal static func toAnyObject(_ obj: AnyObject) -> AnyObject {
         if let nsSet = obj as? NSSet {
             let array = NSMutableArray()
             for item in nsSet {
-                array.addObject(toAnyObject(item))
+                array.add(toAnyObject(item))
             }
             return array
         }
         if let nsArray = obj as? NSArray {
             let array = NSMutableArray()
             for item in nsArray {
-                array.addObject(toAnyObject(item))
+                array.add(toAnyObject(item))
             }
             return array
         }
@@ -194,12 +194,12 @@ internal class C8oFullSyncTranslator {
         }
     }
     
-    internal static func toAnyObject(obj: Any) -> AnyObject {
+    internal static func toAnyObject(_ obj: Any) -> AnyObject {
         if let nsValue = obj as? NSObject {
             return toAnyObject(nsValue)
         }
         if (obj is AnyObject) {
-            return toAnyObject(obj as! AnyObject)
+            return toAnyObject(obj as AnyObject)
         }
         let mirror = Mirror(reflecting: obj)
         if (mirror.children.count > 0) {

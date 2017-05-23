@@ -8,16 +8,16 @@
 
 import Foundation
 
-public class C8oProgress: NSObject {
-	private var _changed: Bool? = false
-	private var _continuous: Bool? = false
-	private var _finished: Bool? = false
-	private var _pull: Bool? = true
-	private var _current: Int? = -1
-	private var _total: Int? = -1
-	private var _status: String? = ""
-	private var _taskInfo: String? = ""
-	private var _raw: NSObject?
+open class C8oProgress: NSObject {
+	fileprivate var _changed: Bool? = false
+	fileprivate var _continuous: Bool? = false
+	fileprivate var _finished: Bool? = false
+	fileprivate var _pull: Bool? = true
+	fileprivate var _current: Int? = -1
+	fileprivate var _total: Int? = -1
+	fileprivate var _status: String? = ""
+	fileprivate var _taskInfo: String? = ""
+	fileprivate var _raw: NSObject?
 	
 	internal override init() {
 		super.init()
@@ -47,13 +47,13 @@ public class C8oProgress: NSObject {
 		}
 	}
 	
-	public override var description: String {
+	open override var description: String {
 		var ch: String = direction + ": " + String(current) + "/" + String(total) + " ("
 		ch += (finished ? (continuous ? "live" : "done") : "running") + ")"
 		return ch
 	}
 	
-	public var continuous: Bool {
+	open var continuous: Bool {
 		get {
 			return _continuous!
 		}
@@ -66,7 +66,7 @@ public class C8oProgress: NSObject {
 		}
 	}
 	
-	public var finished: Bool {
+	open var finished: Bool {
 		get {
 			return _finished!
 		}
@@ -79,7 +79,7 @@ public class C8oProgress: NSObject {
 		}
 	}
 	
-	public var pull: Bool {
+	open var pull: Bool {
 		get {
 			return _pull!
 		}
@@ -92,13 +92,13 @@ public class C8oProgress: NSObject {
 		}
 	}
 	
-	public var push: Bool {
+	open var push: Bool {
 		get {
 			return !_pull!
 		}
 	}
 	
-	public var current: Int {
+	open var current: Int {
 		get {
 			return _current!
 		}
@@ -111,7 +111,7 @@ public class C8oProgress: NSObject {
 		}
 	}
 	
-	public var total: Int {
+	open var total: Int {
 		get {
 			return _total!
 		}
@@ -124,7 +124,7 @@ public class C8oProgress: NSObject {
 		}
 	}
 	
-	public var direction: String {
+	open var direction: String {
 		get {
 			return _pull! ?
 			C8oFullSyncTranslator.FULL_SYNC_RESPONSE_VALUE_DIRECTION_PULL :
@@ -132,7 +132,7 @@ public class C8oProgress: NSObject {
 		}
 	}
 	
-	public var status: String {
+	open var status: String {
 		get {
 			return _status!
 		}
@@ -145,7 +145,7 @@ public class C8oProgress: NSObject {
 		}
 	}
 	
-	public var taskInfo: String {
+	open var taskInfo: String {
 		get {
 			return _taskInfo!
 		}
@@ -158,7 +158,7 @@ public class C8oProgress: NSObject {
 		}
 	}
 	
-	public var raw: NSObject {
+	open var raw: NSObject {
 		get {
 			return _raw!
 		}

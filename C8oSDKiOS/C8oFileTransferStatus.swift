@@ -8,16 +8,16 @@
 
 import Foundation
 
-public class C8oFileTransferStatus {
-    public static let StateNotQueued: DownloadState = DownloadState.NotQueued
-	public static let StateQueued: DownloadState = DownloadState.Queued
-	public static let StateAuthenticated: DownloadState = DownloadState.Authenticated
-	public static let StateSplitting: DownloadState = DownloadState.Splitting
-	public static let StateReplicate: DownloadState = DownloadState.Replicate
-	public static let StateAssembling: DownloadState = DownloadState.Assembling
-	public static let StateCleaning: DownloadState = DownloadState.Cleaning
-    public static let StateFinished: DownloadState = DownloadState.Finished
-    public static let StateCanceled: DownloadState = DownloadState.Canceled
+open class C8oFileTransferStatus {
+    open static let StateNotQueued: DownloadState = DownloadState.NotQueued
+	open static let StateQueued: DownloadState = DownloadState.Queued
+	open static let StateAuthenticated: DownloadState = DownloadState.Authenticated
+	open static let StateSplitting: DownloadState = DownloadState.Splitting
+	open static let StateReplicate: DownloadState = DownloadState.Replicate
+	open static let StateAssembling: DownloadState = DownloadState.Assembling
+	open static let StateCleaning: DownloadState = DownloadState.Cleaning
+    open static let StateFinished: DownloadState = DownloadState.Finished
+    open static let StateCanceled: DownloadState = DownloadState.Canceled
 	
 	public enum DownloadState: String {
         case NotQueued
@@ -31,15 +31,15 @@ public class C8oFileTransferStatus {
         case Canceled
 	}
 	
-	private var _state: DownloadState? = nil
-	private var _uuid: String? = ""
-	private var _filepath: String? = ""
-	private var _current: Int? = 0
-	private var _total: Int? = 0
-	private var _serverFilepath: String = ""
-	private var _download: Bool? = nil
+	fileprivate var _state: DownloadState? = nil
+	fileprivate var _uuid: String? = ""
+	fileprivate var _filepath: String? = ""
+	fileprivate var _current: Int? = 0
+	fileprivate var _total: Int? = 0
+	fileprivate var _serverFilepath: String = ""
+	fileprivate var _download: Bool? = nil
 	
-	public var state: DownloadState {
+	open var state: DownloadState {
 		get {
 			return self._state!
 		}
@@ -48,7 +48,7 @@ public class C8oFileTransferStatus {
 		}
 	}
 	
-	public var download: Bool {
+	open var download: Bool {
 		get {
 			return self._download!
 		}
@@ -60,7 +60,7 @@ public class C8oFileTransferStatus {
 		}
 	}
 	
-	public private(set) var uuid: String {
+	open fileprivate(set) var uuid: String {
 		get {
 			return self._uuid!
 		}
@@ -69,7 +69,7 @@ public class C8oFileTransferStatus {
 		}
 	}
 	
-	public var serverFilepath: String {
+	open var serverFilepath: String {
 		get {
 			return self._serverFilepath
 		}
@@ -78,7 +78,7 @@ public class C8oFileTransferStatus {
 		}
 	}
 	
-	public private(set) var filepath: String {
+	open fileprivate(set) var filepath: String {
 		get {
 			return self._filepath!
 		}
@@ -87,7 +87,7 @@ public class C8oFileTransferStatus {
 		}
 	}
 	
-	public var current: Int {
+	open var current: Int {
 		get {
 			return self._current!
 		}
@@ -97,7 +97,7 @@ public class C8oFileTransferStatus {
 		}
 	}
 	
-	public var total: Int {
+	open var total: Int {
 		get {
 			return self._total!
 		}
@@ -106,7 +106,7 @@ public class C8oFileTransferStatus {
 		}
 	}
 	
-	public var progress: Double {
+	open var progress: Double {
 		get {
 			return total > 0 ? (Double(current) * 1.0 / Double(total)) : 0
 		}
@@ -120,10 +120,10 @@ public class C8oFileTransferStatus {
 		self.total = 0
 	}
 	func tot() {
-		let range2: Range<String.Index> = uuid.rangeOfString("-", options: .BackwardsSearch)!
-		var start_index: Int = uuid.startIndex.distanceTo(range2.startIndex)
+		let range2: Range<String.Index> = uuid.range(of: "-", options: .backwards)!
+		var start_index: Int = uuid.characters.distance(from: uuid.startIndex, to: range2.lowerBound)
 		start_index += 1
-		self.total = Int(uuid.substringWithRange(Range<String.Index>(uuid.startIndex.advancedBy(start_index)..<uuid.endIndex)))!
+		self.total = Int(uuid.substring(with: Range<String.Index>(uuid.characters.index(uuid.startIndex, offsetBy: start_index)..<uuid.endIndex)))!
 	}
 	
 }

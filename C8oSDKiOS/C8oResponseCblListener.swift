@@ -10,9 +10,9 @@ import Foundation
 
 public protocol C8oResponseCblListener: C8oResponseListener {
 	
-	func onDocumentResponse(document: CBLDocument, requestParameters: Dictionary<String, NSObject>)
+	func onDocumentResponse(_ document: CBLDocument, requestParameters: Dictionary<String, NSObject>)
 	
-	func onQueryEnumeratorResponse(queryEnumerator: CBLQueryEnumerator, requestParameters: Dictionary<String, NSObject>)
+	func onQueryEnumeratorResponse(_ queryEnumerator: CBLQueryEnumerator, requestParameters: Dictionary<String, NSObject>)
 	
 	// func onReplicationChangeEventResponse(changeEvent : , requestParameters : Dictionary<String, NSObject>)
 }

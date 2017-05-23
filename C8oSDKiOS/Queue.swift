@@ -16,7 +16,7 @@ internal class C8oJSON: AnyObject {
 	internal var myJSON: JSON?
 }
 
-public class Pair<K , V>: NSObject {
+open class Pair<K , V>: NSObject {
 	
 	var key: K
 	var value: V
@@ -30,15 +30,15 @@ public class Pair<K , V>: NSObject {
 }
 
 extension String {
-	static func IsNullOrEmpty(value: String?) -> Bool {
+	static func IsNullOrEmpty(_ value: String?) -> Bool {
 		return value == nil || value!.isEmpty
 	}
 }
 
 extension String {
-	static func IsNullOrWhiteSpace(value: String?) -> Bool {
+	static func IsNullOrWhiteSpace(_ value: String?) -> Bool {
 		return IsNullOrEmpty(value) ||
-		(value!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())).length == 0
+		(value!.trimmingCharacters(in: CharacterSet.whitespaces)).length == 0
 	}
 }
 
@@ -60,7 +60,7 @@ class _QueueItem<T> {
 /**
     A standard queue (FIFO - First In First Out). Supports simultaneous adding and removing, but only one item can be added at a time, and only one item can be removed at a time.
 */
-public class Queue<T> {
+open class Queue<T> {
 	
 	public typealias Element = T
 	
@@ -76,7 +76,7 @@ public class Queue<T> {
 	}
 	
 	// Add a new item to the back of the queue.
-	public func enqueue (value: Element) {
+	open func enqueue (_ value: Element) {
 		_back.next = _QueueItem(value)
         _back = _back.next!
         
@@ -85,7 +85,7 @@ public class Queue<T> {
 	}
 	
 	// Return and remove the item at the front of the queue.
-	public func dequeue () -> Element? {
+	open func dequeue () -> Element? {
 		if let newhead = _front.next {
 			_front = newhead
 			count -= 1
@@ -95,27 +95,27 @@ public class Queue<T> {
 		}
 	}
 	
-	public func isEmpty() -> Bool {
+	open func isEmpty() -> Bool {
 		return _front === _back
 	}
-	public func Count() -> Int {
+	open func Count() -> Int {
 		return count
 	}
 }
 
 extension String {
 	
-	func indexOf(target: String) -> Int? {
-		if let range = self.rangeOfString(target) {
-			return startIndex.distanceTo(range.startIndex)
+	func indexOf(_ target: String) -> Int? {
+		if let range = self.range(of: target) {
+			return characters.distance(from: startIndex, to: range.lowerBound)
 		} else {
 			return nil
 		}
 	}
 	
-	func lastIndexOf(target: String) -> Int? {
-		if let range = self.rangeOfString(target, options: .BackwardsSearch) {
-			return startIndex.distanceTo(range.startIndex)
+	func lastIndexOf(_ target: String) -> Int? {
+		if let range = self.range(of: target, options: .backwards) {
+			return characters.distance(from: startIndex, to: range.lowerBound)
 		} else {
 			return nil
 		}

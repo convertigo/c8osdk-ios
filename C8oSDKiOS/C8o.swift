@@ -10,6 +10,19 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 import AEXML
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 /**
  Allows to send requests to a Convertigo Server (or Studio), these requests are called c8o calls.
@@ -20,12 +33,12 @@ import AEXML
 
  To use it, you have to first initialize the C8o instance with the Convertigo endpoint, then use call methods with Convertigo variables as parameter.
  */
-public class C8o: C8oBase {
+open class C8o: C8oBase {
 	
 	/* Regular Expression */
-	private static let RE_REQUESTABLE: NSRegularExpression = try! NSRegularExpression(pattern: "^([^.]*)\\.(?:([^.]+)|(?:([^.]+)\\.([^.]+)))$", options: [])
+	fileprivate static let RE_REQUESTABLE: NSRegularExpression = try! NSRegularExpression(pattern: "^([^.]*)\\.(?:([^.]+)|(?:([^.]+)\\.([^.]+)))$", options: [])
 	
-	private static let RE_ENDPOINT: NSRegularExpression = try! NSRegularExpression(pattern: "^(http(s)?://([^:/]+)(:[0-9]+)?/?.*?)/projects/([^/]+)$", options: [])
+	fileprivate static let RE_ENDPOINT: NSRegularExpression = try! NSRegularExpression(pattern: "^(http(s)?://([^:/]+)(:[0-9]+)?/?.*?)/projects/([^/]+)$", options: [])
 	
 	/* Engine reserved parameters */
 	internal static var ENGINE_PARAMETER_PROJECT: String = "__project"
@@ -48,52 +61,52 @@ public class C8o: C8oBase {
 	 "mykey", myvalue
 	 ).sync();
 	 */
-	public static var FS_POLICY: String = "_use_policy"
+	open static var FS_POLICY: String = "_use_policy"
 	/**
 	 Use it with "fs://.post" and C8o.FS_POLICY.
 
 	 This is the default post policy that don't alter the document before the CouchbaseLite's insertion.
 	 */
-	public static var FS_POLICY_NONE: String = "none"
+	open static var FS_POLICY_NONE: String = "none"
 	/**
 	 Use it with "fs://.post" and C8o.FS_POLICY.
 
 	 This post policy remove the "_id" and "_rev" of the document before the CouchbaseLite's insertion.
 	 */
-	public static var FS_POLICY_CREATE: String = "create"
+	open static var FS_POLICY_CREATE: String = "create"
 	/**
 	 Use it with "fs://.post" and C8o.FS_POLICY.
 
 	 This post policy inserts the document in CouchbaseLite even if a document with the same "_id" already exists.
 	 */
-	public static var FS_POLICY_OVERRIDE: String = "override"
+	open static var FS_POLICY_OVERRIDE: String = "override"
 	/**
 	 Use it with "fs://.post" and C8o.FS_POLICY.
 
 	 This post policy merge the document with an existing document with the same "_id" before the CouchbaseLite's insertion.
 	 */
-	public static var FS_POLICY_MERGE: String = "merge"
+	open static var FS_POLICY_MERGE: String = "merge"
 	/**
 	 Use it with "fs://.post". Default value is ".".
 
 	 This key allow to override the sub key separator in case of document depth modification.
 	 */
-    public static var FS_SUBKEY_SEPARATOR: String = "_use_subkey_separator"
+    open static var FS_SUBKEY_SEPARATOR: String = "_use_subkey_separator"
     /**
      Use it with "c8oSettings.setFullSyncStorageEngine" to choose the SQL fullsync storage engine.
      */
-    public static var FS_STORAGE_SQL: String = "SQL"
+    open static var FS_STORAGE_SQL: String = "SQL"
     /**
      Use it with "c8oSettings.setFullSyncStorageEngine" to choose the FORESTDB fullsync storage engine.
      */
-    public static var FS_STORAGE_FORESTDB: String = "FORESTDB"
+    open static var FS_STORAGE_FORESTDB: String = "FORESTDB"
     /**
      Use it with "fs://" request as parameter to enable the live request feature.<br/>
      Must be followed by a string parameter, the 'liveid' that can be use to cancel the live
      request using c8o.cancelLive(liveid) method.<br/>
      A live request automatically recall the then or thenUI handler when the database changed.
      */
-    public static var FS_LIVE: String = "__live"
+    open static var FS_LIVE: String = "__live"
 	
 	/* Local cache keys */
 	
@@ -116,18 +129,18 @@ public class C8o: C8oBase {
 	 Returns the current version of the SDK as "x.y.z".
 	 - returns: Current version of the SDK as "x.y.z".
 	 */
-	public static func getSdkVersion() -> String {
+	open static func getSdkVersion() -> String {
 		return "2.1.0"
 	}
 	
 	/* Attributes */
 	
-	private var _endpoint: String?
-	private var _endpointConvertigo: String?
-	private var _endpointIsSecure: Bool?
-	private var _endpointHost: String?
-	private var _endpointPort: String?
-	private var _endpointProject: String?
+	fileprivate var _endpoint: String?
+	fileprivate var _endpointConvertigo: String?
+	fileprivate var _endpointIsSecure: Bool?
+	fileprivate var _endpointHost: String?
+	fileprivate var _endpointPort: String?
+	fileprivate var _endpointProject: String?
 	
 	/* Used to run HTTP requests.*/
 	internal var httpInterface: C8oHttpInterface?
@@ -160,25 +173,25 @@ public class C8o: C8oBase {
 		}
 		
 		// Checks the endpoint validty
-		let regexV = C8o.RE_ENDPOINT.matchesInString(endpoint, options: [], range: NSMakeRange(0, endpoint.characters.count))
+		let regexV = C8o.RE_ENDPOINT.matches(in: endpoint, options: [], range: NSMakeRange(0, endpoint.characters.count))
 		
 		if (regexV.first == nil) {
 			throw C8oException(message: C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint))
 		}
 		
 		_endpoint = endpoint
-		_endpointConvertigo = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(1))
+		_endpointConvertigo = (endpoint as NSString).substring(with: regexV[0].rangeAt(1))
 		
-		if (regexV[0].rangeAtIndex(2).location != NSNotFound) {
-			_endpointIsSecure = !(endpoint as NSString?)!.substringWithRange(regexV[0].rangeAtIndex(2)).isEmpty
+		if (regexV[0].rangeAt(2).location != NSNotFound) {
+			_endpointIsSecure = !(endpoint as NSString?)!.substring(with: regexV[0].rangeAt(2)).isEmpty
 		} else {
 			_endpointIsSecure = false
 		}
-		_endpointHost = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(3))
-		if (regexV[0].rangeAtIndex(4).location != NSNotFound) {
-			_endpointPort = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(4))
+		_endpointHost = (endpoint as NSString).substring(with: regexV[0].rangeAt(3))
+		if (regexV[0].rangeAt(4).location != NSNotFound) {
+			_endpointPort = (endpoint as NSString).substring(with: regexV[0].rangeAt(4))
 		}
-		_endpointProject = (endpoint as NSString).substringWithRange(regexV[0].rangeAtIndex(5))
+		_endpointProject = (endpoint as NSString).substring(with: regexV[0].rangeAt(5))
 		
 		if (c8oSettings != nil) {
 			copyProperties(c8oSettings!)
@@ -204,7 +217,7 @@ public class C8o: C8oBase {
 	 @endcode
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 */
-	public func call(requestable: String?, parameters: Dictionary<String, AnyObject>? = nil, c8oResponseListener: C8oResponseListener, c8oExceptionListener: C8oExceptionListener) -> Void {
+	open func call(_ requestable: String?, parameters: Dictionary<String, AnyObject>? = nil, c8oResponseListener: C8oResponseListener, c8oExceptionListener: C8oExceptionListener) -> Void {
 		var parameters = parameters
 		do {
 			if (requestable == nil) {
@@ -221,35 +234,35 @@ public class C8o: C8oBase {
 			
 			// Use the requestable string to add parameters corresponding to the c8o project, sequence, connector and transaction (<project>.<sequence> or <project>.<connector>.<transaction>)
 			let regex: NSRegularExpression = C8o.RE_REQUESTABLE
-			let regexV = regex.matchesInString(requestable!, options: [], range: NSMakeRange(0, requestable!.characters.count))
+			let regexV = regex.matches(in: requestable!, options: [], range: NSMakeRange(0, requestable!.characters.count))
 			
 			if (regexV.first == nil) {
 				throw C8oException(message: C8oExceptionMessage.InvalidArgumentInvalidEndpoint(_endpoint!)) // Exception(C8oExceptionMessage.InvalidArgumentInvalidEndpoint(endpoint))
 			}
 			
 			// If the project name is specified
-			if ((requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(1)) != "") {
-				parameters![C8o.ENGINE_PARAMETER_PROJECT] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(1))
+			if ((requestable! as NSString).substring(with: regexV[0].rangeAt(1)) != "") {
+				parameters![C8o.ENGINE_PARAMETER_PROJECT] = (requestable! as NSString).substring(with: regexV[0].rangeAt(1)) as AnyObject
 			}
 			
 			// If the C8o call use a sequence
-			let rangeLenght = regexV[0].rangeAtIndex(2).length - 1
+			let rangeLenght = regexV[0].rangeAt(2).length - 1
 			let requestableLenght = (requestable! as NSString?)?.length
 			if (rangeLenght < requestableLenght && rangeLenght > 0) {
 				
-				if (((requestable! as NSString?)!.substringWithRange(regexV[0].rangeAtIndex(2)) as String?) != "") {
-					parameters![C8o.ENGINE_PARAMETER_SEQUENCE] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(2))
+				if (((requestable! as NSString?)!.substring(with: regexV[0].rangeAt(2)) as String?) != "") {
+					parameters![C8o.ENGINE_PARAMETER_SEQUENCE] = (requestable! as NSString).substring(with: regexV[0].rangeAt(2)) as AnyObject
 				} else {
-					parameters![C8o.ENGINE_PARAMETER_CONNECTOR] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(3))
+					parameters![C8o.ENGINE_PARAMETER_CONNECTOR] = (requestable! as NSString).substring(with: regexV[0].rangeAt(3)) as AnyObject
 					
-					parameters![C8o.ENGINE_PARAMETER_TRANSACTION] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(4))
+					parameters![C8o.ENGINE_PARAMETER_TRANSACTION] = (requestable! as NSString).substring(with: regexV[0].rangeAt(4)) as AnyObject
 					
 				}
 				
 			} else {
-				parameters![C8o.ENGINE_PARAMETER_CONNECTOR] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(3))
+				parameters![C8o.ENGINE_PARAMETER_CONNECTOR] = (requestable! as NSString).substring(with: regexV[0].rangeAt(3)) as AnyObject
 				
-				parameters![C8o.ENGINE_PARAMETER_TRANSACTION] = (requestable! as NSString).substringWithRange(regexV[0].rangeAtIndex(4))
+				parameters![C8o.ENGINE_PARAMETER_TRANSACTION] = (requestable! as NSString).substring(with: regexV[0].rangeAt(4)) as AnyObject
 			}
 			
 			try! call(parameters, c8oResponseListener: c8oResponseListener, c8oExceptionListener: c8oExceptionListener)
@@ -262,11 +275,11 @@ public class C8o: C8oBase {
 		}
 	}
 	
-	public func call(parameters: Dictionary<String, AnyObject>? = nil, c8oResponseListener: C8oResponseListener? = nil, c8oExceptionListener: C8oExceptionListener? = nil) throws {
+	open func call(_ parameters: Dictionary<String, AnyObject>? = nil, c8oResponseListener: C8oResponseListener? = nil, c8oExceptionListener: C8oExceptionListener? = nil) throws {
 		var parameters = parameters
 		// IMPORTANT : all c8o calls have to end here !
 		
-		c8oLogger!.logMethodCall("Call", parameters: parameters!)
+		c8oLogger!.logMethodCall("Call", parameters: parameters! as NSObject)
 		
 		// Checks parameters validity
 		if (parameters == nil) {
@@ -310,7 +323,7 @@ public class C8o: C8oBase {
 	 FailUI() methods to handle C8oErrors.
 
 	 */
-	public func callJson (requestable: String, parameters: Dictionary<String, AnyObject>?) -> C8oPromise<JSON> {
+	open func callJson (_ requestable: String, parameters: Dictionary<String, AnyObject>?) -> C8oPromise<JSON> {
 		let promise = C8oPromise<JSON>(c8o: self)
 		
 		call(requestable,
@@ -362,7 +375,7 @@ public class C8o: C8oBase {
      FailUI() methods to handle C8oErrors.
      
      */
-	public func callJson(requestable: String, parameters: AnyObject...) -> C8oPromise<JSON> {
+	open func callJson(_ requestable: String, parameters: AnyObject...) -> C8oPromise<JSON> {
 		
 		return try! callJson(requestable, parameters: C8o.toParameters(parameters))
 		
@@ -394,7 +407,7 @@ public class C8o: C8oBase {
      FailUI() methods to handle C8oErrors.
      
      */
-	public func callJson(requestable: String, parameters: JSON) -> C8oPromise<JSON> {
+	open func callJson(_ requestable: String, parameters: JSON) -> C8oPromise<JSON> {
 		
 		return callJson(requestable, parameters: (parameters.object as! Dictionary<String, AnyObject>))
     }
@@ -425,7 +438,7 @@ public class C8o: C8oBase {
      failUI() methods to handle C8oErrors.
      
      */
-	public func callXml(requestable: String, parameters: Dictionary<String, AnyObject>) -> C8oPromise<AEXMLDocument> {
+	open func callXml(_ requestable: String, parameters: Dictionary<String, AnyObject>) -> C8oPromise<AEXMLDocument> {
 		
 		let promise = C8oPromise<AEXMLDocument>(c8o: self)
 		
@@ -480,7 +493,7 @@ public class C8o: C8oBase {
      failUI() methods to handle C8oErrors.
      
      */
-	public func callXml(requestable: String, parameters: AnyObject...) -> C8oPromise<AEXMLDocument> {
+	open func callXml(_ requestable: String, parameters: AnyObject...) -> C8oPromise<AEXMLDocument> {
 		return try! callXml(requestable, parameters: C8o.toParameters(parameters))
 	}
 	
@@ -493,7 +506,7 @@ public class C8o: C8oBase {
 	 @param value : String
 
 	 */
-	public func addCookie(name: String, value: String) -> Void {
+	open func addCookie(_ name: String, value: String) -> Void {
 		httpInterface!.addCookie(name, value: value)
 	}
 	
@@ -502,7 +515,7 @@ public class C8o: C8oBase {
      Add to the application log (generated using the c8o.log object) the logs generated internally
      by the SDK. Useful for debugging the SDK.
      */
-	public override var logC8o: Bool {
+	open override var logC8o: Bool {
 		get { return _logC8o! }
 		set(value) { _logC8o = value }
 	}
@@ -511,12 +524,12 @@ public class C8o: C8oBase {
      Sets a value indicating if logs are sent to the Convertigo server.<br/>
      Default is <b>true</b>.
      */
-	public override var logRemote: Bool {
+	open override var logRemote: Bool {
 		get { return _logRemote! }
 		set(value) { _logRemote = value }
 	}
 	
-	public override var logLevelLocal: C8oLogLevel {
+	open override var logLevelLocal: C8oLogLevel {
 		get { return _logLevelLocal }
 		set(value) { _logLevelLocal = value }
 	}
@@ -524,7 +537,7 @@ public class C8o: C8oBase {
     /**
      Set the storage engine for local FullSync databases. Use C8o.FS_STORAGE_SQL or C8o.FS_STORAGE_FORESTDB.
      */
-	public override var fullSyncStorageEngine: String {
+	open override var fullSyncStorageEngine: String {
 		get { return _fullSyncStorageEngine }
 		set(value) {
 			if (C8o.FS_STORAGE_SQL == value || C8o.FS_STORAGE_FORESTDB == value) {
@@ -536,31 +549,31 @@ public class C8o: C8oBase {
     /**
      Set the encryption key for local FullSync databases encryption.
      */
-	public override var fullSyncEncryptionKey: String? {
+	open override var fullSyncEncryptionKey: String? {
 		get { return _fullSyncEncryptionKey }
 		set(value) { _fullSyncEncryptionKey = value }
 	}
 	
-	public var log: C8oLogger {
+	open var log: C8oLogger {
 		get { return c8oLogger! }
 	}
     
     /**
      Is the current thread is the UI thread.
      */
-	public func isUI () -> Bool {
-		return NSThread.isMainThread()
+	open func isUI () -> Bool {
+		return Thread.isMainThread
 	}
 	
     /**
      Run a block of code in the UI Thread.<br/>
      Run the code directly if already in the UI thread.
      */
-	public func runUI (block: dispatch_block_t) {
+	open func runUI (_ block: @escaping ()->()) {
 		if (isUI()) {
 			block()
 		} else {
-			dispatch_async(dispatch_get_main_queue(), {
+			DispatchQueue.main.async(execute: {
 				block()
 			})
 		}
@@ -569,48 +582,48 @@ public class C8o: C8oBase {
     /**
      Run a block of code in a background Thread.
      */
-	public func runBG (block: dispatch_block_t) {
-		let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
-		dispatch_async(dispatch_get_global_queue(priority, 0)) {
+	open func runBG (_ block: @escaping ()->()) {
+		let priority = DispatchQueue.GlobalQueuePriority.default
+		DispatchQueue.global(priority: priority).async {
 			block()
 		}
 	}
 	
-	public override var description: String {
+	open override var description: String {
 		get {
 			return "C8o[" + _endpoint! + "] " + super.description
 		}
 	}
 	
-	public var endpoint: String {
+	open var endpoint: String {
 		get { return _endpoint! }
 	}
 	
-	public var endpointConvertigo: String {
+	open var endpointConvertigo: String {
 		get { return _endpointConvertigo! }
 	}
 	
-	public var endpointIsSecure: Bool {
+	open var endpointIsSecure: Bool {
 		get { return _endpointIsSecure! }
 	}
 	
-	public var endpointHost: String {
+	open var endpointHost: String {
 		get { return _endpointHost! }
 	}
 	
-	public var endpointPort: String {
+	open var endpointPort: String {
 		get { return _endpointPort! }
 	}
 	
-	public var endpointProject: String {
+	open var endpointProject: String {
 		get { return _endpointProject! }
 	}
 	
-	public var deviceUUID: String {
+	open var deviceUUID: String {
 		get { return C8o.deviceUUID }
 	}
 	
-	public var cookieStore: C8oCookieStorage {
+	open var cookieStore: C8oCookieStorage {
 		get { return httpInterface!.cookieStore! }
 	}
 	
@@ -620,7 +633,7 @@ public class C8o: C8oBase {
      @param db the name of the fullsync database to monitor. Use the default database for a blank or a null value.
      @param listener the listener to trigger on change.
      */
-    public func addFullSyncChangeListener(db: String, listener: C8oFullSyncChangeListener) throws {
+    open func addFullSyncChangeListener(_ db: String, listener: C8oFullSyncChangeListener) throws {
         try c8oFullSync!.addFullSyncChangeListener(db, listener: listener)
     }
     
@@ -630,11 +643,11 @@ public class C8o: C8oBase {
      @param db the name of the fullsync database to monitor. Use the default database for a blank or a null value.
      @param listener the listener instance to remove.
      */
-    public func removeFullSyncChangeListener(db: String, listener: C8oFullSyncChangeListener) throws {
+    open func removeFullSyncChangeListener(_ db: String, listener: C8oFullSyncChangeListener) throws {
         try c8oFullSync!.removeFullSyncChangeListener(db, listener: listener)
     }
     
-    func addLive(liveid: String, db: String, task: C8oCallTask) throws {
+    func addLive(_ liveid: String, db: String, task: C8oCallTask) throws {
         try cancelLive(liveid)
         lives[liveid] = task
         livesDb[liveid] = db
@@ -646,31 +659,31 @@ public class C8o: C8oBase {
      
      @param liveid The value associated with the C8o.FS_LIVE parameter.
      */
-    public func cancelLive(liveid: String) throws {
+    open func cancelLive(_ liveid: String) throws {
         if let db = livesDb[liveid] {
-            livesDb.removeValueForKey(liveid)
+            livesDb.removeValue(forKey: liveid)
             if (!livesDb.values.contains(db)) {
                 try removeFullSyncChangeListener(db, listener: handleFullSyncLive!)
             }
         }
-        lives.removeValueForKey(liveid)
+        lives.removeValue(forKey: liveid)
     }
     
-	private static func toParameters(parameters: [AnyObject]?) throws -> Dictionary<String, AnyObject> {
+	fileprivate static func toParameters(_ parameters: [AnyObject]?) throws -> Dictionary<String, AnyObject> {
 		if (parameters!.count % 2 != 0) {
 			throw C8oException(message: C8oExceptionMessage.invalidParameterValue("parameters", details: "needs pairs of values"))
 		}
 		
 		var newParameters = Dictionary<String, AnyObject>()
 		
-		for i in 0.stride(to: parameters!.count, by: 2) {
-			newParameters[String(parameters![i])] = parameters![i + 1]
+		for i in stride(from: 0, to: parameters!.count, by: 2) {
+			newParameters[String(describing: parameters![i])] = parameters![i + 1]
 		}
 		
 		return newParameters
 	}
 	
-	internal func handleCallException(c8oExceptionListener: C8oExceptionListener?, requestParameters: Dictionary<String, AnyObject>, exception: C8oException) {
+	internal func handleCallException(_ c8oExceptionListener: C8oExceptionListener?, requestParameters: Dictionary<String, AnyObject>, exception: C8oException) {
 		c8oLogger!._warn("Handle a call exception", exceptions: exception)
 		
 		if (c8oExceptionListener != nil) {

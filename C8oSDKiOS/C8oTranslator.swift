@@ -12,13 +12,13 @@ import SwiftyJSON
 import AEXML
 
 internal class C8oTranslator {
-	private static var XML_KEY_ITEM: String = "item";
-	private static var XML_KEY_OBJECT: String = "object";
-	private static var XML_KEY__ATTACHMENTS: String = "_attachments";
-	private static var XML_KEY_ATTACHMENT: String = "attachment";
-	private static var XML_KEY_NAME: String = "name";
+	fileprivate static var XML_KEY_ITEM: String = "item";
+	fileprivate static var XML_KEY_OBJECT: String = "object";
+	fileprivate static var XML_KEY__ATTACHMENTS: String = "_attachments";
+	fileprivate static var XML_KEY_ATTACHMENT: String = "attachment";
+	fileprivate static var XML_KEY_NAME: String = "name";
 	
-	internal static func jsonToXml(json: JSON, parentElement: AEXMLElement) -> Void {
+	internal static func jsonToXml(_ json: JSON, parentElement: AEXMLElement) -> Void {
 		
 		// Translates the JSON object depending to its type
 		
@@ -29,7 +29,7 @@ internal class C8oTranslator {
 			for jsonChild in jsonObject {
                 keys.append(jsonChild.0)
 			}
-			keys.sortInPlace()
+			keys.sort()
 			
 			// Translates each elements of the JSON object
 			for key in keys {
@@ -51,7 +51,7 @@ internal class C8oTranslator {
         }
 	}
 	
-	internal static func jsonKeyToXml(jsonKey: String, jsonValue: JSON/*JToken*/, parentElement: AEXMLElement/*XElement*/) -> Void {
+	internal static func jsonKeyToXml(_ jsonKey: String, jsonValue: JSON/*JToken*/, parentElement: AEXMLElement/*XElement*/) -> Void {
 		var jsonKeyMutable = jsonKey
 		// Replaces the key if it is not specified
 		if (String.IsNullOrEmpty(jsonKeyMutable)) {
@@ -83,34 +83,34 @@ internal class C8oTranslator {
 	
 	// *** XML / JSON / Stream to string ***//
 	
-	internal static func xmlToString(xmlDocument: AEXMLDocument) -> String? {
+	internal static func xmlToString(_ xmlDocument: AEXMLDocument) -> String? {
 		return String(xmlDocument)
 		
 	}
 	
-	internal static func jsonToString(jsonObject: JSON) -> String? {
+	internal static func jsonToString(_ jsonObject: JSON) -> String? {
 		return String(jsonObject)
 	}
 	
-	internal static func streamToString(stream: NSStream) -> String? {
+	internal static func streamToString(_ stream: Stream) -> String? {
 		fatalError("Function \"StreamToString\" must be defined")
 		
 	}
 	
 	// *** Stream to XML / JSON ***//
 	
-	internal static func streamToJson(stream: NSStream) -> JSON? {
+	internal static func streamToJson(_ stream: Stream) -> JSON? {
 		fatalError("Function \"StreamToJson\" must be defined")
 	}
-	internal static func dataToJson(data: NSData) -> JSON? {
+	internal static func dataToJson(_ data: NSData) -> JSON? {
 		let json = JSON(data: data)
 		return json
 	}
 	
-	internal static func streamToXml(stream: NSStream) -> NSObject? {
+	internal static func streamToXml(_ stream: Stream) -> NSObject? {
 		fatalError("Function \"StreamToXml\" must be defined")
 	}
-	internal static func dataToXml(data: NSData) -> AEXMLDocument? {
+	internal static func dataToXml(_ data: NSData) -> AEXMLDocument? {
 		do {
 			let doc = try AEXMLDocument(xmlData: data)
 			return doc
@@ -122,28 +122,28 @@ internal class C8oTranslator {
 	
 	// *** string to XML / JSON / object ***//
 	
-	internal static func stringToXml(xmlString: String) throws -> AEXMLElement {
+	internal static func stringToXml(_ xmlString: String) throws -> AEXMLElement {
 		return try AEXMLDocument(xmlData: xmlString.dataUsingEncoding(NSUTF8StringEncoding)!)
 	}
 	
-	internal static func stringToJson(jsonValueString: String) -> JSON {
+	internal static func stringToJson(_ jsonValueString: String) -> JSON {
 		return JSON(data: jsonValueString.dataUsingEncoding(NSUTF8StringEncoding)!)
 	}
 	
-	internal static func stringToObject(objectValue: String, type: Type) -> NSObject? {
+	internal static func stringToObject(_ objectValue: String, type: Type) -> NSObject? {
 		fatalError("Function \"StringToObject\" must be defined")
 		
 	}
 	
 	// *** Others ***//
 	
-	internal static func byteArrayToHexString(ba: UInt64) -> String? {
+	internal static func byteArrayToHexString(_ ba: UInt64) -> String? {
 		let hex: String = String(format: "%2X", ba)
-		return hex.stringByReplacingOccurrencesOfString("-", withString: "")
+		return hex.replacingOccurrences(of: "-", with: "")
 		
 	}
 	
-	internal static func doubleToHexString(d: Double) -> String? {
+	internal static func doubleToHexString(_ d: Double) -> String? {
 		let bytes: UInt64 = UInt64(d)
 		return C8oTranslator.byteArrayToHexString(bytes);
 	}
@@ -151,25 +151,25 @@ internal class C8oTranslator {
 	// *** Unused ***//
 	
 	// TODO
-	internal static func stringToByteArray(str: String) -> [UInt8]? {
+	internal static func stringToByteArray(_ str: String) -> [UInt8]? {
 		fatalError("Function \"StringToByteArray\" must be defined")
 		
 	}
 	
 	// TODO
-	internal static func byteArrayToString(bytes: [UInt8]) -> String? {
+	internal static func byteArrayToString(_ bytes: [UInt8]) -> String? {
 		fatalError("Function \"ByteArrayToString\" must be defined")
 		
 	}
 	
 	// TODO
-	internal static func hexStringToByteArray(hex: String) -> [UInt8]? {
+	internal static func hexStringToByteArray(_ hex: String) -> [UInt8]? {
 		fatalError("Function \"HexStringToByteArray\" must be defined")
 		
 	}
 	
 	// TODO
-	internal static func dictionaryToJson(dict: Dictionary<String, NSObject>) -> JSON? {
+	internal static func dictionaryToJson(_ dict: Dictionary<String, NSObject>) -> JSON? {
 		fatalError("Function \"DictionaryToJson\" must be defined")
 		
 	}

@@ -14,7 +14,7 @@ internal class C8oExceptionMessage {
 		return "You are using the default FullSyncInterface which is not implemented"
 	}
 	
-	internal static func invalidParameterValue(parameterName: String, details: String? = nil) -> String {
+	internal static func invalidParameterValue(_ parameterName: String, details: String? = nil) -> String {
 		var errorMessage: String = "The parameter '" + parameterName + "' is invalid"
 		if (details != nil) {
 			errorMessage += ", " + details!
@@ -22,19 +22,19 @@ internal class C8oExceptionMessage {
 		return errorMessage
 	}
 	
-	internal static func missingValue(valueName: String) -> String {
+	internal static func missingValue(_ valueName: String) -> String {
 		return "The " + valueName + " is missing"
 	}
 	
-	internal static func unknownValue(valueName: String, value: String) -> String {
+	internal static func unknownValue(_ valueName: String, value: String) -> String {
 		return "The " + valueName + " value " + value + " is unknown"
 	}
 	
-	internal static func unknownType(variableName: String, variable: NSObject) -> String {
+	internal static func unknownType(_ variableName: String, variable: NSObject) -> String {
 		return "The " + variableName + " type " + C8oUtils.getObjectClassName(variable) + "is unknown"
 	}
 	
-	internal static func ressourceNotFound(ressourceName: String) -> String {
+	internal static func ressourceNotFound(_ ressourceName: String) -> String {
 		return "The " + ressourceName + " was not found"
 	}
 	
@@ -44,19 +44,19 @@ internal class C8oExceptionMessage {
 	
 	/** TAG Illegal argument */
 	
-	internal static func illegalArgumentInvalidFullSyncDatabaseUrl(fullSyncDatabaseUrlStr: String) -> String {
+	internal static func illegalArgumentInvalidFullSyncDatabaseUrl(_ fullSyncDatabaseUrlStr: String) -> String {
 		return "The fullSync database url '" + fullSyncDatabaseUrlStr + "' is not a valid url"
 	}
 	
-	internal static func FullSyncDatabaseInitFailed(databaseName: String) -> String {
+	internal static func FullSyncDatabaseInitFailed(_ databaseName: String) -> String {
 		return "Failed to initialize the FullSync database '" + databaseName + "'"
 	}
 	
-	internal static func MissParameter(parameterName: String) -> String {
+	internal static func MissParameter(_ parameterName: String) -> String {
 		return "The parameter '" + parameterName + "' is missing"
 	}
 	
-	private static func illegalArgumentInvalidParameterValue(parameterName: String, parameterValue: String) -> String {
+	fileprivate static func illegalArgumentInvalidParameterValue(_ parameterName: String, parameterValue: String) -> String {
 		return "'" + parameterValue + "' is not a valid value for the parameter '" + parameterName + "'"
 	}
 	
@@ -66,32 +66,32 @@ internal class C8oExceptionMessage {
 	// ", to run a fullSync request this parameter must start with '" + FullSyncInterface.FULL_SYNC_PROJECT + "'"
 	// }
 	
-	internal static func InvalidArgumentInvalidURL(urlStr: String) -> String {
+	internal static func InvalidArgumentInvalidURL(_ urlStr: String) -> String {
 		return "'" + urlStr + "' is not a valid URL"
 	}
 	
-	internal static func UnknownFullSyncPolicy(policy: NSObject?/*NSOFullSyncPolicy*/) -> String {
+	internal static func UnknownFullSyncPolicy(_ policy: NSObject?/*NSOFullSyncPolicy*/) -> String {
 		// return "Unknown the FullSync policy '" + policy + "'"
 		return ""
 	}
 	
-	internal static func InvalidArgumentInvalidEndpoint(endpoint: String) -> String {
+	internal static func InvalidArgumentInvalidEndpoint(_ endpoint: String) -> String {
 		return "'" + endpoint + "' is not a valid Convertigo endpoint"
 	}
 	
-	internal static func InvalidRequestable(requestable: String) -> String {
+	internal static func InvalidRequestable(_ requestable: String) -> String {
 		return "'" + requestable + "' is not a valid requestable."
 	}
 	
-	internal static func InvalidParameterType(parameterName: String, wantedParameterType: String, actualParameterType: String) -> String {
+	internal static func InvalidParameterType(_ parameterName: String, wantedParameterType: String, actualParameterType: String) -> String {
 		return "The parameter '" + parameterName + "' must be of type '" + wantedParameterType + "' and not '" + actualParameterType + "'"
 	}
 	
-	internal static func illegalArgumentIncompatibleListener(listenerType: String, responseType: String) -> String {
+	internal static func illegalArgumentIncompatibleListener(_ listenerType: String, responseType: String) -> String {
 		return "The listener type '" + listenerType + "' is incompatible with the response type '" + responseType + "'"
 	}
 	
-	internal static func InvalidArgumentNullParameter(parameterName: String) -> String {
+	internal static func InvalidArgumentNullParameter(_ parameterName: String) -> String {
 		return parameterName + " must be not null"
 	}
 	
@@ -168,15 +168,15 @@ internal class C8oExceptionMessage {
 		return "Unable to parse the string to a JSON document"
 	}
 	
-	internal static func ParseStringToObject(type: NSObject/*type*/) -> String {
+	internal static func ParseStringToObject(_ type: NSObject/*type*/) -> String {
 		return "Unable to parse the string (JSON)->String to an object of type " // + type
 	}
 	
-	internal static func StringToJsonValue(str: String) -> String {
+	internal static func StringToJsonValue(_ str: String) -> String {
 		return "Unable to translate the string '" + str + "' to a JSON value"
 	}
 	
-	internal static func GetParameterJsonValue(parameter: Dictionary<String, NSObject>) -> String {
+	internal static func GetParameterJsonValue(_ parameter: Dictionary<String, NSObject>) -> String {
 		return "" // return "Unable to translate the string value '" + parameter.values + "' of the key + '" + parameter.keys + "' to a JSON value"
 	}
 	
@@ -216,7 +216,7 @@ internal class C8oExceptionMessage {
 		return "Unable to run the post document query"
 	}
 	
-	internal static func unableToGetFullSyncDatabase(databaseName: String) -> String {
+	internal static func unableToGetFullSyncDatabase(_ databaseName: String) -> String {
 		return "Unable to get the fullSync database '" + databaseName + "' from the manager"
 	}
 	
@@ -232,11 +232,11 @@ internal class C8oExceptionMessage {
 		return "Delete the Couch document failed"
 	}
 	
-	internal static func fullSyncPutProperties(properties: Dictionary<String, AnyObject>) -> String {
-		return "Unable to put the following properties in the fullSync Document : " + String(properties)
+	internal static func fullSyncPutProperties(_ properties: Dictionary<String, AnyObject>) -> String {
+		return "Unable to put the following properties in the fullSync Document : " + String(describing: properties)
 	}
 	
-	internal static func fullSyncGetOrCreateDatabase(databaseName: String) -> String {
+	internal static func fullSyncGetOrCreateDatabase(_ databaseName: String) -> String {
 		return "Unable to get or create the fullSync database '" + databaseName + "'"
 	}
 	
@@ -269,25 +269,25 @@ internal class C8oExceptionMessage {
 	
 	/** TAG Not found */
 	
-	internal static func illegalArgumentNotFoundFullSyncView(viewName: String, databaseName: String) -> String {
+	internal static func illegalArgumentNotFoundFullSyncView(_ viewName: String, databaseName: String) -> String {
 		return "Cannot found the view '" + viewName + "' in database '" + databaseName + "'"
 	}
 	
 	/** TAG Other */
 	
-	internal static func unhandledResponseType(responseType: String) -> String {
+	internal static func unhandledResponseType(_ responseType: String) -> String {
 		return "The response type '" + responseType + "' is not handled"
 	}
 	
-	internal static func unhandledListenerType(listenerType: String) -> String {
+	internal static func unhandledListenerType(_ listenerType: String) -> String {
 		return "The listener type '" + listenerType + "' is not handled"
 	}
 	
-	internal static func WrongListener(c8oListener: C8oResponseListener) -> String {
+	internal static func WrongListener(_ c8oListener: C8oResponseListener) -> String {
 		return "" // "The C8oListener class " + C8oUtils.GetObjectClassName(c8oListener) + " is not handled"
 	}
 	
-	internal static func wrongResult(result: AnyObject) -> String {
+	internal static func wrongResult(_ result: AnyObject) -> String {
 		return "The response class " + C8oUtils.getObjectClassName(result) + " is not handled"
 	}
 	
@@ -295,7 +295,7 @@ internal class C8oExceptionMessage {
 		return "todo"
 	}
 	
-	internal static func unhandledFullSyncRequestable(fullSyncRequestableValue: String) -> String {
+	internal static func unhandledFullSyncRequestable(_ fullSyncRequestableValue: String) -> String {
 		return "The fullSync requestable '" + fullSyncRequestableValue + "' is not handled"
 	}
 	
@@ -303,7 +303,7 @@ internal class C8oExceptionMessage {
 		return "Unable to close the input stream"
 	}
 	
-	internal static func deserializeJsonObjectFromString(str: String) -> String {
+	internal static func deserializeJsonObjectFromString(_ str: String) -> String {
 		return "Unable to deserialize the JSON object from the following string : '" + str + "'"
 	}
 	
@@ -316,7 +316,7 @@ internal class C8oExceptionMessage {
 		return "Unable to post document"
 	}
 	
-	internal static func getNameValuePairObjectValue(name: String) -> String {
+	internal static func getNameValuePairObjectValue(_ name: String) -> String {
 		return "Unable to get the object value from the NameValuePair named '" + name + "'"
 	}
 	
@@ -404,7 +404,7 @@ internal class C8oExceptionMessage {
 		return "Failed to get Cipher instance"
 	}
 	
-	internal static func entryNotFound(entryKey: String) -> String {
+	internal static func entryNotFound(_ entryKey: String) -> String {
 		return "Entry key '" + entryKey + "' not found"
 	}
 	
@@ -412,7 +412,7 @@ internal class C8oExceptionMessage {
 		return "Failed to parse c8o call request to JSON"
 	}
 	
-	internal static func getJsonKey(key: String) -> String {
+	internal static func getJsonKey(_ key: String) -> String {
 		return "Failed to get the JSON key '" + key + "'"
 	}
 	
@@ -436,7 +436,7 @@ internal class C8oExceptionMessage {
 		return "Failed to get local cache parameters"
 	}
 	
-	internal static func GetLocalCachePolicy(policy: String) -> String {
+	internal static func GetLocalCachePolicy(_ policy: String) -> String {
 		return "Failed to get local cache policy: " + policy
 	}
 	
@@ -468,11 +468,11 @@ internal class C8oExceptionMessage {
 		return "Failed to instanciate the FullSync interface"
 	}
 	
-	internal static func getDocumentFromDatabase(documentId: String) -> String {
+	internal static func getDocumentFromDatabase(_ documentId: String) -> String {
 		return "Failed to get fullSync document '" + documentId + "' from the database"
 	}
 	
-	internal static func FullSyncReplicationFail(databaseName: String, way: String) -> String {
+	internal static func FullSyncReplicationFail(_ databaseName: String, way: String) -> String {
 		return "Failed to '" + way + "' replicate the '" + databaseName + "' database"
 	}
 	
@@ -484,7 +484,7 @@ internal class C8oExceptionMessage {
 		return "The local cache document is just created (empty)->String"
 	}
 	
-	internal static func illegalArgumentInvalidLocalCachePolicy(localCachePolicyString: String) -> String {
+	internal static func illegalArgumentInvalidLocalCachePolicy(_ localCachePolicyString: String) -> String {
 		return "The local cache policy '" + localCachePolicyString + "' is invalid"
 	}
 	

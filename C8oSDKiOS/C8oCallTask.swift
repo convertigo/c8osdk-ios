@@ -13,11 +13,11 @@ import SwiftyJSON
 import AEXML
 
 internal class C8oCallTask {
-	private var c8o: C8o
-	private var parameters: Dictionary<String, AnyObject>
-	private var c8oResponseListener: C8oResponseListener?
-	private var c8oExceptionListener: C8oExceptionListener
-	private var c8oCallUrl: String?
+	fileprivate var c8o: C8o
+	fileprivate var parameters: Dictionary<String, AnyObject>
+	fileprivate var c8oResponseListener: C8oResponseListener?
+	fileprivate var c8oExceptionListener: C8oExceptionListener
+	fileprivate var c8oCallUrl: String?
 	
 	internal init(c8o: C8o, parameters: Dictionary<String, AnyObject>, c8oResponseListener: C8oResponseListener, c8oExceptionListener: C8oExceptionListener) {
 		self.c8o = c8o
@@ -27,7 +27,7 @@ internal class C8oCallTask {
 		self.c8oExceptionListener = c8oExceptionListener
 		self.c8oCallUrl = nil
 		
-		c8o.c8oLogger!.logMethodCall("C8oCallTask", parameters: parameters)
+		c8o.c8oLogger!.logMethodCall("C8oCallTask", parameters: parameters as NSObject)
 	}
 	
 	internal func execute() -> Void {
@@ -37,12 +37,12 @@ internal class C8oCallTask {
 	}
     
     internal func executeFromLive() {
-        parameters.removeValueForKey(C8o.FS_LIVE)
-        parameters[C8o.ENGINE_PARAMETER_FROM_LIVE] = true
+        parameters.removeValue(forKey: C8o.FS_LIVE)
+        parameters[C8o.ENGINE_PARAMETER_FROM_LIVE] = true as AnyObject
         execute()
     }
 	
-	private func doInBackground() -> Void {
+	fileprivate func doInBackground() -> Void {
 		do {
 			let response = try handleRequest()
 			handleResponse(response!)
@@ -55,7 +55,7 @@ internal class C8oCallTask {
 		
 	}
 	
-	private func handleRequest() throws -> AnyObject? {
+	fileprivate func handleRequest() throws -> AnyObject? {
 		let isFullSyncRequest: Bool = C8oFullSync.isFullSyncRequest(parameters)
 		
 		if (isFullSyncRequest) {
@@ -63,7 +63,7 @@ internal class C8oCallTask {
             
             let liveid = C8oUtils.getParameterStringValue(parameters, name: C8o.FS_LIVE)
             if (liveid != nil) {
-                let dbName = C8oUtils.getParameterStringValue(parameters, name: C8o.ENGINE_PARAMETER_PROJECT)?.substringFromIndex(C8oFullSync.FULL_SYNC_PROJECT.endIndex)
+                let dbName = C8oUtils.getParameterStringValue(parameters, name: C8o.ENGINE_PARAMETER_PROJECT)?.substring(from: C8oFullSync.FULL_SYNC_PROJECT.endIndex)
                 try c8o.addLive(liveid!, db: dbName!, task: self)
             }
 			// The result cannot be handled here because it can be different depending to the platform
@@ -87,7 +87,7 @@ internal class C8oCallTask {
 			} else if (c8oResponseListener is C8oResponseJsonListener) {
 				responseType = C8o.RESPONSE_TYPE_JSON
 			} else {
-				throw C8oError.C8oException("Wrong listener")
+				throw C8oError.c8oException("Wrong listener")
 			}
 			
 			/** Local cache */
@@ -102,13 +102,13 @@ internal class C8oCallTask {
 			if (localCache != nil) {
 				
 				// Removes local cache parameters and build the c8o call request identifier
-				parameters.removeValueForKey(C8oLocalCache.PARAM)
+				parameters.removeValue(forKey: C8oLocalCache.PARAM)
 				
 				localCacheEnabled = localCache!.enabled
 				if (localCacheEnabled) {
 					c8oCallRequestIdentifier = C8oUtils.identifyC8oCallRequest(parameters, responseType: responseType)
 					
-					if (localCache!.priority!.isAvailable(c8o: c8o)) {
+					if (localCache!.priority!.isAvailable(c8o)) {
 						do {
 							let localCacheResponse: C8oLocalCacheResponse = try (c8o.c8oFullSync as! C8oFullSyncCbl).getResponseFromLocalCache(c8oCallRequestIdentifier!)!
 							if (!localCacheResponse.isExpired()) {
@@ -129,13 +129,13 @@ internal class C8oCallTask {
 			
 			/** Get response */
 			
-			parameters[C8o.ENGINE_PARAMETER_DEVICE_UUID] = c8o.deviceUUID
+			parameters[C8o.ENGINE_PARAMETER_DEVICE_UUID] = c8o.deviceUUID as AnyObject
 			
 			// Build the c8o call URL
 			c8oCallUrl = c8o.endpoint + "/." + responseType
 			
-			let httpResponse: NSData?
-			var httpResponseDataError: (data: NSData?, error: NSError?)
+			let httpResponse: Data?
+			var httpResponseDataError: (data: Data?, error: NSError?)
 			
 			do {
 				httpResponseDataError = (c8o.httpInterface?.handleRequest(c8oCallUrl!, parameters: parameters))!
@@ -170,14 +170,14 @@ internal class C8oCallTask {
 			var responseString: String? = nil
 			if (c8oResponseListener is C8oResponseXmlListener) {
 				
-				response = C8oTranslator.dataToXml(httpResponse!)!
+				response = C8oTranslator.dataToXml(httpResponse! as NSData)!
 				if (localCacheEnabled) {
-					responseString = (response as! AEXMLDocument).xmlString
+					responseString = (response as! AEXMLDocument).string
 				}
 				
 			} else if (c8oResponseListener is C8oResponseJsonListener) {
 				let myc8 = C8oJSON()
-				myc8.myJSON = C8oTranslator.dataToJson(httpResponse!)!
+				myc8.myJSON = C8oTranslator.dataToJson(httpResponse! as NSData)!
 				response = myc8
 				responseString = C8oTranslator.jsonToString(myc8.myJSON!)
 			} else {
@@ -199,7 +199,7 @@ internal class C8oCallTask {
 		}
 	}
 	
-	internal func handleResponse(result: AnyObject?) -> Void {
+	internal func handleResponse(_ result: AnyObject?) -> Void {
 		do {
 			
 			if (result == nil) {

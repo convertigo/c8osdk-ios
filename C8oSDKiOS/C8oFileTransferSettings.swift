@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class C8oFileTransferSettings : C8oFileTransferBase{
+open class C8oFileTransferSettings : C8oFileTransferBase{
     public override init() {
         super.init()
     }
@@ -18,24 +18,24 @@ public class C8oFileTransferSettings : C8oFileTransferBase{
         copy(c8oFileTransferSettings)
     }
     
-    public func setProjectName(projectName: String) -> C8oFileTransferSettings {
+    open func setProjectName(_ projectName: String) -> C8oFileTransferSettings {
         _projectName = projectName
         return self
     }
     
-    public func setTaskDb(taskDb: String) -> C8oFileTransferSettings {
+    open func setTaskDb(_ taskDb: String) -> C8oFileTransferSettings {
         _taskDb = taskDb
         return self
     }
     
-    public func setMaxRunning(maxRunning: Int) -> C8oFileTransferSettings {
+    open func setMaxRunning(_ maxRunning: Int) -> C8oFileTransferSettings {
         if (maxRunning > 0) {
             _maxRunning = maxRunning
         }
         return self
     }
     
-    public func setMaxDurationForTransferAttempt(maxDurationForTransferAttempt: NSTimeInterval) -> C8oFileTransferSettings {
+    open func setMaxDurationForTransferAttempt(_ maxDurationForTransferAttempt: TimeInterval) -> C8oFileTransferSettings {
         _maxDurationForTransferAttempt = maxDurationForTransferAttempt
         return self
     }

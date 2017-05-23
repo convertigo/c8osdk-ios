@@ -10,7 +10,7 @@ import Foundation
 
 internal class FullSyncResponse {
 	
-	private static var fullSyncResponsesInstance: FullSyncResponse = FullSyncResponse()
+	fileprivate static var fullSyncResponsesInstance: FullSyncResponse = FullSyncResponse()
 	
 	internal static let RESPONSE_KEY_OK: String = "ok";
 	
@@ -20,16 +20,16 @@ internal class FullSyncResponse {
 	
 }
 
-public class FullSyncAbstractResponse: NSObject {
-	private var operationStatus: Bool?
+open class FullSyncAbstractResponse: NSObject {
+	fileprivate var operationStatus: Bool?
 	
-	private init(operationStatus: Bool) {
+	fileprivate init(operationStatus: Bool) {
 		self.operationStatus = operationStatus
 	}
 	
 	func getProperties() -> Dictionary<String, NSObject> {
 		var properties: Dictionary<String, NSObject> = Dictionary<String, NSObject>()
-		properties[FullSyncResponse.RESPONSE_KEY_OK] = self.operationStatus
+		properties[FullSyncResponse.RESPONSE_KEY_OK] = self.operationStatus as! NSObject
 		return properties
 	}
 	
@@ -53,8 +53,8 @@ internal class FullSyncDocumentOperationResponse: FullSyncAbstractResponse {
 	
 	override internal func getProperties() -> Dictionary<String, NSObject> {
 		var properties: Dictionary<String, NSObject> = super.getProperties()
-		properties[FullSyncResponse.RESPONSE_KEY_DOCUMENT_ID] = self.documentId
-		properties[FullSyncResponse.RESPONSE_KEY_DOCUMENT_REVISION] = self.documentRevision
+		properties[FullSyncResponse.RESPONSE_KEY_DOCUMENT_ID] = self.documentId as! NSObject
+		properties[FullSyncResponse.RESPONSE_KEY_DOCUMENT_REVISION] = self.documentRevision as! NSObject
 		return properties
 	}
 	

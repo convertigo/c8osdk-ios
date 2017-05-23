@@ -8,21 +8,21 @@
 
 import Foundation
 
-public class C8oLocalCache: NSObject {
-	public static var PARAM: String = "__localCache"
+open class C8oLocalCache: NSObject {
+	open static var PARAM: String = "__localCache"
 	
-	public class Priority {
+	open class Priority {
 		
-		var isAvailable: (c8o: C8o) -> (Bool)
+		var isAvailable: (_ c8o: C8o) -> (Bool)
 		
-		public static var SERVER: Priority = Priority(isAvailable: { (c8o) -> (Bool) in
+		open static var SERVER: Priority = Priority(isAvailable: { (c8o) -> (Bool) in
 			return true
 		})
-		public static var LOCAL: Priority = Priority(isAvailable: { (c8o) -> (Bool) in
+		open static var LOCAL: Priority = Priority(isAvailable: { (c8o) -> (Bool) in
 			return true
 		})
 		
-		public init (isAvailable: (c8o: C8o) -> (Bool)) {
+		public init (isAvailable: @escaping (_ c8o: C8o) -> (Bool)) {
 			self.isAvailable = isAvailable
 		}
 		

@@ -11,16 +11,16 @@ import Alamofire
 import SwiftyJSON
 
 class C8oFullSyncCbl: C8oFullSync {
-    private static let ATTACHMENT_PROPERTY_KEY_CONTENT_URL: String = "content_url"
+    fileprivate static let ATTACHMENT_PROPERTY_KEY_CONTENT_URL: String = "content_url"
     internal var manager: CBLManager?
-    private var fullSyncDatabases: Dictionary<String, C8oFullSyncDatabase>
-    private var fullSyncChangeListeners: Dictionary<String, Set<C8oFullSyncChangeListener>>
-    private var cblChangeListeners: Dictionary<String, (notification: NSNotification) -> ()>
-    private var viewDDocRev: Dictionary<String, String>
-    private var mapVersions: Dictionary<String, String>
-    private var condition: NSCondition = NSCondition()
-    internal static var th: NSThread? = nil
-    private var block: Queue<dispatch_block_t> = Queue<dispatch_block_t>()
+    fileprivate var fullSyncDatabases: Dictionary<String, C8oFullSyncDatabase>
+    fileprivate var fullSyncChangeListeners: Dictionary<String, Set<C8oFullSyncChangeListener>>
+    fileprivate var cblChangeListeners: Dictionary<String, (_ notification: Notification) -> ()>
+    fileprivate var viewDDocRev: Dictionary<String, String>
+    fileprivate var mapVersions: Dictionary<String, String>
+    fileprivate var condition: NSCondition = NSCondition()
+    internal static var th: Thread? = nil
+    fileprivate var block: Queue<()->()> = Queue<()->()>()
     internal var errorFs: [NSError] = [NSError]()
     
     internal override init(c8o: C8o) {
@@ -32,24 +32,24 @@ class C8oFullSyncCbl: C8oFullSync {
         super.init(c8o: c8o)
         if (C8oFullSyncCbl.th == nil) {
             condition.lock()
-            C8oFullSyncCbl.th = NSThread(target: self, selector: #selector(C8oFullSyncCbl.cbl), object: nil)
+            C8oFullSyncCbl.th = Thread(target: self, selector: #selector(C8oFullSyncCbl.cbl), object: nil)
             C8oFullSyncCbl.th!.start()
             condition.wait()
             condition.unlock()
         } else if (self.manager == nil) {
             condition.lock()
-            self.performSelector(#selector(C8oFullSyncCbl.managerInstanciate), onThread: C8oFullSyncCbl.th!, withObject: nil, waitUntilDone: false)
+            self.perform(#selector(C8oFullSyncCbl.managerInstanciate), on: C8oFullSyncCbl.th!, with: nil, waitUntilDone: false)
             condition.wait()
             condition.unlock()
         }
     }
-    internal func performOnCblThread(block: dispatch_block_t) {
+    internal func performOnCblThread(_ block: ()->()) {
         self.block.enqueue(block)
-        self.performSelector(#selector(C8oFullSyncCbl.doBlock), onThread: C8oFullSyncCbl.th!, withObject: errorFs, waitUntilDone: true)
+        self.perform(#selector(C8oFullSyncCbl.doBlock), on: C8oFullSyncCbl.th!, with: errorFs, waitUntilDone: true)
     }
     
-    @objc private func doBlock() {
-        (self.block.dequeue()! as dispatch_block_t)()
+    @objc fileprivate func doBlock() {
+        (self.block.dequeue()! as ()->())()
         
     }
     @objc internal func managerInstanciate() {
@@ -58,16 +58,16 @@ class C8oFullSyncCbl: C8oFullSync {
         
     }
     @objc internal func cbl(){
-        NSThread.currentThread().name = "CBLThread"
+        Thread.current.name = "CBLThread"
         self.manager = CBLManager()
         condition.signal()
         while (true) {
-            CFRunLoopRunInMode(kCFRunLoopDefaultMode, 1, true)
+            CFRunLoopRunInMode(CFRunLoopMode.defaultMode, 1, true)
             
         }
     }
     
-    private func getOrCreateFullSyncDatabase(databaseName: String) throws -> C8oFullSyncDatabase {
+    fileprivate func getOrCreateFullSyncDatabase(_ databaseName: String) throws -> C8oFullSyncDatabase {
         let localDatabaseName: String = databaseName + localSuffix!
         
         if let _ = fullSyncDatabases[localDatabaseName] {
@@ -75,17 +75,17 @@ class C8oFullSyncCbl: C8oFullSync {
         } else {
             fullSyncDatabases[localDatabaseName] = try C8oFullSyncDatabase(c8o: self.c8o!, manager: self.manager!, databaseName: databaseName, fullSyncDatabases: fullSyncDatabaseUrlBase!, localSuffix: localSuffix!)
             if let listener = cblChangeListeners[databaseName] {
-                NSNotificationCenter.defaultCenter().addObserverForName(kCBLDatabaseChangeNotification, object: fullSyncDatabases[localDatabaseName]?.getDatabase(), queue: nil, usingBlock: listener)
+                NotificationCenter.defaultCenter().addObserverForName(kCBLDatabaseChangeNotification, object: fullSyncDatabases[localDatabaseName]?.getDatabase(), queue: nil, usingBlock: listener)
             }
         }
         return fullSyncDatabases[localDatabaseName]!
     }
     
-    internal override func handleFullSyncResponse(response: AnyObject, listener: C8oResponseListener) throws -> AnyObject {
+    internal override func handleFullSyncResponse(_ response: AnyObject, listener: C8oResponseListener) throws -> AnyObject {
         var response = response
         let maVar: C8oJSON = C8oJSON()
         response = try! super.handleFullSyncResponse(response, listener: listener)
-        if (response.isMemberOfClass(VoidResponse)) {
+        if (response.isMember(of: VoidResponse)) {
             return response
         }
         
@@ -93,7 +93,7 @@ class C8oFullSyncCbl: C8oFullSync {
             if (response.isMemberOfClass(CBLDocument)) {
                 maVar.myJSON = C8oFullSyncTranslator.documentToJson(response as! CBLDocument)
                 return maVar
-            } else if (response.isMemberOfClass(FullSyncDocumentOperationResponse)) {
+            } else if (response.isMember(of: FullSyncDocumentOperationResponse)) {
                 maVar.myJSON = C8oFullSyncTranslator.fullSyncDocumentOperationResponseToJson((response as! FullSyncDocumentOperationResponse))
                 return maVar
             } else if (response.isMemberOfClass(CBLQueryEnumerator)) {
@@ -101,10 +101,10 @@ class C8oFullSyncCbl: C8oFullSync {
                     maVar.myJSON = C8oFullSyncTranslator.queryEnumeratorToJson(response as! CBLQueryEnumerator)
                 }
                 return maVar
-            } else if response.isMemberOfClass(FullSyncDefaultResponse) {
+            } else if response.isMember(of: FullSyncDefaultResponse) {
                 maVar.myJSON = C8oFullSyncTranslator.fullSyncDefaultResponseToJson(response as! FullSyncDefaultResponse)
                 return maVar
-            } else if (response.isMemberOfClass(C8oJSON)) {
+            } else if (response.isMember(of: C8oJSON)) {
                 return response
             }
             else if(response is Dictionary<String, AnyObject>){
@@ -117,7 +117,7 @@ class C8oFullSyncCbl: C8oFullSync {
         } else if (listener is C8oResponseXmlListener) {
             if (response.isMemberOfClass(CBLDocument)) {
                 return C8oFullSyncTranslator.documentToXml(response as! CBLDocument)
-            } else if (response.isMemberOfClass(FullSyncDocumentOperationResponse)) {
+            } else if (response.isMember(of: FullSyncDocumentOperationResponse)) {
                 maVar.myJSON = C8oFullSyncTranslator.fullSyncDocumentOperationResponseToJson(response as! FullSyncDocumentOperationResponse)
                 return maVar
             } else if (response.isMemberOfClass(CBLQueryEnumerator)) {
@@ -127,7 +127,7 @@ class C8oFullSyncCbl: C8oFullSync {
                 catch let e as C8oException {
                     throw C8oException(message: C8oExceptionMessage.queryEnumeratorToXML(), exception: e)
                 }
-            } else if (response.isMemberOfClass(FullSyncDefaultResponse)) {
+            } else if (response.isMember(of: FullSyncDefaultResponse)) {
                 maVar.myJSON = C8oFullSyncTranslator.fullSyncDefaultResponseToJson(response as! FullSyncDefaultResponse)
                 return maVar
             }
@@ -139,7 +139,7 @@ class C8oFullSyncCbl: C8oFullSync {
         return response
     }
     
-    func handleGetDocumentRequest(fullSyncDatatbaseName: String, docid: String, parameters: Dictionary<String, AnyObject>) throws -> Dictionary<String, AnyObject> {
+    func handleGetDocumentRequest(_ fullSyncDatatbaseName: String, docid: String, parameters: Dictionary<String, AnyObject>) throws -> Dictionary<String, AnyObject> {
         var fullSyncDatabase: C8oFullSyncDatabase? = nil
         var document: CBLDocument?
         var dictDoc : Dictionary<String, AnyObject>? = nil
@@ -162,12 +162,12 @@ class C8oFullSyncCbl: C8oFullSync {
                     
                     for attachmentName in (attachments?.keys)! {
                         let attachment: CBLAttachment = rev.attachmentNamed(attachmentName)!
-                        let url: NSURL = attachment.contentURL!
+                        let url: URL = attachment.contentURL!
                         var attachmentDesc: Dictionary<String, AnyObject>? = (attachments![attachmentName] as? Dictionary<String, AnyObject>)!
-                        attachmentDesc![C8oFullSyncCbl.ATTACHMENT_PROPERTY_KEY_CONTENT_URL] = String(url).stringByRemovingPercentEncoding
+                        attachmentDesc![C8oFullSyncCbl.ATTACHMENT_PROPERTY_KEY_CONTENT_URL] = String(describing: url).stringByRemovingPercentEncoding
                         var dictAny : Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
-                        dictAny[attachmentName] = attachmentDesc
-                        dictDoc![C8oFullSync.FULL_SYNC__ATTACHMENTS] = dictAny
+                        dictAny[attachmentName] = attachmentDesc as AnyObject
+                        dictDoc![C8oFullSync.FULL_SYNC__ATTACHMENTS] = dictAny as AnyObject
                         
                     }
                 }
@@ -184,7 +184,7 @@ class C8oFullSyncCbl: C8oFullSync {
         return dictDoc!
     }
     
-    func handleDeleteDocumentRequest(DatatbaseName: String, docid: String, parameters: Dictionary<String, AnyObject>) throws -> FullSyncDocumentOperationResponse? {
+    func handleDeleteDocumentRequest(_ DatatbaseName: String, docid: String, parameters: Dictionary<String, AnyObject>) throws -> FullSyncDocumentOperationResponse? {
         var fullSyncDatabase: C8oFullSyncDatabase? = nil
         var document: CBLDocument?
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
@@ -232,7 +232,7 @@ class C8oFullSyncCbl: C8oFullSync {
         return FullSyncDocumentOperationResponse(documentId: docid, documentRevision: documentRevision, operationStatus: deleted)
     }
     
-    func handlePostDocumentRequest(databaseName: String, fullSyncPolicy: FullSyncPolicy, parameters: Dictionary<String, AnyObject>) throws -> NSObject? {
+    func handlePostDocumentRequest(_ databaseName: String, fullSyncPolicy: FullSyncPolicy, parameters: Dictionary<String, AnyObject>) throws -> NSObject? {
         
         var fullSyncDatabase: C8oFullSyncDatabase? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
@@ -281,7 +281,7 @@ class C8oFullSyncCbl: C8oFullSync {
                 
                 // !!!!!!!!!!!!!! Becarefull here cause a possible trouble due to non use of pattern.quote in swift...
                 // Checks if the parameter name is splittable
-                let paths: [String] = parameterName.componentsSeparatedByString(subkeySeparatorParameterValue!)
+                let paths: [String] = parameterName.components(separatedBy: subkeySeparatorParameterValue!)
                 
                 if (paths.count > 1) {
                     // The first substring becomes the key
@@ -291,14 +291,14 @@ class C8oFullSyncCbl: C8oFullSync {
                     while (count > 0) {
                         var tmpObject: Dictionary<String, AnyObject> = Dictionary<String, AnyObject>()
                         tmpObject[paths[count]] = objectParameterValue
-                        objectParameterValue = tmpObject
+                        objectParameterValue = tmpObject as AnyObject
                         count = count - 1
                     }
                     let existProperty: AnyObject? = newProperties[parameterName]
                     if let ex = existProperty as? Dictionary<String, AnyObject> {
                         if var e = objectParameterValue as? Dictionary<String, AnyObject> {
                             C8oFullSyncCbl.mergeProperties(&e, oldProperties: ex)
-                            objectParameterValue = e
+                            objectParameterValue = e as AnyObject
                         }
                         
                     }
@@ -345,7 +345,7 @@ class C8oFullSyncCbl: C8oFullSync {
         return FullSyncDocumentOperationResponse(documentId: documentId!, documentRevision: currentRevision!, operationStatus: true)
         
     }
-    func handlePutAttachmentRequest(databaseName : String, docid : String, attachmentName : String, attachmentType : String, attachmentContent : NSData) throws -> AnyObject {
+    func handlePutAttachmentRequest(_ databaseName : String, docid : String, attachmentName : String, attachmentType : String, attachmentContent : Data) throws -> AnyObject {
         var document : CBLDocument? = nil
         var newRev : CBLUnsavedRevision? = nil
         var error : NSError? = nil
@@ -385,7 +385,7 @@ class C8oFullSyncCbl: C8oFullSync {
         
     }
     
-    func handleDeleteAttachmentRequest(databaseName : String, docid : String, attachmentName : String) throws ->AnyObject{
+    func handleDeleteAttachmentRequest(_ databaseName : String, docid : String, attachmentName : String) throws ->AnyObject{
         var document : CBLDocument? = nil
         var newRev : CBLUnsavedRevision? = nil
         var error : NSError? = nil
@@ -421,7 +421,7 @@ class C8oFullSyncCbl: C8oFullSync {
         }
         return FullSyncDocumentOperationResponse(documentId: (document?.documentID)!, documentRevision: (document?.currentRevisionID)!, operationStatus: true)
     }
-    func handleAllDocumentsRequest(databaseName: String, parameters: Dictionary<String, AnyObject>) throws -> AnyObject? {
+    func handleAllDocumentsRequest(_ databaseName: String, parameters: Dictionary<String, AnyObject>) throws -> AnyObject? {
         var fullSyncDatabase: C8oFullSyncDatabase? = nil
         var query: CBLQuery? = nil
         // Creates the fullSync query and add parameters to it
@@ -458,7 +458,7 @@ class C8oFullSyncCbl: C8oFullSync {
         return result
     }
     
-    func handleGetViewRequest(databaseName: String, ddocName: String?, viewName: String?, parameters: Dictionary<String, AnyObject>) throws -> CBLQueryEnumerator? {
+    func handleGetViewRequest(_ databaseName: String, ddocName: String?, viewName: String?, parameters: Dictionary<String, AnyObject>) throws -> CBLQueryEnumerator? {
         
         var fullSyncDatabase: C8oFullSyncDatabase? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
@@ -504,7 +504,7 @@ class C8oFullSyncCbl: C8oFullSync {
         return result
     }
     
-    func handleSyncRequest(databaseName: String, parameters: Dictionary<String, AnyObject>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
+    func handleSyncRequest(_ databaseName: String, parameters: Dictionary<String, AnyObject>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
         
         let fullSyncDatabase: C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         
@@ -513,7 +513,7 @@ class C8oFullSyncCbl: C8oFullSync {
         return VoidResponse.getInstance()
     }
     
-    func handleReplicatePullRequest(databaseName: String, parameters: Dictionary<String, AnyObject>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
+    func handleReplicatePullRequest(_ databaseName: String, parameters: Dictionary<String, AnyObject>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
         
         let fullSyncDatabase: C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         
@@ -522,7 +522,7 @@ class C8oFullSyncCbl: C8oFullSync {
         return VoidResponse.getInstance()
     }
     
-    func handleReplicatePushRequest(databaseName: String, parameters: Dictionary<String, AnyObject>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
+    func handleReplicatePushRequest(_ databaseName: String, parameters: Dictionary<String, AnyObject>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
         
         let fullSyncDatabase: C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
         
@@ -531,28 +531,28 @@ class C8oFullSyncCbl: C8oFullSync {
         return VoidResponse.getInstance()
     }
     
-    func handleResetDatabaseRequest(databaseName: String) throws -> FullSyncDefaultResponse? {
+    func handleResetDatabaseRequest(_ databaseName: String) throws -> FullSyncDefaultResponse? {
         try handleDestroyDatabaseRequest(databaseName)
         return try handleCreateDatabaseRequest(databaseName)
     }
     
-    func handleCreateDatabaseRequest(databaseName: String) throws -> FullSyncDefaultResponse? {
+    func handleCreateDatabaseRequest(_ databaseName: String) throws -> FullSyncDefaultResponse? {
         let _: C8oFullSyncDatabase = try getOrCreateFullSyncDatabase(databaseName)
         return FullSyncDefaultResponse(operationStatus: true)
     }
     
-    func handleDestroyDatabaseRequest(databaseName: String) throws -> FullSyncDefaultResponse? {
+    func handleDestroyDatabaseRequest(_ databaseName: String) throws -> FullSyncDefaultResponse? {
         try getOrCreateFullSyncDatabase(databaseName).deleteDb()
         
         let localDatabaseName: String = databaseName + localSuffix!
         if let _ = fullSyncDatabases[localDatabaseName] {
-            fullSyncDatabases.removeValueForKey(localDatabaseName)
+            fullSyncDatabases.removeValue(forKey: localDatabaseName)
         }
         
         return FullSyncDefaultResponse(operationStatus: true)
     }
     
-    private func compileView (db: CBLDatabase, viewName: String, viewProps: Dictionary<String, NSObject>?) -> CBLView? {
+    fileprivate func compileView (_ db: CBLDatabase, viewName: String, viewProps: Dictionary<String, NSObject>?) -> CBLView? {
         var language: String? = viewProps!["language"] as? String
         if (language == nil) {
             language = "javascript"
@@ -603,7 +603,7 @@ class C8oFullSyncCbl: C8oFullSync {
         return view
     }
     
-    private func checkAndCreateJavaScriptView(database: CBLDatabase, ddocName: String, viewName: String) -> CBLView? {
+    fileprivate func checkAndCreateJavaScriptView(_ database: CBLDatabase, ddocName: String, viewName: String) -> CBLView? {
         let tdViewName: String = ddocName + "/" + viewName
         var view: CBLView? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
@@ -644,7 +644,7 @@ class C8oFullSyncCbl: C8oFullSync {
         return view
     }
     
-    private static func addParametersToQuery(query: CBLQuery, parameters: Dictionary<String, AnyObject>) throws {
+    fileprivate static func addParametersToQuery(_ query: CBLQuery, parameters: Dictionary<String, AnyObject>) throws {
         
         for fullSyncParameter in FullSyncRequestParameter.values() {
             var objectParameterValue: AnyObject? = nil
@@ -660,7 +660,7 @@ class C8oFullSyncCbl: C8oFullSync {
         }
     }
     
-    static func mergeProperties(inout newProperties: Dictionary<String, AnyObject>, oldProperties: Dictionary<String, AnyObject>) {
+    static func mergeProperties(_ newProperties: inout Dictionary<String, AnyObject>, oldProperties: Dictionary<String, AnyObject>) {
         for old in oldProperties {
             // let oldProperty = old
             let oldPropertyKey = old.0
@@ -670,10 +670,10 @@ class C8oFullSyncCbl: C8oFullSync {
             if let newPropertyValue = newProperties[oldPropertyKey] {
                 if var a = newPropertyValue as? Dictionary<String, AnyObject>, let b = oldPropertyValue as? Dictionary<String, AnyObject> {
                     mergeProperties(&a, oldProperties: b)
-                    newProperties[oldPropertyKey] = a
+                    newProperties[oldPropertyKey] = a as AnyObject
                 } else if var a = newPropertyValue as? [AnyObject], let b = oldPropertyValue as? [AnyObject] {
                     C8oFullSyncCbl.mergeArrayProperties(&a, oldArray: b)
-                    newProperties[oldPropertyKey] = a
+                    newProperties[oldPropertyKey] = a as AnyObject
                 } else {
                     
                 }
@@ -683,7 +683,7 @@ class C8oFullSyncCbl: C8oFullSync {
         }
     }
     
-    static func mergeArrayProperties(inout newArray: [AnyObject], oldArray: [AnyObject]) {
+    static func mergeArrayProperties(_ newArray: inout [AnyObject], oldArray: [AnyObject]) {
         let newArraySize = newArray.count
         let oldArraySize = oldArray.count
         for i in 0..<oldArraySize {
@@ -696,10 +696,10 @@ class C8oFullSyncCbl: C8oFullSync {
             if (newArrayValue != nil) {
                 if var e = newArrayValue as? Dictionary<String, AnyObject>, let f = oldArrayValue as? Dictionary<String, AnyObject> {
                     mergeProperties(&e, oldProperties: f)
-                    newArrayValue = e
+                    newArrayValue = e as AnyObject
                 } else if var g = newArrayValue as? [AnyObject], let h = oldArrayValue as? [AnyObject] {
                     mergeArrayProperties(&g, oldArray: h)
-                    newArrayValue = g
+                    newArrayValue = g as AnyObject
                 } else {
                     
                 }
@@ -709,7 +709,7 @@ class C8oFullSyncCbl: C8oFullSync {
         }
     }
     
-    internal func getDocucmentFromDatabase(c8o: C8o, databaseName: String, documentId: String) throws -> CBLDocument {
+    internal func getDocucmentFromDatabase(_ c8o: C8o, databaseName: String, documentId: String) throws -> CBLDocument {
         var c8oFullSyncDatabase: C8oFullSyncDatabase
         do {
             c8oFullSyncDatabase = try self.getOrCreateFullSyncDatabase(databaseName)
@@ -719,7 +719,7 @@ class C8oFullSyncCbl: C8oFullSync {
         return (c8oFullSyncDatabase.getDatabase()?.existingDocumentWithID(documentId))!
     }
     
-    internal static func overrideDocument(document: CBLDocument, properties: Dictionary<String, NSObject>) throws {
+    internal static func overrideDocument(_ document: CBLDocument, properties: Dictionary<String, NSObject>) throws {
         var propertiesMutable = properties
         let currentRevision: CBLSavedRevision? = document.currentRevision
         if (currentRevision != nil) {
@@ -734,7 +734,7 @@ class C8oFullSyncCbl: C8oFullSync {
         }
     }
     
-    func getResponseFromLocalCache(c8oCallRequestIdentifier: String) throws -> C8oLocalCacheResponse? {
+    func getResponseFromLocalCache(_ c8oCallRequestIdentifier: String) throws -> C8oLocalCacheResponse? {
         let fullSyncDatabase: C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(C8o.LOCAL_CACHE_DATABASE_NAME)
         
         var localCacheDocument: CBLDocument? = nil
@@ -770,7 +770,7 @@ class C8oFullSyncCbl: C8oFullSync {
         if (expirationDate != nil) {
             if let e = expirationDate as! Double? {
                 expirationDateLong = e
-                let currentTime = NSDate().timeIntervalSince1970 * 1000
+                let currentTime = Date().timeIntervalSince1970 * 1000
                 if (Double(expirationDateLong) < currentTime) {
                     throw C8oUnavailableLocalCacheException(message: C8oExceptionMessage.timeToLiveExpired())
                 }
@@ -781,7 +781,7 @@ class C8oFullSyncCbl: C8oFullSync {
         return C8oLocalCacheResponse(response: responseString!, responseType: responseTypeString!, expirationDate: expirationDateLong)
     }
     
-    func saveResponseToLocalCache(c8oCallRequestIdentifier: String, localCacheResponse: C8oLocalCacheResponse) throws {
+    func saveResponseToLocalCache(_ c8oCallRequestIdentifier: String, localCacheResponse: C8oLocalCacheResponse) throws {
         
         let fullSyncDatabase: C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(C8o.LOCAL_CACHE_DATABASE_NAME)
         
@@ -790,10 +790,10 @@ class C8oFullSyncCbl: C8oFullSync {
             localCacheDocument = fullSyncDatabase.getDatabase()?.documentWithID(c8oCallRequestIdentifier)
             // }
             var properties: Dictionary<String, NSObject> = Dictionary<String, NSObject>()
-            properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE] = localCacheResponse.getResponse()
-            properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE_TYPE] = localCacheResponse.getResponseType()
+            properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE] = localCacheResponse.getResponse() as NSObject
+            properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE_TYPE] = localCacheResponse.getResponseType() as NSObject
             if (localCacheResponse.getExpirationDate() > 0) {
-                properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_EXPIRATION_DATE] = localCacheResponse.getExpirationDate()
+                properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_EXPIRATION_DATE] = localCacheResponse.getExpirationDate() as NSObject
             }
             let currentRevision: CBLSavedRevision? = localCacheDocument!.currentRevision
             if (currentRevision != nil) {
@@ -813,7 +813,7 @@ class C8oFullSyncCbl: C8oFullSync {
          }*/
     }
     
-    internal override func addFullSyncChangeListener(db: String?, listener: C8oFullSyncChangeListener) throws {
+    internal override func addFullSyncChangeListener(_ db: String?, listener: C8oFullSyncChangeListener) throws {
         var _db = db
         if (_db == nil || _db!.isEmpty) {
             _db = c8o!.defaultDatabaseName
@@ -822,7 +822,7 @@ class C8oFullSyncCbl: C8oFullSync {
         if let _ = fullSyncChangeListeners[_db!] {
         } else {
             fullSyncChangeListeners[_db!] = Set<C8oFullSyncChangeListener>()
-            let evtHandler = {(notification: NSNotification) -> () in
+            let evtHandler = {(notification: Notification) -> () in
                 var changes: JSON = [:]
                 var docs = Array<JSON>()
                 changes["isExternal"].boolValue = notification.userInfo!["external"] as! Bool
@@ -843,14 +843,14 @@ class C8oFullSyncCbl: C8oFullSync {
                     handler.handler(changes: changes)
                 }
             }
-            NSNotificationCenter.defaultCenter().addObserverForName(kCBLDatabaseChangeNotification, object: try getOrCreateFullSyncDatabase(_db!).getDatabase(), queue: nil, usingBlock: evtHandler)
+            NotificationCenter.defaultCenter().addObserverForName(kCBLDatabaseChangeNotification, object: try getOrCreateFullSyncDatabase(_db!).getDatabase(), queue: nil, usingBlock: evtHandler)
             cblChangeListeners[_db!] = evtHandler
         }
         
         fullSyncChangeListeners[_db!]!.insert(listener)
     }
     
-    internal override func removeFullSyncChangeListener(db: String?, listener: C8oFullSyncChangeListener) throws {
+    internal override func removeFullSyncChangeListener(_ db: String?, listener: C8oFullSyncChangeListener) throws {
         var _db = db
         if (_db == nil || _db!.isEmpty) {
             _db = c8o!.defaultDatabaseName
