@@ -257,11 +257,14 @@ class C8oSDKiOSTests: XCTestCase {
 	}
 	
 	func testC8oCheckJsonTypes() {
-		let c8o = try! get(.c8O)
-		var json = try! c8o.callJson(".JsonTypes",
+		
+        do {
+            let c8o = try! get(.c8O)
+		var json = try c8o.callJson(".JsonTypes",
 			parameters: "var1", "value one",
 			"mvar1", ["mvalue one", "mvalue two", "mvalue three"]
 		).sync()
+        
 		json = json!["document"]
 		let pong = json!["pong"]
 		var value: Any = pong["var1"].string
@@ -290,6 +293,13 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssert(value as! Bool)
 		value = complex["ÉlŸz@-node"].string!
 		XCTAssertEqual("that's ÉlŸz@", value as! String)
+        }
+        catch is C8oException{
+            print("error")
+        }
+        catch is Error{
+            
+        }
 	}
 	
 	func testsetGetInSession() {
