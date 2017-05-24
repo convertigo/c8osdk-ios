@@ -1637,15 +1637,19 @@ class C8oSDKiOSTests: XCTestCase {
 			}
 			json = try! c8o.callJson("fs://.get", parameters: "docid", "def").sync()!
 			value = json["_id"].string as AnyObject
+            
 			XCTAssertEqual("def", value as? String)
 			json.dictionaryObject!["custom"] = id
-			json = try! c8o.callJson("fs://.post", parameters: json).sync()!
+            
+            json = try! c8o.callJson("fs://.post", parametersJSON: json).sync()!
+			//json = try! c8o.callJson("fs://.post", parametersJSON: json).sync()!
 			XCTAssertTrue(json["ok"].boolValue)
 			json = try! c8o.callJson(".qa_fs_push.PostDocument", parameters: "_id", "ghi", "custom", id).sync()!
 			XCTAssertTrue(json["document"]["couchdb_output"]["ok"].boolValue)
 			sleep(2)
 			json = try! c8o.callJson("fs://.get", parameters: "docid", "ghi").sync()!
 			value = json["custom"].string as AnyObject
+            print(json.description)
 			
 			XCTAssertEqual(id, value as? String)
 			json = try! c8o.callJson(".qa_fs_push.GetDocument", parameters: "_use_docid", "def").sync()!
@@ -1761,7 +1765,7 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertNotEqual(signature, signature2)
 	}
 	
-	func testC8oFileTransferDownloadSimple() {
+	/*func testC8oFileTransferDownloadSimple() {
 		let c8o = try! get(.c8O)
 		let ft = try! C8oFileTransfer(c8o: c8o, c8oFileTransferSettings: C8oFileTransferSettings())
 		try! c8o.callJson("fs://" + ft.taskDb + ".destroy").sync()
@@ -1847,7 +1851,7 @@ class C8oSDKiOSTests: XCTestCase {
 		let filepath = status[0]?.serverFilepath
 		let length = try! c8o.callXml(".GetSizeAndDelete", parameters: "filepath", filepath!).sync()!["document"]["length"].string
 		XCTAssertEqual("5120000", length)
-	}
+	}*/
 	
     func disable_testC8oFsLiveChanges() {
         let c8o = try! get(.c8O_FS_PUSH)
@@ -1978,27 +1982,29 @@ class C8oSDKiOSTests: XCTestCase {
 	}
 	
 	func XCTAssertEqualsJsonChild(expectedObject: JSON, actualObject: JSON) {
-		if ((expectedObject.dictionary?.count)! >= 0) {
-			XCTAssertNotNil(actualObject, "must not be null")
-			XCTAssertEquals(expected: expectedObject, actual: actualObject)
-		}
-		else if ((expectedObject.array?.count)! >= 0) {
-			XCTAssertNotNil(actualObject, "must not be null")
-			XCTAssertEquals(expected: expectedObject, actual: actualObject)
-		}
-		else if (expectedObject.int != nil) {
-			XCTAssertNotNil(actualObject, "must not be null")
-			XCTAssertEqual(expectedObject.int, actualObject.int)
-		}
-		else if (expectedObject.string != nil) {
-			XCTAssertNotNil(actualObject, "must not be null")
-			XCTAssertEqual(expectedObject.string, actualObject.string)
-		}
-	}
+        if(expectedObject != nil){
+            if (expectedObject.dictionary != nil) {
+                XCTAssertNotNil(actualObject, "must not be null")
+                XCTAssertEquals(expected: expectedObject, actual: actualObject)
+            }
+            else if (expectedObject.array != nil) {
+                XCTAssertNotNil(actualObject, "must not be null")
+                XCTAssertEquals(expected: expectedObject, actual: actualObject)
+            }
+            else if (expectedObject.int != nil) {
+                XCTAssertNotNil(actualObject, "must not be null")
+                XCTAssertEqual(expectedObject.int, actualObject.int)
+            }
+            else if (expectedObject.string != nil) {
+                XCTAssertNotNil(actualObject, "must not be null")
+                XCTAssertEqual(expectedObject.string, actualObject.string)
+            }
+        }
+    }
 	
 	func XCTAssertEquals(expected: JSON, actual: JSON) {
 		do {
-			if ((expected.dictionary?.count)! >= 0) { // || expected.array?.count >= 0 ){
+			if (expected.dictionary != nil) { // || expected.array?.count >= 0 ){
 				let expectedD = expected.dictionary
 				let actualD = actual.dictionary
 				let expectedNames = expectedD?.keys
@@ -2009,7 +2015,7 @@ class C8oSDKiOSTests: XCTestCase {
 					XCTAssertEqualsJsonChild(expectedObject: expectedD![key]!, actualObject: actualD![key]!)
 				}
 			}
-			else if ((expected.array?.count)! >= 0) {
+			else if (expected.array != nil) {
 				XCTAssertEqual(expected.array!, actual.array!, "array")
 			}
 			else if (expected.int != nil) {

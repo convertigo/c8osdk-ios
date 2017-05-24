@@ -157,18 +157,18 @@ internal class C8oFullSyncTranslator {
 		return try! fullSyncJsonToXml(fullSyncDocumentOperationResponseToJson(fullSyncDocumentOperationResponse))!
 	}
     
-    internal static func toAny(_ obj: Any) -> Any {
+    internal static func toAnyObject(obj: AnyObject) -> AnyObject {
         if let nsSet = obj as? NSSet {
             let array = NSMutableArray()
             for item in nsSet {
-                array.add(toAny(item))
+                array.add(toAnyObject(obj: item))
             }
             return array
         }
         if let nsArray = obj as? NSArray {
             let array = NSMutableArray()
             for item in nsArray {
-                array.add(toAny(item))
+                array.add(toAnyObject(obj: item))
             }
             return array
         }
@@ -176,7 +176,7 @@ internal class C8oFullSyncTranslator {
             let dict = NSMutableDictionary()
             for item in nsDict {
                 if let k = item.key as? NSCopying {
-                    dict[k] = toAny(item.value)
+                    dict[k] = toAnyObject(obj: item.value)
                 }
             }
             return dict
@@ -186,7 +186,7 @@ internal class C8oFullSyncTranslator {
             let dict = NSMutableDictionary()
             for child in mirror.children {
                 let prop = child.label!
-                dict[prop] = toAny(child.value)
+                dict[prop] = toAnyObject(obj: child.value)
             }
             return dict
         } else {
@@ -194,17 +194,20 @@ internal class C8oFullSyncTranslator {
         }
     }
     
-    internal static func toAnyObject(_ obj: Any) -> Any {
-        if let nsValue = obj as? NSObject {
-            return toAny(nsValue)
+    internal static func toAnyObject(obj: Any) -> AnyObject {
+        if(obj is String){
+            return obj as AnyObject
         }
-        if (obj is Any) {
-            return toAny(obj as Any)
+        if let nsValue = obj as? NSObject {
+            return toAnyObject(obj: nsValue)
+        }
+        if (obj is AnyObject) {
+            return toAnyObject(obj: obj as! AnyObject)
         }
         let mirror = Mirror(reflecting: obj)
         if (mirror.children.count > 0) {
             for child in mirror.children {
-                return toAny(child.value)
+                return toAnyObject(obj: child.value)
             }
         }
         return NSNull()

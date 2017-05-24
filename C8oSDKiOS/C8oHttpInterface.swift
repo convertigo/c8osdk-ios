@@ -74,7 +74,7 @@ internal class C8oHttpInterface {
         let request = alamofire.upload(data!, to: url, method: .post, headers: headers)
             .response(queue:queue,
                       completionHandler:{ response in
-                        myResponse = (response.data, response.error! as NSError)
+                        myResponse = (response.data, response.error as NSError?)
                         semaphore.signal()
             })
 

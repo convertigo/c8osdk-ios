@@ -323,11 +323,11 @@ open class C8o: C8oBase {
 	 FailUI() methods to handle C8oErrors.
 
 	 */
-	open func callJson (_ requestable: String, parameters: Dictionary<String, Any>?) -> C8oPromise<JSON> {
+	open func callJson (_ requestable: String, parametersDict: Dictionary<String, Any>?) -> C8oPromise<JSON> {
 		let promise = C8oPromise<JSON>(c8o: self)
 		
 		call(requestable,
-			parameters: parameters,
+			parameters: parametersDict,
 			c8oResponseListener: C8oResponseJsonListener(onJsonResponse: {
 				(response, requestParameters) -> () in
 				
@@ -375,11 +375,11 @@ open class C8o: C8oBase {
      FailUI() methods to handle C8oErrors.
      
      */
-	open func callJson(_ requestable: String, parameters: Any...) -> C8oPromise<JSON> {
-		
-		return try! callJson(requestable, parameters: C8o.toParameters(parameters))
-		
-	}
+    open func callJson(_ requestable: String, parametersJSON: JSON) -> C8oPromise<JSON> {
+        
+        return callJson(requestable, parametersDict: parametersJSON.dictionaryValue)
+        //callJson(requestable, parametersDict: (parametersJSON.object as! Dictionary<String, Any>))
+    }
     
     /**
      Call a Convertigo Server backend service and return data in a JSON Object.
@@ -407,10 +407,20 @@ open class C8o: C8oBase {
      FailUI() methods to handle C8oErrors.
      
      */
-	open func callJson(_ requestable: String, parameters: JSON) -> C8oPromise<JSON> {
+	open func callJson(_ requestable: String, parameters: Any?...) -> C8oPromise<JSON> {
+        print(parameters)
+        let parametersUp: [AnyObject]? = parameters as [AnyObject]?
+        let dictionnary: Dictionary<String, Any>?
+        if(parametersUp?.count != 0){
+            dictionnary = try! C8o.toParameters(parametersUp)
+        }
+        else{
+            dictionnary = Dictionary<String, Any>()
+        }
+        return try! callJson(requestable, parametersDict: dictionnary)
 		
-		return callJson(requestable, parameters: (parameters.object as! Dictionary<String, Any>))
-    }
+	}
+    
     
     /**
      Call a Convertigo Server backend service and return data in a XML Document.
@@ -494,7 +504,7 @@ open class C8o: C8oBase {
      
      */
 	open func callXml(_ requestable: String, parameters: Any...) -> C8oPromise<AEXMLDocument> {
-		return try! callXml(requestable, parameters: C8o.toParameters(parameters))
+		return try! callXml(requestable, parameters: C8o.toParameters(parameters as [AnyObject]))
 	}
 	
 	/**
@@ -661,7 +671,7 @@ open class C8o: C8oBase {
         lives.removeValue(forKey: liveid)
     }
     
-	fileprivate static func toParameters(_ parameters: [Any]?) throws -> Dictionary<String, Any> {
+	fileprivate static func toParameters(_ parameters: [AnyObject]?) throws -> Dictionary<String, Any> {
 		if (parameters!.count % 2 != 0) {
 			throw C8oException(message: C8oExceptionMessage.invalidParameterValue("parameters", details: "needs pairs of values"))
 		}

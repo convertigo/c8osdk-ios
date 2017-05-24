@@ -20,7 +20,7 @@ class C8oFullSyncCbl: C8oFullSync {
     fileprivate var mapVersions: Dictionary<String, String>
     fileprivate var condition: NSCondition = NSCondition()
     internal static var th: Thread? = nil
-    fileprivate var block: Queue<()->()> = Queue<()->()>()
+    fileprivate var block: Queue<() throws ->()> = Queue<()throws ->()>()
     internal var errorFs: [NSError] = [NSError]()
     
     internal override init(c8o: C8o) {
@@ -43,13 +43,13 @@ class C8oFullSyncCbl: C8oFullSync {
             condition.unlock()
         }
     }
-    internal func performOnCblThread(_ block: @escaping ()->()) {
+    internal func performOnCblThread(_ block: @escaping () throws ->()) {
         self.block.enqueue(block)
         self.perform(#selector(C8oFullSyncCbl.doBlock), on: C8oFullSyncCbl.th!, with: errorFs, waitUntilDone: true)
     }
     
-    @objc fileprivate func doBlock() {
-        (self.block.dequeue()! as ()->())()
+    @objc fileprivate func doBlock() throws {
+         try (self.block.dequeue()! as () throws ->())()
         
     }
     @objc internal func managerInstanciate() {
@@ -148,7 +148,10 @@ class C8oFullSyncCbl: C8oFullSync {
             fullSyncDatabase = try! self.getOrCreateFullSyncDatabase(fullSyncDatatbaseName)
             
             // Gets the document from the local database
-            
+            let doc2 = fullSyncDatabase?.getDatabase()!.existingLocalDocument(withID: docid)
+            let doc3 = fullSyncDatabase?.getDatabase()?.document(withID: docid)
+            let dbc = fullSyncDatabase?.getDatabase()?.documentCount
+            let db = fullSyncDatabase?.getDatabase()?.createAllDocumentsQuery().allDocsMode.rawValue
             document = fullSyncDatabase!.getDatabase()?.existingDocument(withID: docid)
             dictDoc = document?.properties
             // If there are attachments, compute for each one the url to local storage and add it to the attachment descriptor
@@ -261,7 +264,7 @@ class C8oFullSyncCbl: C8oFullSync {
                 var objectParameterValue = parameter.1
                 // var objectParameterValueT : Dictionary<String, Any> = Dictionary<String, Any>()
                 do {
-                    objectParameterValue = C8oFullSyncTranslator.toAny(objectParameterValue)
+                    objectParameterValue = C8oFullSyncTranslator.toAnyObject(obj: objectParameterValue)
                     
                     // var count = 0
                     //objectParameterValue = objectParameterValue.description
@@ -430,7 +433,7 @@ class C8oFullSyncCbl: C8oFullSync {
             query = fullSyncDatabase!.getDatabase()!.createAllDocumentsQuery()
         }
         do {
-            try C8oFullSyncCbl.addParametersToQuery(query!, parameters: parameters)
+            try C8oFullSyncCbl.addParametersToQuery(query!, parameters: parameters as Dictionary<String, AnyObject>)
         } catch let e as NSError {
             throw C8oException(message: C8oExceptionMessage.addparametersToQuery(), exception: e)
         }
@@ -481,7 +484,7 @@ class C8oFullSyncCbl: C8oFullSync {
         // Creates the fullSync query and add parameters to it
         let query: CBLQuery = view!.createQuery()
         do {
-            try C8oFullSyncCbl.addParametersToQuery(query, parameters: parameters)
+            try C8oFullSyncCbl.addParametersToQuery(query, parameters: parameters as Dictionary<String, AnyObject>)
         } catch {
             // TODO...
             throw C8oException(message: C8oExceptionMessage.addparametersToQuery())
@@ -532,7 +535,9 @@ class C8oFullSyncCbl: C8oFullSync {
     }
     
     func handleResetDatabaseRequest(_ databaseName: String) throws -> FullSyncDefaultResponse? {
-        try handleDestroyDatabaseRequest(databaseName)
+        (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+            try self.handleDestroyDatabaseRequest(databaseName)
+        }
         return try handleCreateDatabaseRequest(databaseName)
     }
     
@@ -542,7 +547,9 @@ class C8oFullSyncCbl: C8oFullSync {
     }
     
     func handleDestroyDatabaseRequest(_ databaseName: String) throws -> FullSyncDefaultResponse? {
-        try getOrCreateFullSyncDatabase(databaseName).deleteDb()
+        (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
+            try self.getOrCreateFullSyncDatabase(databaseName).deleteDb()
+        }
         
         let localDatabaseName: String = databaseName + localSuffix!
         if let _ = fullSyncDatabases[localDatabaseName] {
@@ -644,16 +651,17 @@ class C8oFullSyncCbl: C8oFullSync {
         return view
     }
     
-    fileprivate static func addParametersToQuery(_ query: CBLQuery, parameters: Dictionary<String, Any>) throws {
+    fileprivate static func addParametersToQuery(_ query: CBLQuery, parameters: Dictionary<String, AnyObject>) throws {
         
         for fullSyncParameter in FullSyncRequestParameter.values() {
-            var objectParameterValue: Any? = nil
+            var objectParameterValue: AnyObject? = nil
             if (fullSyncParameter.isJson) {
-                objectParameterValue = C8oUtils.getParameterObjectValue(parameters, name: fullSyncParameter.name, useName: true)
+                objectParameterValue = C8oUtils.getParameterObjectValue(parameters, name: fullSyncParameter.name, useName: true) as AnyObject?
                 
             } else {
-                objectParameterValue = C8oUtils.getParameterStringValue(parameters, name: fullSyncParameter.name, useName: true)
+                objectParameterValue = C8oUtils.getParameterStringValue(parameters, name: fullSyncParameter.name, useName: true) as AnyObject?
             }
+            print(objectParameterValue)
             if (objectParameterValue != nil) {
                 fullSyncParameter.action(query, objectParameterValue!)
             }

@@ -276,17 +276,13 @@ internal class FullSyncRequestable {
 
 open class FullSyncRequestParameter {
 	open static let DESCENDING: FullSyncRequestParameter = FullSyncRequestParameter(name: "descending", isJson: true, action: { query, value in
-		
 		query.descending = value as! Bool
-		
 	})
 	open static let ENDKEY: FullSyncRequestParameter = FullSyncRequestParameter(name: "endkey", isJson: true, action: { query, value in
-		
 		query.endKey = value
-		
 	})
 	open static let ENDKEY_DOCID: FullSyncRequestParameter = FullSyncRequestParameter(name: "endkey_docid", action: { query, value in
-		query.endKeyDocID = value as? String
+		query.endKeyDocID = value as! String
 	})
 	open static let GROUP_LEVEL: FullSyncRequestParameter = FullSyncRequestParameter(name: "group_level", isJson: true, action: { query, value in
 		query.groupLevel = value as! UInt
@@ -308,7 +304,8 @@ open class FullSyncRequestParameter {
 		query.keys = value as? [Any]
 	})
 	open static let LIMIT: FullSyncRequestParameter = FullSyncRequestParameter(name: "limit", isJson: true, action: { query, value in
-		query.limit = value as! UInt
+        var valUint : UInt = UInt(value as! NSNumber)
+		query.limit = valUint
 	})
 	open static let INCLUDE_DOCS: FullSyncRequestParameter = FullSyncRequestParameter(name: "include_docs", isJson: true, action: { query, value in
 		query.prefetch = value as! Bool
@@ -320,7 +317,8 @@ open class FullSyncRequestParameter {
 		query.groupLevel = (value as! Bool) ? 99 : 0
 	})
 	open static let SKIP: FullSyncRequestParameter = FullSyncRequestParameter(name: "skip", isJson: true, action: { query, value in
-		query.skip = value as! UInt
+		var valUint : UInt = UInt(value as! NSNumber)
+        query.skip = valUint
 	})
 	open static let STARTKEY: FullSyncRequestParameter = FullSyncRequestParameter(name: "startkey", isJson: true, action: { query, value in
 		query.startKey = value
@@ -331,15 +329,15 @@ open class FullSyncRequestParameter {
 	
 	open var name: String
 	open var isJson: Bool
-	open var action: (CBLQuery, Any) -> ()
+	open var action: (CBLQuery, AnyObject) -> ()
 	
-	fileprivate init(name: String, action: @escaping (CBLQuery, Any) -> ()) {
+	fileprivate init(name: String, action: @escaping (CBLQuery, AnyObject) -> ()) {
 		self.name = name
 		self.isJson = false
 		self.action = action
 	}
 	
-	fileprivate init(name: String, isJson: Bool, action: @escaping (CBLQuery, Any) -> ()) {
+	fileprivate init(name: String, isJson: Bool, action: @escaping (CBLQuery, AnyObject) -> ()) {
 		self.name = name
 		self.isJson = isJson
 		self.action = action
