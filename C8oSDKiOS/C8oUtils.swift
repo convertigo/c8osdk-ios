@@ -26,12 +26,9 @@ internal class C8oUtils {
 	}
 	
 	internal static func getParameter(_ parameters: Dictionary<String, Any>, name: String, useName: Bool = false) -> Pair<String?, Any?> {
-		print(parameters.description)
 		for parameter in parameters {
 			let parameterName: String = parameter.0;
-            print(parameterName)
 			if ((name == parameterName) || (useName && name == (C8oUtils.USE_PARAMETER_IDENTIFIER + parameterName))) {
-                print(parameter.value)
 				return Pair<String?, Any?>(key: parameter.0, value: parameter.1) // (key: parameter.0, value: parameter.1 as Any);
 			}
 		}
@@ -58,7 +55,6 @@ internal class C8oUtils {
 				
 				return String(describing: (parameter.value as! C8oJSON).myJSON)
 			} else {
-                print(String(describing: parameter.value!).description)
 				return String(describing: parameter.value!);
 			}
 			

@@ -661,7 +661,6 @@ class C8oFullSyncCbl: C8oFullSync {
             } else {
                 objectParameterValue = C8oUtils.getParameterStringValue(parameters, name: fullSyncParameter.name, useName: true) as AnyObject?
             }
-            print(objectParameterValue)
             if (objectParameterValue != nil) {
                 fullSyncParameter.action(query, objectParameterValue!)
             }

@@ -408,7 +408,6 @@ open class C8o: C8oBase {
      
      */
 	open func callJson(_ requestable: String, parameters: Any?...) -> C8oPromise<JSON> {
-        print(parameters)
         let parametersUp: [AnyObject]? = parameters as [AnyObject]?
         let dictionnary: Dictionary<String, Any>?
         if(parametersUp?.count != 0){
@@ -448,12 +447,12 @@ open class C8o: C8oBase {
      failUI() methods to handle C8oErrors.
      
      */
-	open func callXml(_ requestable: String, parameters: Dictionary<String, Any>) -> C8oPromise<AEXMLDocument> {
+	open func callXml(_ requestable: String, parametersDict: Dictionary<String, Any>) -> C8oPromise<AEXMLDocument> {
 		
 		let promise = C8oPromise<AEXMLDocument>(c8o: self)
 		
 		call(requestable,
-			parameters: parameters,
+			parameters: parametersDict,
 			c8oResponseListener: C8oResponseXmlListener(onXmlResponse: {
 				(response, requestParameters) -> () in
 				
@@ -503,8 +502,16 @@ open class C8o: C8oBase {
      failUI() methods to handle C8oErrors.
      
      */
-	open func callXml(_ requestable: String, parameters: Any...) -> C8oPromise<AEXMLDocument> {
-		return try! callXml(requestable, parameters: C8o.toParameters(parameters as [AnyObject]))
+	open func callXml(_ requestable: String, parameters: Any?...) -> C8oPromise<AEXMLDocument> {
+        let parametersUp: [AnyObject]? = parameters as [AnyObject]?
+        let dictionnary: Dictionary<String, Any>?
+        if(parametersUp?.count != 0){
+            dictionnary = try! C8o.toParameters(parametersUp)
+        }
+        else{
+            dictionnary = Dictionary<String, Any>()
+        }
+		return try! callXml(requestable, parametersDict: C8o.toParameters(parameters as [AnyObject]))
 	}
 	
 	/**

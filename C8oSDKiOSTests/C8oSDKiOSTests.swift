@@ -1640,7 +1640,6 @@ class C8oSDKiOSTests: XCTestCase {
             
 			XCTAssertEqual("def", value as? String)
 			json.dictionaryObject!["custom"] = id
-            
             json = try! c8o.callJson("fs://.post", parametersJSON: json).sync()!
 			//json = try! c8o.callJson("fs://.post", parametersJSON: json).sync()!
 			XCTAssertTrue(json["ok"].boolValue)
@@ -1649,8 +1648,6 @@ class C8oSDKiOSTests: XCTestCase {
 			sleep(2)
 			json = try! c8o.callJson("fs://.get", parameters: "docid", "ghi").sync()!
 			value = json["custom"].string as AnyObject
-            print(json.description)
-			
 			XCTAssertEqual(id, value as? String)
 			json = try! c8o.callJson(".qa_fs_push.GetDocument", parameters: "_use_docid", "def").sync()!
 			value = json["document"]["couchdb_output"]["custom"].string as AnyObject
@@ -1765,7 +1762,7 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertNotEqual(signature, signature2)
 	}
 	
-	/*func testC8oFileTransferDownloadSimple() {
+	func testC8oFileTransferDownloadSimple() {
 		let c8o = try! get(.c8O)
 		let ft = try! C8oFileTransfer(c8o: c8o, c8oFileTransferSettings: C8oFileTransferSettings())
 		try! c8o.callJson("fs://" + ft.taskDb + ".destroy").sync()
@@ -1842,16 +1839,19 @@ class C8oSDKiOSTests: XCTestCase {
 		let path = Bundle(for: C8oSDKiOSTests.self).path(forResource: "4m", ofType: "jpg")
 		let ins: InputStream = InputStream(fileAtPath: path!)!
 		try! ft.uploadFile("4m.jpg", fileStream: ins)
-		__status.wait(until: NSDate(timeIntervalSinceNow: 20.0) as Date)
+		__status.wait(until: NSDate(timeIntervalSinceNow: 50.0) as Date)
 		__status.unlock()
 		if (error[0] != nil) {
 			// throw error[0]!
+            print(error[0])
 		}
 		XCTAssertNotNil(status[0])
+        print(status[0])
+        print(status[0]?.serverFilepath)
 		let filepath = status[0]?.serverFilepath
 		let length = try! c8o.callXml(".GetSizeAndDelete", parameters: "filepath", filepath!).sync()!["document"]["length"].string
 		XCTAssertEqual("5120000", length)
-	}*/
+	}
 	
     func disable_testC8oFsLiveChanges() {
         let c8o = try! get(.c8O_FS_PUSH)

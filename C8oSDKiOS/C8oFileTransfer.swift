@@ -91,9 +91,7 @@ open class C8oFileTransfer: C8oFileTransferBase {
 	open func start() -> Void {
 		if (tasks == nil) {
 			tasks = Dictionary<String, C8oFileTransferStatus>()
-			
-			let priority = DispatchQueue.GlobalQueuePriority.default
-			DispatchQueue.global(priority: priority).async {
+			DispatchQueue.global(qos: .default).async {
 				do {
 					try self.checkTaskDb()
 				}
@@ -109,13 +107,13 @@ open class C8oFileTransfer: C8oFileTransferBase {
 				while (self.alive) {
 					do {
 						param["skip"] = skip as Any
-						var res: JSON = try self.c8oTask.callJson("fs://.all", parameters: param).sync()!
+						var res: JSON = try self.c8oTask.callJson("fs://.all", parametersDict: param).sync()!
 						
 						let rows: JSON = res["rows"]
 						if (rows.count > 0) {
 							let row: JSON = rows[0]
 							var task: JSON = row["doc"]
-							if (task == nil) {
+							if (task == JSON.null) {
 								task = try self.c8oTask.callJson("fs://.get",
 									parameters: "docid", row["id"].stringValue
 								).sync()!
@@ -277,7 +275,7 @@ open class C8oFileTransfer: C8oFileTransferBase {
                             condition.unlock()
                         }
 												
-						var all = try c8o?.callJson("fs://" + fsConnector! + ".all", parameters: allOptions).sync()
+						var all = try c8o?.callJson("fs://" + fsConnector! + ".all", parametersDict: allOptions).sync()
 						let rows = all!["rows"]
 						if (rows != nil) {
 							let current: Int = rows.count
