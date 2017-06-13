@@ -626,7 +626,7 @@ open class C8oFileTransfer: C8oFileTransferBase {
 				//
 				// 4 : Delete the local database containing chunks
 				//
-                DispatchQueue.main.async {[task] in // copies val
+                DispatchQueue.global(qos: .default).async {[task] in // copies val
                     var task = task
                     c8o.callJson("fs://.reset")
                         .then({ (response, parameters) -> (C8oPromise<JSON>?) in

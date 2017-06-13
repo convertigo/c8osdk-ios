@@ -17,9 +17,9 @@ import AEXML
 class C8oSDKiOSTests: XCTestCase {
 	
 	var myC8o: C8o!
-	let HOST =  "c8o-dev.convertigo.net" //"buildus.twinsoft.fr" // "192.168.100.95"
-	let PROJECT_PATH = "/cems/projects/ClientSDKtesting" //"/convertigo/projects/ClientSDKtesting"
-	let PORT = ":80"//":28080" // 18080
+	let HOST =  "buildus.twinsoft.fr" //"c8o-dev.convertigo.net" // "192.168.100.95"
+	let PROJECT_PATH = "/convertigo/projects/ClientSDKtesting" //"/cems/projects/ClientSDKtesting"
+	let PORT = ":28080" // ":80"// 18080
 	let PREFIX = "http://"
 	let PREFIXS = "https://"
 	
@@ -1781,7 +1781,7 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertNotEqual(signature, signature2)
 	}
 	
-	/*func testC8oFileTransferDownloadSimple() {
+	func testC8oFileTransferDownloadSimple() {
 		let c8o = try! get(.c8O)
 		let ft = try! C8oFileTransfer(c8o: c8o, c8oFileTransferSettings: C8oFileTransferSettings())
 		try! c8o.callJson("fs://" + ft.taskDb + ".destroy").sync()
@@ -1830,8 +1830,8 @@ class C8oSDKiOSTests: XCTestCase {
 				try fm.removeItem(atPath: file)
 			} catch { }
 		}
-	}*/
-	/*
+	}
+	
 	func testC8oFileTransferUploadSimple() {
 		let c8o = try! get(.c8O)
 		let ft = try! C8oFileTransfer(c8o: c8o, c8oFileTransferSettings: C8oFileTransferSettings())
@@ -1840,6 +1840,11 @@ class C8oSDKiOSTests: XCTestCase {
 		let __status: NSCondition = NSCondition()
 		var error: [NSError?] = [nil]
 		ft.raiseTransferStatus({ (source, event) in
+            print("event")
+            print(event.current.description + " / " + event.total.description)
+            print(event.state)
+                let a = source
+                let b = event
 			if (event.state == C8oFileTransferStatus.StateFinished) {
 				__status.lock()
 				status[0] = event
@@ -1858,7 +1863,7 @@ class C8oSDKiOSTests: XCTestCase {
 		let path = Bundle(for: C8oSDKiOSTests.self).path(forResource: "4m", ofType: "jpg")
 		let ins: InputStream = InputStream(fileAtPath: path!)!
 		try! ft.uploadFile("4m.jpg", fileStream: ins)
-		__status.wait(until: NSDate(timeIntervalSinceNow: 50.0) as Date)
+		__status.wait(until: NSDate(timeIntervalSinceNow: 500.0) as Date)
 		__status.unlock()
 		if (error[0] != nil) {
 			// throw error[0]!
@@ -1868,10 +1873,11 @@ class C8oSDKiOSTests: XCTestCase {
         print(status[0])
         print(status[0]?.serverFilepath)
 		let filepath = status[0]?.serverFilepath
-		let length = try! c8o.callXml(".GetSizeAndDelete", parameters: "filepath", filepath!).sync()!["document"]["length"].string
+		let lengthC8o = try! c8o.callXml(".GetSizeAndDelete", parameters: "filepath", filepath!).sync()
+        let length = lengthC8o!["document"]["length"].string
 		XCTAssertEqual("5120000", length)
-	}*/
-	
+	}
+    
     func disable_testC8oFsLiveChanges() {
         let c8o = try! get(.c8O_FS_PUSH)
         var lastChanges: JSON? = nil
