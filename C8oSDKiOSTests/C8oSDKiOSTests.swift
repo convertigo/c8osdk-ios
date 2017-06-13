@@ -22,6 +22,7 @@ class C8oSDKiOSTests: XCTestCase {
 	let PORT = ":80" //":28080" // 18080
 	let PREFIX = "http://"
 	let PREFIXS = "https://"
+    
 	
 	enum Stuff {
 		case c8O, c8O_BIS, c8O_FS, c8O_FS_PULL, c8O_FS_PUSH, c8O_LC, setGetInSession
