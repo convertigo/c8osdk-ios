@@ -1168,23 +1168,23 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertEqual(myId, id)
 	}
 	
-	/*
-	 func testC8oCBLpull() {
+	
+	 /*func testC8oCBLpull() {
 	 let manager = CBLManager()
 	 let options = CBLDatabaseOptions()
 	 options.create = true
 	 //options.storageType = kCBLForestDBStorage
 	 options.storageType = kCBLSQLiteStorage
-	 let db = try! manager.openDatabaseNamed("testing4", withOptions: options)
+	 let db = try! manager.openDatabaseNamed("testing4", with: options)
 	 //let url = NSURL(string: "http://buildus.twinsoft.fr:28080/convertigo/fullsync/qa_fs_pull")
 	 let url = NSURL(string: "http://buildus.twinsoft.fr:5984/qa_fs_pull")
-	 let rep = db.createPullReplication(url!)
+	 let rep = db.createPullReplication(url! as URL)
 	 rep.start()
 	 sleep(4)
 	 let changes = rep.completedChangesCount
 	 XCTAssertNotEqual(0, changes)
-	 }
-	 */
+	 }*/
+	 
 	
 	func testC8oFsReplicateAnoAndAuth() {
 		
@@ -1564,7 +1564,26 @@ class C8oSDKiOSTests: XCTestCase {
 		try! c8o.callJson(".LogoutTesting").sync()!
 		
 	}
-	/*
+    
+    func testCBLAlone() {
+    do {
+        let manager = CBLManager()
+        let options = CBLDatabaseOptions()
+        options.create = true
+        let db = try manager.openDatabaseNamed("mytest222", with: options)
+        let doc = db.createDocument()
+        try doc.putProperties(["abc":"def"])
+        let id = doc["_id"]
+        let rev = doc["_rev"]
+        let doc2 = db.document(withID: id as! String)
+        try doc2?.putProperties(["abc":"def", "_rev": rev!])
+    }
+    catch let e as NSError{
+        print(e)
+    }
+        
+    }
+	
 	func testC8oFsReplicateSyncContinuousProgress() {
 		
 		let c8o = try! get(.c8O_FS_PUSH)
@@ -1666,7 +1685,7 @@ class C8oSDKiOSTests: XCTestCase {
 		}
 		try! c8o.callJson(".LogoutTesting").sync()!
 	}
-	*/
+	
     func testC8oFsReplicateCancel() {
         let c8o = try! get(.c8O_FS)
         do {
@@ -1682,7 +1701,7 @@ class C8oSDKiOSTests: XCTestCase {
            XCTFail(e.description)
         }
     }
-    /*
+    
 	func testC8oLocalCacheXmlPriorityLocal() {
 		let c8o = try! get(.c8O_FS_PUSH)
 		let id: String = "C8oFsReplidateFormattercateSyncContinuousProgress-" + String(NSDate().timeIntervalSince1970 * 1000)
@@ -1721,7 +1740,7 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertEqual(id, value)
 		signature2 = doc["document"].attributes["signature"]!
 		XCTAssertNotEqual(signature, signature2)
-	}*/
+	}
 	
 	func testC8oLocalCacheJsonPriorityLocal() {
 		let c8o = try! get(.c8O_FS_PUSH)
@@ -1936,9 +1955,9 @@ class C8oSDKiOSTests: XCTestCase {
 
 	 }*/
 	
-    func testSslTrustAllClientFail() {
+    /*func testSslTrustAllClientFail() {
         do {
-            let c8o = try C8o(endpoint: PREFIXS + HOST + ":444" + PROJECT_PATH, c8oSettings: C8oSettings().setTrustAllCertificates(false))
+            let c8o = try C8o(endpoint: PREFIXS + HOST + ":443" + PROJECT_PATH, c8oSettings: C8oSettings().setTrustAllCertificates(false))
             _ = try c8o.callXml(".Ping", parameters: "var1", "value one").sync()
             XCTAssertTrue(false, "not possible")
         }
@@ -1955,7 +1974,7 @@ class C8oSDKiOSTests: XCTestCase {
         let doc = try! c8o.callXml(".Ping", parameters: "var1", "value one").sync()
         let value = doc?.root["pong"]["var1"].string
         XCTAssertEqual("value one", value)
-    }
+    }*/
     
 	func testC8oWithTimeout() {
 		let c8o = try! C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH, c8oSettings: C8oSettings().setTimeout(1000))

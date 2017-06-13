@@ -120,7 +120,7 @@ internal class C8oCallTask {
 									return myJson
 								}
 							}
-						} catch _ as C8oUnavailableLocalCacheException {
+						} catch {
 							// no entry
 						}
 					}
@@ -170,9 +170,9 @@ internal class C8oCallTask {
 			var responseString: String? = nil
 			if (c8oResponseListener is C8oResponseXmlListener) {
 				
-				response = C8oTranslator.dataToXml(httpResponse! as NSData)!
+				response = C8oTranslator.dataToXml(httpResponse!)!
 				if (localCacheEnabled) {
-					responseString = (response as! AEXMLDocument).string
+					responseString = (response as! AEXMLDocument).xml
 				}
 				
 			} else if (c8oResponseListener is C8oResponseJsonListener) {

@@ -255,7 +255,7 @@ class C8oFullSyncCbl: C8oFullSync {
         }
         
         // Filters and modifies wrong properties
-        var newProperties = Dictionary<String, Any>()
+        var newProperties = [String: Any]()
         for parameter in parameters {
             var parameterName: String = parameter.0
             
@@ -743,12 +743,20 @@ class C8oFullSyncCbl: C8oFullSync {
     
     func getResponseFromLocalCache(_ c8oCallRequestIdentifier: String) throws -> C8oLocalCacheResponse? {
         let fullSyncDatabase: C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(C8o.LOCAL_CACHE_DATABASE_NAME)
-        
+        let condition: NSCondition = NSCondition()
+        var locker: Bool = true
+        condition.lock()
         var localCacheDocument: CBLDocument? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             localCacheDocument = fullSyncDatabase.getDatabase()?.existingDocument(withID: c8oCallRequestIdentifier)
+            locker = false
+            condition.signal()
+        }
+        if(locker){
+            condition.wait()
         }
         
+        condition.unlock()
         if (localCacheDocument == nil) {
             throw C8oUnavailableLocalCacheException(message: C8oExceptionMessage.localCacheDocumentJustCreated())
         }
@@ -777,8 +785,8 @@ class C8oFullSyncCbl: C8oFullSync {
         if (expirationDate != nil) {
             if let e = expirationDate as! Double? {
                 expirationDateLong = e
-                let currentTime = Date().timeIntervalSince1970 * 1000
-                if (Double(expirationDateLong) < currentTime) {
+                let currentTime = C8oUtils.getUnixEpochTime()
+                if (expirationDateLong < currentTime!) {
                     throw C8oUnavailableLocalCacheException(message: C8oExceptionMessage.timeToLiveExpired())
                 }
             } else {

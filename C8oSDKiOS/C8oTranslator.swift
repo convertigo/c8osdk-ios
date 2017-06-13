@@ -110,9 +110,9 @@ internal class C8oTranslator {
 	internal static func streamToXml(_ stream: Stream) -> NSObject? {
 		fatalError("Function \"StreamToXml\" must be defined")
 	}
-	internal static func dataToXml(_ data: NSData) -> AEXMLDocument? {
+	internal static func dataToXml(_ data: Data) -> AEXMLDocument? {
 		do {
-            let doc = try AEXMLDocument(xml: (data as Data?)!)
+            let doc = try AEXMLDocument(xml: data)
 			return doc
 		}
 		catch {

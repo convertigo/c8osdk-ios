@@ -377,7 +377,7 @@ open class C8o: C8oBase {
      */
     open func callJson(_ requestable: String, parametersJSON: JSON) -> C8oPromise<JSON> {
         
-        return callJson(requestable, parametersDict: parametersJSON.dictionaryValue)
+        return callJson(requestable, parametersDict: parametersJSON.dictionaryObject)
         //callJson(requestable, parametersDict: (parametersJSON.object as! Dictionary<String, Any>))
     }
     

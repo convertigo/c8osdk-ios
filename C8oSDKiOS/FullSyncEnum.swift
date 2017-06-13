@@ -475,7 +475,7 @@ open class FullSyncPolicy {
 	
 	open static let NONE: FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_NONE, action: { database, newProperties in
 		var createdDocument: CBLDocument
-		var newPropertiesMutable = newProperties
+        var newPropertiesMutable = newProperties
 		do {
 			var documentId = C8oUtils.getParameterStringValue(newPropertiesMutable, name: C8oFullSync.FULL_SYNC__ID, useName: false)
 			
@@ -483,9 +483,10 @@ open class FullSyncPolicy {
 			if (documentId == "") {
 				documentId = nil
 			}
+        
 			createdDocument = (documentId == nil) ? database.createDocument() : database.document(withID: documentId!)!
-			
-			try createdDocument.putProperties(newPropertiesMutable)
+            
+            try createdDocument.putProperties(newPropertiesMutable)
 			
 		}
 		catch let e as NSError {
@@ -561,7 +562,7 @@ open class FullSyncPolicy {
 	open var value: String?
 	open var action: (CBLDatabase, Dictionary<String, Any>) throws -> (CBLDocument)
 	
-	fileprivate init(value: String?, action: @escaping (CBLDatabase, Dictionary<String, Any>) throws -> (CBLDocument)) {
+    fileprivate init(value: String?, action: @escaping (CBLDatabase, [String: Any]) throws -> (CBLDocument)) {
 		self.value = value
 		self.action = action
 		
