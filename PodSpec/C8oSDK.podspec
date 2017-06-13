@@ -4,10 +4,10 @@
 Pod::Spec.new do |s|
     s.name         = 'C8oSDK'
     s.module_name  = 'C8o'
-    s.version      = C8OSDK_VERSION
+    s.version      = '2.2.0-alpha1'
     
     s.author       = 'Convertigo'
-    s.license      = { :type => 'Enterprise License', :file  => 'LICENSE.txt' }
+    s.license      = 'Apache License 2.0'
     
     s.summary      = 'Convertigo client SDK for iOS.'
     s.description  = <<-DESC
@@ -22,17 +22,11 @@ Pod::Spec.new do |s|
     documentation_url = 'http://www.convertigo.com/document/convertigo-client-sdk/'
     social_media_url  = 'https://twitter.com/convertigo'
     
-    s.source       = { :http => "http://download.convertigo.com/webrepository/sdk/ios/C8oSDKiOS-universal-#{C8OSDK_VERSION}.zip" }
-    
-    s.preserve_path       = 'C8o.framework'
-    s.vendored_frameworks = 'C8o.framework'
+    s.source           = { :git => 'https://github.com/convertigo/C8oSDKiOS.git' }
     
     s.platform     = :ios, '8.0'
     
-    # We can't enable bitcode because of some dependencies
-    s.user_target_xcconfig = { 'ENABLE_BITCODE' => 'NO' }
-    
-    s.dependency 'SwiftyJSON', '2.3.2'
-    s.dependency 'Alamofire', '3.5.0'
-    s.dependency 'AEXML', '3.0.0'
+    s.dependency 'SwiftyJSON', '3.1.4'
+    s.dependency 'Alamofire', '4.4.0'
+    s.dependency 'AEXML', '4.1.0'
 end
