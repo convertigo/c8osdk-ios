@@ -1,0 +1,6 @@
+language: objective-c
+osx_image: xcode8.3
+
+xcode_project: C8oSDKiOS.xcodeproj # path to your xcodeproj folder
+xcode_scheme: C8oSDKiOSTests
+xcode_sdk: iphoneos10.3

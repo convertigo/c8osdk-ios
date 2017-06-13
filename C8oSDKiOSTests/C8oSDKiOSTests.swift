@@ -17,9 +17,9 @@ import AEXML
 class C8oSDKiOSTests: XCTestCase {
 	
 	var myC8o: C8o!
-	let HOST =  "buildus.twinsoft.fr" //"c8o-dev.convertigo.net" // "192.168.100.95"
-	let PROJECT_PATH = "/convertigo/projects/ClientSDKtesting" //"/cems/projects/ClientSDKtesting"
-	let PORT = ":28080" // ":80"// 18080
+	let HOST =  "c8o-dev.convertigo.net" //"buildus.twinsoft.fr"// "192.168.100.95"
+	let PROJECT_PATH = "/cems/projects/ClientSDKtesting"//"/convertigo/projects/ClientSDKtesting"
+	let PORT = ":80" //":28080" // 18080
 	let PREFIX = "http://"
 	let PREFIXS = "https://"
 	

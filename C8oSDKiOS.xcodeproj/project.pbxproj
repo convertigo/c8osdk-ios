@@ -30,6 +30,7 @@
 		626CC7BF1CE4CAD6002ED698 /* libCBLJSViewCompiler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 626CC7941CE4C5B4002ED698 /* libCBLJSViewCompiler.a */; };
 		62CD2A571C6207AD009E9F7E /* C8oSDKiOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CD2A561C6207AD009E9F7E /* C8oSDKiOSTests.swift */; };
 		62DE2D181CB6B4130026C3B1 /* C8oLocalCacheResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DE2D171CB6B4130026C3B1 /* C8oLocalCacheResponse.swift */; };
+		62E4B45C1EF02595004C84AB /* .travis.yml in Resources */ = {isa = PBXBuildFile; fileRef = 62E4B45B1EF02595004C84AB /* .travis.yml */; };
 		62EDE9041C7481ED00D9213F /* C8oExceptionListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9031C7481ED00D9213F /* C8oExceptionListener.swift */; };
 		62EDE9091C7482B300D9213F /* C8oFileTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9081C7482B300D9213F /* C8oFileTransfer.swift */; };
 		62EDE90B1C74D3AB00D9213F /* C8oFileTransferStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE90A1C74D3AB00D9213F /* C8oFileTransferStatus.swift */; };
@@ -98,6 +99,7 @@
 		62CD2A581C6207AD009E9F7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		62CD2A961C6210D6009E9F7E /* PodFile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PodFile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		62DE2D171CB6B4130026C3B1 /* C8oLocalCacheResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oLocalCacheResponse.swift; sourceTree = "<group>"; };
+		62E4B45B1EF02595004C84AB /* .travis.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
 		62EDE9031C7481ED00D9213F /* C8oExceptionListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oExceptionListener.swift; sourceTree = "<group>"; };
 		62EDE9081C7482B300D9213F /* C8oFileTransfer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFileTransfer.swift; sourceTree = "<group>"; };
 		62EDE90A1C74D3AB00D9213F /* C8oFileTransferStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFileTransferStatus.swift; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 		62CD2A3D1C6207AC009E9F7E = {
 			isa = PBXGroup;
 			children = (
+				62E4B45B1EF02595004C84AB /* .travis.yml */,
 				621C066C1D5A08F100192E90 /* PodSpec */,
 				62CD2A961C6210D6009E9F7E /* PodFile */,
 				62CD2A491C6207AD009E9F7E /* C8oSDKiOS */,
@@ -353,6 +356,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62E4B45C1EF02595004C84AB /* .travis.yml in Resources */,
 				621C066E1D5A08F100192E90 /* C8oSDK.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
