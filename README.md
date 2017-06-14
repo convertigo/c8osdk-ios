@@ -39,7 +39,7 @@ And there you go !
 
 ## Sample code ##
 
-#####Initializing a Convertigo Enpoint#####
+##### Initializing a Convertigo Enpoint #####
 
 For the .NET SDK, there is a common static initialization to be done before using the SDK feature. It prepares some platform specific features. After that, you will be able to create and use the C8o instance to interact with the Convertigo server and the Client SDK features. A C8o instance is linked to a server through is endpoint and cannot be changed after.  
 You can have as many C8o instance,pointing to a same or different endpoint. Each instance handles its own session and settings. We strongly recommend using a single C8o instance per application because server licensing can based on the number of sessions used.
@@ -60,7 +60,7 @@ You can have as many C8o instance,pointing to a same or different endpoint. Each
 	}
 	// the C8o instance is ready to interact over https with the demo.convertigo.net server, using sampleMobileUsDirectoryDemo as default project.
 	
-#####Advanced instance settings#####
+##### Advanced instance settings #####
 
 The endpoint is the mandatory setting to get a C8o instance, but there is additional settings through the C8oSettings class.  
 A C8oSettings instance should be passed after the endpoint. Settings are copied inside the C8o instance and a C8oSettings instance can be modified and reused after the C8o constructor.  
@@ -86,7 +86,7 @@ A C8oSettings can be instantiated from an existing C8oSettings or C8o instance.
 	// all settings can be retrieve from a C8o or C8oSettings instance
 	let timeout : Int = c8o.timeout
 
-#####Calling a Convertigo Requestable#####
+##### Calling a Convertigo Requestable #####
 
 With a C8o instance you can call Convertigo Sequence and Transaction or make query to your local FullSync database. You must specify the result type you want: an XML Document or a JSON Object response.
   
@@ -108,7 +108,7 @@ Just use the c8o.callXml method to request a XML response.
 	// c8o is a C8o instance
 	let document : AEXMLDocument = try! c8o.callXml(".getSimpleData").sync()!
 
-#####Call parameters#####
+##### Call parameters #####
 
 The call method expects the requester string of the following syntax:
 
@@ -133,7 +133,7 @@ Here a sample with JSON but this would be the same for XML calls:
 	parameters["lastname"] = "Do"
 	let JSONObject : JSON = try! c8o.callJson(".getSimpleData", parameters: parameters)!.sync()!
 	
-#####Working with threads#####
+##### Working with threads #####
 
 Maybe you noticed that the calls methods doesn’t return the result directly and that all the sample code chains to the `.sync()` method.  
 This is because the call methods return a `C8oPromise` instance. That allows the developer to choose if he wants to block the current thread, make an async request or get the response in a callback.  
@@ -167,7 +167,7 @@ The `.then()` and `.thenUI()` callbacks receives as parameters the response and 
 	
 	// following lines are executed immediately, before the end of the request.
 	
-#####Chaining calls#####
+##### Chaining calls #####
 
 The `.then()` or `.thenUI()` returns a C8oPromise that can be use to chain other promise methods, such as `.then()` or `.thenUI()` or failure handlers.  
  The last `.then()` or `.thenUI()` must return a nil value. `.then()` or `.thenUI()` can be mixed but the returning type must be the same: XML or JSON.
@@ -186,7 +186,7 @@ The `.then()` or `.thenUI()` returns a C8oPromise that can be use to chain other
 	    return nil
 	})
 
-#####Handling failures#####
+##### Handling failures #####
 
 A call can throw an error for many reasons: technical failure, network error and so on.  
 The standard do/catch should be used to handle this.  
@@ -231,9 +231,11 @@ Please see about other SDKs:
 
 - [.NET](https://www.nuget.org/packages/C8oFullSyncExtensions/)
 
+- [Angular](https://www.npmjs.com/package/c8osdkangular)
+
 <br><br><br><br><br>
 
-##About Convertigo##
+## About Convertigo ##
 
 <div style="text-align:center">  
 
