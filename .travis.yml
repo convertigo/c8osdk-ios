@@ -3,7 +3,7 @@ osx_image: xcode8.3
 
 # Install lfs
 before_install:
-- brew update && brew install git-lfs
+- brew install git-lfs
 - git lfs install
 before_script:
 - git lfs pull

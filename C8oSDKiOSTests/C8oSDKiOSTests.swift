@@ -268,10 +268,10 @@ class C8oSDKiOSTests: XCTestCase {
         
 		json = json!["document"]
 		let pong = json!["pong"]
-		var value: Any = pong["var1"].string
+		var value: Any = pong["var1"].string!
 		XCTAssertEqual("value one", value as! String)
 		let mvar1 = pong["mvar1"]
-		value = mvar1[0].string
+		value = mvar1[0].string!
 		XCTAssertEqual("mvalue one", value as! String)
 		value = mvar1[1].string!
 		XCTAssertEqual("mvalue two", value as! String)
@@ -280,7 +280,7 @@ class C8oSDKiOSTests: XCTestCase {
 		let count = mvar1.count
 		XCTAssertEqual(3, count)
 		let complex = json!["complex"]
-		let isnil: AnyObject? = complex["isNull"].string as AnyObject
+		//let isnil: AnyObject? = complex["isNull"].string as AnyObject
 		let exist = complex["isNull"].exists()
 		//XCTAssertNil(isnil)
 		XCTAssertTrue(exist)
