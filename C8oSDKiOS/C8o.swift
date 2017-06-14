@@ -130,7 +130,7 @@ open class C8o: C8oBase {
 	 - returns: Current version of the SDK as "x.y.z".
 	 */
 	open static func getSdkVersion() -> String {
-		return "2.2.0-alpha1"
+		return "2.2.0-alpha2"
 	}
 	
 	/* Attributes */

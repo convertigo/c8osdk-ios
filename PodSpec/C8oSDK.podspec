@@ -4,7 +4,7 @@
 Pod::Spec.new do |s|
     s.name         = 'C8oSDK'
     s.module_name  = 'C8o'
-    s.version      = '2.2.0-alpha1'
+    s.version      = '2.2.0-alpha2'
     
     s.author       = 'Convertigo'
     s.license      = 'Apache License 2.0'
@@ -22,7 +22,8 @@ Pod::Spec.new do |s|
     documentation_url = 'http://www.convertigo.com/document/convertigo-client-sdk/'
     social_media_url  = 'https://twitter.com/convertigo'
     
-    s.source           = { :git => 'https://github.com/convertigo/C8oSDKiOS.git', :tag => '2.2.0-alpha1' }
+    s.source           = { :git => 'https://github.com/convertigo/C8oSDKiOS.git', :tag => '2.2.0-alpha2' }
+    s.source_files = 'C8oSDKiOS/*.{swift,h}', 'C8oSDKiOS/Internal/*.{swift,h,a}'
     
     s.platform     = :ios, '8.0'
     
