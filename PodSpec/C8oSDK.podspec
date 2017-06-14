@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
     documentation_url = 'http://www.convertigo.com/document/convertigo-client-sdk/'
     social_media_url  = 'https://twitter.com/convertigo'
     
-    s.source           = { :git => 'https://github.com/convertigo/C8oSDKiOS.git' }
+    s.source           = { :git => 'https://github.com/convertigo/C8oSDKiOS.git', :tag => '2.2.0-alpha1' }
     
     s.platform     = :ios, '8.0'
     

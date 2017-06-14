@@ -709,6 +709,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 48A8DAB072C56A9108866F53 /* Pods-C8oSDKiOSTests.debug.xcconfig */;
 			buildSettings = {
+				ENABLE_BITCODE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = C8oSDKiOSTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -722,6 +723,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EB9DD9C4928622F71D6AB05F /* Pods-C8oSDKiOSTests.release.xcconfig */;
 			buildSettings = {
+				ENABLE_BITCODE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = C8oSDKiOSTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
