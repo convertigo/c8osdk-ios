@@ -1,6 +1,7 @@
 language: objective-c
 osx_image: xcode8.3
 
+# set script mannualy due to xcode8.3 non supporting xctool
 script:
 - xcodebuild clean build -sdk iphonesimulator -workspace C8oSDKiOS.xcworkspace -scheme C8oSDKiOS CODE_SIGNING_REQUIRED=NO
 
