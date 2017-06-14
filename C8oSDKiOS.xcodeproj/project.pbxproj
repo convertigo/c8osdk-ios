@@ -329,7 +329,9 @@
 					};
 					62CD2A501C6207AD009E9F7E = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = FKA4E5M74L;
 						LastSwiftMigration = 0830;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -709,12 +711,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 48A8DAB072C56A9108866F53 /* Pods-C8oSDKiOSTests.debug.xcconfig */;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = FKA4E5M74L;
 				ENABLE_BITCODE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = C8oSDKiOSTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKiOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -723,12 +728,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EB9DD9C4928622F71D6AB05F /* Pods-C8oSDKiOSTests.release.xcconfig */;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = FKA4E5M74L;
 				ENABLE_BITCODE = YES;
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = C8oSDKiOSTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKiOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
