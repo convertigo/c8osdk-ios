@@ -1,7 +1,6 @@
 language: objective-c
 osx_image: xcode8.3
 
-xcode_workspace: C8oSDKiOS.xcworkspace
-xcode_scheme: C8oSDKiOS
-xcode_sdk: iphoneos10.3
+script:
+- xcodebuild clean build -sdk iphonesimulator -workspace C8oSDKiOS.xcworkspace -scheme C8oSDKiOS CODE_SIGNING_REQUIRED=NO
 
