@@ -1671,7 +1671,6 @@ class C8oSDKiOSTests: XCTestCase {
 			XCTAssertEqual(id, value as? String)
 			json = try! c8o.callJson(".qa_fs_push.GetDocument", parameters: "_use_docid", "def").sync()!
 			value = json["document"]["couchdb_output"]["custom"].string as AnyObject
-			print(json["document"].description)
 			XCTAssertEqual(id, value as? String)
 			range = NSMakeRange(0, (livePull[0] as String!).characters.count)
 			regexV = try! NSRegularExpression(pattern: "pull: \\d+/\\d+ \\(live\\)", options: []).matches(in: livePull[0]!, options: [], range: range)
@@ -1841,11 +1840,6 @@ class C8oSDKiOSTests: XCTestCase {
 		let __status: NSCondition = NSCondition()
 		var error: [NSError?] = [nil]
 		ft.raiseTransferStatus({ (source, event) in
-            print("event")
-            print(event.current.description + " / " + event.total.description)
-            print(event.state)
-                let a = source
-                let b = event
 			if (event.state == C8oFileTransferStatus.StateFinished) {
 				__status.lock()
 				status[0] = event
@@ -1867,12 +1861,10 @@ class C8oSDKiOSTests: XCTestCase {
 		__status.wait(until: NSDate(timeIntervalSinceNow: 500.0) as Date)
 		__status.unlock()
 		if (error[0] != nil) {
-			// throw error[0]!
-            print(error[0])
+            print(error)
+			 //throw error[0]!
 		}
 		XCTAssertNotNil(status[0])
-        print(status[0])
-        print(status[0]?.serverFilepath)
 		let filepath = status[0]?.serverFilepath
 		let lengthC8o = try! c8o.callXml(".GetSizeAndDelete", parameters: "filepath", filepath!).sync()
         let length = lengthC8o!["document"]["length"].string
