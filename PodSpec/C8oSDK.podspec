@@ -1,7 +1,8 @@
 # The C8OSDK_VERSION variable will be defined by jenkins on Buildus.
 # It is read from XCode: Target C8oSDKiOS, tab "General", "Version" field.
 
-Pod::Spec.new do |s|
+Pod::
+Spec.new do |s|
     s.name         = 'C8oSDK'
     s.module_name  = 'C8o'
     s.version      = '2.2.0-beta1'
@@ -22,7 +23,7 @@ Pod::Spec.new do |s|
     documentation_url = 'http://www.convertigo.com/document/convertigo-client-sdk/'
     social_media_url  = 'https://twitter.com/convertigo'
     
-    s.source           = { :git => 'https://github.com/convertigo/C8oSDKiOS.git' }
+    s.source           = { :git => 'https://github.com/convertigo/C8oSDKiOS.git', :tag => '2.2.0-beta1' }
     s.source_files = 'C8oSDKiOS/*.{swift,h}', 'C8oSDKiOS/Internal/*.{swift,h,a}'
     
     s.platform     = :ios, '8.0'

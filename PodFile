@@ -1,5 +1,9 @@
 platform :ios, '8.0'
 
+pre_install do |installer|
+    def installer.verify_no_static_framework_transitive_dependencies; end
+end
+
 target 'C8oSDKiOS' do
   use_frameworks!
   
