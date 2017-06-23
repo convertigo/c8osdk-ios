@@ -24,13 +24,13 @@ Spec.new do |s|
     social_media_url  = 'https://twitter.com/convertigo'
     
     s.source           = { :git => 'https://github.com/convertigo/C8oSDKiOS.git', :tag => '2.2.0-beta3' }
-    s.source_files = 'C8oSDKiOS/*.{swift,h}', 'C8oSDKiOS/Internal/*.{swift,h,a}'
+    s.source_files = 'C8oSDKiOS/*.swift', 'C8oSDKiOS/Internal/*.swift'
     
     s.platform     = :ios, '8.0'
     
     s.dependency 'SwiftyJSON', '3.1.4'
     s.dependency 'Alamofire', '4.4.0'
     s.dependency 'AEXML', '4.1.0'
-    s.dependency 'couchbase-lite-ios', '1.4.0'
-    s.dependency 'couchbase-lite-ios/ForestDB', '1.4.0'
+    #s.dependency 'couchbase-lite-ios', '1.4.0'
+    #s.dependency 'couchbase-lite-ios/ForestDB', '1.4.0'
 end
