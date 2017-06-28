@@ -26,6 +26,13 @@
 		623C740B1C7C932900E691B0 /* C8oFullSyncCbl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C740A1C7C932900E691B0 /* C8oFullSyncCbl.swift */; };
 		623C740E1C7C94E900E691B0 /* C8oFullSyncDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C740D1C7C94E900E691B0 /* C8oFullSyncDatabase.swift */; };
 		623C74101C7CD02100E691B0 /* C8oLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C740F1C7CD02100E691B0 /* C8oLogger.swift */; };
+		6249D0BA1F04012A001C458B /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B61F04012A001C458B /* AEXML.framework */; };
+		6249D0BB1F04012A001C458B /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B71F04012A001C458B /* Alamofire.framework */; };
+		6249D0BC1F04012A001C458B /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B81F04012A001C458B /* CouchbaseLite.framework */; };
+		6249D0BD1F04012A001C458B /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B91F04012A001C458B /* SwiftyJSON.framework */; };
+		6249D0BF1F0401CE001C458B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0BE1F0401CE001C458B /* JavaScriptCore.framework */; };
+		6249D0C01F040433001C458B /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B61F04012A001C458B /* AEXML.framework */; };
+		6249D0C11F040433001C458B /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B91F04012A001C458B /* SwiftyJSON.framework */; };
 		626CC7BF1CE4CAD6002ED698 /* libCBLJSViewCompiler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 626CC7941CE4C5B4002ED698 /* libCBLJSViewCompiler.a */; };
 		62CD2A571C6207AD009E9F7E /* C8oSDKiOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CD2A561C6207AD009E9F7E /* C8oSDKiOSTests.swift */; };
 		62DE2D181CB6B4130026C3B1 /* C8oLocalCacheResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DE2D171CB6B4130026C3B1 /* C8oLocalCacheResponse.swift */; };
@@ -83,6 +90,11 @@
 		623C740A1C7C932900E691B0 /* C8oFullSyncCbl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFullSyncCbl.swift; sourceTree = "<group>"; };
 		623C740D1C7C94E900E691B0 /* C8oFullSyncDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFullSyncDatabase.swift; sourceTree = "<group>"; };
 		623C740F1C7CD02100E691B0 /* C8oLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oLogger.swift; sourceTree = "<group>"; };
+		6249D0B61F04012A001C458B /* AEXML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AEXML.framework; path = Carthage/Build/iOS/AEXML.framework; sourceTree = "<group>"; };
+		6249D0B71F04012A001C458B /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		6249D0B81F04012A001C458B /* CouchbaseLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLite.framework; path = Carthage/Build/iOS/CouchbaseLite.framework; sourceTree = "<group>"; };
+		6249D0B91F04012A001C458B /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
+		6249D0BE1F0401CE001C458B /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		626CC7931CE4C5B4002ED698 /* CBLRegisterJSViewCompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBLRegisterJSViewCompiler.h; path = ../ObjC/CBLRegisterJSViewCompiler.h; sourceTree = "<group>"; };
 		626CC7941CE4C5B4002ED698 /* libCBLJSViewCompiler.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCBLJSViewCompiler.a; path = ../ObjC/libCBLJSViewCompiler.a; sourceTree = "<group>"; };
 		627259C31ED31C38004A3769 /* C8o.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = C8o.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -120,6 +132,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6249D0BF1F0401CE001C458B /* JavaScriptCore.framework in Frameworks */,
+				6249D0BA1F04012A001C458B /* AEXML.framework in Frameworks */,
+				6249D0BB1F04012A001C458B /* Alamofire.framework in Frameworks */,
+				6249D0BC1F04012A001C458B /* CouchbaseLite.framework in Frameworks */,
+				6249D0BD1F04012A001C458B /* SwiftyJSON.framework in Frameworks */,
 				626CC7BF1CE4CAD6002ED698 /* libCBLJSViewCompiler.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -128,12 +145,26 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6249D0C01F040433001C458B /* AEXML.framework in Frameworks */,
+				6249D0C11F040433001C458B /* SwiftyJSON.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6249D0B51F04012A001C458B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6249D0BE1F0401CE001C458B /* JavaScriptCore.framework */,
+				6249D0B61F04012A001C458B /* AEXML.framework */,
+				6249D0B71F04012A001C458B /* Alamofire.framework */,
+				6249D0B81F04012A001C458B /* CouchbaseLite.framework */,
+				6249D0B91F04012A001C458B /* SwiftyJSON.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		62CD2A3D1C6207AC009E9F7E = {
 			isa = PBXGroup;
 			children = (
@@ -143,6 +174,7 @@
 				62CD2A551C6207AD009E9F7E /* C8oSDKiOSTests */,
 				627259C31ED31C38004A3769 /* C8o.framework */,
 				627259C41ED31C38004A3769 /* C8oSDKiOSTests.xctest */,
+				6249D0B51F04012A001C458B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -231,12 +263,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 62CD2A5B1C6207AD009E9F7E /* Build configuration list for PBXNativeTarget "C8oSDKiOS" */;
 			buildPhases = (
-				871243579CE41AE44ECCEC6B /* [CP] Check Pods Manifest.lock */,
 				62CD2A421C6207AC009E9F7E /* Sources */,
 				62CD2A431C6207AC009E9F7E /* Frameworks */,
 				62CD2A441C6207AC009E9F7E /* Headers */,
 				62CD2A451C6207AC009E9F7E /* Resources */,
-				A6BC0877FB7B6CD2E282DD90 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -251,12 +281,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 62CD2A5E1C6207AD009E9F7E /* Build configuration list for PBXNativeTarget "C8oSDKiOSTests" */;
 			buildPhases = (
-				3768B8FD2C36279E12AF0630 /* [CP] Check Pods Manifest.lock */,
 				62CD2A4D1C6207AD009E9F7E /* Sources */,
 				62CD2A4E1C6207AD009E9F7E /* Frameworks */,
 				62CD2A4F1C6207AD009E9F7E /* Resources */,
-				77A7A78025CE5FAA15463448 /* [CP] Embed Pods Frameworks */,
-				139F23206FAF1E0B9139B82D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -328,84 +355,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		139F23206FAF1E0B9139B82D /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-C8oSDKiOSTests/Pods-C8oSDKiOSTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3768B8FD2C36279E12AF0630 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		77A7A78025CE5FAA15463448 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-C8oSDKiOSTests/Pods-C8oSDKiOSTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		871243579CE41AE44ECCEC6B /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		A6BC0877FB7B6CD2E282DD90 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-C8oSDKiOS/Pods-C8oSDKiOS-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		62CD2A421C6207AC009E9F7E /* Sources */ = {
@@ -587,6 +536,7 @@
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
 					"$(PROJECT_DIR)/Pods/couchbase-lite-ios",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = C8oSDKiOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -635,6 +585,7 @@
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
 					"$(PROJECT_DIR)/Pods/couchbase-lite-ios",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = C8oSDKiOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -669,9 +620,13 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = FKA4E5M74L;
 				ENABLE_BITCODE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = C8oSDKiOSTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks $(PROJECT_DIR)/Carthage/Build/iOS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKiOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -685,9 +640,13 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = FKA4E5M74L;
 				ENABLE_BITCODE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				HEADER_SEARCH_PATHS = "$(SDKROOT)/usr/include/libxml2";
 				INFOPLIST_FILE = C8oSDKiOSTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks $(PROJECT_DIR)/Carthage/Build/iOS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKiOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

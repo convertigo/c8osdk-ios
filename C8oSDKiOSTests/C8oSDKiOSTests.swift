@@ -8,8 +8,9 @@
 
 import XCTest
 import Foundation
-import SwiftyJSON
+
 import Alamofire
+import SwiftyJSON
 import AEXML
 
 @testable import C8o
