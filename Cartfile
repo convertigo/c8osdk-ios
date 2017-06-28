@@ -1,0 +1,4 @@
+github "Alamofire/Alamofire" == 4.4.0
+github "SwiftyJSON/SwiftyJSON" ~> 3.1.4
+github "tadija/AEXML" ~> 4.1.0
+github "couchbase/couchbase-lite-ios" "release/1.4.0"

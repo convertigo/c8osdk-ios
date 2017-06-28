@@ -1,0 +1,4 @@
+github "Alamofire/Alamofire" "4.4.0"
+github "SwiftyJSON/SwiftyJSON" "3.1.4"
+github "couchbase/couchbase-lite-ios" "04fbe5e6a522f375f2c9e33d26f1c98a1cfe2455"
+github "tadija/AEXML" "4.1.0"
