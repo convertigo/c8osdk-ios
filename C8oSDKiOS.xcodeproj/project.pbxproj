@@ -28,10 +28,11 @@
 		6249D0BA1F04012A001C458B /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B61F04012A001C458B /* AEXML.framework */; };
 		6249D0BB1F04012A001C458B /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B71F04012A001C458B /* Alamofire.framework */; };
 		6249D0BD1F04012A001C458B /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B91F04012A001C458B /* SwiftyJSON.framework */; };
-		6249D0BF1F0401CE001C458B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0BE1F0401CE001C458B /* JavaScriptCore.framework */; };
 		6249D0C01F040433001C458B /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B61F04012A001C458B /* AEXML.framework */; };
 		6249D0C11F040433001C458B /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B91F04012A001C458B /* SwiftyJSON.framework */; };
-		6273065B1F0533BD00680CEE /* libCBLJSViewCompiler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 626CC7941CE4C5B4002ED698 /* libCBLJSViewCompiler.a */; };
+		6273069A1F053E0800680CEE /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B81F04012A001C458B /* CouchbaseLite.framework */; };
+		6273069D1F0544D400680CEE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0BE1F0401CE001C458B /* JavaScriptCore.framework */; };
+		6273069E1F0544E700680CEE /* libCBLJSViewCompiler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 626CC7941CE4C5B4002ED698 /* libCBLJSViewCompiler.a */; };
 		62CD2A571C6207AD009E9F7E /* C8oSDKiOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CD2A561C6207AD009E9F7E /* C8oSDKiOSTests.swift */; };
 		62DE2D181CB6B4130026C3B1 /* C8oLocalCacheResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DE2D171CB6B4130026C3B1 /* C8oLocalCacheResponse.swift */; };
 		62E4B45C1EF02595004C84AB /* .travis.yml in Resources */ = {isa = PBXBuildFile; fileRef = 62E4B45B1EF02595004C84AB /* .travis.yml */; };
@@ -130,8 +131,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6273065B1F0533BD00680CEE /* libCBLJSViewCompiler.a in Frameworks */,
-				6249D0BF1F0401CE001C458B /* JavaScriptCore.framework in Frameworks */,
+				6273069E1F0544E700680CEE /* libCBLJSViewCompiler.a in Frameworks */,
+				6273069D1F0544D400680CEE /* JavaScriptCore.framework in Frameworks */,
+				6273069A1F053E0800680CEE /* CouchbaseLite.framework in Frameworks */,
 				6249D0BA1F04012A001C458B /* AEXML.framework in Frameworks */,
 				6249D0BB1F04012A001C458B /* Alamofire.framework in Frameworks */,
 				6249D0BD1F04012A001C458B /* SwiftyJSON.framework in Frameworks */,
