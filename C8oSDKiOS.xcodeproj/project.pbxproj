@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		372612EA1DD1D7020092EEC6 /* C8oFullSyncChangeListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372612E91DD1D7020092EEC6 /* C8oFullSyncChangeListener.swift */; };
-		3766883B1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 3766883A1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h */; };
 		376A96061D81B0F600F023D8 /* 4m.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 376A96041D81AD3E00F023D8 /* 4m.jpg */; };
 		37F523B41C9ABE19007952C3 /* C8oCookieStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37F523B31C9ABE19007952C3 /* C8oCookieStorage.swift */; };
 		62057A211CB53DA0004AE521 /* FullSyncEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62057A201CB53DA0004AE521 /* FullSyncEnum.swift */; };
@@ -28,12 +27,11 @@
 		623C74101C7CD02100E691B0 /* C8oLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C740F1C7CD02100E691B0 /* C8oLogger.swift */; };
 		6249D0BA1F04012A001C458B /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B61F04012A001C458B /* AEXML.framework */; };
 		6249D0BB1F04012A001C458B /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B71F04012A001C458B /* Alamofire.framework */; };
-		6249D0BC1F04012A001C458B /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B81F04012A001C458B /* CouchbaseLite.framework */; };
 		6249D0BD1F04012A001C458B /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B91F04012A001C458B /* SwiftyJSON.framework */; };
 		6249D0BF1F0401CE001C458B /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0BE1F0401CE001C458B /* JavaScriptCore.framework */; };
 		6249D0C01F040433001C458B /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B61F04012A001C458B /* AEXML.framework */; };
 		6249D0C11F040433001C458B /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B91F04012A001C458B /* SwiftyJSON.framework */; };
-		626CC7BF1CE4CAD6002ED698 /* libCBLJSViewCompiler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 626CC7941CE4C5B4002ED698 /* libCBLJSViewCompiler.a */; };
+		6273065B1F0533BD00680CEE /* libCBLJSViewCompiler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 626CC7941CE4C5B4002ED698 /* libCBLJSViewCompiler.a */; };
 		62CD2A571C6207AD009E9F7E /* C8oSDKiOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CD2A561C6207AD009E9F7E /* C8oSDKiOSTests.swift */; };
 		62DE2D181CB6B4130026C3B1 /* C8oLocalCacheResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DE2D171CB6B4130026C3B1 /* C8oLocalCacheResponse.swift */; };
 		62E4B45C1EF02595004C84AB /* .travis.yml in Resources */ = {isa = PBXBuildFile; fileRef = 62E4B45B1EF02595004C84AB /* .travis.yml */; };
@@ -132,12 +130,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6273065B1F0533BD00680CEE /* libCBLJSViewCompiler.a in Frameworks */,
 				6249D0BF1F0401CE001C458B /* JavaScriptCore.framework in Frameworks */,
 				6249D0BA1F04012A001C458B /* AEXML.framework in Frameworks */,
 				6249D0BB1F04012A001C458B /* Alamofire.framework in Frameworks */,
-				6249D0BC1F04012A001C458B /* CouchbaseLite.framework in Frameworks */,
 				6249D0BD1F04012A001C458B /* SwiftyJSON.framework in Frameworks */,
-				626CC7BF1CE4CAD6002ED698 /* libCBLJSViewCompiler.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,7 +249,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3766883B1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -534,7 +530,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/Pods/couchbase-lite-ios",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
@@ -545,7 +540,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/C8oSDKiOS",
 					"$(PROJECT_DIR)/ObjC",
-					"$(PROJECT_DIR)/Pods/couchbase-lite-ios/Extras",
 				);
 				MODULEMAP_FILE = "";
 				OTHER_LDFLAGS = (
@@ -583,7 +577,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/Pods/couchbase-lite-ios",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
@@ -594,7 +587,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/C8oSDKiOS",
 					"$(PROJECT_DIR)/ObjC",
-					"$(PROJECT_DIR)/Pods/couchbase-lite-ios/Extras",
 				);
 				MODULEMAP_FILE = "";
 				OTHER_LDFLAGS = (

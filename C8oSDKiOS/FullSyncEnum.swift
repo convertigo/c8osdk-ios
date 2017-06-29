@@ -9,6 +9,7 @@
 import Foundation
 import SwiftyJSON
 import AEXML
+import CouchbaseLite
 
 internal class FullSyncRequestable {
 	internal static var GET: FullSyncRequestable = FullSyncRequestable(value: "get", handleFullSyncrequestOp: { (c8oFullSync, databaseName, parameters, c8oResponseListener) throws -> (Any) in

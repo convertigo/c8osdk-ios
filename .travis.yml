@@ -9,7 +9,7 @@ before_install:
 - git lfs install
 before_script:
 - git lfs pull
-- carthage bootstrap
+- carthage update --platform iOS
 
 # set script mannualy due to xcode8.3 non supporting xctool
 script:

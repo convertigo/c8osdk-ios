@@ -4,7 +4,6 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnullability-completeness"
 
-#import <CouchbaseLite/CouchbaseLite.h>
 #import "CBLRegisterJSViewCompiler.h"
 
 #pragma clang diagnostic pop

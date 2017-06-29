@@ -9,6 +9,7 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
+import CouchbaseLite
 
 open class C8oFullSyncDatabase: NSObject {
 	

@@ -12,6 +12,7 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 import AEXML
+import CouchbaseLite
 
 @testable import C8o
 
