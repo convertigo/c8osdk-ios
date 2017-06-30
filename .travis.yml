@@ -13,5 +13,5 @@ before_script:
 
 # set script mannualy due to xcode8.3 non supporting xctool
 script:
-- xcodebuild test -project C8oSDKiOS.xcproject -scheme C8oSDKiOS -destination 'platform=iOS Simulator,name=iPhone 7 Plus,OS=10.3.1'
+- xcodebuild test -project C8oSDKiOS.xcodeproj -scheme C8oSDKiOS -destination 'platform=iOS Simulator,name=iPhone 7 Plus,OS=10.3.1'
 
