@@ -555,7 +555,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/C8oSDKiOS";
-				SWIFT_OBJC_BRIDGING_HEADER = "C8oSDKiOS/Couchbase-Lite-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/C8oSDKiOS/Couchbase-Lite-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "C8oSDKiOS-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -602,7 +602,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/C8oSDKiOS";
-				SWIFT_OBJC_BRIDGING_HEADER = "C8oSDKiOS/Couchbase-Lite-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/C8oSDKiOS/Couchbase-Lite-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "C8oSDKiOS-Swift.h";
 				SWIFT_VERSION = 3.0;
 			};

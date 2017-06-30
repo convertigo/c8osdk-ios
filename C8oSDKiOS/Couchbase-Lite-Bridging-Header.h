@@ -4,7 +4,7 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnullability-completeness"
 
-#import "ObjC/CBLRegisterJSViewCompiler.h"
+#import "CBLRegisterJSViewCompiler.h"
 
 #pragma clang diagnostic pop
 #endif
