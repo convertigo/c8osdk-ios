@@ -1,6 +1,10 @@
 language: objective-c
 osx_image: xcode8.3
 
+cache:
+directories:
+- Carthage
+
 # Install lfs
 before_install:
 - brew update
@@ -9,7 +13,7 @@ before_install:
 - git lfs install
 before_script:
 - git lfs pull
-- carthage update --platform iOS
+- carthage bootstrap --verbose --no-use-binaries --platform iOS --cache-builds
 
 # set script mannualy due to xcode8.3 non supporting xctool
 script:
