@@ -30,6 +30,7 @@
 		6249D0BD1F04012A001C458B /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B91F04012A001C458B /* SwiftyJSON.framework */; };
 		6249D0C01F040433001C458B /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B61F04012A001C458B /* AEXML.framework */; };
 		6249D0C11F040433001C458B /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B91F04012A001C458B /* SwiftyJSON.framework */; };
+		625F64291F1384260018D97C /* CBLRegisterJSViewCompiler.h in Headers */ = {isa = PBXBuildFile; fileRef = 626CC7931CE4C5B4002ED698 /* CBLRegisterJSViewCompiler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6273069A1F053E0800680CEE /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0B81F04012A001C458B /* CouchbaseLite.framework */; };
 		6273069D1F0544D400680CEE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6249D0BE1F0401CE001C458B /* JavaScriptCore.framework */; };
 		6273069E1F0544E700680CEE /* libCBLJSViewCompiler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 626CC7941CE4C5B4002ED698 /* libCBLJSViewCompiler.a */; };
@@ -251,6 +252,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				625F64291F1384260018D97C /* CBLRegisterJSViewCompiler.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
