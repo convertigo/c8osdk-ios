@@ -180,18 +180,18 @@ open class C8o: C8oBase {
 		}
 		
 		_endpoint = endpoint
-		_endpointConvertigo = (endpoint as NSString).substring(with: regexV[0].rangeAt(1))
+        _endpointConvertigo = (endpoint as NSString).substring(with: regexV[0].range(at: 1))
 		
-		if (regexV[0].rangeAt(2).location != NSNotFound) {
-			_endpointIsSecure = !(endpoint as NSString?)!.substring(with: regexV[0].rangeAt(2)).isEmpty
+        if (regexV[0].range(at: 2).location != NSNotFound) {
+            _endpointIsSecure = !(endpoint as NSString?)!.substring(with: regexV[0].range(at: 2)).isEmpty
 		} else {
 			_endpointIsSecure = false
 		}
-		_endpointHost = (endpoint as NSString).substring(with: regexV[0].rangeAt(3))
-		if (regexV[0].rangeAt(4).location != NSNotFound) {
-			_endpointPort = (endpoint as NSString).substring(with: regexV[0].rangeAt(4))
+        _endpointHost = (endpoint as NSString).substring(with: regexV[0].range(at: 3))
+        if (regexV[0].range(at: 4).location != NSNotFound) {
+            _endpointPort = (endpoint as NSString).substring(with: regexV[0].range(at: 4))
 		}
-		_endpointProject = (endpoint as NSString).substring(with: regexV[0].rangeAt(5))
+        _endpointProject = (endpoint as NSString).substring(with: regexV[0].range(at: 5))
 		
 		if (c8oSettings != nil) {
 			copyProperties(c8oSettings!)
@@ -241,28 +241,28 @@ open class C8o: C8oBase {
 			}
 			
 			// If the project name is specified
-			if ((requestable! as NSString).substring(with: regexV[0].rangeAt(1)) != "") {
-				parameters![C8o.ENGINE_PARAMETER_PROJECT] = (requestable! as NSString).substring(with: regexV[0].rangeAt(1)) as Any
+            if ((requestable! as NSString).substring(with: regexV[0].range(at: 1)) != "") {
+                parameters![C8o.ENGINE_PARAMETER_PROJECT] = (requestable! as NSString).substring(with: regexV[0].range(at: 1)) as Any
 			}
 			
 			// If the C8o call use a sequence
-			let rangeLenght = regexV[0].rangeAt(2).length - 1
+            let rangeLenght = regexV[0].range(at: 2).length - 1
 			let requestableLenght = (requestable! as NSString?)?.length
 			if (rangeLenght < requestableLenght && rangeLenght > 0) {
 				
-				if (((requestable! as NSString?)!.substring(with: regexV[0].rangeAt(2)) as String?) != "") {
-					parameters![C8o.ENGINE_PARAMETER_SEQUENCE] = (requestable! as NSString).substring(with: regexV[0].rangeAt(2)) as Any
+                if (((requestable! as NSString?)!.substring(with: regexV[0].range(at: 2)) as String?) != "") {
+                    parameters![C8o.ENGINE_PARAMETER_SEQUENCE] = (requestable! as NSString).substring(with: regexV[0].range(at: 2)) as Any
 				} else {
-					parameters![C8o.ENGINE_PARAMETER_CONNECTOR] = (requestable! as NSString).substring(with: regexV[0].rangeAt(3)) as Any
+                    parameters![C8o.ENGINE_PARAMETER_CONNECTOR] = (requestable! as NSString).substring(with: regexV[0].range(at: 3)) as Any
 					
-					parameters![C8o.ENGINE_PARAMETER_TRANSACTION] = (requestable! as NSString).substring(with: regexV[0].rangeAt(4)) as Any
+                    parameters![C8o.ENGINE_PARAMETER_TRANSACTION] = (requestable! as NSString).substring(with: regexV[0].range(at: 4)) as Any
 					
 				}
 				
 			} else {
-				parameters![C8o.ENGINE_PARAMETER_CONNECTOR] = (requestable! as NSString).substring(with: regexV[0].rangeAt(3)) as Any
+                parameters![C8o.ENGINE_PARAMETER_CONNECTOR] = (requestable! as NSString).substring(with: regexV[0].range(at: 3)) as Any
 				
-				parameters![C8o.ENGINE_PARAMETER_TRANSACTION] = (requestable! as NSString).substring(with: regexV[0].rangeAt(4)) as Any
+                parameters![C8o.ENGINE_PARAMETER_TRANSACTION] = (requestable! as NSString).substring(with: regexV[0].range(at: 4)) as Any
 			}
 			
 			try! call(parameters, c8oResponseListener: c8oResponseListener, c8oExceptionListener: c8oExceptionListener)
