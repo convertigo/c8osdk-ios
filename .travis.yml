@@ -9,14 +9,16 @@ before_script:
 script:
 - mkdir -p ./buildSim
 - mkdir -p ./universal_outputfolder
-- ./scripts/ci-script.bash
-- xcodebuild test -workspace C8oSDKiOS.xcworkspace -scheme C8oSDKiOS -destination 'platform=iOS Simulator,name=iPhone X,OS=11.2'
+- "./scripts/ci-script.bash"
+- xcodebuild test -workspace C8oSDKiOS.xcworkspace -scheme C8oSDKiOS -destination
+  'platform=iOS Simulator,name=iPhone X,OS=11.2'
 - xcodebuild -workspace C8oSDKiOS.xcworkspace -scheme C8oSDKiOS archive
-- mkdir Frameworks && cp -r ./universal_outputfolder/C8o.framework ./Frameworks/ && zip -r -X C8oSDK.zip ./Frameworks/C8o.framework LICENSE
+- mkdir Frameworks && cp -r ./universal_outputfolder/C8o.framework ./Frameworks/ &&
+  zip -r -X C8oSDK.zip ./Frameworks/C8o.framework LICENSE
 deploy:
   provider: releases
   api_key:
-    secure: NdNNGb2lAQJwpczjzMcVvcCpaR/whh6uHZ/bPLkoJeI1q7mkvtjcTKa970utzKDcW4ngZdcI7ldAfH/Pf1ylgyIXymy1N3RkQbBJTzXERCHH/7M9iXJXUjrDlxA7plEXvkSHadnckmKgnvSDZtFX5BX2YYON81cSw//NktwUNNxDc4viTPJTn35RS4mvYUtzDLSrk8hfupgZpD7rz4MqHIgFCJzlp71Z+ESbgvfqTapIXD0f90U72P5UiVi60KfPctuaEW10IBvNSxI2xDTXvfUZ0reoT2JEKf9UECdDUXD9OO/OREWrytg3FP2ivUrAn/qWyHZIFJVAxOicMXdDZhFS9CJB31SzaeTfJDEBHCrOtkYv6b63q2LtcKsiGcVzc0ulID334YneeXHb8ffWRsLvtdlVIm0gRHNfpl+UyO5Lxc0duEa44lQFPEw8Q1iwT4Umbrv57qxFtgOSNyjd5f2BLjytkzfVHiYBGbTZPm1GHwhRaw1B/IZfvzA4gS0Q9Qv1P7bJIRslub8RMbi98XX5NvqOJEeSmaR8Z3BmZumPnzeE1A5E4M+M62I/jPzZUVJbzNll5cAXbOi2P4Tn6KG6hZgd3flUUMeS+MhzaKBWa7qiZC03B4Cj41V4z45X1rXBaBEIsqIp78rGT2oKTZVPRWdS5d9fD2FHqPKaIMw=
+    secure: NtvoZYdFl1iOB1zwNEh28pvvUDWkmzEDt/UymbritZ5DxHx3or/09A+7X3Io1Ujl3Lp9SHMasG1PUElPkjE3pMw7bRH0N3xlje49FNE7WYAtXSmqABTUIQT9At28h8TtN3gvC8+Khn6M9+mI1i/x3kQwdTI0F7YAZqD2aW/0sWbNcv3D2GSmUa6OAVyqupmnGVZKCGWlicIcJ1J0yba8P97DgXD3LiytHfCmouKdRRszy67wKrrELnbaIHhKYP6Kxg88sIT8hMlTKSLqsCcXEH72UcX8AooFsiUXnPXurDWoQlQ3dbL+EWMl2XD4cr+Y2nIEsx2M7MWh4jeR94IKNkrhRmhoTwYLxiSTVsySiM2AbR5pSulngIPzVJa9rOneGtNs0eAea2WwoorzOqTqRkXMEGJ96uOHx0+i1PTuoqHNAyXDHfbth8W/6wvcSh+ZoCYiyzhZbSbMiiqg+g+IL8N6kzRSNh94vgutoOdV2l5q2QckB6QrsC+k70m5OpEbhEcThPP2djv5luStp0BTxIouzGt0WzQcBvjIUtxCVMNZc3Kmm2F0XVSYP8loTq5A/wIDOUt+IzBopkDLFHijed5VqBaEiTw0QSpPNfwFa/tWaSCuU7zfGBFYrv6AKm7TecRhwskqnOPZd5pw9BTPqLqgyZvjucrEsaUP/98HOyY=
   file: "C8oSDK.zip"
   skip_cleanup: true
   on:
