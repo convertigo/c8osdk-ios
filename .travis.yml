@@ -1,14 +1,23 @@
 language: objective-c
-osx_image: xcode8.3
-
-# Install lfs
+osx_image: xcode9.2
 before_install:
 - brew update && brew install git-lfs
 - git lfs install
+- chmod +x ./scripts/ci-script.bash
 before_script:
 - git lfs pull
-
-# set script mannualy due to xcode8.3 non supporting xctool
 script:
-- xcodebuild test -workspace C8oSDKiOS.xcworkspace -scheme C8oSDKiOS -destination 'platform=iOS Simulator,name=iPhone 7 Plus,OS=10.3.1'
-
+- mkdir -p ./buildSim
+- mkdir -p ./universal_outputfolder
+- ./scripts/ci-script.bash
+- xcodebuild test -workspace C8oSDKiOS.xcworkspace -scheme C8oSDKiOS -destination 'platform=iOS Simulator,name=iPhone X,OS=11.2'
+- xcodebuild -workspace C8oSDKiOS.xcworkspace -scheme C8oSDKiOS archive
+- mkdir Frameworks && cp -r ./universal_outputfolder/C8o.framework ./Frameworks/ && zip -r -X C8oSDK.zip ./Frameworks/C8o.framework LICENSE
+deploy:
+  provider: releases
+  api_key:
+    secure: NdNNGb2lAQJwpczjzMcVvcCpaR/whh6uHZ/bPLkoJeI1q7mkvtjcTKa970utzKDcW4ngZdcI7ldAfH/Pf1ylgyIXymy1N3RkQbBJTzXERCHH/7M9iXJXUjrDlxA7plEXvkSHadnckmKgnvSDZtFX5BX2YYON81cSw//NktwUNNxDc4viTPJTn35RS4mvYUtzDLSrk8hfupgZpD7rz4MqHIgFCJzlp71Z+ESbgvfqTapIXD0f90U72P5UiVi60KfPctuaEW10IBvNSxI2xDTXvfUZ0reoT2JEKf9UECdDUXD9OO/OREWrytg3FP2ivUrAn/qWyHZIFJVAxOicMXdDZhFS9CJB31SzaeTfJDEBHCrOtkYv6b63q2LtcKsiGcVzc0ulID334YneeXHb8ffWRsLvtdlVIm0gRHNfpl+UyO5Lxc0duEa44lQFPEw8Q1iwT4Umbrv57qxFtgOSNyjd5f2BLjytkzfVHiYBGbTZPm1GHwhRaw1B/IZfvzA4gS0Q9Qv1P7bJIRslub8RMbi98XX5NvqOJEeSmaR8Z3BmZumPnzeE1A5E4M+M62I/jPzZUVJbzNll5cAXbOi2P4Tn6KG6hZgd3flUUMeS+MhzaKBWa7qiZC03B4Cj41V4z45X1rXBaBEIsqIp78rGT2oKTZVPRWdS5d9fD2FHqPKaIMw=
+  file: "C8oSDK.zip"
+  skip_cleanup: true
+  on:
+    tags: true

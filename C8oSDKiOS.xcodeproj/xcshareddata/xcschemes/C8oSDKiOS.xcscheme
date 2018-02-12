@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "0830"
-   version = "1.3">
+   version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
@@ -98,5 +98,23 @@
    <ArchiveAction
       buildConfiguration = "Release"
       revealArchiveInOrganizer = "YES">
+      <PostActions>
+         <ExecutionAction
+            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
+            <ActionContent
+               title = "Run Script"
+               scriptText = "UNIVERSAL_OUTPUTFOLDER=${BUILD_DIR}/${CONFIGURATION}-universal&#10;&#10;if [ &quot;true&quot; == ${ALREADYINVOKED:-false} ]&#10;then&#10;echo &quot;RECURSION: Detected, stopping&quot;&#10;else&#10;export ALREADYINVOKED=&quot;true&quot;&#10;# Make sur that dir exists&#10;mkdir -p ./universal_outputfolder&#10;mkdir -p ./buildSim&#10;# Get workspace dir&#10;workspace=&quot;${WORKSPACE_PATH}&quot;&#10;echo &quot;WORKSPACE_PATH: &quot;&#10;echo &quot;${WORKSPACE_PATH}&quot;&#10;end=${workspace##*/}&#10;    end=$((${#workspace} - ${#end}))&#10;        echo &quot;Current workspace dir is: &quot;&#10;        workspace_dir=&quot;${workspace:0:end}&quot;&#10;        echo &quot;$workspace_dir&quot;&#10;        working_dir=&quot;universal_outputfolder&quot;&#10;        universal_folder=&quot;$workspace_dir&quot;&#10;        universal_folder+=&quot;$working_dir&quot;&#10;        echo &quot;universal folder is: &quot;&#10;        echo &quot;${universal_folder}&quot;&#10;        &#10;        # Clean&#10;        echo &quot;Cleanning&quot;&#10;        xcodebuild -workspace &quot;${WORKSPACE_PATH}&quot; -scheme C8oSDKiOS clean&#10;        &#10;        #Building for iPhone Simulator&#10;        echo &quot;Building for iPhoneSimulator&quot;&#10;        xcodebuild -workspace &quot;${WORKSPACE_PATH}&quot; -scheme C8oSDKiOS -configuration &quot;${CONFIGURATION}&quot; -sdk iphonesimulator11.2 -destination &apos;platform=iOS Simulator,name=iPhone X&apos; ONLY_ACTIVE_ARCH=NO ARCHS=&apos;i386 x86_64&apos; BUILD_DIR=&quot;${workspace_dir}/buildSim&quot; BUILD_ROOT=&quot;${BUILD_ROOT}&quot; ENABLE_BITCODE=YES OTHER_CFLAGS=&quot;-fembed-bitcode&quot; BITCODE_GENERATION_MODE=bitcodebuild&#10;        &#10;        # Step 1. Copy the framework structure (from iphoneos build) to the universal folder&#10;        echo &quot;Copying to output folder&quot;&#10;        cp -R &quot;${ARCHIVE_PRODUCTS_PATH}${INSTALL_PATH}/${FULL_PRODUCT_NAME}&quot; &quot;${universal_folder}/&quot;&#10;        &#10;        # Step 2. Copy Swift modules from iphonesimulator build (if it exists) to the copied framework directory&#10;        SIMULATOR_SWIFT_MODULES_DIR=&quot;${workspace_dir}/buildSim/${CONFIGURATION}-iphonesimulator/C8o.framework/Modules/C8o.swiftmodule/.&quot;&#10;        if [ -d &quot;${SIMULATOR_SWIFT_MODULES_DIR}&quot; ]; then&#10;        cp -R &quot;${SIMULATOR_SWIFT_MODULES_DIR}&quot; &quot;${universal_folder}/C8o.framework/Modules/C8o.swiftmodule&quot;&#10;        fi&#10;        &#10;        # Step 3. Create universal binary file using lipo and place the combined executable in the copied framework directory&#10;        echo &quot;Combining executables&quot;&#10;        lipo -create -output &quot;${universal_folder}/${EXECUTABLE_PATH}&quot; &quot;${workspace_dir}/buildSim/${CONFIGURATION}-iphonesimulator/${EXECUTABLE_PATH}&quot; &quot;${ARCHIVE_PRODUCTS_PATH}${INSTALL_PATH}/${EXECUTABLE_PATH}&quot;&#10;        &#10;        # Step 4. Convenience step to copy the framework to the project&apos;s directory&#10;        echo &quot;Copying to project dir&quot;&#10;        yes | cp -Rf &quot;${universal_folder}/${FULL_PRODUCT_NAME}&quot; &quot;${PROJECT_DIR}&quot;&#10;        &#10;        open &quot;${PROJECT_DIR}&quot;&#10;        &#10;        fi">
+               <EnvironmentBuildable>
+                  <BuildableReference
+                     BuildableIdentifier = "primary"
+                     BlueprintIdentifier = "62CD2A461C6207AC009E9F7E"
+                     BuildableName = "C8o.framework"
+                     BlueprintName = "C8oSDKiOS"
+                     ReferencedContainer = "container:C8oSDKiOS.xcodeproj">
+                  </BuildableReference>
+               </EnvironmentBuildable>
+            </ActionContent>
+         </ExecutionAction>
+      </PostActions>
    </ArchiveAction>
 </Scheme>
