@@ -52,6 +52,8 @@
 		62EDE92D1C762EE500D9213F /* C8oExceptionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE92C1C762EE500D9213F /* C8oExceptionMessage.swift */; };
 		62EDE9311C762FFE00D9213F /* C8oFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9301C762FFE00D9213F /* C8oFileManager.swift */; };
 		62EDE9331C76314200D9213F /* C8oFullSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9321C76314200D9213F /* C8oFullSync.swift */; };
+		B79434C820235DCD00DDE990 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = B79434C720235DCC00DDE990 /* scripts */; };
+		B79434CA2023610100DDE990 /* universal_outputfolder in Resources */ = {isa = PBXBuildFile; fileRef = B79434C92023610100DDE990 /* universal_outputfolder */; };
 		D1E67029367412270B12DFA4 /* Pods_C8oSDKiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EBE744ED5FB126ADD38B6DD /* Pods_C8oSDKiOS.framework */; };
 		D8245BE8EF45CF77D770CC8D /* Pods_C8oSDKiOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040F84B5718525109D28750D /* Pods_C8oSDKiOSTests.framework */; };
 /* End PBXBuildFile section */
@@ -79,7 +81,7 @@
 		620F6D131C77666800683D0F /* C8oHttpInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oHttpInterface.swift; sourceTree = "<group>"; };
 		620F6D151C776E0500683D0F /* C8oTranslator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oTranslator.swift; sourceTree = "<group>"; };
 		620F6D171C7771B300683D0F /* C8oUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oUtils.swift; sourceTree = "<group>"; };
-		621C066D1D5A08F100192E90 /* C8oSDK.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; fileEncoding = 4; path = C8oSDK.podspec; sourceTree = "<group>"; };
+		621C066D1D5A08F100192E90 /* C8oSDK.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; fileEncoding = 4; path = C8oSDK.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		6222327E1C6B29E2001D2EA1 /* C8oBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oBase.swift; sourceTree = "<group>"; };
 		622232851C6B2A00001D2EA1 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		622CA1651CAD54570074F704 /* FullSyncResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullSyncResponse.swift; sourceTree = "<group>"; };
@@ -123,6 +125,8 @@
 		62EDE9321C76314200D9213F /* C8oFullSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFullSync.swift; sourceTree = "<group>"; };
 		73A8549AAD8B896907F2F6CB /* Pods-C8oSDKiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-C8oSDKiOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-C8oSDKiOS/Pods-C8oSDKiOS.debug.xcconfig"; sourceTree = "<group>"; };
 		7C2A23DDBCB149E8C1358243 /* Pods-C8oSDKiOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-C8oSDKiOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-C8oSDKiOS/Pods-C8oSDKiOS.release.xcconfig"; sourceTree = "<group>"; };
+		B79434C720235DCC00DDE990 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = "<group>"; };
+		B79434C92023610100DDE990 /* universal_outputfolder */ = {isa = PBXFileReference; lastKnownFileType = folder; path = universal_outputfolder; sourceTree = "<group>"; };
 		EB9DD9C4928622F71D6AB05F /* Pods-C8oSDKiOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-C8oSDKiOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-C8oSDKiOSTests/Pods-C8oSDKiOSTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -169,6 +173,8 @@
 			children = (
 				62E4B45D1EF03A2D004C84AB /* LICENSE */,
 				62E4B45B1EF02595004C84AB /* .travis.yml */,
+				B79434C92023610100DDE990 /* universal_outputfolder */,
+				B79434C720235DCC00DDE990 /* scripts */,
 				621C066C1D5A08F100192E90 /* PodSpec */,
 				62CD2A961C6210D6009E9F7E /* PodFile */,
 				62CD2A491C6207AD009E9F7E /* C8oSDKiOS */,
@@ -327,11 +333,12 @@
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = FKA4E5M74L;
 						LastSwiftMigration = 0830;
+						ProvisioningStyle = Automatic;
 					};
 					62CD2A501C6207AD009E9F7E = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = FKA4E5M74L;
-						LastSwiftMigration = 0830;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -363,6 +370,8 @@
 				62E4B45E1EF03A2D004C84AB /* LICENSE in Resources */,
 				62E4B45C1EF02595004C84AB /* .travis.yml in Resources */,
 				621C066E1D5A08F100192E90 /* C8oSDK.podspec in Resources */,
+				B79434CA2023610100DDE990 /* universal_outputfolder in Resources */,
+				B79434C820235DCD00DDE990 /* scripts in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -637,6 +646,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = FKA4E5M74L;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -666,6 +676,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKiOS;
 				PRODUCT_NAME = C8o;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/C8oSDKiOS";
@@ -673,6 +684,7 @@
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "C8oSDKiOS-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
+				VALID_ARCHS = "arm64 armv7 armv7s i386 x86_64";
 			};
 			name = Debug;
 		};
@@ -685,6 +697,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = FKA4E5M74L;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -715,12 +728,14 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKiOS;
 				PRODUCT_NAME = C8o;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/C8oSDKiOS";
 				SWIFT_OBJC_BRIDGING_HEADER = "C8oSDKiOS/Couchbase-Lite-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "C8oSDKiOS-Swift.h";
 				SWIFT_VERSION = 4.0;
+				VALID_ARCHS = "arm64 armv7 armv7s i386 x86_64";
 			};
 			name = Release;
 		};
@@ -737,7 +752,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKiOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -754,7 +770,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKiOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

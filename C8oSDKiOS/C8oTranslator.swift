@@ -103,7 +103,7 @@ internal class C8oTranslator {
 		fatalError("Function \"StreamToJson\" must be defined")
 	}
 	internal static func dataToJson(_ data: NSData) -> JSON? {
-		let json = JSON(data: data as Data)
+		let json = try! JSON(data: data as Data)
 		return json
 	}
 	
@@ -127,7 +127,7 @@ internal class C8oTranslator {
 	}
 	
 	internal static func stringToJson(_ jsonValueString: String) -> JSON {
-		return JSON(data: jsonValueString.data(using: String.Encoding.utf8)!)
+		return try! JSON(data: jsonValueString.data(using: String.Encoding.utf8)!)
 	}
 	
 	internal static func stringToObject(_ objectValue: String, type: Type) -> NSObject? {

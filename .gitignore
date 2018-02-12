@@ -10,12 +10,14 @@ Carthage/*
 #           - Also handy if you have a lage number of dependant pods
 #           - AS PER https://guides.cocoapods.org/using/using-cocoapods.html NEVER IGONRE THE LOCK FILE
 Pods/
+buildSim/
 PodFile.lock
 ### macOS ###
 *.DS_Store
 .AppleDouble
 .LSOverride
-
+universal_outputfolder/
+C8o.framework
 # Icon must end with two \r
 Icon
 
