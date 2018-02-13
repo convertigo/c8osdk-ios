@@ -1,3 +1,4 @@
+![](https://travis-ci.org/convertigo/c8osdk-ios.svg?branch=master)
 ![](http://www.convertigo.com/wp-content/uploads/2015/05/logofix.png)
 # Convertigo SDK for iOS #
 Convertigo Mobility Platform supports native iOS developpers. Services brought by the platform are available for iOS clients applications thanks to the Convertigo MBaaS SDK. SDK provides a iOS framework you can use to access Convertigo Server’s services such as:
