@@ -31,7 +31,7 @@ Create a PodFile with :
     use_frameworks!
 
 	target 'MyApp' do
-	  pod 'C8oSDK', '2.2.2'
+	  pod 'C8oSDK', '2.2.3'
 	end
 
 run `pod install`
