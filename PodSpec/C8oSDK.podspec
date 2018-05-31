@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
     documentation_url = 'http://www.convertigo.com/document/convertigo-client-sdk/'
     social_media_url  = 'https://twitter.com/convertigo'
     
-    s.source           = { :git => 'https://github.com/convertigo/c8osdk-ios.git', :tag => 'rc1'}
+    s.source           = { :git => 'https://github.com/convertigo/c8osdk-ios.git', :tag => '2.3.0'}
     s.ios.deployment_target = '8.0'
     s.source_files       = 'C8oSDKiOS/*.swift', 'C8oSDKiOS/Internal/*.swift'
     s.static_framework = true
