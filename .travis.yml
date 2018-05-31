@@ -4,6 +4,7 @@ before_install:
 - brew update && brew install git-lfs
 - git lfs install
 - chmod +x ./scripts/ci-script.bash
+- pod repo update
 before_script:
 - git lfs pull
 script:
