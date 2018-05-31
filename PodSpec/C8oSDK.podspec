@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
     s.name         = 'C8oSDK'
     s.module_name  = 'C8o'
-    s.version      = '2.2.5'
+    s.version      = '2.3.0'
     
     s.author       = 'Convertigo'
     s.license      = 'Apache License 2.0'
