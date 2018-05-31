@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		372612EA1DD1D7020092EEC6 /* C8oFullSyncChangeListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372612E91DD1D7020092EEC6 /* C8oFullSyncChangeListener.swift */; };
-		3766883B1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 3766883A1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h */; };
 		376A96061D81B0F600F023D8 /* 4m.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 376A96041D81AD3E00F023D8 /* 4m.jpg */; };
 		37F523B41C9ABE19007952C3 /* C8oCookieStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37F523B31C9ABE19007952C3 /* C8oCookieStorage.swift */; };
 		62057A211CB53DA0004AE521 /* FullSyncEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62057A201CB53DA0004AE521 /* FullSyncEnum.swift */; };
@@ -268,7 +267,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3766883B1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,6 +277,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 62CD2A5B1C6207AD009E9F7E /* Build configuration list for PBXNativeTarget "C8oSDKiOS" */;
 			buildPhases = (
+				B768792420C0A1D400608B80 /* ShellScript */,
 				871243579CE41AE44ECCEC6B /* [CP] Check Pods Manifest.lock */,
 				62CD2A421C6207AC009E9F7E /* Sources */,
 				62CD2A431C6207AC009E9F7E /* Frameworks */,
@@ -437,6 +436,19 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		B768792420C0A1D400608B80 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"C8oSDK: Add umbrella header for CBL dependency\" && ls && pwd && [ ! -d \"./Pods/couchbase-lite-ios/Couchbaselite.framework/Modules\" ] && mkdir ./Pods/couchbase-lite-ios/Couchbaselite.framework/Modules || echo \"path already exists\" && touch ./Pods/couchbase-lite-ios/Couchbaselite.framework/Modules/module.modulemap && echo 'framework module CouchbaseLite { module All { umbrella header \"../Headers/CouchbaseLite.h\" export * module * { export * }} module JSView { umbrella header \"../../Extras/CBLRegisterJSViewCompiler.h\" export * module * { export * }}}' > ./Pods/couchbase-lite-ios/Couchbaselite.framework/Modules/module.modulemap";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -644,7 +656,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/C8oSDKiOS";
-				SWIFT_OBJC_BRIDGING_HEADER = "C8oSDKiOS/Couchbase-Lite-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "C8oSDKiOS-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
@@ -696,7 +708,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
 				SWIFT_INCLUDE_PATHS = "${SRCROOT}/C8oSDKiOS";
-				SWIFT_OBJC_BRIDGING_HEADER = "C8oSDKiOS/Couchbase-Lite-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "C8oSDKiOS-Swift.h";
 				SWIFT_VERSION = 4.0;
 				VALID_ARCHS = "arm64 armv7 armv7s i386 x86_64";
