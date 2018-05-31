@@ -1,6 +1,3 @@
-# The C8OSDK_VERSION variable will be defined by jenkins on Buildus.
-# It is read from XCode: Target C8oSDKiOS, tab "General", "Version" field.
-
 Pod::Spec.new do |s|
     s.name         = 'C8oSDK'
     s.module_name  = 'C8o'
@@ -22,7 +19,7 @@ Pod::Spec.new do |s|
     documentation_url = 'http://www.convertigo.com/document/convertigo-client-sdk/'
     social_media_url  = 'https://twitter.com/convertigo'
     
-    s.source           = { :git => 'https://github.com/convertigo/c8osdk-ios.git', :tag => 'module2'}
+    s.source           = { :git => 'https://github.com/convertigo/c8osdk-ios.git', :tag => 'rc1'}
     s.ios.deployment_target = '8.0'
     s.source_files       = 'C8oSDKiOS/*.swift', 'C8oSDKiOS/Internal/*.swift'
     s.static_framework = true
@@ -34,10 +31,4 @@ Pod::Spec.new do |s|
     s.dependency 'AEXML', '4.2.2'
     s.dependency 'couchbase-lite-ios', '1.4.1'
     s.dependency 'couchbase-lite-ios/ForestDB', '1.4.1'
-    
-    s.test_spec 'Tests' do |test_spec|
-        test_spec.source_files = 'C8oSDKiOSTests/C8oSDKiOSTests/*.swift}'
-        #test_spec.dependency 'OCMock' # This dependency will only be linked with your tests.
-    end
-    
 end
