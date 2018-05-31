@@ -8,6 +8,7 @@
 
 import Foundation
 
+
 public protocol C8oResponseCblListener: C8oResponseListener {
 	
 	func onDocumentResponse(_ document: CBLDocument, requestParameters: Dictionary<String, NSObject>)
