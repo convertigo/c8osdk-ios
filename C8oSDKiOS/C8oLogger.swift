@@ -192,8 +192,8 @@ open class C8oLogger: NSObject {
 		condition.unlock()
 		
 		if (canLog) {
-			let priority = DispatchQueue.GlobalQueuePriority.default
-			DispatchQueue.global(priority: priority).async {
+			let priority = DispatchQoS.QoSClass.default
+            DispatchQueue.global(qos: priority).async {
 				
 				// Take logs in the queue and add it to a json array
 				var count: Int = 0

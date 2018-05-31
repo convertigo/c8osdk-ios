@@ -137,7 +137,7 @@ open class C8oPromise<T>: C8oPromiseFailSync<T> {
 				condition.unlock()
 			}
             return nil as C8oPromise<T>?
-		}.fail { exception, parameters in
+		}.fail { exception, _ in
 			if (thread == Thread.current) {
 				syncMutex[0] = true
 				self.lastFailure = exception
