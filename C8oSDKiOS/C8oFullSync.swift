@@ -51,7 +51,7 @@ internal class C8oFullSync: NSObject {
 		}
 		
 		// Gets the database name if this is not specified then if takes the default database name
-		let index1 = projectParameterValue!.characters.index(projectParameterValue!.startIndex, offsetBy: C8oFullSync.FULL_SYNC_PROJECT.characters.count)
+		let index1 = projectParameterValue!.index(projectParameterValue!.startIndex, offsetBy: C8oFullSync.FULL_SYNC_PROJECT.count)
 		var databaseName: String? = projectParameterValue!.substring(from: index1)
 		if (databaseName!.length < 1) {
 			databaseName = c8o!.defaultDatabaseName;

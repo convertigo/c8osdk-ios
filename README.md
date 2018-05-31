@@ -228,13 +228,12 @@ One fail handler per promise chain is allowed. The fail callback provide the obj
 ## More information ##
 <img src='http://www.convertigo.com/wp-content/uploads/2015/11/convertigoClientSDK-300x203.png' style='float:right'>
 
-Please see about other SDKs:
-
-- [.NET (Xamarin)](https://components.xamarin.com/view/convertigo-mbaas "Xamarin")
-
-- [.NET](https://www.nuget.org/packages/C8oFullSyncExtensions/)
-
-- [Angular](https://www.npmjs.com/package/c8osdkangular)
+Client SDK is available for:
+* [Android Native](https://github.com/convertigo/c8osdk-android) apps as a standard Gradle dependency
+* Windows desktop or Xamarin apps as Nugets or Xamarin Components
+* [Google Angular framework](https://github.com/convertigo/c8osdk-angular) as an NPM package
+* [Vue.js](https://github.com/convertigo/c8osdk-vuejs) Framework as a NPM package
+* [Angular](https://www.npmjs.com/package/c8osdkangular) Framework as a NPM package
 
 <br><br><br><br><br>
 
