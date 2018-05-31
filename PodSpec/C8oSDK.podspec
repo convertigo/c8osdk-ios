@@ -35,4 +35,9 @@ Pod::Spec.new do |s|
     s.dependency 'couchbase-lite-ios', '1.4.1'
     s.dependency 'couchbase-lite-ios/ForestDB', '1.4.1'
     
+    s.test_spec 'Tests' do |test_spec|
+        test_spec.source_files = 'C8oSDKiOSTests/C8oSDKiOSTests/*.swift}'
+        #test_spec.dependency 'OCMock' # This dependency will only be linked with your tests.
+    end
+    
 end
