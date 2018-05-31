@@ -10,6 +10,7 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 import AEXML
+import CouchbaseLite.All
 
 internal class C8oFullSyncTranslator {
 	internal static var FULL_SYNC_RESPONSE_KEY_COUNT: String = "count"

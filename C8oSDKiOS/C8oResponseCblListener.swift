@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import CouchbaseLite.All
 
 public protocol C8oResponseCblListener: C8oResponseListener {
 	
