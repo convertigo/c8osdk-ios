@@ -69,7 +69,6 @@
 /* Begin PBXFileReference section */
 		040F84B5718525109D28750D /* Pods_C8oSDKiOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_C8oSDKiOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		372612E91DD1D7020092EEC6 /* C8oFullSyncChangeListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFullSyncChangeListener.swift; sourceTree = "<group>"; };
-		3766883A1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Couchbase-Lite-Bridging-Header.h"; sourceTree = "<group>"; };
 		376A96041D81AD3E00F023D8 /* 4m.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 4m.jpg; sourceTree = "<group>"; };
 		37F523B31C9ABE19007952C3 /* C8oCookieStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oCookieStorage.swift; sourceTree = "<group>"; };
 		3EBE744ED5FB126ADD38B6DD /* Pods_C8oSDKiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_C8oSDKiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -185,7 +184,6 @@
 		62CD2A491C6207AD009E9F7E /* C8oSDKiOS */ = {
 			isa = PBXGroup;
 			children = (
-				3766883A1CBE4D34004FD9A2 /* Couchbase-Lite-Bridging-Header.h */,
 				62EDE92B1C762CEE00D9213F /* Internal */,
 				6222327E1C6B29E2001D2EA1 /* C8oBase.swift */,
 				622CA1721CAEB8340074F704 /* C8o.swift */,

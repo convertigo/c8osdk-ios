@@ -9,6 +9,8 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
+import CouchbaseLite.All
+import CouchbaseLite.JSView
 
 class C8oFullSyncCbl: C8oFullSync {
     fileprivate static let ATTACHMENT_PROPERTY_KEY_CONTENT_URL: String = "content_url"
