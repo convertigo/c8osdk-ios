@@ -11,7 +11,7 @@ import Foundation
 import SwiftyJSON
 import Alamofire
 import AEXML
-
+import CouchbaseLite
 @testable import C8o
 
 class C8oSDKiOSTests: XCTestCase {
@@ -1782,7 +1782,7 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertNotEqual(signature, signature2)
 	}
 	
-	func testC8oFileTransferDownloadSimple() {
+	/*func testC8oFileTransferDownloadSimple() {
 		let c8o = try! get(.c8O)
 		let ft = try! C8oFileTransfer(c8o: c8o, c8oFileTransferSettings: C8oFileTransferSettings())
 		try! c8o.callJson("fs://" + ft.taskDb + ".destroy").sync()
@@ -1871,7 +1871,7 @@ class C8oSDKiOSTests: XCTestCase {
         let length = lengthC8o!["document"]["length"].string
 		XCTAssertEqual("5120000", length)
 	}
-    
+    */
     func disable_testC8oFsLiveChanges() {
         let c8o = try! get(.c8O_FS_PUSH)
         var lastChanges: JSON? = nil
