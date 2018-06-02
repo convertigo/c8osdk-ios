@@ -124,7 +124,7 @@ open class C8oPromise<T>: C8oPromiseFailSync<T> {
 		syncMutex.append(false)
 		let condition: NSCondition = NSCondition()
 		condition.lock()
-		then { response, parameters in
+		_ = then { response, parameters in
 			if (thread == Thread.current) {
 				syncMutex[0] = true
 				self.lastResponse = response

@@ -8,10 +8,10 @@
 
 import Foundation
 
-open class C8oExceptionListener {
-	open var onException: (Pair<C8oException, Dictionary<String, Any>?>?) -> ()
-	
-	init(onException: @escaping (_ params: Pair<C8oException, Dictionary<String, Any>?>?) -> ()) {
-		self.onException = onException;
-	}
+@objc open class C8oExceptionListener: NSObject {
+    open var onException: (_ exep:C8oException, _ params:Dictionary<String, Any>?) -> ()
+    
+    @objc public init(onException: @escaping (_ exep:C8oException, _ params:Dictionary<String, Any>?) -> ()) {
+        self.onException = onException;
+    }
 }

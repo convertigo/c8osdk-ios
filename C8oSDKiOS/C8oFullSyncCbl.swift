@@ -150,10 +150,10 @@ class C8oFullSyncCbl: C8oFullSync {
             fullSyncDatabase = try! self.getOrCreateFullSyncDatabase(fullSyncDatatbaseName)
             
             // Gets the document from the local database
-            let doc2 = fullSyncDatabase?.getDatabase()!.existingLocalDocument(withID: docid)
-            let doc3 = fullSyncDatabase?.getDatabase()?.document(withID: docid)
-            let dbc = fullSyncDatabase?.getDatabase()?.documentCount
-            let db = fullSyncDatabase?.getDatabase()?.createAllDocumentsQuery().allDocsMode.rawValue
+            _ = fullSyncDatabase?.getDatabase()!.existingLocalDocument(withID: docid)
+            _ = fullSyncDatabase?.getDatabase()?.document(withID: docid)
+            _ = fullSyncDatabase?.getDatabase()?.documentCount
+            _ = fullSyncDatabase?.getDatabase()?.createAllDocumentsQuery().allDocsMode.rawValue
             document = fullSyncDatabase!.getDatabase()?.existingDocument(withID: docid)
             dictDoc = document?.properties
             // If there are attachments, compute for each one the url to local storage and add it to the attachment descriptor
@@ -538,7 +538,7 @@ class C8oFullSyncCbl: C8oFullSync {
     
     func handleResetDatabaseRequest(_ databaseName: String) throws -> FullSyncDefaultResponse? {
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
-            try self.handleDestroyDatabaseRequest(databaseName)
+            _ = try self.handleDestroyDatabaseRequest(databaseName)
         }
         return try handleCreateDatabaseRequest(databaseName)
     }
@@ -732,7 +732,7 @@ class C8oFullSyncCbl: C8oFullSync {
         var propertiesMutable = properties
         let currentRevision: CBLSavedRevision? = document.currentRevision
         if (currentRevision != nil) {
-            propertiesMutable[C8oFullSync.FULL_SYNC__REV] = currentRevision?.revisionID as! NSObject
+            propertiesMutable[C8oFullSync.FULL_SYNC__REV] = (currentRevision?.revisionID! as NSObject?)
         }
         
         do {
@@ -814,7 +814,7 @@ class C8oFullSyncCbl: C8oFullSync {
             }
             let currentRevision: CBLSavedRevision? = localCacheDocument!.currentRevision
             if (currentRevision != nil) {
-                properties[C8oFullSyncCbl.FULL_SYNC__REV] = currentRevision?.revisionID as! NSObject
+                properties[C8oFullSyncCbl.FULL_SYNC__REV] = currentRevision?.revisionID! as NSObject?
             }
             
             // do {

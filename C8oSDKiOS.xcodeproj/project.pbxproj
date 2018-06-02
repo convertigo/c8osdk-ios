@@ -26,7 +26,6 @@
 		623C740B1C7C932900E691B0 /* C8oFullSyncCbl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C740A1C7C932900E691B0 /* C8oFullSyncCbl.swift */; };
 		623C740E1C7C94E900E691B0 /* C8oFullSyncDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C740D1C7C94E900E691B0 /* C8oFullSyncDatabase.swift */; };
 		623C74101C7CD02100E691B0 /* C8oLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623C740F1C7CD02100E691B0 /* C8oLogger.swift */; };
-		626CC7BF1CE4CAD6002ED698 /* libCBLJSViewCompiler.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 626CC7941CE4C5B4002ED698 /* libCBLJSViewCompiler.a */; };
 		62CD2A571C6207AD009E9F7E /* C8oSDKiOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62CD2A561C6207AD009E9F7E /* C8oSDKiOSTests.swift */; };
 		62DE2D181CB6B4130026C3B1 /* C8oLocalCacheResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DE2D171CB6B4130026C3B1 /* C8oLocalCacheResponse.swift */; };
 		62E4B45C1EF02595004C84AB /* .travis.yml in Resources */ = {isa = PBXBuildFile; fileRef = 62E4B45B1EF02595004C84AB /* .travis.yml */; };
@@ -90,8 +89,6 @@
 		623C740A1C7C932900E691B0 /* C8oFullSyncCbl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFullSyncCbl.swift; sourceTree = "<group>"; };
 		623C740D1C7C94E900E691B0 /* C8oFullSyncDatabase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFullSyncDatabase.swift; sourceTree = "<group>"; };
 		623C740F1C7CD02100E691B0 /* C8oLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oLogger.swift; sourceTree = "<group>"; };
-		626CC7931CE4C5B4002ED698 /* CBLRegisterJSViewCompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBLRegisterJSViewCompiler.h; path = ../ObjC/CBLRegisterJSViewCompiler.h; sourceTree = "<group>"; };
-		626CC7941CE4C5B4002ED698 /* libCBLJSViewCompiler.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCBLJSViewCompiler.a; path = ../ObjC/libCBLJSViewCompiler.a; sourceTree = "<group>"; };
 		627259C31ED31C38004A3769 /* C8o.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = C8o.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		627259C41ED31C38004A3769 /* C8oSDKiOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = C8oSDKiOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		62CD2A4C1C6207AD009E9F7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -133,7 +130,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				626CC7BF1CE4CAD6002ED698 /* libCBLJSViewCompiler.a in Frameworks */,
 				D1E67029367412270B12DFA4 /* Pods_C8oSDKiOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -244,8 +240,6 @@
 				620F6D151C776E0500683D0F /* C8oTranslator.swift */,
 				620F6D171C7771B300683D0F /* C8oUtils.swift */,
 				37F523B31C9ABE19007952C3 /* C8oCookieStorage.swift */,
-				626CC7931CE4C5B4002ED698 /* CBLRegisterJSViewCompiler.h */,
-				626CC7941CE4C5B4002ED698 /* libCBLJSViewCompiler.a */,
 			);
 			name = Internal;
 			sourceTree = "<group>";
@@ -649,7 +643,6 @@
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/build/Debug-iphoneos",
 					"$(PROJECT_DIR)/Pods/couchbase-lite-ios",
 				);
 				INFOPLIST_FILE = C8oSDKiOS/Info.plist;
@@ -657,9 +650,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/C8oSDKiOS",
-					"$(PROJECT_DIR)/ObjC",
 					"$(PROJECT_DIR)/Pods/couchbase-lite-ios/Extras",
+					"$(PROJECT_DIR)/C8oSDKiOS",
 				);
 				MODULEMAP_FILE = "";
 				OTHER_LDFLAGS = (
@@ -701,7 +693,6 @@
 				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/build/Debug-iphoneos",
 					"$(PROJECT_DIR)/Pods/couchbase-lite-ios",
 				);
 				INFOPLIST_FILE = C8oSDKiOS/Info.plist;
@@ -710,7 +701,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/C8oSDKiOS",
-					"$(PROJECT_DIR)/ObjC",
 					"$(PROJECT_DIR)/Pods/couchbase-lite-ios/Extras",
 				);
 				MODULEMAP_FILE = "";
@@ -746,7 +736,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKiOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
@@ -764,7 +754,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.convertigo.C8oSDKiOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 			};
 			name = Release;

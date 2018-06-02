@@ -121,9 +121,9 @@ open class C8oFileTransferStatus {
 	}
 	func tot() {
 		let range2: Range<String.Index> = uuid.range(of: "-", options: .backwards)!
-		var start_index: Int = uuid.characters.distance(from: uuid.startIndex, to: range2.lowerBound)
+		var start_index: Int = uuid.distance(from: uuid.startIndex, to: range2.lowerBound)
 		start_index += 1
-		self.total = Int(uuid.substring(with: Range<String.Index>(uuid.characters.index(uuid.startIndex, offsetBy: start_index)..<uuid.endIndex)))!
+        self.total = Int(String(uuid[uuid.index(uuid.startIndex, offsetBy: start_index)..<uuid.endIndex]))!
 	}
 	
 }

@@ -124,8 +124,8 @@ internal class C8oFullSyncTranslator {
 		
 		if (dict.count > 0) {
 			
-			let desiredLength = str.characters.index(str.startIndex, offsetBy: ((str.characters.count) - 2))
-			str = str.substring(to: desiredLength)
+			let desiredLength = str.index(str.startIndex, offsetBy: ((str.count) - 2))
+			str = String(str[..<desiredLength])
 		}
 		
 		str += " }"
@@ -140,8 +140,8 @@ internal class C8oFullSyncTranslator {
 		}
 		
 		if (list.count > 0) {
-			let desiredLength = str.characters.index(str.startIndex, offsetBy: ((str.characters.count) - 2))
-			str = str.substring(to: desiredLength)
+			let desiredLength = str.index(str.startIndex, offsetBy: ((str.count) - 2))
+			str = String(str[..<desiredLength])
 		}
 		
 		str = str + "]"
@@ -202,15 +202,15 @@ internal class C8oFullSyncTranslator {
         if let nsValue = obj as? NSObject {
             return toAnyObject(obj: nsValue)
         }
-        if (obj is AnyObject) {
-            return toAnyObject(obj: obj as! AnyObject)
-        }
-        let mirror = Mirror(reflecting: obj)
+        return toAnyObject(obj: obj as AnyObject)
+        
+        /*let mirror = Mirror(reflecting: obj)
         if (mirror.children.count > 0) {
             for child in mirror.children {
                 return toAnyObject(obj: child.value)
             }
         }
         return NSNull()
+         */
     }
 }

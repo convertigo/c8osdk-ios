@@ -29,7 +29,7 @@ open class FullSyncAbstractResponse: NSObject {
 	
 	func getProperties() -> Dictionary<String, NSObject> {
 		var properties: Dictionary<String, NSObject> = Dictionary<String, NSObject>()
-		properties[FullSyncResponse.RESPONSE_KEY_OK] = self.operationStatus as! NSObject
+        properties[FullSyncResponse.RESPONSE_KEY_OK] = self.operationStatus! as NSObject
 		return properties
 	}
 	
@@ -53,8 +53,8 @@ internal class FullSyncDocumentOperationResponse: FullSyncAbstractResponse {
 	
 	override internal func getProperties() -> Dictionary<String, NSObject> {
 		var properties: Dictionary<String, NSObject> = super.getProperties()
-		properties[FullSyncResponse.RESPONSE_KEY_DOCUMENT_ID] = self.documentId as! NSObject
-		properties[FullSyncResponse.RESPONSE_KEY_DOCUMENT_REVISION] = self.documentRevision as! NSObject
+        properties[FullSyncResponse.RESPONSE_KEY_DOCUMENT_ID] = self.documentId! as NSObject
+        properties[FullSyncResponse.RESPONSE_KEY_DOCUMENT_REVISION] = self.documentRevision! as NSObject
 		return properties
 	}
 	

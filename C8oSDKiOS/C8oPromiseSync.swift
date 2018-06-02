@@ -8,8 +8,8 @@
 
 import Foundation
 
-open class C8oPromiseSync<T> {
-	func sync() throws -> T? {
-		return nil as T?
-	}
+open class C8oPromiseSync<T> : NSObject{
+    func sync() throws -> T? {
+        return nil as T?
+    }
 }
