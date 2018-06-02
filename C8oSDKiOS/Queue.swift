@@ -44,7 +44,7 @@ extension String {
 
 extension String {
 	var length: Int {
-		return characters.count
+		return count
 	}
 }
 
@@ -107,7 +107,7 @@ extension String {
 	
 	func indexOf(_ target: String) -> Int? {
 		if let range = self.range(of: target) {
-			return characters.distance(from: startIndex, to: range.lowerBound)
+			return distance(from: startIndex, to: range.lowerBound)
 		} else {
 			return nil
 		}
@@ -115,7 +115,7 @@ extension String {
 	
 	func lastIndexOf(_ target: String) -> Int? {
 		if let range = self.range(of: target, options: .backwards) {
-			return characters.distance(from: startIndex, to: range.lowerBound)
+			return distance(from: startIndex, to: range.lowerBound)
 		} else {
 			return nil
 		}

@@ -5,9 +5,8 @@
 //  Created by Charles Grimont on 18/02/2016.
 //  Copyright © 2016 Convertigo. All rights reserved.
 //
-
 import Foundation
 
-public protocol C8oResponseListener {
-	
+@objc public protocol C8oResponseListener {
+    
 }

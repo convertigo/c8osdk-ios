@@ -5,7 +5,7 @@ target 'C8oSDKiOS' do
   
   pod 'SwiftyJSON', '4.0.0'
   pod 'Alamofire', '4.7.2'
-  pod 'AEXML', '4.2.2'
+  pod 'AEXML', '4.3.0'
   pod 'couchbase-lite-ios', '1.4.1'
   pod 'couchbase-lite-ios/ForestDB', '1.4.1'
 

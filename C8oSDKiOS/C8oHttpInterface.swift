@@ -34,7 +34,7 @@ internal class C8oHttpInterface {
         
 		if (c8o.cookies != nil) {
 			for a in c8o.cookies! {
-				addCookie(a.0, value: a.1)
+				_ = addCookie(a.0, value: a.1)
 			}
 		}
 	}
@@ -56,29 +56,29 @@ internal class C8oHttpInterface {
 		firstCallMutex.lock()
 		if (firstCall) {
 			//let request = alamofire.upload(.POST, url, headers: headers, data: data!)
-            let request = alamofire.upload(data!, to: url, method: .post, headers: headers)
+            _ = alamofire.upload(data!, to: url, method: .post, headers: headers)
                 .response(queue:queue,
                           completionHandler:{ response in
-                          myResponse = (response.data, response.error as! NSError?)
+                            myResponse = (response.data, response.error as NSError?)
                           semaphore.signal()
             })
             
             
-			semaphore.wait(timeout: DispatchTime.distantFuture)
+			_ = semaphore.wait(timeout: DispatchTime.distantFuture)
 			firstCall = false
 			firstCallMutex.unlock()
 			return myResponse
 		}
 		firstCallMutex.unlock()
 		
-        let request = alamofire.upload(data!, to: url, method: .post, headers: headers)
+        _ = alamofire.upload(data!, to: url, method: .post, headers: headers)
             .response(queue:queue,
                       completionHandler:{ response in
                         myResponse = (response.data, response.error as NSError?)
                         semaphore.signal()
             })
 
-		semaphore.wait(timeout: DispatchTime.distantFuture)
+		_ = semaphore.wait(timeout: DispatchTime.distantFuture)
 		return myResponse
 		
 	}
@@ -124,7 +124,7 @@ internal class C8oHttpInterface {
 				}
 				
 			}
-			postData = String(postData.characters.dropLast(1))
+			postData = String(postData.dropLast(1))
 			
 			return postData.data(using: String.Encoding.utf8)
 			
