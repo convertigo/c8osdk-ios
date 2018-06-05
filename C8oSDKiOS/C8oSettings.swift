@@ -12,6 +12,7 @@ import SwiftyJSON
 
 @objc open class C8oSettings: C8oBase {
     @objc public override init() {
+        super.init()
     }
     
     @objc public init(c8oSettings: C8oBase) {

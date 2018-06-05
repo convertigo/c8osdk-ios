@@ -12,7 +12,9 @@ open class C8oBase: NSObject {
 	override init() {
 		super.init()
 	}
-	
+    @objc public var react = false;
+    @objc public var dictBase: NSMutableDictionary = ["_timeout": -1, "_trustAllCertificates": false, "_cookies": "", "Byte": "","_clientCertificateBinaries": "", "_clientCertificateFiles": "", "_logRemote": true, "_logLevelLocal": C8oLogLevel.none, "_logC8o": true, "_logOnFail": "", "_defaultDatabaseName": "", "_authenticationCookieValue": "", "_fullSyncLocalSuffix": "", "_fullSyncStorageEngine": C8o.FS_STORAGE_SQL, "_fullSyncEncryptionKey": "", "_fullSyncServerUrl":"http://localhost:5984", "_fullSyncUsername": "", "_fullSyncPassword": "","_useEncryption": ""];
+    
 	// *** HTTP ***//
 	internal var _timeout: Int? = -1
 	internal var _trustAllCertificates: Bool? = false
@@ -53,7 +55,7 @@ open class C8oBase: NSObject {
 	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
 	 @return The timeout.
 	 */
-	open var timeout: Int {
+	@objc open var timeout: Int {
 		get { return _timeout! }
 	}
 	
@@ -262,73 +264,60 @@ open class C8oBase: NSObject {
 	open var fullSyncPassword: String {
 		get { return _fullSyncPassword! }
 	}
-	
-	/**
-	 Copy any c8oBase object into another.
-	 Example usage:
-	 @code
-	 myc8o : C8o = C8o()
-	 mySecondC8o : C8o
-	 mySecondC8o.Copy(myC8o)
-	 @endcode
-	 @see http://www.convertigo.com/document/convertigo-client-sdk/programming-guide/ for more information.
-	 @param c8oBase
-	 any C8oBase object that yout wants to copy
-	 @return Void.
-	 */
-	internal func copyProperties (_ c8oBase: C8oBase) -> Void {
-		// *** HTTP ***//
-		
-		_timeout = c8oBase._timeout
-		_trustAllCertificates = c8oBase._trustAllCertificates
-		
-		if (c8oBase._cookies != nil) {
-			if (_cookies == nil) {
-				_cookies = NSObject() as? Dictionary<String, String>// CookieCollection()
-			}
-			// cookies.Add(c8oBase.cookies)
-		}
-		
-		if (c8oBase._clientCertificateBinaries != nil) {
-			if (_clientCertificateBinaries == nil) {
-				_clientCertificateBinaries = c8oBase._clientCertificateBinaries
-			} else {
-				for entry in c8oBase._clientCertificateBinaries! {
-					
-					_clientCertificateBinaries?.updateValue(entry.1, forKey: entry.0)
-				}
-			}
-		}
-		
-		if (c8oBase._clientCertificateFiles != nil) {
-			if (_clientCertificateFiles == nil) {
-				_clientCertificateFiles = c8oBase._clientCertificateFiles
-			} else {
-				for entry in c8oBase._clientCertificateFiles! {
-					_clientCertificateFiles?.updateValue(entry.1, forKey: entry.0)
-				}
-			}
-		}
-		
-		// *** Log ***//
-		
-		_logRemote = c8oBase._logRemote
-		_logLevelLocal = c8oBase._logLevelLocal
-		_logC8o = c8oBase._logC8o
-		_logOnFail = c8oBase._logOnFail
-		
-		// *** FullSync ***//
-		
-		_defaultDatabaseName = c8oBase._defaultDatabaseName
-		_authenticationCookieValue = c8oBase._authenticationCookieValue
-		_fullSyncLocalSuffix = c8oBase._fullSyncLocalSuffix
+    
+    internal func copyProperties (_ c8oBase: C8oBase) -> Void {
+        // *** HTTP ***//
+        
+        _timeout = c8oBase._timeout
+        _trustAllCertificates = c8oBase._trustAllCertificates
+        
+        if (c8oBase._cookies != nil) {
+            if (_cookies == nil) {
+                _cookies = NSObject() as? Dictionary<String, String>// CookieCollection()
+            }
+            // cookies.Add(c8oBase.cookies)
+        }
+        
+        if (c8oBase._clientCertificateBinaries != nil) {
+            if (_clientCertificateBinaries == nil) {
+                _clientCertificateBinaries = c8oBase._clientCertificateBinaries
+            } else {
+                for entry in c8oBase._clientCertificateBinaries! {
+                    
+                    _clientCertificateBinaries?.updateValue(entry.1, forKey: entry.0)
+                }
+            }
+        }
+        
+        if (c8oBase._clientCertificateFiles != nil) {
+            if (_clientCertificateFiles == nil) {
+                _clientCertificateFiles = c8oBase._clientCertificateFiles
+            } else {
+                for entry in c8oBase._clientCertificateFiles! {
+                    _clientCertificateFiles?.updateValue(entry.1, forKey: entry.0)
+                }
+            }
+        }
+        
+        // *** Log ***//
+        
+        _logRemote = c8oBase._logRemote
+        _logLevelLocal = c8oBase._logLevelLocal
+        _logC8o = c8oBase._logC8o
+        _logOnFail = c8oBase._logOnFail
+        
+        // *** FullSync ***//
+        
+        _defaultDatabaseName = c8oBase._defaultDatabaseName
+        _authenticationCookieValue = c8oBase._authenticationCookieValue
+        _fullSyncLocalSuffix = c8oBase._fullSyncLocalSuffix
         _fullSyncStorageEngine = c8oBase._fullSyncStorageEngine
         _fullSyncEncryptionKey = c8oBase._fullSyncEncryptionKey
         
-		_fullSyncServerUrl = c8oBase._fullSyncServerUrl
-		_fullSyncUsername = c8oBase._fullSyncUsername
-		_fullSyncPassword = c8oBase._fullSyncPassword
-		
-		// uiDispatcher = c8oBase.uiDispatcher
-	}
+        _fullSyncServerUrl = c8oBase._fullSyncServerUrl
+        _fullSyncUsername = c8oBase._fullSyncUsername
+        _fullSyncPassword = c8oBase._fullSyncPassword
+        
+        // uiDispatcher = c8oBase.uiDispatcher
+    }
 }

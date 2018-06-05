@@ -50,9 +50,11 @@
 		62EDE92D1C762EE500D9213F /* C8oExceptionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE92C1C762EE500D9213F /* C8oExceptionMessage.swift */; };
 		62EDE9311C762FFE00D9213F /* C8oFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9301C762FFE00D9213F /* C8oFileManager.swift */; };
 		62EDE9331C76314200D9213F /* C8oFullSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9321C76314200D9213F /* C8oFullSync.swift */; };
+		B7368C9220C55EAB00797AA5 /* AEXML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7368C9120C55EAB00797AA5 /* AEXML.framework */; };
+		B7368C9420C55EAB00797AA5 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7368C9320C55EAB00797AA5 /* Alamofire.framework */; };
+		B7368C9620C55EB100797AA5 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7368C9520C55EB100797AA5 /* SwiftyJSON.framework */; };
 		B768792620C0ACCB00608B80 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B768792520C0ACCA00608B80 /* README.md */; };
 		B79434C820235DCD00DDE990 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = B79434C720235DCC00DDE990 /* scripts */; };
-		D1E67029367412270B12DFA4 /* Pods_C8oSDKiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EBE744ED5FB126ADD38B6DD /* Pods_C8oSDKiOS.framework */; };
 		D8245BE8EF45CF77D770CC8D /* Pods_C8oSDKiOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040F84B5718525109D28750D /* Pods_C8oSDKiOSTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -120,6 +122,9 @@
 		62EDE9321C76314200D9213F /* C8oFullSync.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFullSync.swift; sourceTree = "<group>"; };
 		73A8549AAD8B896907F2F6CB /* Pods-C8oSDKiOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-C8oSDKiOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-C8oSDKiOS/Pods-C8oSDKiOS.debug.xcconfig"; sourceTree = "<group>"; };
 		7C2A23DDBCB149E8C1358243 /* Pods-C8oSDKiOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-C8oSDKiOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-C8oSDKiOS/Pods-C8oSDKiOS.release.xcconfig"; sourceTree = "<group>"; };
+		B7368C9120C55EAB00797AA5 /* AEXML.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AEXML.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7368C9320C55EAB00797AA5 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7368C9520C55EB100797AA5 /* SwiftyJSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftyJSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B768792520C0ACCA00608B80 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B79434C720235DCC00DDE990 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = "<group>"; };
 		EB9DD9C4928622F71D6AB05F /* Pods-C8oSDKiOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-C8oSDKiOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-C8oSDKiOSTests/Pods-C8oSDKiOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -130,7 +135,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D1E67029367412270B12DFA4 /* Pods_C8oSDKiOS.framework in Frameworks */,
+				B7368C9620C55EB100797AA5 /* SwiftyJSON.framework in Frameworks */,
+				B7368C9220C55EAB00797AA5 /* AEXML.framework in Frameworks */,
+				B7368C9420C55EAB00797AA5 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,6 +155,9 @@
 		0A4B6BBA5253C1E7B8588B64 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B7368C9520C55EB100797AA5 /* SwiftyJSON.framework */,
+				B7368C9120C55EAB00797AA5 /* AEXML.framework */,
+				B7368C9320C55EAB00797AA5 /* Alamofire.framework */,
 				3EBE744ED5FB126ADD38B6DD /* Pods_C8oSDKiOS.framework */,
 				040F84B5718525109D28750D /* Pods_C8oSDKiOSTests.framework */,
 			);
