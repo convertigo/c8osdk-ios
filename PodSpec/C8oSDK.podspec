@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
     s.name         = 'C8oSDK'
     s.module_name  = 'C8o'
-    s.version      = '2.3.0'
+    s.version      = '2.3.1.2'
     
     s.author       = 'Convertigo'
     s.license      = 'Apache License 2.0'
@@ -31,4 +31,7 @@ Pod::Spec.new do |s|
     s.dependency 'AEXML', '4.2.2'
     s.dependency 'couchbase-lite-ios', '1.4.1'
     s.dependency 'couchbase-lite-ios/ForestDB', '1.4.1'
+    
+    s.ios.libraries = 'z', 'c++', 'sqlite3'
+    s.ios.frameworks = 'CFNetwork', 'Security', 'SystemConfiguration', 'JavascriptCore'
 end
