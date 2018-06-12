@@ -1,0 +1,3 @@
+[submodule "Pods/AEXML"]
+	path = Pods/AEXML
+	url = https://github.com/tadija/AEXML
