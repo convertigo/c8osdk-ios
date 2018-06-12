@@ -4,3 +4,6 @@
 [submodule "Pods/Alamofire"]
 	path = Pods/Alamofire
 	url = https://github.com/Alamofire/Alamofire
+[submodule "Pods/SwiftyJSON"]
+	path = Pods/SwiftyJSON
+	url = https://github.com/SwiftyJSON/SwiftyJSON
