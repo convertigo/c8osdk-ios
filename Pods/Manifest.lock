@@ -1,0 +1,32 @@
+PODS:
+  - AEXML (4.3.0)
+  - Alamofire (4.7.2)
+  - couchbase-lite-ios (1.4.1):
+    - couchbase-lite-ios/SQLite (= 1.4.1)
+  - couchbase-lite-ios/ForestDB (1.4.1)
+  - couchbase-lite-ios/SQLite (1.4.1)
+  - SwiftyJSON (4.0.0)
+
+DEPENDENCIES:
+  - AEXML (= 4.3.0)
+  - Alamofire (= 4.7.2)
+  - couchbase-lite-ios (= 1.4.1)
+  - couchbase-lite-ios/ForestDB (= 1.4.1)
+  - SwiftyJSON (= 4.0.0)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - AEXML
+    - Alamofire
+    - couchbase-lite-ios
+    - SwiftyJSON
+
+SPEC CHECKSUMS:
+  AEXML: bae92c01e0da64132fd72f748721cda07466032b
+  Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
+  couchbase-lite-ios: 7c875538a0fc55a7e9744edb4e89c23737686230
+  SwiftyJSON: 070dabdcb1beb81b247c65ffa3a79dbbfb3b48aa
+
+PODFILE CHECKSUM: 6f4ee257134ed777395bf064f1d929f35d14b5d0
+
+COCOAPODS: 1.5.3

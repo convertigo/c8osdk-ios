@@ -1,0 +1,6 @@
+framework module Pods_C8oSDKiOS {
+  umbrella header "Pods-C8oSDKiOS-umbrella.h"
+
+  export *
+  module * { export * }
+}
