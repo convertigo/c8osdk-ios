@@ -207,7 +207,7 @@ open class C8o: C8oBase {
             }
         })
     }
-        
+    
     /**
      This calls a Convertigo requestable.
      Example usage:
@@ -561,7 +561,7 @@ open class C8o: C8oBase {
         set(value) { _fullSyncEncryptionKey = value }
     }
     
-    open var log: C8oLogger {
+    @objc open var log: C8oLogger {
         get { return c8oLogger! }
     }
     

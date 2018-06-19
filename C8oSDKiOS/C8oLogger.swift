@@ -11,7 +11,7 @@ import CoreFoundation
 import SwiftyJSON
 import AEXML
 
-open class C8oLogger: NSObject {
+@objc open class C8oLogger: NSObject {
     fileprivate let RE_FORMAT_TIME: NSRegularExpression = try! NSRegularExpression(pattern: "(\\d*?)(?:,|.)(\\d{3}).*", options: [])
     // *** Constants ***//
     
@@ -100,7 +100,7 @@ open class C8oLogger: NSObject {
         let isLogRemote: Bool = isLoggableRemote(logLevel)
         
         if (isLogConsole || isLogRemote) {
-            if (exception != nil) {
+            if (exception! != nil) {
                 message += "\n" + String(describing: exception)
             }
             
@@ -117,33 +117,33 @@ open class C8oLogger: NSObject {
             }
             
             if (isLogConsole) {
-                debugPrint("(" + time + ") [" + logLevel.name() + "] " + message)
+                print("(" + time + ") [" + logLevel.name() + "] " + message)
                 
             }
         }
     }
     
-    open func fatal(_ message: String, exceptions: C8oException? = nil) -> Void {
+    @objc open func fatal(_ message: String, exceptions: C8oException? = nil) -> Void {
         log(C8oLogLevel.fatal, message: message, exception: exceptions)
     }
     
-    open func error(_ message: String, exceptions: C8oException? = nil) -> Void {
+    @objc open func error(_ message: String, exceptions: C8oException? = nil) -> Void {
         log(C8oLogLevel.error, message: message, exception: exceptions)
     }
     
-    open func warn(_ message: String, exceptions: C8oException? = nil) -> Void {
+    @objc open func warn(_ message: String, exceptions: C8oException? = nil) -> Void {
         log(C8oLogLevel.warn, message: message, exception: exceptions)
     }
     
-    open func info(_ message: String, exceptions: C8oException? = nil) -> Void {
+    @objc open func info(_ message: String, exceptions: C8oException? = nil) -> Void {
         log(C8oLogLevel.info, message: message, exception: exceptions)
     }
     
-    open func debug(_ message: String, exceptions: C8oException? = nil) -> Void {
+    @objc open func debug(_ message: String, exceptions: C8oException? = nil) -> Void {
         log(C8oLogLevel.debug, message: message, exception: exceptions)
     }
     
-    open func trace(_ message: String, exceptions: C8oException? = nil) -> Void {
+    @objc open func trace(_ message: String, exceptions: C8oException? = nil) -> Void {
         log(C8oLogLevel.trace, message: message, exception: exceptions)
     }
     

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		372612EA1DD1D7020092EEC6 /* C8oFullSyncChangeListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372612E91DD1D7020092EEC6 /* C8oFullSyncChangeListener.swift */; };
-		376A96061D81B0F600F023D8 /* 4m.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 376A96041D81AD3E00F023D8 /* 4m.jpg */; };
+		379D9FE1EB87A26E252B3194 /* Pods_C8oSDKiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EBE744ED5FB126ADD38B6DD /* Pods_C8oSDKiOS.framework */; };
 		37F523B41C9ABE19007952C3 /* C8oCookieStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37F523B31C9ABE19007952C3 /* C8oCookieStorage.swift */; };
 		62057A211CB53DA0004AE521 /* FullSyncEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62057A201CB53DA0004AE521 /* FullSyncEnum.swift */; };
 		62057A261CB63E7B004AE521 /* VoidResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62057A251CB63E7B004AE521 /* VoidResponse.swift */; };
@@ -55,14 +55,7 @@
 		B7368C9620C55EB100797AA5 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7368C9520C55EB100797AA5 /* SwiftyJSON.framework */; };
 		B768792620C0ACCB00608B80 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B768792520C0ACCA00608B80 /* README.md */; };
 		B79434C820235DCD00DDE990 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = B79434C720235DCC00DDE990 /* scripts */; };
-		B7E5CFF220CEA5160076914F /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E5CFF120CEA5150076914F /* libc++.tbd */; };
-		B7E5CFF420CEA51C0076914F /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E5CFF320CEA51C0076914F /* libsqlite3.tbd */; };
-		B7E5CFF620CEA5260076914F /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E5CFF520CEA5260076914F /* JavaScriptCore.framework */; };
-		B7E5CFF820CEA52E0076914F /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E5CFF720CEA52E0076914F /* libz.tbd */; };
-		B7E5CFFA20CEA5580076914F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E5CFF920CEA5580076914F /* SystemConfiguration.framework */; };
-		B7E5CFFC20CEA55F0076914F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E5CFFB20CEA55F0076914F /* Security.framework */; };
-		B7E5CFFE20CEA5680076914F /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E5CFFD20CEA5680076914F /* CFNetwork.framework */; };
-		BE60D29EDBC0D412CBE470F4 /* Pods_C8oSDKiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EBE744ED5FB126ADD38B6DD /* Pods_C8oSDKiOS.framework */; };
+		B7D0179920D943BB004C93BB /* 4m.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B7D0179820D943BB004C93BB /* 4m.jpg */; };
 		D8245BE8EF45CF77D770CC8D /* Pods_C8oSDKiOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040F84B5718525109D28750D /* Pods_C8oSDKiOSTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -79,7 +72,6 @@
 /* Begin PBXFileReference section */
 		040F84B5718525109D28750D /* Pods_C8oSDKiOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_C8oSDKiOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		372612E91DD1D7020092EEC6 /* C8oFullSyncChangeListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFullSyncChangeListener.swift; sourceTree = "<group>"; };
-		376A96041D81AD3E00F023D8 /* 4m.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 4m.jpg; sourceTree = "<group>"; };
 		37F523B31C9ABE19007952C3 /* C8oCookieStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oCookieStorage.swift; sourceTree = "<group>"; };
 		3EBE744ED5FB126ADD38B6DD /* Pods_C8oSDKiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_C8oSDKiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48A8DAB072C56A9108866F53 /* Pods-C8oSDKiOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-C8oSDKiOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-C8oSDKiOSTests/Pods-C8oSDKiOSTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -135,13 +127,7 @@
 		B7368C9520C55EB100797AA5 /* SwiftyJSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftyJSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B768792520C0ACCA00608B80 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B79434C720235DCC00DDE990 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = "<group>"; };
-		B7E5CFF120CEA5150076914F /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
-		B7E5CFF320CEA51C0076914F /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
-		B7E5CFF520CEA5260076914F /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		B7E5CFF720CEA52E0076914F /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		B7E5CFF920CEA5580076914F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		B7E5CFFB20CEA55F0076914F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		B7E5CFFD20CEA5680076914F /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		B7D0179820D943BB004C93BB /* 4m.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 4m.jpg; sourceTree = "<group>"; };
 		EB9DD9C4928622F71D6AB05F /* Pods-C8oSDKiOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-C8oSDKiOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-C8oSDKiOSTests/Pods-C8oSDKiOSTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -150,17 +136,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B7E5CFFE20CEA5680076914F /* CFNetwork.framework in Frameworks */,
-				B7E5CFFC20CEA55F0076914F /* Security.framework in Frameworks */,
-				B7E5CFFA20CEA5580076914F /* SystemConfiguration.framework in Frameworks */,
-				B7E5CFF820CEA52E0076914F /* libz.tbd in Frameworks */,
-				B7E5CFF620CEA5260076914F /* JavaScriptCore.framework in Frameworks */,
-				B7E5CFF420CEA51C0076914F /* libsqlite3.tbd in Frameworks */,
-				B7E5CFF220CEA5160076914F /* libc++.tbd in Frameworks */,
 				B7368C9620C55EB100797AA5 /* SwiftyJSON.framework in Frameworks */,
 				B7368C9220C55EAB00797AA5 /* AEXML.framework in Frameworks */,
 				B7368C9420C55EAB00797AA5 /* Alamofire.framework in Frameworks */,
-				BE60D29EDBC0D412CBE470F4 /* Pods_C8oSDKiOS.framework in Frameworks */,
+				379D9FE1EB87A26E252B3194 /* Pods_C8oSDKiOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,13 +157,6 @@
 		0A4B6BBA5253C1E7B8588B64 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B7E5CFFD20CEA5680076914F /* CFNetwork.framework */,
-				B7E5CFFB20CEA55F0076914F /* Security.framework */,
-				B7E5CFF920CEA5580076914F /* SystemConfiguration.framework */,
-				B7E5CFF720CEA52E0076914F /* libz.tbd */,
-				B7E5CFF520CEA5260076914F /* JavaScriptCore.framework */,
-				B7E5CFF320CEA51C0076914F /* libsqlite3.tbd */,
-				B7E5CFF120CEA5150076914F /* libc++.tbd */,
 				B7368C9520C55EB100797AA5 /* SwiftyJSON.framework */,
 				B7368C9120C55EAB00797AA5 /* AEXML.framework */,
 				B7368C9320C55EAB00797AA5 /* Alamofire.framework */,
@@ -262,7 +234,7 @@
 		62CD2A551C6207AD009E9F7E /* C8oSDKiOSTests */ = {
 			isa = PBXGroup;
 			children = (
-				376A96041D81AD3E00F023D8 /* 4m.jpg */,
+				B7D0179820D943BB004C93BB /* 4m.jpg */,
 				62CD2A561C6207AD009E9F7E /* C8oSDKiOSTests.swift */,
 				62CD2A581C6207AD009E9F7E /* Info.plist */,
 			);
@@ -407,7 +379,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				376A96061D81B0F600F023D8 /* 4m.jpg in Resources */,
+				B7D0179920D943BB004C93BB /* 4m.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -650,7 +622,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 73A8549AAD8B896907F2F6CB /* Pods-C8oSDKiOS.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ENABLE_MODULES = YES;
@@ -676,7 +647,6 @@
 					"$(PROJECT_DIR)/C8oSDKiOS",
 				);
 				MODULEMAP_FILE = "";
-				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -701,7 +671,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7C2A23DDBCB149E8C1358243 /* Pods-C8oSDKiOS.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ENABLE_MODULES = YES;
