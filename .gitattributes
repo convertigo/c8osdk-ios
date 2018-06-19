@@ -97,4 +97,3 @@ samplebigfiletransfer/FilesViewController.swift -text
 samplebigfiletransfer/Info.plist -text
 samplebigfiletransfer/ViewController.swift -text
 samplebigfiletransfer/convertigo_University.png -text
-*/*.jpg filter=lfs diff=lfs merge=lfs -text
