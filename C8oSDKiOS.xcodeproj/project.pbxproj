@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		372612EA1DD1D7020092EEC6 /* C8oFullSyncChangeListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372612E91DD1D7020092EEC6 /* C8oFullSyncChangeListener.swift */; };
-		376A96061D81B0F600F023D8 /* 4m.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 376A96041D81AD3E00F023D8 /* 4m.jpg */; };
 		379D9FE1EB87A26E252B3194 /* Pods_C8oSDKiOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EBE744ED5FB126ADD38B6DD /* Pods_C8oSDKiOS.framework */; };
 		37F523B41C9ABE19007952C3 /* C8oCookieStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37F523B31C9ABE19007952C3 /* C8oCookieStorage.swift */; };
 		62057A211CB53DA0004AE521 /* FullSyncEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62057A201CB53DA0004AE521 /* FullSyncEnum.swift */; };
@@ -56,6 +55,7 @@
 		B7368C9620C55EB100797AA5 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7368C9520C55EB100797AA5 /* SwiftyJSON.framework */; };
 		B768792620C0ACCB00608B80 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B768792520C0ACCA00608B80 /* README.md */; };
 		B79434C820235DCD00DDE990 /* scripts in Resources */ = {isa = PBXBuildFile; fileRef = B79434C720235DCC00DDE990 /* scripts */; };
+		B7D0179920D943BB004C93BB /* 4m.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B7D0179820D943BB004C93BB /* 4m.jpg */; };
 		D8245BE8EF45CF77D770CC8D /* Pods_C8oSDKiOSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 040F84B5718525109D28750D /* Pods_C8oSDKiOSTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -72,7 +72,6 @@
 /* Begin PBXFileReference section */
 		040F84B5718525109D28750D /* Pods_C8oSDKiOSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_C8oSDKiOSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		372612E91DD1D7020092EEC6 /* C8oFullSyncChangeListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oFullSyncChangeListener.swift; sourceTree = "<group>"; };
-		376A96041D81AD3E00F023D8 /* 4m.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 4m.jpg; sourceTree = "<group>"; };
 		37F523B31C9ABE19007952C3 /* C8oCookieStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oCookieStorage.swift; sourceTree = "<group>"; };
 		3EBE744ED5FB126ADD38B6DD /* Pods_C8oSDKiOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_C8oSDKiOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48A8DAB072C56A9108866F53 /* Pods-C8oSDKiOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-C8oSDKiOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-C8oSDKiOSTests/Pods-C8oSDKiOSTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -128,6 +127,7 @@
 		B7368C9520C55EB100797AA5 /* SwiftyJSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftyJSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B768792520C0ACCA00608B80 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B79434C720235DCC00DDE990 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = "<group>"; };
+		B7D0179820D943BB004C93BB /* 4m.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 4m.jpg; sourceTree = "<group>"; };
 		EB9DD9C4928622F71D6AB05F /* Pods-C8oSDKiOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-C8oSDKiOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-C8oSDKiOSTests/Pods-C8oSDKiOSTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -234,7 +234,7 @@
 		62CD2A551C6207AD009E9F7E /* C8oSDKiOSTests */ = {
 			isa = PBXGroup;
 			children = (
-				376A96041D81AD3E00F023D8 /* 4m.jpg */,
+				B7D0179820D943BB004C93BB /* 4m.jpg */,
 				62CD2A561C6207AD009E9F7E /* C8oSDKiOSTests.swift */,
 				62CD2A581C6207AD009E9F7E /* Info.plist */,
 			);
@@ -380,7 +380,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				376A96061D81B0F600F023D8 /* 4m.jpg in Resources */,
+				B7D0179920D943BB004C93BB /* 4m.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
