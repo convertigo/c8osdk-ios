@@ -54,7 +54,7 @@ import Foundation
     }
     
     @objc open var dictionary: NSDictionary {
-        let di = ["continuous": continuous, "finished": finished, "pull": pull, "current": current, "total": total, "status": status, "taskInfo": taskInfo, "raw": raw] as [String : Any];
+        let di = ["continuous": continuous, "finished": finished, "pull": pull, "current": current, "total": total, "status": status, "taskInfo": taskInfo, "raw": raw, "description": description] as [String : Any];
         let nsDi = di as NSDictionary
         return nsDi
     }
