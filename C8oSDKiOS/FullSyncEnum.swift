@@ -514,7 +514,7 @@ open class FullSyncPolicy {
         var createdDocument: CBLDocument
         var newPropertiesMutable = newProperties
         do {
-            let documentId: String? = C8oUtils.getParameterStringValue(newPropertiesMutable, name: C8oFullSync.FULL_SYNC__ID, useName: false)!
+            let documentId: String? = C8oUtils.getParameterStringValue(newPropertiesMutable, name: C8oFullSync.FULL_SYNC__ID, useName: false)
             newPropertiesMutable.removeValue(forKey: C8oFullSync.FULL_SYNC__ID)
             newPropertiesMutable.removeValue(forKey: C8oFullSync.FULL_SYNC__REV)
             
@@ -539,7 +539,7 @@ open class FullSyncPolicy {
         var createdDocument: CBLDocument
         var newPropertiesMutable = newProperties
         do {
-            let documentId: String? = C8oUtils.getParameterStringValue(newPropertiesMutable, name: C8oFullSync.FULL_SYNC__ID, useName: false)!
+            let documentId: String? = C8oUtils.getParameterStringValue(newPropertiesMutable, name: C8oFullSync.FULL_SYNC__ID, useName: false)
             newPropertiesMutable.removeValue(forKey: C8oFullSync.FULL_SYNC__ID)
             newPropertiesMutable.removeValue(forKey: C8oFullSync.FULL_SYNC__REV)
             
