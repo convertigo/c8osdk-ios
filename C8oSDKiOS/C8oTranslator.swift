@@ -102,8 +102,8 @@ internal class C8oTranslator {
 	internal static func streamToJson(_ stream: Stream) -> JSON? {
 		fatalError("Function \"StreamToJson\" must be defined")
 	}
-	internal static func dataToJson(_ data: NSData) -> JSON? {
-		let json = try! JSON(data: data as Data)
+    internal static func dataToJson(_ data: NSData) throws -> JSON? {
+		let json = try JSON(data: data as Data)
 		return json
 	}
 	
