@@ -12,6 +12,7 @@ import SwiftyJSON
 import Alamofire
 import AEXML
 import CouchbaseLite
+
 @testable import C8o
 
 class C8oSDKiOSTests: XCTestCase {
