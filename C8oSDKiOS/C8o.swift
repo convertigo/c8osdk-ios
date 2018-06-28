@@ -658,7 +658,7 @@ open class C8o: C8oBase {
      
      @param liveid The value associated with the C8o.FS_LIVE parameter.
      */
-    open func cancelLive(_ liveid: String) throws {
+    @objc open func cancelLive(_ liveid: String) throws {
         if let db = livesDb[liveid] {
             livesDb.removeValue(forKey: liveid)
             if (!livesDb.values.contains(db)) {
