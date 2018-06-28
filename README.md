@@ -31,7 +31,7 @@ Create a PodFile with :
     use_frameworks!
 
 	target 'MyApp' do
-	  pod 'C8oSDK', '2.2.4'
+	  pod 'C8oSDK', '2.3.2'
 	end
 
 run `pod install`
@@ -230,10 +230,11 @@ One fail handler per promise chain is allowed. The fail callback provide the obj
 
 Client SDK is available for:
 * [Android Native](https://github.com/convertigo/c8osdk-android) apps as a standard Gradle dependency
+* [iOS native](https://github.com/convertigo/c8osdk-ios) apps as a standard Cocoapod
+* [React Native](https://github.com/convertigo/react-native-c8osdk) as a NPM package
+* [Google Angular framework](https://github.com/convertigo/c8osdk-angular) as typescript an NPM package
+* [Vue.js](https://github.com/convertigo/c8osdk-vuejs), [ReactJS](https://github.com/convertigo/c8osdk-vuejs), [AngularJS](https://github.com/convertigo/c8osdk-vuejs) Framework as a standard Javascript NPM package
 * Windows desktop or Xamarin apps as Nugets or Xamarin Components
-* [Google Angular framework](https://github.com/convertigo/c8osdk-angular) as an NPM package
-* [Vue.js](https://github.com/convertigo/c8osdk-vuejs) Framework as a NPM package
-* [Angular](https://www.npmjs.com/package/c8osdkangular) Framework as a NPM package
 
 <br><br><br><br><br>
 

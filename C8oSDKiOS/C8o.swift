@@ -130,7 +130,7 @@ open class C8o: C8oBase {
      - returns: Current version of the SDK as "x.y.z".
      */
     open static func getSdkVersion() -> String {
-        return "2.2.4"
+        return "2.3.2"
     }
     
     /* Attributes */
@@ -658,7 +658,7 @@ open class C8o: C8oBase {
      
      @param liveid The value associated with the C8o.FS_LIVE parameter.
      */
-    open func cancelLive(_ liveid: String) throws {
+    @objc open func cancelLive(_ liveid: String) throws {
         if let db = livesDb[liveid] {
             livesDb.removeValue(forKey: liveid)
             if (!livesDb.values.contains(db)) {
