@@ -1867,7 +1867,7 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertEqual("5120000", length)
 	}
     
-    func disable_testC8oFsLiveChanges() {
+    func testC8oFsLiveChanges() {
         let c8o = try! get(.c8O_FS_PUSH)
         var lastChanges: JSON? = nil
         let _lastChanges = NSCondition()
