@@ -228,7 +228,12 @@ import AEXML
                         }
                         return
                     } else {
-                        jsonResponse = C8oTranslator.dataToJson(webResponse.data! as NSData)!
+                        do{
+                            jsonResponse = try C8oTranslator.dataToJson(webResponse.data! as NSData)!
+                        }
+                        catch let e as Error{
+                            jsonResponse = "Can't translate data into JSON"
+                        }
                     }
                     
                 }
@@ -250,10 +255,6 @@ import AEXML
                     
                 }
             }
-            
-            /*dispatch_async(dispatch_get_main_queue()){
-             
-             }*/
         }
     }
     /** Others log */

@@ -177,7 +177,7 @@ internal class C8oCallTask {
                 
             } else if (c8oResponseListener is C8oResponseJsonListener) {
                 let myc8 = C8oJSON()
-                myc8.myJSON = C8oTranslator.dataToJson(httpResponse! as NSData)!
+                myc8.myJSON = try C8oTranslator.dataToJson(httpResponse! as NSData)!
                 response = myc8
                 responseString = C8oTranslator.jsonToString(myc8.myJSON!)
             } else {
