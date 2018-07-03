@@ -77,11 +77,11 @@ open class Queue<T> {
 	
 	// Add a new item to the back of the queue.
 	open func enqueue (_ value: Element) {
-		_back.next = _QueueItem(value)
-        _back = _back.next!
-        
-		
-		count += 1
+        _back.next = _QueueItem(value)
+        if _back.next != nil{
+            _back = _back.next!
+        }
+        count += 1
 	}
 	
 	// Return and remove the item at the front of the queue.
