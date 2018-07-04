@@ -51,13 +51,14 @@ class C8oFullSyncCbl: C8oFullSync {
     }
     
     @objc fileprivate func doBlock() throws {
-         try (self.block.dequeue()! as () throws ->())()
-        
+        let block = self.block.dequeue();
+        if block != nil{
+            try (block as! () throws ->())()
+        }
     }
     @objc internal func managerInstanciate() {
         self.manager = CBLManager()
         condition.signal()
-        
     }
     @objc internal func cbl(){
         Thread.current.name = "CBLThread"
