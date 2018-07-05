@@ -24,6 +24,7 @@ class C8oFullSyncCbl: C8oFullSync {
     internal static var th: Thread? = nil
     fileprivate var block: Queue<() throws ->()> = Queue<()throws ->()>()
     internal var errorFs: [NSError] = [NSError]()
+    fileprivate let serialQueue = DispatchQueue(label: "accessBlock")
     
     internal override init(c8o: C8o) {
         fullSyncDatabases = Dictionary<String, C8oFullSyncDatabase>()
@@ -46,12 +47,37 @@ class C8oFullSyncCbl: C8oFullSync {
         }
     }
     internal func performOnCblThread(_ block: @escaping () throws ->()) {
-        self.block.enqueue(block)
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
+        serialQueue.sync {
+            self.block.enqueue(block)
+            syncMutex[0] = true
+            condition.signal()
+        }
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        condition.unlock()
         self.perform(#selector(C8oFullSyncCbl.doBlock), on: C8oFullSyncCbl.th!, with: errorFs, waitUntilDone: true)
     }
     
     @objc fileprivate func doBlock() throws {
-        let block = self.block.dequeue();
+        var block : AnyObject? = nil;
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
+        serialQueue.sync {
+            block = self.block.dequeue() as AnyObject;
+            syncMutex[0] = true
+            condition.signal()
+        }
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        condition.unlock()
         if block != nil{
             try (block as! () throws ->())()
         }
