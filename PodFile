@@ -3,7 +3,7 @@ platform :ios, '8.0'
 target 'C8oSDKiOS' do
   use_frameworks!
   
-  pod 'SwiftyJSON', '4.0.0'
+  pod 'SwiftyJSON', '4.1.0'
   pod 'Alamofire', '4.7.2'
   pod 'AEXML', '4.3.0'
   pod 'couchbase-lite-ios', '1.4.1'
