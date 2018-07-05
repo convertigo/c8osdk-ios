@@ -231,13 +231,11 @@ import AEXML
                         do{
                             jsonResponse = try C8oTranslator.dataToJson(webResponse.data! as NSData)!
                         }
-                        catch let e as Error{
+                        catch {
                             jsonResponse = "Can't translate data into JSON"
                         }
                     }
-                    
                 }
-                
                 var logLevelResponse = jsonResponse[C8oLogger.JSON_KEY_REMOTE_LOG_LEVEL]
                 
                 if (logLevelResponse != JSON.null) {
@@ -247,12 +245,10 @@ import AEXML
                     if (c8oLogLevel != nil) {
                         self.remoteLogLevel = c8oLogLevel!
                     }
-                    
                     condition.lock()
                     self.alreadyRemoteLogging![0] = false
                     condition.unlock()
                     self.logRemote()
-                    
                 }
             }
         }

@@ -916,7 +916,7 @@ class C8oFullSyncCbl: C8oFullSync {
             listeners.remove(listener)
             if (listeners.isEmpty) {
                 let db = try getOrCreateFullSyncDatabase(_db!).getDatabase()
-                NotificationCenter.default.removeObserver(db, name: NSNotification.Name.cblDatabaseChange, object: nil)
+                NotificationCenter.default.removeObserver(db as Any, name: NSNotification.Name.cblDatabaseChange, object: nil)
             }
         }
     }
