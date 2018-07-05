@@ -126,9 +126,24 @@ class C8oFullSyncCbl: C8oFullSync {
                 maVar.myJSON = C8oFullSyncTranslator.fullSyncDocumentOperationResponseToJson((response as! FullSyncDocumentOperationResponse))
                 return maVar
             } else if ((response as AnyObject).isMember(of:CBLQueryEnumerator.self)) {
+                // Lock
+                var syncMutex: [Bool] = [Bool]()
+                syncMutex.append(false)
+                let condition: NSCondition = NSCondition()
+                condition.lock()
+                // Call on CBL thread
                 (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
                     maVar.myJSON = C8oFullSyncTranslator.queryEnumeratorToJson(response as! CBLQueryEnumerator)
+                    // Signal
+                    syncMutex[0] = true
+                    condition.signal()
                 }
+                // Waiting for signal
+                if(!syncMutex[0]){
+                    condition.wait()
+                }
+                condition.unlock()
+                
                 return maVar
             } else if (response as AnyObject).isMember(of: FullSyncDefaultResponse.self) {
                 maVar.myJSON = C8oFullSyncTranslator.fullSyncDefaultResponseToJson(response as! FullSyncDefaultResponse)
@@ -137,10 +152,22 @@ class C8oFullSyncCbl: C8oFullSync {
                 return response
             }
             else if(response is Dictionary<String, Any>){
-                
+                // Lock
+                var syncMutex: [Bool] = [Bool]()
+                syncMutex.append(false)
+                let condition: NSCondition = NSCondition()
+                condition.lock()
                 (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
                     maVar.myJSON = C8oFullSyncTranslator.dictionaryToJson(response as! Dictionary<String, Any>)
+                    // Signal
+                    syncMutex[0] = true
+                    condition.signal()
                 }
+                // Waiting for signal
+                if(!syncMutex[0]){
+                    condition.wait()
+                }
+                condition.unlock()
                 return maVar
             }
         } else if (listener is C8oResponseXmlListener) {
@@ -173,6 +200,13 @@ class C8oFullSyncCbl: C8oFullSync {
         var document: CBLDocument?
         var dictDoc : Dictionary<String, Any>? = nil
         var exep: Bool = false
+        
+        // Lock
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
+        
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             fullSyncDatabase = try! self.getOrCreateFullSyncDatabase(fullSyncDatatbaseName)
             
@@ -206,7 +240,17 @@ class C8oFullSyncCbl: C8oFullSync {
             } else {
                 exep = true
             }
+            // Signal
+            syncMutex[0] = true
+            condition.signal()
         }
+        
+        // Waiting for signal
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        condition.unlock()
+        
         if (exep) {
             throw C8oRessourceNotFoundException(message: C8oExceptionMessage.ressourceNotFound("requested document \"" + docid + "\""))
         }
@@ -219,14 +263,46 @@ class C8oFullSyncCbl: C8oFullSync {
     func handleDeleteDocumentRequest(_ DatatbaseName: String, docid: String, parameters: Dictionary<String, Any>) throws -> FullSyncDocumentOperationResponse? {
         var fullSyncDatabase: C8oFullSyncDatabase? = nil
         var document: CBLDocument?
+        
+        // Lock
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
+        
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             fullSyncDatabase = try! self.getOrCreateFullSyncDatabase(DatatbaseName)
+            // Signal
+            syncMutex[0] = true
+            condition.signal()
         }
+        
+        // Waiting for signal
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        condition.unlock()
+        
         let revParameterValue: String? = C8oUtils.getParameterStringValue(parameters, name: FullSyncDeleteDocumentParameter.REV.name, useName: false)
+        
+        // Lock
+        var syncMutex2: [Bool] = [Bool]()
+        syncMutex2.append(false)
+        let condition2: NSCondition = NSCondition()
+        condition2.lock()
+        
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
-            
             document = (fullSyncDatabase!.getDatabase()?.existingDocument(withID: docid))!
+            // Signal
+            syncMutex2[0] = true
+            condition2.signal()
         }
+        // Waiting for signal
+        if(!syncMutex2[0]){
+            condition2.wait()
+        }
+        condition2.unlock()
+        
         if (document == nil) {
             throw C8oRessourceNotFoundException(message: C8oExceptionMessage.toDo())
         }
@@ -240,14 +316,32 @@ class C8oFullSyncCbl: C8oFullSync {
         var deleted: Bool = true
         var error: NSError? = nil
         do {
+            // Lock
+            var syncMutex3: [Bool] = [Bool]()
+            syncMutex3.append(false)
+            let condition3: NSCondition = NSCondition()
+            condition3.lock()
+            
             (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
                 do {
                     try document?.delete()
+                    // Signal
+                    syncMutex3[0] = true
+                    condition3.signal()
                 }
                 catch let e as NSError {
                     error = e
+                    // Signal
+                    syncMutex3[0] = true
+                    condition3.signal()
                 }
             }
+            // Waiting for signal
+            if(!syncMutex3[0]){
+                condition3.wait()
+            }
+            condition3.unlock()
+            
             if (error != nil) {
                 throw error!
             }
@@ -266,16 +360,24 @@ class C8oFullSyncCbl: C8oFullSync {
     
     func handlePostDocumentRequest(_ databaseName: String, fullSyncPolicy: FullSyncPolicy, parameters: Dictionary<String, Any>) throws -> NSObject? {
         
+        // Lock
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
+        
         var fullSyncDatabase: C8oFullSyncDatabase? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
-            do {
-                fullSyncDatabase = try self.getOrCreateFullSyncDatabase(databaseName)
-            }
-            catch {
-                
-            }
-            
+            fullSyncDatabase = try self.getOrCreateFullSyncDatabase(databaseName)
+            // Signal
+            syncMutex[0] = true
+            condition.signal()
         }
+        // Waiting for signal
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        condition.unlock()
         
         // Gets the subkey separator parameter
         var subkeySeparatorParameterValue: String? = C8oUtils.getParameterStringValue(parameters, name: C8o.FS_SUBKEY_SEPARATOR, useName: false)
@@ -294,23 +396,7 @@ class C8oFullSyncCbl: C8oFullSync {
                 // var objectParameterValueT : Dictionary<String, Any> = Dictionary<String, Any>()
                 do {
                     objectParameterValue = C8oFullSyncTranslator.toAnyObject(obj: objectParameterValue)
-                    
-                    // var count = 0
-                    //objectParameterValue = objectParameterValue.description
-                    /*let json = JSON(objectParameterValue)
-                     if let dataFromString = objectParameterValue.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false) {
-                     let json = JSON(data: dataFromString)
-                     for (key, value) : (String, JSON) in json {
-                     objectParameterValueT[key] = value.object
-                     count += 1
-                     }
-                     if(count > 0){
-                     objectParameterValue = objectParameterValueT
-                     }
-                     }*/
-                    
                 }
-                
                 // !!!!!!!!!!!!!! Becarefull here cause a possible trouble due to non use of pattern.quote in swift...
                 // Checks if the parameter name is splittable
                 let paths: [String] = parameterName.components(separatedBy: subkeySeparatorParameterValue!)
@@ -332,20 +418,30 @@ class C8oFullSyncCbl: C8oFullSync {
                             C8oFullSyncCbl.mergeProperties(&e, oldProperties: ex)
                             objectParameterValue = e as Any
                         }
-                        
                     }
-                    
                 }
-                
                 newProperties[parameterName] = objectParameterValue
             }
         }
+        // Lock
+        var syncMutex2: [Bool] = [Bool]()
+        syncMutex2.append(false)
+        let condition2: NSCondition = NSCondition()
+        condition2.lock()
         
         // Execute the query depending to the policy
         var db: CBLDatabase? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             db = fullSyncDatabase!.getDatabase()!
+            // Signal
+            syncMutex2[0] = true
+            condition2.signal()
         }
+        // Waiting for signal
+        if(!syncMutex2[0]){
+            condition2.wait()
+        }
+        condition2.unlock()
         // We passed c8o object to fullsyncpolicy to process action on CBLThread
         // fullSyncPolicy.setC8o(c8o!)
         var error: NSError? = nil
@@ -353,27 +449,64 @@ class C8oFullSyncCbl: C8oFullSync {
         var createdDocument: CBLDocument? = nil
         var documentId: String? = nil
         var currentRevision: String? = nil
+        
+        // Lock
+        var syncMutex3: [Bool] = [Bool]()
+        syncMutex3.append(false)
+        let condition3: NSCondition = NSCondition()
+        condition3.lock()
+        
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             do {
-                
                 createdDocument = try fullSyncPolicy.action(db!, newProperties)
+                // Signal
+                syncMutex3[0] = true
+                condition3.signal()
             }
             catch let e as C8oException {
                 exception = e
+                // Signal
+                syncMutex3[0] = true
+                condition3.signal()
             }
             catch let e as NSError {
                 error = e
+                // Signal
+                syncMutex3[0] = true
+                condition3.signal()
             }
         }
+        // Waiting for signal
+        if(!syncMutex3[0]){
+            condition3.wait()
+        }
+        condition3.unlock()
+        
         if (error != nil) {
             throw error!
         } else if (exception != nil) {
             throw exception!
         }
+        
+        // Lock
+        var syncMutex4: [Bool] = [Bool]()
+        syncMutex4.append(false)
+        let condition4: NSCondition = NSCondition()
+        condition4.lock()
+        
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             documentId = createdDocument!.documentID
             currentRevision = createdDocument!.currentRevisionID!
+            // Signal
+            syncMutex4[0] = true
+            condition4.signal()
         }
+        // Waiting for signal
+        if(!syncMutex4[0]){
+            condition4.wait()
+        }
+        condition4.unlock()
+        
         return FullSyncDocumentOperationResponse(documentId: documentId!, documentRevision: currentRevision!, operationStatus: true)
         
     }
@@ -381,6 +514,12 @@ class C8oFullSyncCbl: C8oFullSync {
         var document : CBLDocument? = nil
         var newRev : CBLUnsavedRevision? = nil
         var error : NSError? = nil
+        
+        // Lock
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
         
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             do{
@@ -394,6 +533,9 @@ class C8oFullSyncCbl: C8oFullSync {
                     newRev!.setAttachmentNamed(attachmentName, withContentType: attachmentType, content: attachmentContent)
                     do{
                         try newRev!.save()
+                        // Signal
+                        syncMutex[0] = true
+                        condition.signal()
                     }
                     catch let e as NSError{
                         throw c8oCouchbaseLiteException(message: "Unable to put the attachment " + attachmentName + " to the document " + docid + ".", exception: e)
@@ -405,13 +547,22 @@ class C8oFullSyncCbl: C8oFullSync {
             }
             catch let e as NSError{
                 error = e
+                // Signal
+                syncMutex[0] = true
+                condition.signal()
             }
             
         }
+        
+        // Waiting for signal
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        condition.unlock()
+        
         if(error != nil){
             throw error!
         }
-        
         
         return FullSyncDocumentOperationResponse(documentId: (document?.documentID)!, documentRevision: (document?.currentRevisionID)!, operationStatus: true)
         
@@ -421,6 +572,12 @@ class C8oFullSyncCbl: C8oFullSync {
         var document : CBLDocument? = nil
         var newRev : CBLUnsavedRevision? = nil
         var error : NSError? = nil
+        
+        // Lock
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
         
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             do{
@@ -434,6 +591,9 @@ class C8oFullSyncCbl: C8oFullSync {
                     newRev!.removeAttachmentNamed(attachmentName)
                     do{
                         try newRev!.save()
+                        // Signal
+                        syncMutex[0] = true
+                        condition.signal()
                     }
                     catch let e as NSError{
                         throw c8oCouchbaseLiteException(message: "Unable to delete the attachment " + attachmentName + " to the document " + docid + ".", exception: e)
@@ -445,22 +605,47 @@ class C8oFullSyncCbl: C8oFullSync {
             }
             catch let e as NSError{
                 error = e
+                // Signal
+                syncMutex[0] = true
+                condition.signal()
             }
             
         }
+        // Waiting for signal
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        condition.unlock()
+        
         if(error != nil){
             throw error!
         }
         return FullSyncDocumentOperationResponse(documentId: (document?.documentID)!, documentRevision: (document?.currentRevisionID)!, operationStatus: true)
     }
     func handleAllDocumentsRequest(_ databaseName: String, parameters: Dictionary<String, Any>) throws -> Any? {
+        // Lock
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
+        
         var fullSyncDatabase: C8oFullSyncDatabase? = nil
         var query: CBLQuery? = nil
         // Creates the fullSync query and add parameters to it
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             fullSyncDatabase = try! self.getOrCreateFullSyncDatabase(databaseName)
             query = fullSyncDatabase!.getDatabase()!.createAllDocumentsQuery()
+            // Signal
+            syncMutex[0] = true
+            condition.signal()
         }
+        
+        // Waiting for signal
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        condition.unlock()
+        
         do {
             try C8oFullSyncCbl.addParametersToQuery(query!, parameters: parameters as Dictionary<String, AnyObject>)
         } catch let e as NSError {
@@ -470,16 +655,34 @@ class C8oFullSyncCbl: C8oFullSync {
         // Runs the query
         var result: CBLQueryEnumerator? = nil
         do {
+            // Lock
+            var syncMutex2: [Bool] = [Bool]()
+            syncMutex2.append(false)
+            let condition2: NSCondition = NSCondition()
+            condition2.lock()
+            
             var err: NSError? = nil
             (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
                 do {
                     result = try query!.run()
+                    // Signal
+                    syncMutex2[0] = true
+                    condition2.signal()
                 }
                 catch let e as NSError {
                     err = e
+                    // Signal
+                    syncMutex2[0] = true
+                    condition2.signal()
                 }
                 
             }
+            // Waiting for signal
+            if(!syncMutex2[0]){
+                condition2.wait()
+            }
+            condition2.unlock()
+            
             if (err != nil) {
                 throw err!
             }
@@ -491,19 +694,22 @@ class C8oFullSyncCbl: C8oFullSync {
     }
     
     func handleGetViewRequest(_ databaseName: String, ddocName: String?, viewName: String?, parameters: Dictionary<String, Any>) throws -> CBLQueryEnumerator? {
-        
+        // Lock
         var syncMutex: [Bool] = [Bool]()
         syncMutex.append(false)
         let condition: NSCondition = NSCondition()
         condition.lock()
         
+        // CBL Thread
         var fullSyncDatabase: C8oFullSyncDatabase? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             fullSyncDatabase = try! self.getOrCreateFullSyncDatabase(databaseName)
+            // Signal
             syncMutex[0] = true
             condition.signal()
         }
         
+        // Waiting for signal
         if(!syncMutex[0]){
             condition.wait()
         }
@@ -527,9 +733,14 @@ class C8oFullSyncCbl: C8oFullSync {
         do {
             try C8oFullSyncCbl.addParametersToQuery(query, parameters: parameters as Dictionary<String, AnyObject>)
         } catch {
-            // TODO...
             throw C8oException(message: C8oExceptionMessage.addparametersToQuery())
         }
+        
+        // Lock
+        var syncMutex2: [Bool] = [Bool]()
+        syncMutex2.append(false)
+        let condition2: NSCondition = NSCondition()
+        condition2.lock()
         
         // Runs the query
         var bool = false
@@ -537,11 +748,21 @@ class C8oFullSyncCbl: C8oFullSync {
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             do {
                 result = try query.run()
+                // Signal
+                syncMutex2[0] = true
+                condition2.signal()
             } catch {
-                // TODO...
                 bool = true
+                // Signal
+                syncMutex2[0] = true
+                condition2.signal()
             }
         }
+        // Waiting for signal
+        if(!syncMutex2[0]){
+            condition2.wait()
+        }
+        condition2.unlock()
         if (bool) {
             throw C8oException(message: C8oExceptionMessage.couchRequestGetView())
         }
@@ -549,36 +770,41 @@ class C8oFullSyncCbl: C8oFullSync {
     }
     
     func handleSyncRequest(_ databaseName: String, parameters: Dictionary<String, Any>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
-        
         let fullSyncDatabase: C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
-        
         try! fullSyncDatabase.startAllReplications(parameters, c8oResponseListener: c8oResponseListener)
-        
         return VoidResponse.getInstance()
     }
     
     func handleReplicatePullRequest(_ databaseName: String, parameters: Dictionary<String, Any>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
-        
         let fullSyncDatabase: C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
-        
         try! fullSyncDatabase.startPullReplication(parameters, c8oResponseListener: c8oResponseListener)
-        
         return VoidResponse.getInstance()
     }
     
     func handleReplicatePushRequest(_ databaseName: String, parameters: Dictionary<String, Any>, c8oResponseListener: C8oResponseListener) throws -> VoidResponse? {
-        
         let fullSyncDatabase: C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(databaseName)
-        
         try! fullSyncDatabase.startPushReplication(parameters, c8oResponseListener: c8oResponseListener)
-        
         return VoidResponse.getInstance()
     }
     
     func handleResetDatabaseRequest(_ databaseName: String) throws -> FullSyncDefaultResponse? {
+        // Lock
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
+        
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             _ = try self.handleDestroyDatabaseRequest(databaseName)
+            // Signal
+            syncMutex[0] = true
+            condition.signal()
         }
+        // Waiting for signal
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        
         return try handleCreateDatabaseRequest(databaseName)
     }
     
@@ -588,19 +814,32 @@ class C8oFullSyncCbl: C8oFullSync {
     }
     
     func handleDestroyDatabaseRequest(_ databaseName: String) throws -> FullSyncDefaultResponse? {
+        // Lock
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
+        
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             try self.getOrCreateFullSyncDatabase(databaseName).deleteDb()
+            // Signal
+            syncMutex[0] = true
+            condition.signal()
         }
-        
+        // Waiting for signal
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        condition.unlock()
         let localDatabaseName: String = databaseName + localSuffix!
         if let _ = fullSyncDatabases[localDatabaseName] {
             fullSyncDatabases.removeValue(forKey: localDatabaseName)
         }
-        
         return FullSyncDefaultResponse(operationStatus: true)
     }
     
     fileprivate func compileView (_ db: CBLDatabase, viewName: String, viewProps: Dictionary<String, NSObject>?) -> CBLView? {
+        
         var language: String? = viewProps!["language"] as? String
         if (language == nil) {
             language = "javascript"
@@ -610,12 +849,26 @@ class C8oFullSyncCbl: C8oFullSync {
             return nil
         }
         
+        // Lock
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
+        
         var mapBlock: CBLMapBlock? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             CBLRegisterJSViewCompiler()
             mapBlock = CBLView.compiler()?.compileMapFunction(mapSource!, language: language!)
+            // Signal
+            syncMutex[0] = true
+            condition.signal()
             
         }
+        // Waiting for signal
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        condition.unlock()
         
         if (mapBlock == nil) {
             return nil
@@ -626,42 +879,98 @@ class C8oFullSyncCbl: C8oFullSync {
         let reduceSource: String? = viewProps!["reduce"] as? String
         var reduceBlock: CBLReduceBlock? = nil
         if (reduceSource != nil) {
+            // Lock
+            var syncMutex2: [Bool] = [Bool]()
+            syncMutex2.append(false)
+            let condition2: NSCondition = NSCondition()
+            condition2.lock()
             (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
                 reduceBlock = CBLView.compiler()!.compileReduceFunction(reduceSource!, language: language!)
+                // Signal
+                syncMutex2[0] = true
+                condition2.signal()
             }
+            
+            // Waiting for signal
+            if(!syncMutex2[0]){
+                condition.wait()
+            }
+            condition2.unlock()
+            
             if (reduceBlock == nil) {
                 return nil
             }
             mapID = mapID + ":" + String(reduceSource!.hash)
         }
-        
+        // Lock
+        var syncMutex3: [Bool] = [Bool]()
+        syncMutex3.append(false)
+        let condition3: NSCondition = NSCondition()
+        condition3.lock()
         var view: CBLView?
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             view = db.viewNamed(viewName)
-            
             view!.setMapBlock(mapBlock!, reduce: reduceBlock, version: mapID)
             self.mapVersions[db.name + ":" + viewName] = mapID
+            // Signal
+            syncMutex3[0] = true
+            condition3.signal()
         }
+        // Waiting for signal
+        if(!syncMutex3[0]){
+            condition3.wait()
+        }
+        condition3.unlock()
+        
         let collation: String? = viewProps!["collation"] as? String
         if ("raw" == collation) {
-            // view.
-            // TODO....
+            // TODO
             fatalError("TODO ... collation not found for the moment within IOS")
         }
         return view
     }
     
     fileprivate func checkAndCreateJavaScriptView(_ database: CBLDatabase, ddocName: String, viewName: String) -> CBLView? {
+        // Lock
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
+        
         let tdViewName: String = ddocName + "/" + viewName
         var view: CBLView? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             view = database.existingViewNamed(tdViewName)
+            // Signal
+            syncMutex[0] = true
+            condition.signal()
         }
+        
+        // Waiting for signal
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        condition.unlock()
+        
+        // Lock
+        var syncMutex2: [Bool] = [Bool]()
+        syncMutex2.append(false)
+        let condition2: NSCondition = NSCondition()
+        condition2.lock()
         
         var rev: CBLRevision? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             rev = database.existingDocument(withID: String(format: "_design/%@", ddocName))?.currentRevision
+            // Signal
+            syncMutex2[0] = true
+            condition2.signal()
         }
+        
+        // Waiting for signal
+        if(!syncMutex2[0]){
+            condition2.wait()
+        }
+        condition2.unlock()
         
         if (rev == nil) {
             return nil
@@ -838,13 +1147,16 @@ class C8oFullSyncCbl: C8oFullSync {
     }
     
     func saveResponseToLocalCache(_ c8oCallRequestIdentifier: String, localCacheResponse: C8oLocalCacheResponse) throws {
-        
+        // Lock
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
+        var e: C8oException? = nil
         let fullSyncDatabase: C8oFullSyncDatabase = try! getOrCreateFullSyncDatabase(C8o.LOCAL_CACHE_DATABASE_NAME)
-        
         var localCacheDocument: CBLDocument? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             localCacheDocument = fullSyncDatabase.getDatabase()?.document(withID: c8oCallRequestIdentifier)
-            // }
             var properties: Dictionary<String, NSObject> = Dictionary<String, NSObject>()
             properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE] = localCacheResponse.getResponse() as NSObject
             properties[C8o.LOCAL_CACHE_DOCUMENT_KEY_RESPONSE_TYPE] = localCacheResponse.getResponseType() as NSObject
@@ -855,18 +1167,28 @@ class C8oFullSyncCbl: C8oFullSync {
             if (currentRevision != nil) {
                 properties[C8oFullSyncCbl.FULL_SYNC__REV] = currentRevision?.revisionID! as NSObject?
             }
-            
-            // do {
-            // (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             do {
                 try localCacheDocument!.putProperties(properties)
+                // Signal
+                syncMutex[0] = true
+                condition.signal()
             } catch {
-                
+                e = C8oException(message: "Can't save response to local cache")
+                // Signal
+                syncMutex[0] = true
+                condition.signal()
             }
         }
-        /*} catch {
-         throw C8oException(message: "TODO")
-         }*/
+        
+        // Waiting for signal
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        condition.unlock()
+        
+        if(e != nil){
+            throw e!
+        }
     }
     
     internal override func addFullSyncChangeListener(_ db: String?, listener: C8oFullSyncChangeListener) throws {
@@ -921,3 +1243,4 @@ class C8oFullSyncCbl: C8oFullSync {
         }
     }
 }
+
