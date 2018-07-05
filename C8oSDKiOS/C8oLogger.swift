@@ -184,7 +184,7 @@ import AEXML
         condition.lock()
         
         // If there is no another thread already logging AND there is at least one log
-        canLog = !alreadyRemoteLogging![0] && remoteLogs!.Count() > 0
+        canLog = !alreadyRemoteLogging![0] && remoteLogs!.count > 0
         if (canLog) {
             alreadyRemoteLogging![0] = true
         }
@@ -197,7 +197,7 @@ import AEXML
                 
                 // Take logs in the queue and add it to a json array
                 var count: Int = 0
-                let listSize: Int = self.remoteLogs!.Count()
+                let listSize: Int = self.remoteLogs!.count
                 var logsArray = Array<JSON>()
                 
                 while (count < listSize && count < C8oLogger.REMOTE_LOG_LIMIT) {
