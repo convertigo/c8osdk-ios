@@ -44,7 +44,6 @@
 		62EDE91F1C76141500D9213F /* C8oResponseProgressListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE91E1C76141500D9213F /* C8oResponseProgressListener.swift */; };
 		62EDE9211C76149A00D9213F /* C8oResponseXmlListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9201C76149A00D9213F /* C8oResponseXmlListener.swift */; };
 		62EDE9231C76153000D9213F /* C8oSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9221C76153000D9213F /* C8oSettings.swift */; };
-		62EDE9251C761BF700D9213F /* Delegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9241C761BF700D9213F /* Delegates.swift */; };
 		62EDE9271C761D7500D9213F /* Exceptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9261C761D7500D9213F /* Exceptions.swift */; };
 		62EDE92A1C76239000D9213F /* C8oCallTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE9291C76239000D9213F /* C8oCallTask.swift */; };
 		62EDE92D1C762EE500D9213F /* C8oExceptionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EDE92C1C762EE500D9213F /* C8oExceptionMessage.swift */; };
@@ -114,7 +113,6 @@
 		62EDE91E1C76141500D9213F /* C8oResponseProgressListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oResponseProgressListener.swift; sourceTree = "<group>"; };
 		62EDE9201C76149A00D9213F /* C8oResponseXmlListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oResponseXmlListener.swift; sourceTree = "<group>"; };
 		62EDE9221C76153000D9213F /* C8oSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oSettings.swift; sourceTree = "<group>"; };
-		62EDE9241C761BF700D9213F /* Delegates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Delegates.swift; sourceTree = "<group>"; };
 		62EDE9261C761D7500D9213F /* Exceptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Exceptions.swift; sourceTree = "<group>"; };
 		62EDE9291C76239000D9213F /* C8oCallTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oCallTask.swift; sourceTree = "<group>"; };
 		62EDE92C1C762EE500D9213F /* C8oExceptionMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = C8oExceptionMessage.swift; sourceTree = "<group>"; };
@@ -208,7 +206,6 @@
 				62EDE91E1C76141500D9213F /* C8oResponseProgressListener.swift */,
 				62EDE9201C76149A00D9213F /* C8oResponseXmlListener.swift */,
 				62EDE9221C76153000D9213F /* C8oSettings.swift */,
-				62EDE9241C761BF700D9213F /* Delegates.swift */,
 				62EDE9261C761D7500D9213F /* Exceptions.swift */,
 				62EDE9161C75FF3700D9213F /* C8oPromiseSync.swift */,
 				62EDE9181C75FF5100D9213F /* C8oPromiseFailSync.swift */,
@@ -484,7 +481,6 @@
 				62EDE91D1C7613E500D9213F /* C8oResponseListener.swift in Sources */,
 				62EDE9131C75F99800D9213F /* C8oPromise.swift in Sources */,
 				62EDE92D1C762EE500D9213F /* C8oExceptionMessage.swift in Sources */,
-				62EDE9251C761BF700D9213F /* Delegates.swift in Sources */,
 				62EDE9191C75FF5100D9213F /* C8oPromiseFailSync.swift in Sources */,
 				62EDE91B1C76114B00D9213F /* C8oResponseJsonListener.swift in Sources */,
 				62314C6D1D36894D00F200B8 /* C8oFileTransferBase.swift in Sources */,

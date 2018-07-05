@@ -252,12 +252,6 @@ open class C8oFullSyncDatabase: NSObject {
         }
     }
     
-    func replicationProgress(_ n: Notification) {
-        
-        // fullSyncReplication.changeListener
-        // let active = pullFullSyncReplication?.replication?.status == CBLReplicationStatus.Active || pushFullSyncReplication?.replication?.status == CBLReplicationStatus.Active
-    }
-    
     open func getDatabaseName() -> String { return self.databaseName }
     
     open func getDatabase() -> CBLDatabase? { return self.database }
