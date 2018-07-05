@@ -24,6 +24,7 @@ class C8oFullSyncCbl: C8oFullSync {
     internal static var th: Thread? = nil
     fileprivate var block: Queue<() throws ->()> = Queue<()throws ->()>()
     internal var errorFs: [NSError] = [NSError]()
+    fileprivate let serialQueue = DispatchQueue(label: "accessBlock")
     
     internal override init(c8o: C8o) {
         fullSyncDatabases = Dictionary<String, C8oFullSyncDatabase>()
@@ -46,12 +47,37 @@ class C8oFullSyncCbl: C8oFullSync {
         }
     }
     internal func performOnCblThread(_ block: @escaping () throws ->()) {
-        self.block.enqueue(block)
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
+        serialQueue.sync {
+            self.block.enqueue(block)
+            syncMutex[0] = true
+            condition.signal()
+        }
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        condition.unlock()
         self.perform(#selector(C8oFullSyncCbl.doBlock), on: C8oFullSyncCbl.th!, with: errorFs, waitUntilDone: true)
     }
     
     @objc fileprivate func doBlock() throws {
-        let block = self.block.dequeue();
+        var block : AnyObject? = nil;
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
+        serialQueue.sync {
+            block = self.block.dequeue() as AnyObject;
+            syncMutex[0] = true
+            condition.signal()
+        }
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        condition.unlock()
         if block != nil{
             try (block as! () throws ->())()
         }
@@ -466,10 +492,22 @@ class C8oFullSyncCbl: C8oFullSync {
     
     func handleGetViewRequest(_ databaseName: String, ddocName: String?, viewName: String?, parameters: Dictionary<String, Any>) throws -> CBLQueryEnumerator? {
         
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
+        
         var fullSyncDatabase: C8oFullSyncDatabase? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             fullSyncDatabase = try! self.getOrCreateFullSyncDatabase(databaseName)
+            syncMutex[0] = true
+            condition.signal()
         }
+        
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        condition.unlock()
         
         // Gets the view depending to its programming language (Javascript / Java)
         let view: CBLView?
@@ -878,7 +916,7 @@ class C8oFullSyncCbl: C8oFullSync {
             listeners.remove(listener)
             if (listeners.isEmpty) {
                 let db = try getOrCreateFullSyncDatabase(_db!).getDatabase()
-                NotificationCenter.default.removeObserver(db, name: NSNotification.Name.cblDatabaseChange, object: nil)
+                NotificationCenter.default.removeObserver(db as Any, name: NSNotification.Name.cblDatabaseChange, object: nil)
             }
         }
     }
