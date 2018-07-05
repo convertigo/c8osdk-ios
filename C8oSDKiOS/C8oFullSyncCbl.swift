@@ -466,10 +466,22 @@ class C8oFullSyncCbl: C8oFullSync {
     
     func handleGetViewRequest(_ databaseName: String, ddocName: String?, viewName: String?, parameters: Dictionary<String, Any>) throws -> CBLQueryEnumerator? {
         
+        var syncMutex: [Bool] = [Bool]()
+        syncMutex.append(false)
+        let condition: NSCondition = NSCondition()
+        condition.lock()
+        
         var fullSyncDatabase: C8oFullSyncDatabase? = nil
         (c8o!.c8oFullSync as! C8oFullSyncCbl).performOnCblThread {
             fullSyncDatabase = try! self.getOrCreateFullSyncDatabase(databaseName)
+            syncMutex[0] = true
+            condition.signal()
         }
+        
+        if(!syncMutex[0]){
+            condition.wait()
+        }
+        condition.unlock()
         
         // Gets the view depending to its programming language (Javascript / Java)
         let view: CBLView?
