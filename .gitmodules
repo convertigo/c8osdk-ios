@@ -7,3 +7,6 @@
 [submodule "Pods/SwiftyJSON"]
 	path = Pods/SwiftyJSON
 	url = https://github.com/SwiftyJSON/SwiftyJSON
+[submodule "Pods/couchbase-lite-ios"]
+	path = Pods/couchbase-lite-ios
+	url = https://github.com/convertigo/couchbase-lite-ios
