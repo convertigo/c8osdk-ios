@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
     s.swift_version = '4.1'
     s.dependency 'SwiftyJSON', '4.1.0'
     s.dependency 'Alamofire', '4.7.2'
-    s.dependency 'AEXML', '4.2.2'
+    s.dependency 'AEXML', '4.3.0'
     s.dependency 'couchbase-lite-ios', '1.4.1'
     s.dependency 'couchbase-lite-ios/ForestDB', '1.4.1'
 end
