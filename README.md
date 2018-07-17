@@ -66,6 +66,8 @@ And there you go !
 
 ## Documentation ##
 
+Full documentation is available [here](https://www.convertigo.com/document/all/cmp-7/7-5-1/reference-manual/convertigo-mbaas-server/convertigo-client-sdk/programming-guide/)
+
 ### Initializing a Convertigo Enpoint ###
 
 For the .NET SDK, there is a common static initialization to be done before using the SDK feature. It prepares some platform specific features. After that, you will be able to create and use the C8o instance to interact with the Convertigo server and the Client SDK features. A C8o instance is linked to a server through is endpoint and cannot be changed after.  
@@ -123,7 +125,7 @@ Just use the `c8o.callJson` method to request a JSON response.
 	import SwiftyJSON
 
 	// c8o is a C8o instance
-	let jObject : JSON = try! c8o.callJson(".getSimpleData")!.sync()!
+	let jObject : JSON = try! c8o.callJson(".getSimpleData").sync()!
 
 	// You now have JSON object that you can use in your app!
 
