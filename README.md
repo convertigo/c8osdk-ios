@@ -13,10 +13,12 @@
 
 - [TOC](#toc)
 - [Introduction](#introduction)
+	- [About SDKs](#about-sdks)
+	- [About Convertigo Platform](#about-convertigo-platform)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Documentation](#documentation)
-	- [Initializing a Convertigo Enpoint](#initializing-a-convertigo-enpoint)
+	- [Initializing a Convertigo Endpoint](#initializing-a-convertigo-endpoint)
 	- [Advanced instance settings](#advanced-instance-settings)
 	- [Calling a Convertigo Requestable](#calling-a-convertigo-requestable)
 	- [Call parameters](#call-parameters)
@@ -26,6 +28,9 @@
 - [Building c8osdk-ios](#building-c8osdk-ios)
 
 ## Introduction ##
+
+### About SDKs ###
+
 This is the Convertigo library for native swift iOS
 
 Convertigo Client SDK is a set of libraries used by mobile or Windows desktop applications to access Convertigo Server services. An application using the SDK can easily access Convertigo services such as Sequences and Transactions.
@@ -38,16 +43,33 @@ Client SDK is available for:
 * [React Native](https://github.com/convertigo/react-native-c8osdk) as a NPM package
 * [Google Angular framework](https://github.com/convertigo/c8osdk-angular) as typescript an NPM package
 * [Vue.js](https://github.com/convertigo/c8osdk-js), [ReactJS](https://github.com/convertigo/c8osdk-js), [AngularJS](https://github.com/convertigo/c8osdk-js) Framework, or any [Javascript](https://github.com/convertigo/c8osdk-js) project as a standard Javascript NPM package
-* Windows desktop or Xamarin apps as Nugets or Xamarin Components
+* [Windows desktop](https://github.com/convertigo/c8osdk-dotnet) or [Xamarin apps](https://github.com/convertigo/c8osdk-dotnet) as Nugets or Xamarin Components
 
 
-This current package is the Native iOS SDK. For others SDKs see official Convertigo Documentation.
+This current package is the Native iOS SDK. For others SDKs see official [Convertigo Documentation.](https://www.convertigo.com/document/all/cmp-7/7-5-1/reference-manual/convertigo-mbaas-server/convertigo-client-sdk/programming-guide/)
+
+### About Convertigo Platform ###
+
+Convertigo Mobility Platform supports native iOS developers. Services brought by the platform are available for iOS clients applications thanks to the Convertigo MBaaS SDK. SDK provides an iOS framework you can use to access Convertigo Server’s services such as:
+
+- Connectors to back-end data (SQL, NoSQL, REST/SOAP, SAP, - WEB HTML, AS/400, Mainframes)
+- Server Side Business Logic (Protocol transform, Business logic augmentation, ...)
+- Automatic offline replicated databases with FullSync technology
+- Security and access control (Identity managers, LDAP , SAML, oAuth)
+- Server side Cache
+- Push notifications (APND, GCM)
+- Auditing Analytics and logs (SQL, and Google Analytics)
+
+[Convertigo Technology Overview](http://download.convertigo.com/webrepository/Marketing/ConvertigoTechnologyOverview.pdf)
+
+[Access Convertigo mBaaS technical documentation](http://www.convertigo.com/document/latest/)
+
+[Access Convertigo SDK Documentations](https://www.convertigo.com/document/all/cmp-7/7-5-1/reference-manual/convertigo-mbaas-server/convertigo-client-sdk/)
 
 ## Requirements ##
 
 * Cocoapods >= 1.5.3
 * Xcode >= 9.4
-
 
 ## Installation ##
 Create a PodFile with :
@@ -72,9 +94,9 @@ And there you go !
 
 Full documentation is available [here](https://www.convertigo.com/document/all/cmp-7/7-5-1/reference-manual/convertigo-mbaas-server/convertigo-client-sdk/programming-guide/)
 
-### Initializing a Convertigo Enpoint ###
+### Initializing a Convertigo Endpoint ###
 
-For the .NET SDK, there is a common static initialization to be done before using the SDK feature. It prepares some platform specific features. After that, you will be able to create and use the C8o instance to interact with the Convertigo server and the Client SDK features. A C8o instance is linked to a server through is endpoint and cannot be changed after.  
+
 You can have as many C8o instance,pointing to a same or different endpoint. Each instance handles its own session and settings. We strongly recommend using a single C8o instance per application because server licensing can based on the number of sessions used.
 
 ```swift
@@ -179,7 +201,7 @@ let JSONObject : JSON = try! c8o.callJson(".getSimpleData", parameters: paramete
 
 Maybe you noticed that the calls methods doesn’t return the result directly and that all the sample code chains to the `.sync()` method.  
 This is because the call methods return a `C8oPromise` instance. That allows the developer to choose if he wants to block the current thread, make an async request or get the response in a callback.  
-The `.sync()` method locks the current thread and return the result as soon as it’s avalaible. Of course this should not be used in a UI thread as this will result to a frozen UI untill data is returned by the server. You should use the `.sync()` method only in worker threads.  
+The `.sync()` method locks the current thread and return the result as soon as it’s available. Of course this should not be used in a UI thread as this will result to a frozen UI until data is returned by the server. You should use the `.sync()` method only in worker threads.  
 
 ```swift
 // lock the current thread while the request is done
@@ -256,7 +278,7 @@ c8o.callJson(".getSimpleData", parameters: "callNumber", 1)?.then({ (jObject, pa
 })?.thenUI({ (response, parameters) -> (C8oPromise?) in
 	return nil
 })?.fail({ (exception, parameters) in
-	// exception catched from the first or the second CallJson, can be an Exception
+	// exception caught from the first or the second CallJson, can be an Exception
 	// this code runs in a worker thread
 	//...
 })
@@ -266,7 +288,7 @@ c8o.callJson(".getSimpleData", parameters: "callNumber", 1)?.then({ (jObject, pa
 })?.thenUI({ (jObject, parameters) -> (C8oPromise?) in
 	return nil
 })?.failUI({ (exception, parameters) in
-	// exception catched from the first or the second CallJson, can be an Exception
+	// exception caught from the first or the second CallJson, can be an Exception
 	// this code runs in a UI thread
 	//...
 })
