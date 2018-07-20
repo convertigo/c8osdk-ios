@@ -201,7 +201,7 @@ open class C8o: C8oBase {
         self.c8oLogger = C8oLogger(c8o: self)
         self.c8oLogger!.logMethodCall("C8o constructor")
         self.c8oFullSync = C8oFullSyncCbl(c8o: self)
-        self.handleFullSyncLive = C8oFullSyncChangeListener(handler: {(changes: JSON) -> () in
+        self.handleFullSyncLive = C8oFullSyncChangeListener(handler: {(changes: AnyObject) -> () in
             for task in self.lives.values {
                 task.executeFromLive()
             }
@@ -632,7 +632,7 @@ open class C8o: C8oBase {
      @param db the name of the fullsync database to monitor. Use the default database for a blank or a null value.
      @param listener the listener to trigger on change.
      */
-    open func addFullSyncChangeListener(_ db: String, listener: C8oFullSyncChangeListener) throws {
+    @objc open func addFullSyncChangeListener(_ db: String, listener: C8oFullSyncChangeListener) throws {
         try c8oFullSync!.addFullSyncChangeListener(db, listener: listener)
     }
     

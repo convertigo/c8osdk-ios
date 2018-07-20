@@ -1873,9 +1873,9 @@ class C8oSDKiOSTests: XCTestCase {
         var lastChanges: JSON? = nil
         let _lastChanges = NSCondition()
         
-        let changeListener = C8oFullSyncChangeListener(handler: {(changes: JSON) -> () in
+        let changeListener = C8oFullSyncChangeListener(handler: {(changes: NSDictionary) -> () in
             _lastChanges.lock()
-            lastChanges = changes
+            lastChanges = JSON(changes)
             _lastChanges.signal()
             _lastChanges.unlock()
         })
