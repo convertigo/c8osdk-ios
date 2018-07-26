@@ -264,7 +264,7 @@ class C8oSDKiOSTests: XCTestCase {
             let c8o = try! get(.c8O)
 		var json = try c8o.callJson(".JsonTypes",
 			parameters: "var1", "value one",
-			"mvar1", ["mvalue one", "mvalue two", "mvalue three"]
+			"mvar1", ["mvalue one", "mvalue two", "mvalue three", "2+2+4"]
 		).sync()
         
 		json = json!["document"]
@@ -278,8 +278,10 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertEqual("mvalue two", value as! String)
 		value = mvar1[2].string!
 		XCTAssertEqual("mvalue three", value as! String)
+        value = mvar1[3].string!
+        XCTAssertEqual("2+2+4", value as! String)
 		let count = mvar1.count
-		XCTAssertEqual(3, count)
+		XCTAssertEqual(4, count)
 		let complex = json!["complex"]
 		//let isnil: AnyObject? = complex["isNull"].string as AnyObject
 		let exist = complex["isNull"].exists()
