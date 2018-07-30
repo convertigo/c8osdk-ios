@@ -52,9 +52,19 @@ internal class FullSyncRequestable {
         // Gets the attachment content_type parameter
         let contentType: String? = C8oUtils.getParameterStringValue(parameters, name: FullSyncAttachmentParameter.CONTENT_TYPE.name, useName: false)
         
+        
         // Gets the attachment content parameter
-        let a = C8oUtils.getParameterObjectValue(parameters, name: FullSyncAttachmentParameter.CONTENT.name, useName: false)
-        let content: Data? = C8oUtils.getParameterObjectValue(parameters, name: FullSyncAttachmentParameter.CONTENT.name, useName: false) as! Data?
+        let content: Data?
+        let any: Any? = C8oUtils.getParameterObjectValue(parameters, name: FullSyncAttachmentParameter.CONTENT.name, useName: false)
+        if any as? Data? != nil{
+            content = any as! Data?
+        }
+        else if any as? String != nil {
+            content = Data(base64Encoded: any as! String, options: .ignoreUnknownCharacters)
+        }
+        else{
+            throw C8oException(message: "Invalid argument given for put_attachment")
+        }
         
         return try c8oFullSync.handlePutAttachmentRequest(databaseName, docid: docid!, attachmentName: name!, attachmentType: contentType!, attachmentContent: content!)
     }

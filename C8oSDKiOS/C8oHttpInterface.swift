@@ -115,12 +115,12 @@ internal class C8oHttpInterface {
 			for parameter in parameters! {
 				if let downcastStrings = parameter.1 as? [String] {
 					for item in downcastStrings {
-                        postData += String(parameter.0).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
-                            + "=" + String(item).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)! + "&"
+                        postData += String(parameter.0).addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: ""))!
+                            + "=" + String(item).addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: ""))! + "&"
 					}
 				} else {
-					postData += String(parameter.0).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)!
-                        + "=" + String(describing: parameter.1).addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)! + "&"
+					postData += String(parameter.0).addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: ""))!
+                        + "=" + String(describing: parameter.1).addingPercentEncoding(withAllowedCharacters: CharacterSet(charactersIn: ""))! + "&"
 				}
 				
 			}
