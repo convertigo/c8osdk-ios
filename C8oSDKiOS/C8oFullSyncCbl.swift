@@ -1218,7 +1218,7 @@ class C8oFullSyncCbl: C8oFullSync {
                 }
                 changes["changes"] = JSON(docs)
                 for handler in self.fullSyncChangeListeners[_db!]! {
-                    handler.handler(changes)
+                    handler.handler(changes.dictionaryObject as! NSDictionary)
                 }
             }
             NotificationCenter.default.addObserver(forName: NSNotification.Name.cblDatabaseChange, object: try getOrCreateFullSyncDatabase(_db!).getDatabase(), queue: nil, using: evtHandler)

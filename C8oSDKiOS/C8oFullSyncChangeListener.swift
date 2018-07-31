@@ -9,24 +9,16 @@
 import Foundation
 import SwiftyJSON
 
-open class C8oFullSyncChangeListener : Hashable {
+@objc open class C8oFullSyncChangeListener : NSObject {
     fileprivate static var c = 0
     fileprivate let i = c
     
-    let handler: (_ changes: JSON) -> ()
+    @objc let handler: (_ changes: NSDictionary) -> ()
     
-    public init(handler: @escaping (_ changes: JSON) -> ()) {
+    @objc public init(handler: @escaping (_ changes: NSDictionary) -> ()) {
         C8oFullSyncChangeListener.c = C8oFullSyncChangeListener.c + 1
         self.handler = handler
     }
     
-    open var hashValue: Int {
-        get {
-            return i
-        }
-    }
 }
 
-public func ==(lhs: C8oFullSyncChangeListener, rhs: C8oFullSyncChangeListener) -> Bool {
-    return lhs.hashValue == rhs.hashValue
-}
