@@ -29,6 +29,11 @@
 		- [Basic](#basic)
 		- [Advanced](#advanced)
 	- [Using the Local Cache](#using-the-local-cache)
+	- [Using the Full Sync](#using-the-full-sync)
+	- [Replicating Full Sync databases](#replicating-full-sync-databases)
+	- [Replicating Full Sync databases with continuous flag](#replicating-full-sync-databases-with-continuous-flag)
+	- [Full Sync FS_LIVE requests](#full-sync-fs_live-requests)
+	- [Full Sync Change Listener](#full-sync-change-listener)
 - [Building c8osdk-ios](#building-c8osdk-ios)
 
 ## Introduction ##
@@ -387,6 +392,148 @@ try! c8o.callJson(".getSimpleData",
 )!.sync()
 ```
 
+### Using the Full Sync ###
+Full Sync enables mobile apps to handle fully disconnected scenarios, still having data handled and controlled by back end business logic. See the presentation of the Full Sync architecture for more details.
+
+Convertigo Client SDK provides a high level access to local data following the standard Convertigo Sequence paradigm. They differ from standard sequences by a fs:// prefix. Calling these local Full Sync requestable will enable the app to read, write, query and delete data from the local database:
+
+* fs://<database>.create creates the local database if not already exist
+* fs://<database>.view queries a view from the local database
+* fs://<database>.get reads an object from the local database
+* fs://<database>.post writes/update an object to the local database
+* fs://<database>.delete deletes an object from the local database
+* fs://<database>.all gets all objects from the local database
+* fs://<database>.sync synchronizes with server database
+* fs://<database>.replicate_push pushes local modifications on the database server
+* fs://<database>.replicate_pull gets all database server modifications
+* fs://<database>.reset resets a database by removing all the data in it
+* fs://<database>.put_attachment Puts (add) an attachment to a document in the database
+* fs://<database>.get_attachment Gets an attachment from a document
+
+Where fs://<database> is the name of a specific FullSync Connector in the project specified in the endpoint. The fs://<database> name is optional only if the default database name is specified with the method setDefaultDatabaseName on the C8oSetting.
+
+An application can have many databases. On mobile (Android, iOS and Xamarin based) they are stored in the secure storage of the application. On Windows desktop application, they are stored in the user AppData/Local folder, without application isolation.
+
+All platforms can specify a local database prefix that allows many local database copies of the same remote database. Use the method setFullSyncLocalSuffix on the C8oSetting.
+
+```swift
+c8o.callJson("fs://base.reset")?.then({ (json, parameters) -> (C8oPromise?) in
+    // json content:
+    // { "ok": true }
+    return c8o.callJson("fs://base.post", // creates a new document on "base", with 2 key/value pairs
+        parameters: "firstname", "John",
+        "lastname", "Doe"
+    )
+})?.then({ (json, parameters) -> (C8oPromise?) in
+    // json content:
+    // {
+    //   "ok": true,
+    //   "id": "6f1b52df",
+    //   "rev": "1-b0620371"
+    // }
+    return c8o.callJson("fs://base.get",
+        parameters: "docid", json["id"].stringValue) // retrieves the complet document from its "docid"
+})?.then({ (json, parameters) -> (C8oPromise?) in
+    // json content:
+    // {
+    //   "lastname": "Doe",
+    //   "rev": "1-b0620371",
+    //   "firstname": "John",
+    //   "_id": "6f1b52df"
+    // }
+    c8o.log.info(json.stringValue) // output the document in the log
+    return nil
+})
+```
+
+### Replicating Full Sync databases
+FullSync has the ability to replicate mobile and Convertigo server databases over unreliable connections still preserving integrity. Data can be replicated in upload or download or both directions. The replication can also be continuous: a new document is instantaneously replicated to the other side.
+
+The client SDK offers the progress event to monitor the replication progression thanks to a C8oProgress instance.
+
+A device cannot pull private documents or push any document without authentication. A session must be established before and the Convertigo server must authenticate the session (using the Set authenticated user step for example).
+
+```swift
+// Assuming c8o is a C8o instance properly instanciated and initiated as describe above.
+
+c8o.callJson(".login")?.then({ (json, parameters) -> (C8oPromise?) in  	if(json == "ok"){
+		// replication_pull can also be sync or replication_push
+		c8o.callJson("fs://base.replication_pull")?.then({ (json, parameters) -> (C8oPromise?) in  // launches a database replication from the server to the device
+			// json content:
+			// { "ok": true }
+			// the documents are retrieved from the server and can be used
+			return nil
+			
+		})?.progress({ (progress) in
+			// this code runs after each progression event
+			// progress.Total is calculated and grows up then progress.Current increases to the total
+			c8o.log.info("progress: " + progress.description)
+		})
+	}
+	return nil
+})
+```
+
+### Replicating Full Sync databases with continuous flag ###
+As mentioned above, a replication can also be continuous: a new document is instantaneously replicated to the other side.
+
+Progress will be called at each entering replication during the all life of the application until that you explicitly cancel that one
+
+```swift
+c8o.callJson("fs://base.replication_pull", "continuous", true)?.then({ (json, parameters) -> (C8oPromise?) in  // launches a database replication from the server to the device
+			// json content:
+			// { "ok": true }
+			// the documents are retrieved from the server and can be used
+			return nil
+			
+		})?.progress({ (progress) in
+			// this code runs after each progression event
+			// progress.Total is calculated and grows up then progress.Current increases to the total
+			c8o.log.info("progress: " + progress.description)
+		})
+```
+
+### Full Sync FS_LIVE requests
+
+Full Sync has the ability to re-execute your fs:// calls if the database is modified. The then or thenUI following a FS_LIVE parameter is re-executed after each database update. Database update can be local modification or remote modification replicated.
+
+This allow you keep your UI synchronized with database documents.
+
+A FS_LIVE parameter must have a string value, its liveid. The liveid allow to cancel a FS_LIVE request.
+
+```swift
+c8o.callJson("fs://.view",
+    parameters: "ddoc", "design",
+    "view", "customers",
+    C8O.FS_LIVE, "customers")?.thenUI({ (json, parameters) -> (C8oPromise?) in  // launches a live view
+    // will be call now and after each database update
+    updateCustomersUI(json)
+  return nil
+})?
+…
+// cancel the previous FS_LIVE request, can be on application page change for example
+c8o.cancelLive("customers")	
+```
+
+
+### Full Sync Change Listener ###
+
+Full Sync has also the ability to notify your if there is any change on the database. The progress following a FS_LIVE parameter is triggered  after each database update. The changes contains the origin of the change, and other attributes :
+* isExternal
+* isCurrentRevision
+* isConflict
+* id
+* revisionId
+
+```swift
+let changeListener = C8oFullSyncChangeListener(handler: {(changes: JSON) -> () in
+    checkChanges(changes)
+})
+…
+c8o.addFullSyncChangeListener("base", changeListener) // add this listener for the database "base" ; null or "" while use the default database.
+…
+c8o.removeFullSyncChangeListener("base", changeListener) // remove this listener for the database "base" ; null or "" while use the default database.
+```
 
 ## Building c8osdk-ios ##
 
