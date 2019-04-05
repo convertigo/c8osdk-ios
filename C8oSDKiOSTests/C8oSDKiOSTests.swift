@@ -11,18 +11,18 @@ import Foundation
 import SwiftyJSON
 import Alamofire
 import AEXML
-import CouchbaseLite
 
 @testable import C8o
 
 class C8oSDKiOSTests: XCTestCase {
 	
 	var myC8o: C8o!
-	let HOST =  "c8o-dev.convertigo.net" //"buildus.twinsoft.fr"// "192.168.100.95"
+	let HOST =  "c8o-dev.convertigo.net" //"nicolasa.convertigo.net"//"buildus.twinsoft.fr"// "192.168.100.95"
 	let PROJECT_PATH = "/cems/projects/ClientSDKtesting"//"/convertigo/projects/ClientSDKtesting"
-	let PORT = ":80" //":28080" // 18080
+    let PORT = ":80" //":28080" // 18080
 	let PREFIX = "http://"
 	let PREFIXS = "https://"
+    let semaphore = DispatchSemaphore(value: 1)
     
 	
 	enum Stuff {
@@ -319,35 +319,48 @@ class C8oSDKiOSTests: XCTestCase {
 	}
 	
 	func CheckLogRemoteHelper(c8o: C8o, lvl: String, msg: String) throws -> () {
-		Thread.sleep(forTimeInterval: 0.333)
-		let doc: AEXMLDocument = try! c8o.callXml(".GetLogs").sync()!
-		let sLine = doc.root["line"].string
-		XCTAssertTrue(!sLine.isEmpty, "[" + lvl + "] sLine='" + sLine + "'")
-		let line = try! JSON(data: sLine.data(using: String.Encoding.utf8)!)
-		XCTAssertEqual(lvl, line[2].string)
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) { // Change `2.0` to the desired number of seconds.
+            // Code you want to be delayed
+            let doc: AEXMLDocument = try! c8o.callXml(".GetLogs").sync()!
+            let sLine = doc.root["line"].string
+            XCTAssertTrue(!sLine.isEmpty, "[" + lvl + "] sLine='" + sLine + "'")
+            let line = try! JSON(data: sLine.data(using: String.Encoding.utf8)!)
+            XCTAssertEqual(lvl, line[2].string)
+            self.semaphore.signal()
+        }
+		
 	}
 	
 	func testCheckLogRemote() {
-		let c8o = try! C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH)
+        let c8osettings = C8oSettings().setLogLevelLocal(C8oLogLevel.trace).setLogRemote(true)
+        let c8o = try! C8o(endpoint: PREFIX + HOST + PORT + PROJECT_PATH,c8oSettings: c8osettings)
+        
 		c8o.logC8o = false
 		let id = "logID=" + String(NSTimeIntervalSince1970)
 		_ = try! c8o.callXml(".GetLogs", parameters: "init", id).sync()!
-		Thread.sleep(forTimeInterval: 0.333)
+        semaphore.wait()
 		c8o.log.error(id)
 		try! CheckLogRemoteHelper(c8o: c8o, lvl: "ERROR", msg: id)
+        semaphore.wait()
 		c8o.log.error(id, exceptions: C8oException(message: "for test"))
 		try! CheckLogRemoteHelper(c8o: c8o, lvl: "ERROR", msg: (id + "\nOptional(Optional(Error Domain=com.convertigo.clientsdk.exception.C8oException Code=1 \"for test\" UserInfo={NSLocalizedFailureReason=for test}))"))
-		c8o.log.warn(id)
+		semaphore.wait()
+        c8o.log.warn(id)
 		try! CheckLogRemoteHelper(c8o: c8o, lvl: "WARN", msg: id)
-		c8o.log.info(id)
+		semaphore.wait()
+        c8o.log.info(id)
 		try! CheckLogRemoteHelper(c8o: c8o, lvl: "INFO", msg: id)
-		c8o.log.debug(id)
+		semaphore.wait()
+        c8o.log.debug(id)
 		try! CheckLogRemoteHelper(c8o: c8o, lvl: "DEBUG", msg: id)
-		c8o.log.trace(id)
+		semaphore.wait()
+        c8o.log.trace(id)
 		try! CheckLogRemoteHelper(c8o: c8o, lvl: "TRACE", msg: id)
-		c8o.log.fatal(id)
+		semaphore.wait()
+        c8o.log.fatal(id)
 		try! CheckLogRemoteHelper(c8o: c8o, lvl: "FATAL", msg: id)
-		c8o.logRemote = false
+		semaphore.wait()
+        c8o.logRemote = false
 		c8o.log.info(id)
 		Thread.sleep(forTimeInterval: 0.333)
 		let doc = try! c8o.callXml(".GetLogs").sync()
@@ -1225,13 +1238,16 @@ class C8oSDKiOSTests: XCTestCase {
 			try! json = c8o.callJson(".LoginTesting").sync()!
 			value = json["document"]["authenticatedUserID"].string!
 			XCTAssertEqual("testing_user", value)
-			json = try! c8o.callJson("fs://.replicate_pull").sync()!
+			json = try c8o.callJson("fs://.replicate_pull").sync()!
 			XCTAssertTrue(json["ok"].boolValue)
-			json = try! c8o.callJson("fs://.get", parameters: "docid", "456").sync()!
+			json = try c8o.callJson("fs://.get", parameters: "docid", "456").sync()!
 			value = json["data"].string!
 			XCTAssertEqual("456", value)
 			
 		}
+        catch {
+            XCTFail()
+        }
 		
 		_ = try! c8o.callJson(".LogoutTesting").sync()
 	}
@@ -1660,7 +1676,7 @@ class C8oSDKiOSTests: XCTestCase {
 		
 	}
     
-    func testCBLAlone() {
+    /*func testCBLAlone() {
     do {
         let manager = CBLManager()
         let options = CBLDatabaseOptions()
@@ -1677,7 +1693,7 @@ class C8oSDKiOSTests: XCTestCase {
         print(e)
     }
         
-    }
+    }*/
 	
 	func testC8oFsReplicateSyncContinuousProgress() {
 		

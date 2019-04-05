@@ -1,4 +1,4 @@
-platform :ios, '8.0'
+platform :ios, '10.0'
 
 target 'C8oSDKiOS' do
   use_frameworks!
@@ -8,12 +8,14 @@ target 'C8oSDKiOS' do
   pod 'AEXML', '4.3.0'
   pod 'couchbase-lite-ios', '1.4.1'
   pod 'couchbase-lite-ios/ForestDB', '1.4.1'
+end
 
-  target 'C8oSDKiOSTests' do
-    inherit! :search_paths
+target 'C8oSDKiOSTests' do
     # Pods for testing
-  end
-  
+    use_frameworks!
+    pod 'SwiftyJSON', '4.1.0'
+    pod 'Alamofire', '4.7.2'
+    pod 'AEXML', '4.3.0'
 end
 
 

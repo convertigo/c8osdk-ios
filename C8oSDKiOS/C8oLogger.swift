@@ -356,6 +356,6 @@ import AEXML
         }
     }
     public func name()->String{
-        return self.getC8oLogLevelDescription(self.hashValue)
+        return self.getC8oLogLevelDescription(Int(self.rawValue))
     }
 }

@@ -189,8 +189,8 @@ open class C8oFullSyncDatabase: NSObject {
         var count = false
         NotificationCenter.default.addObserver(forName: NSNotification.Name.cblReplicationChange, object: rep, queue: nil, using: { _ in
             if (count) {
-                progress.total = rep.changesCount.hashValue
-                progress.current = rep.completedChangesCount.hashValue
+                progress.total = Int(rep.changesCount)
+                progress.current = Int(rep.completedChangesCount)
                 progress.taskInfo = ("n/a")
                 switch (rep.status) {
                 case .active:
@@ -226,8 +226,8 @@ open class C8oFullSyncDatabase: NSObject {
                         replication.continuous = true
                         NotificationCenter.default.addObserver(forName: NSNotification.Name.cblReplicationChange, object: replication, queue: nil, using: { _ in
                             let progress: C8oProgress = _progress[0]
-                            progress.total = replication.changesCount.hashValue
-                            progress.current = replication.completedChangesCount.hashValue
+                            progress.total = Int(replication.changesCount)
+                            progress.current = Int(replication.completedChangesCount)
                             progress.taskInfo = "n/a"
                             progress.status = String(describing: replication.status)
                             if (progress.changed) {
