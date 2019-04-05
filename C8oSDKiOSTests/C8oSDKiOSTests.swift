@@ -1234,7 +1234,8 @@ class C8oSDKiOSTests: XCTestCase {
 			catch {
 				XCTAssertTrue(false)
 			}
-			
+            json = try! c8o.callJson("fs://.reset").sync()!
+            XCTAssertTrue(json["ok"].boolValue)
 			try! json = c8o.callJson(".LoginTesting").sync()!
 			value = json["document"]["authenticatedUserID"].string!
 			XCTAssertEqual("testing_user", value)
@@ -1377,6 +1378,8 @@ class C8oSDKiOSTests: XCTestCase {
 			).sync()!
 			value = json["rows"][0]["value"].doubleValue as AnyObject
 			XCTAssertEqual(405.0, value as? Double)
+            json = try! c8o.callJson("fs://.reset").sync()!
+            XCTAssertTrue(json["ok"].boolValue)
 			json = try! c8o.callJson(".LoginTesting").sync()!
 			value = json["document"]["authenticatedUserID"].string as AnyObject
 			XCTAssertEqual("testing_user", value as? String)
