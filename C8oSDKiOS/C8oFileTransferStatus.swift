@@ -9,15 +9,15 @@
 import Foundation
 
 open class C8oFileTransferStatus {
-    open static let StateNotQueued: DownloadState = DownloadState.NotQueued
-	open static let StateQueued: DownloadState = DownloadState.Queued
-	open static let StateAuthenticated: DownloadState = DownloadState.Authenticated
-	open static let StateSplitting: DownloadState = DownloadState.Splitting
-	open static let StateReplicate: DownloadState = DownloadState.Replicate
-	open static let StateAssembling: DownloadState = DownloadState.Assembling
-	open static let StateCleaning: DownloadState = DownloadState.Cleaning
-    open static let StateFinished: DownloadState = DownloadState.Finished
-    open static let StateCanceled: DownloadState = DownloadState.Canceled
+    public static let StateNotQueued: DownloadState = DownloadState.NotQueued
+	public static let StateQueued: DownloadState = DownloadState.Queued
+	public static let StateAuthenticated: DownloadState = DownloadState.Authenticated
+	public static let StateSplitting: DownloadState = DownloadState.Splitting
+	public static let StateReplicate: DownloadState = DownloadState.Replicate
+	public static let StateAssembling: DownloadState = DownloadState.Assembling
+	public static let StateCleaning: DownloadState = DownloadState.Cleaning
+    public static let StateFinished: DownloadState = DownloadState.Finished
+    public static let StateCanceled: DownloadState = DownloadState.Canceled
 	
 	public enum DownloadState: String {
         case NotQueued

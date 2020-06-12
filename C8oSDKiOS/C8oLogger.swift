@@ -236,7 +236,7 @@ import AEXML
                         }
                     }
                 }
-                var logLevelResponse = jsonResponse[C8oLogger.JSON_KEY_REMOTE_LOG_LEVEL]
+                let logLevelResponse = jsonResponse[C8oLogger.JSON_KEY_REMOTE_LOG_LEVEL]
                 
                 if (logLevelResponse != JSON.null) {
                     let logLevelResponseStr: String = logLevelResponse.stringValue
@@ -314,21 +314,21 @@ import AEXML
     internal static func getC8oLogLevel(_ name: String) -> C8oLogLevel? {
         switch name.uppercased() {
         case "NULL":
-            return .null
+            return C8oLogLevel.null
         case "NONE":
-            return .none
+            return C8oLogLevel.none
         case "TRACE":
-            return .trace
+            return C8oLogLevel.trace
         case "DEBUG":
-            return .debug
+            return C8oLogLevel.debug
         case "INFO":
-            return .info
+            return C8oLogLevel.info
         case "WARN":
-            return .warn
+            return C8oLogLevel.warn
         case "ERROR":
-            return .error
+            return C8oLogLevel.error
         case "FATAL":
-            return .fatal
+            return C8oLogLevel.fatal
         default:
             return nil
         }

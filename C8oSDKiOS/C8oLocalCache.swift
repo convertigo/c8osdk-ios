@@ -9,16 +9,16 @@
 import Foundation
 
 @objc open class C8oLocalCache: NSObject {
-    @objc open static var PARAM: String = "__localCache"
+    @objc public static var PARAM: String = "__localCache"
     
     @objc open class Priority: NSObject {
         
         var isAvailable: (_ c8o: C8o) -> (Bool)
         
-        @objc open static var SERVER: Priority = Priority(isAvailable: { (c8o) -> (Bool) in
+        @objc public static var SERVER: Priority = Priority(isAvailable: { (c8o) -> (Bool) in
             return true
         })
-        @objc open static var LOCAL: Priority = Priority(isAvailable: { (c8o) -> (Bool) in
+        @objc public static var LOCAL: Priority = Priority(isAvailable: { (c8o) -> (Bool) in
             return true
         })
         

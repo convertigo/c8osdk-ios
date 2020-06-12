@@ -220,7 +220,7 @@ class C8oFullSyncCbl: C8oFullSync {
             // If there are attachments, compute for each one the url to local storage and add it to the attachment descriptor
             if (document != nil) {
                 
-                var attachments: Dictionary<String, Any>? = document?.property(forKey: C8oFullSync.FULL_SYNC__ATTACHMENTS) as? Dictionary<String, Any>
+                let attachments: Dictionary<String, Any>? = document?.property(forKey: C8oFullSync.FULL_SYNC__ATTACHMENTS) as? Dictionary<String, Any>
                 // let att = document?.properties
                 
                 if (attachments != nil) {

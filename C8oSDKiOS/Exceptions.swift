@@ -9,7 +9,7 @@
 import Foundation
 
 @objc open class C8oException: NSError {
-    open static let NSC8oErrorDomain: String = "com.convertigo.clientsdk.exception.C8oException"
+    public static let NSC8oErrorDomain: String = "com.convertigo.clientsdk.exception.C8oException"
     @objc open var message: String?
     
     public init(message: String, exception: NSError?) {

@@ -17,9 +17,9 @@ import AEXML
 class C8oSDKiOSTests: XCTestCase {
 	
 	var myC8o: C8o!
-	let HOST =  "c8o-dev.convertigo.net" //"nicolasa.convertigo.net"//"buildus.twinsoft.fr"// "192.168.100.95"
-	let PROJECT_PATH = "/cems/projects/ClientSDKtesting"//"/convertigo/projects/ClientSDKtesting"
-    let PORT = ":80" //":28080" // 18080
+	let HOST =  "192.168.11.123"//"c8o-dev.convertigo.net" //"nicolasa.convertigo.net"//"buildus.twinsoft.fr"// "192.168.100.95"
+	let PROJECT_PATH = "/convertigo/projects/ClientSDKtesting"//"/cems/projects/ClientSDKtesting"//"/convertigo/projects/ClientSDKtesting"//
+    let PORT = ":18080" //":80" //":28080" // ":18080" //
 	let PREFIX = "http://"
 	let PREFIXS = "https://"
     let semaphore = DispatchSemaphore(value: 1)
@@ -1031,7 +1031,7 @@ class C8oSDKiOSTests: XCTestCase {
 		XCTAssertTrue(json["ok"].boolValue)
 		let myId: String = "C8oFsPostExistingPolicyMergeSub-" + String(NSDate().timeIntervalSince1970 * 1000)
 		let sub_f: JSON = ["g": true, "h": ["one", "two", "three", "four"]]
-		var sub_c: JSON = ["d": 3, "e": "four", "f": sub_f.object]
+		let sub_c: JSON = ["d": 3, "e": "four", "f": sub_f.object]
 		json = try! c8o.callJson("fs://.post",
 			parameters: "_id", myId,
 			"a", 1,
@@ -1494,7 +1494,7 @@ class C8oSDKiOSTests: XCTestCase {
             
             // Loging Testing
             var json: JSON = try c8o.callJson(".LoginTesting").sync()!
-            var value: AnyObject = json["document"]["authenticatedUserID"].string as AnyObject
+            let value: AnyObject = json["document"]["authenticatedUserID"].string as AnyObject
             XCTAssertEqual("testing_user", value as? String)
             
             // Sync continuous

@@ -23,7 +23,7 @@ internal class C8oTranslator {
 		// Translates the JSON object depending to its type
 		
 		if (json.type == .dictionary) {
-			var jsonObject = json;
+			let jsonObject = json;
 			// Gets all the elements of the JSON object and sorts them
 			var keys = [String]()
 			for jsonChild in jsonObject {

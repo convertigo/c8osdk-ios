@@ -61,52 +61,52 @@ open class C8o: C8oBase {
      "mykey", myvalue
      ).sync();
      */
-    open static var FS_POLICY: String = "_use_policy"
+    public static var FS_POLICY: String = "_use_policy"
     /**
      Use it with "fs://.post" and C8o.FS_POLICY.
      
      This is the default post policy that don't alter the document before the CouchbaseLite's insertion.
      */
-    open static var FS_POLICY_NONE: String = "none"
+    public static var FS_POLICY_NONE: String = "none"
     /**
      Use it with "fs://.post" and C8o.FS_POLICY.
      
      This post policy remove the "_id" and "_rev" of the document before the CouchbaseLite's insertion.
      */
-    open static var FS_POLICY_CREATE: String = "create"
+    public static var FS_POLICY_CREATE: String = "create"
     /**
      Use it with "fs://.post" and C8o.FS_POLICY.
      
      This post policy inserts the document in CouchbaseLite even if a document with the same "_id" already exists.
      */
-    open static var FS_POLICY_OVERRIDE: String = "override"
+    public static var FS_POLICY_OVERRIDE: String = "override"
     /**
      Use it with "fs://.post" and C8o.FS_POLICY.
      
      This post policy merge the document with an existing document with the same "_id" before the CouchbaseLite's insertion.
      */
-    open static var FS_POLICY_MERGE: String = "merge"
+    public static var FS_POLICY_MERGE: String = "merge"
     /**
      Use it with "fs://.post". Default value is ".".
      
      This key allow to override the sub key separator in case of document depth modification.
      */
-    open static var FS_SUBKEY_SEPARATOR: String = "_use_subkey_separator"
+    public static var FS_SUBKEY_SEPARATOR: String = "_use_subkey_separator"
     /**
      Use it with "c8oSettings.setFullSyncStorageEngine" to choose the SQL fullsync storage engine.
      */
-    open static var FS_STORAGE_SQL: String = "SQL"
+    public static var FS_STORAGE_SQL: String = "SQL"
     /**
      Use it with "c8oSettings.setFullSyncStorageEngine" to choose the FORESTDB fullsync storage engine.
      */
-    open static var FS_STORAGE_FORESTDB: String = "FORESTDB"
+    public static var FS_STORAGE_FORESTDB: String = "FORESTDB"
     /**
      Use it with "fs://" request as parameter to enable the live request feature.<br/>
      Must be followed by a string parameter, the 'liveid' that can be use to cancel the live
      request using c8o.cancelLive(liveid) method.<br/>
      A live request automatically recall the then or thenUI handler when the database changed.
      */
-    open static var FS_LIVE: String = "__live"
+    public static var FS_LIVE: String = "__live"
     
     /* Local cache keys */
     
@@ -129,8 +129,8 @@ open class C8o: C8oBase {
      Returns the current version of the SDK as "x.y.z".
      - returns: Current version of the SDK as "x.y.z".
      */
-    open static func getSdkVersion() -> String {
-        return "2.3.4"
+    public static func getSdkVersion() -> String {
+        return "2.4.0"
     }
     
     /* Attributes */

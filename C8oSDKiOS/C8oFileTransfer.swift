@@ -107,7 +107,7 @@ open class C8oFileTransfer: C8oFileTransferBase {
 				while (self.alive) {
 					do {
 						param["skip"] = skip as Any
-						var res: JSON = try self.c8oTask.callJson("fs://.all", parametersDict: param).sync()!
+						let res: JSON = try self.c8oTask.callJson("fs://.all", parametersDict: param).sync()!
 						
 						let rows: JSON = res["rows"]
 						if (rows.count > 0) {
@@ -220,7 +220,7 @@ open class C8oFileTransfer: C8oFileTransferBase {
 			//
 			if (!task["replicated"].boolValue || !task["remoteDeleted"].boolValue) {
 				needRemoveSession = true
-				var json: JSON = try c8o!.callJson(".SelectUuid", parameters: "uuid", uuid).sync()!
+				let json: JSON = try c8o!.callJson(".SelectUuid", parameters: "uuid", uuid).sync()!
 				
 				self.debug("SelectUuid:\n" + json["document"].description)
 				if (json["document"]["selected"].stringValue != "true") {
@@ -275,7 +275,7 @@ open class C8oFileTransfer: C8oFileTransferBase {
                             condition.unlock()
                         }
 												
-						var all = try c8o?.callJson("fs://" + fsConnector! + ".all", parametersDict: allOptions).sync()
+						let all = try c8o?.callJson("fs://" + fsConnector! + ".all", parametersDict: allOptions).sync()
 						let rows = all!["rows"]
 						if (rows != JSON.null) {
 							let current: Int = rows.count
@@ -322,7 +322,7 @@ open class C8oFileTransfer: C8oFileTransferBase {
 				
                 if let createdFileStream = OutputStream(toFileAtPath: transferStatus.filepath, append: false) { // (fileAtPath: transferStatus.filepath)
 					createdFileStream.open()
-					createdFileStream.schedule(in: .main, forMode: RunLoopMode.defaultRunLoopMode)
+					createdFileStream.schedule(in: .main, forMode: RunLoop.Mode.default)
 					for i in 0..<transferStatus.total {
 						let meta: JSON = try c8o!.callJson("fs://" + fsConnector! + ".get", parameters: "docid", uuid + "_" + String(i)).sync()!
 						self.debug((meta.description))

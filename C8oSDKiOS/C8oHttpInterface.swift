@@ -12,7 +12,7 @@ import Alamofire
 internal class C8oHttpInterface {
 	internal var c8o: C8o
 	var cookieContainer: C8oCookieStorage
-	var alamofire: SessionManager
+	var alamofire: Session
 	fileprivate var timeout: Int
 	fileprivate var firstCall = true
 	fileprivate var firstCallMutex = NSCondition()
@@ -26,10 +26,11 @@ internal class C8oHttpInterface {
 		cfg.httpCookieStorage = cookieContainer
         
         if (c8o.trustAllCertificates) {
-            let secu = ServerTrustPolicyManager(policies: [c8o.endpointHost: .disableEvaluation])
-            alamofire = Alamofire.SessionManager(configuration: cfg, serverTrustPolicyManager: secu)
+            //let secu = ServerTrustManager(allHostsMustBeEvaluated: false, evaluators: <#[String : ServerTrustEvaluating]#>)
+            //alamofire = Alamofire.Session(configuration: cfg, serverTrustPolicyManager: secu)
+            alamofire = Alamofire.Session(configuration: cfg)
         } else {
-            alamofire = Alamofire.SessionManager(configuration: cfg)
+            alamofire = Alamofire.Session(configuration: cfg)
         }
         
 		if (c8o.cookies != nil) {
@@ -56,7 +57,8 @@ internal class C8oHttpInterface {
 		firstCallMutex.lock()
 		if (firstCall) {
 			//let request = alamofire.upload(.POST, url, headers: headers, data: data!)
-            _ = alamofire.upload(data!, to: url, method: .post, headers: headers)
+            _ = alamofire.upload(data!, to: url, method: .post)
+                //alamofire.upload(data!, to: url, method: .post, headers: headers)
                 .response(queue:queue,
                           completionHandler:{ response in
                             myResponse = (response.data, response.error as NSError?)
@@ -71,7 +73,8 @@ internal class C8oHttpInterface {
 		}
 		firstCallMutex.unlock()
 		
-        _ = alamofire.upload(data!, to: url, method: .post, headers: headers)
+        _ = alamofire.upload(data!, to: url, method: .post)
+            //alamofire.upload(data!, to: url, method: .post, headers: headers)
             .response(queue:queue,
                       completionHandler:{ response in
                         myResponse = (response.data, response.error as NSError?)

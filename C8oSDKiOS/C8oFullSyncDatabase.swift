@@ -205,6 +205,9 @@ open class C8oFullSyncDatabase: NSObject {
                 case .stopped:
                     progress.status = "Stopped"
                     break
+                default:
+                    progress.status = "Unknown"
+                    break
                 }
                 progress.finished = !(rep.status == CBLReplicationStatus.active)
                 

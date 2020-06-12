@@ -286,55 +286,55 @@ internal class FullSyncRequestable {
 //*** Common parameters ***//
 
 open class FullSyncRequestParameter {
-    open static let DESCENDING: FullSyncRequestParameter = FullSyncRequestParameter(name: "descending", isJson: true, action: { query, value in
+    public static let DESCENDING: FullSyncRequestParameter = FullSyncRequestParameter(name: "descending", isJson: true, action: { query, value in
         query.descending = value as! Bool
     })
-    open static let ENDKEY: FullSyncRequestParameter = FullSyncRequestParameter(name: "endkey", isJson: true, action: { query, value in
+    public static let ENDKEY: FullSyncRequestParameter = FullSyncRequestParameter(name: "endkey", isJson: true, action: { query, value in
         query.endKey = value
     })
-    open static let ENDKEY_DOCID: FullSyncRequestParameter = FullSyncRequestParameter(name: "endkey_docid", action: { query, value in
+    public static let ENDKEY_DOCID: FullSyncRequestParameter = FullSyncRequestParameter(name: "endkey_docid", action: { query, value in
         query.endKeyDocID = (value as! String)
     })
-    open static let GROUP_LEVEL: FullSyncRequestParameter = FullSyncRequestParameter(name: "group_level", isJson: true, action: { query, value in
+    public static let GROUP_LEVEL: FullSyncRequestParameter = FullSyncRequestParameter(name: "group_level", isJson: true, action: { query, value in
         query.groupLevel = value as! UInt
     })
-    open static let INCLUDE_DELETED: FullSyncRequestParameter = FullSyncRequestParameter(name: "include_deleted", isJson: true, action: { query, value in
+    public static let INCLUDE_DELETED: FullSyncRequestParameter = FullSyncRequestParameter(name: "include_deleted", isJson: true, action: { query, value in
         fatalError("must be done")
         // query.allDocsMode. //= value as! Bool
     })
-    open static let INDEX_UPDATE_MODE: FullSyncRequestParameter = FullSyncRequestParameter(name: "index_update_mode", action: { query, value in
+    public static let INDEX_UPDATE_MODE: FullSyncRequestParameter = FullSyncRequestParameter(name: "index_update_mode", action: { query, value in
         fatalError("must be done")
         /*let valueStr : String = value as! String
          var indexUpdateModeValues =   CBLIndexUpdateMode()
          var indexUpdateModeEnumerator =*/
     })
-    open static let KEY: FullSyncRequestParameter = FullSyncRequestParameter(name: "keys", isJson: true, action: { query, value in
+    public static let KEY: FullSyncRequestParameter = FullSyncRequestParameter(name: "keys", isJson: true, action: { query, value in
         query.keys = [value]
     })
-    open static let KEYS: FullSyncRequestParameter = FullSyncRequestParameter(name: "keys", isJson: true, action: { query, value in
+    public static let KEYS: FullSyncRequestParameter = FullSyncRequestParameter(name: "keys", isJson: true, action: { query, value in
         query.keys = value as? [Any]
     })
-    open static let LIMIT: FullSyncRequestParameter = FullSyncRequestParameter(name: "limit", isJson: true, action: { query, value in
+    public static let LIMIT: FullSyncRequestParameter = FullSyncRequestParameter(name: "limit", isJson: true, action: { query, value in
         var valUint : UInt = UInt(truncating: value as! NSNumber)
         query.limit = valUint
     })
-    open static let INCLUDE_DOCS: FullSyncRequestParameter = FullSyncRequestParameter(name: "include_docs", isJson: true, action: { query, value in
+    public static let INCLUDE_DOCS: FullSyncRequestParameter = FullSyncRequestParameter(name: "include_docs", isJson: true, action: { query, value in
         query.prefetch = value as! Bool
     })
-    open static let REDUCE: FullSyncRequestParameter = FullSyncRequestParameter(name: "reduce", isJson: true, action: { query, value in
+    public static let REDUCE: FullSyncRequestParameter = FullSyncRequestParameter(name: "reduce", isJson: true, action: { query, value in
         query.mapOnly = !(value as! Bool)
     })
-    open static let GROUP: FullSyncRequestParameter = FullSyncRequestParameter(name: "group", isJson: true, action: { query, value in
+    public static let GROUP: FullSyncRequestParameter = FullSyncRequestParameter(name: "group", isJson: true, action: { query, value in
         query.groupLevel = (value as! Bool) ? 99 : 0
     })
-    open static let SKIP: FullSyncRequestParameter = FullSyncRequestParameter(name: "skip", isJson: true, action: { query, value in
+    public static let SKIP: FullSyncRequestParameter = FullSyncRequestParameter(name: "skip", isJson: true, action: { query, value in
         var valUint : UInt = UInt(truncating: value as! NSNumber)
         query.skip = valUint
     })
-    open static let STARTKEY: FullSyncRequestParameter = FullSyncRequestParameter(name: "startkey", isJson: true, action: { query, value in
+    public static let STARTKEY: FullSyncRequestParameter = FullSyncRequestParameter(name: "startkey", isJson: true, action: { query, value in
         query.startKey = value
     })
-    open static let STARTKEY_DOCID: FullSyncRequestParameter = FullSyncRequestParameter(name: "startkey_docid", action: { query, value in
+    public static let STARTKEY_DOCID: FullSyncRequestParameter = FullSyncRequestParameter(name: "startkey_docid", action: { query, value in
         query.startKeyDocID = value as? String
     })
     
@@ -354,12 +354,12 @@ open class FullSyncRequestParameter {
         self.action = action
     }
     
-    open static func values() -> [FullSyncRequestParameter] {
+    public static func values() -> [FullSyncRequestParameter] {
         let array: [FullSyncRequestParameter] = [DESCENDING, ENDKEY, ENDKEY_DOCID, GROUP_LEVEL, INCLUDE_DELETED, INDEX_UPDATE_MODE, KEYS, LIMIT, REDUCE, GROUP, SKIP, STARTKEY, STARTKEY_DOCID, INCLUDE_DOCS]
         return array
     }
     
-    open static func getFullSyncRequestParameter(_ name: String?) -> FullSyncRequestParameter? {
+    public static func getFullSyncRequestParameter(_ name: String?) -> FullSyncRequestParameter? {
         if (name != nil) {
             for fullSyncRequestParameter in FullSyncRequestParameter.values() {
                 if (name == fullSyncRequestParameter.name) {
@@ -375,8 +375,8 @@ open class FullSyncRequestParameter {
 //*** Specific parameters ***//
 
 open class FullSyncGetViewParameter {
-    open static let VIEW: FullSyncGetViewParameter = FullSyncGetViewParameter(name: "view")
-    open static let DDOC: FullSyncGetViewParameter = FullSyncGetViewParameter(name: "ddoc")
+    public static let VIEW: FullSyncGetViewParameter = FullSyncGetViewParameter(name: "view")
+    public static let DDOC: FullSyncGetViewParameter = FullSyncGetViewParameter(name: "ddoc")
     
     open var name: String
     
@@ -386,7 +386,7 @@ open class FullSyncGetViewParameter {
 }
 
 open class FullSyncGetDocumentParameter {
-    open static let DOCID: FullSyncGetDocumentParameter = FullSyncGetDocumentParameter(name: "docid")
+    public static let DOCID: FullSyncGetDocumentParameter = FullSyncGetDocumentParameter(name: "docid")
     
     open var name: String
     
@@ -397,8 +397,8 @@ open class FullSyncGetDocumentParameter {
 }
 
 open class FullSyncDeleteDocumentParameter {
-    open static let DOCID: FullSyncDeleteDocumentParameter = FullSyncDeleteDocumentParameter(name: "docid")
-    open static let REV: FullSyncDeleteDocumentParameter = FullSyncDeleteDocumentParameter(name: "rev")
+    public static let DOCID: FullSyncDeleteDocumentParameter = FullSyncDeleteDocumentParameter(name: "docid")
+    public static let REV: FullSyncDeleteDocumentParameter = FullSyncDeleteDocumentParameter(name: "rev")
     
     open var name: String
     
@@ -408,10 +408,10 @@ open class FullSyncDeleteDocumentParameter {
 }
 
 open class FullSyncAttachmentParameter {
-    open static let DOCID: FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "docid")
-    open static let NAME: FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "name")
-    open static let CONTENT_TYPE: FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "content_type")
-    open static let CONTENT: FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "content")
+    public static let DOCID: FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "docid")
+    public static let NAME: FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "name")
+    public static let CONTENT_TYPE: FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "content_type")
+    public static let CONTENT: FullSyncAttachmentParameter = FullSyncAttachmentParameter(name: "content")
     
     open var name: String
     
@@ -420,8 +420,8 @@ open class FullSyncAttachmentParameter {
     }
 }
 open class FullSyncPostDocumentParameter {
-    open static let POLICY: FullSyncPostDocumentParameter = FullSyncPostDocumentParameter(name: C8o.FS_POLICY)
-    open static let SUBKEY_SEPARATOR: FullSyncPostDocumentParameter = FullSyncPostDocumentParameter(name: C8o.FS_SUBKEY_SEPARATOR)
+    public static let POLICY: FullSyncPostDocumentParameter = FullSyncPostDocumentParameter(name: C8o.FS_POLICY)
+    public static let SUBKEY_SEPARATOR: FullSyncPostDocumentParameter = FullSyncPostDocumentParameter(name: C8o.FS_SUBKEY_SEPARATOR)
     
     open var name: String
     
@@ -429,7 +429,7 @@ open class FullSyncPostDocumentParameter {
         self.name = name
     }
     
-    open static func values() -> [FullSyncPostDocumentParameter] {
+    public static func values() -> [FullSyncPostDocumentParameter] {
         let array: [FullSyncPostDocumentParameter] = [POLICY, SUBKEY_SEPARATOR]
         return array
     }
@@ -442,13 +442,13 @@ open class FullSyncPostDocumentParameter {
 
 //TODO... add types
 open class FullSyncReplicationParameter {
-    open static let CANCEL: FullSyncReplicationParameter = FullSyncReplicationParameter(name: "cancel", action: { replication, value in
+    public static let CANCEL: FullSyncReplicationParameter = FullSyncReplicationParameter(name: "cancel", action: { replication, value in
         
     }) // , type: NSObject.self)
-    open static let LIVE: FullSyncReplicationParameter = FullSyncReplicationParameter(name: "live", action: { replication, value in
+    public static let LIVE: FullSyncReplicationParameter = FullSyncReplicationParameter(name: "live", action: { replication, value in
         replication.continuous = value as! Bool
     }) // , Boolean.Type)
-    open static let DOCIDS: FullSyncReplicationParameter = FullSyncReplicationParameter(name: "docids", action: { replication, value in
+    public static let DOCIDS: FullSyncReplicationParameter = FullSyncReplicationParameter(name: "docids", action: { replication, value in
         replication.documentIDs = value as? [String]
     }) // , Array[String]))
     
@@ -464,7 +464,7 @@ open class FullSyncReplicationParameter {
         
     }
     
-    open static func values() -> [FullSyncReplicationParameter] {
+    public static func values() -> [FullSyncReplicationParameter] {
         let array: [FullSyncReplicationParameter] = [CANCEL, LIVE, DOCIDS]
         return array
     }
@@ -484,7 +484,7 @@ open class FullSyncPolicy {
      return self.c8o!.dequeue()!
      }*/
     
-    open static let NONE: FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_NONE, action: { database, newProperties in
+    public static let NONE: FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_NONE, action: { database, newProperties in
         var createdDocument: CBLDocument
         var newPropertiesMutable = newProperties
         do {
@@ -505,7 +505,7 @@ open class FullSyncPolicy {
         }
         return createdDocument
     })
-    open static let CREATE: FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_CREATE, action: { database, newProperties in
+    public static let CREATE: FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_CREATE, action: { database, newProperties in
         var createdDocument: CBLDocument
         var newPropertiesMutable = newProperties
         do {
@@ -520,7 +520,7 @@ open class FullSyncPolicy {
         
         return createdDocument
     })
-    open static let OVERRIDE: FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_OVERRIDE, action: { database, newProperties in
+    public static let OVERRIDE: FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_OVERRIDE, action: { database, newProperties in
         var createdDocument: CBLDocument
         var newPropertiesMutable = newProperties
         do {
@@ -545,7 +545,7 @@ open class FullSyncPolicy {
         
         return createdDocument
     })
-    open static let MERGE: FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_MERGE, action: { database, newProperties in
+    public static let MERGE: FullSyncPolicy = FullSyncPolicy(value: C8o.FS_POLICY_MERGE, action: { database, newProperties in
         var createdDocument: CBLDocument
         var newPropertiesMutable = newProperties
         do {
@@ -580,12 +580,12 @@ open class FullSyncPolicy {
         // abstract void setReplication(Replication replication, Object parameterValue)
     }
     
-    open static func values() -> [FullSyncPolicy] {
+    public static func values() -> [FullSyncPolicy] {
         let array: [FullSyncPolicy] = [NONE, CREATE, OVERRIDE, MERGE]
         return array
     }
     
-    open static func getFullSyncPolicy(_ value: String?) -> FullSyncPolicy {
+    public static func getFullSyncPolicy(_ value: String?) -> FullSyncPolicy {
         if (value != nil) {
             let fullSyncPolicyValues: [FullSyncPolicy] = FullSyncPolicy.values()
             for fullSyncPolicy in fullSyncPolicyValues {
