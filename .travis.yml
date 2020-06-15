@@ -12,8 +12,8 @@ script:
 - mkdir -p ./buildSim
 - mkdir -p ./universal_outputfolder
 - "./scripts/ci-script.bash"
-- xcodebuild test -workspace C8oSDKiOS.xcworkspace -scheme C8oSDKiOS -destination
-  'platform=iOS Simulator,name=iPhone 11,OS=13.5'
+#- xcodebuild test -workspace C8oSDKiOS.xcworkspace -scheme C8oSDKiOS -destination
+#  'platform=iOS Simulator,name=iPhone 11,OS=13.5'
 - xcodebuild -workspace C8oSDKiOS.xcworkspace -scheme C8oSDKiOS archive
 - mkdir Frameworks && cp -r ./universal_outputfolder/C8o.framework ./Frameworks/ &&
   zip -r -X C8oSDK.zip ./Frameworks/C8o.framework LICENSE
