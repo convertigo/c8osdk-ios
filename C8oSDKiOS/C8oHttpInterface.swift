@@ -26,9 +26,8 @@ internal class C8oHttpInterface {
 		cfg.httpCookieStorage = cookieContainer
         
         if (c8o.trustAllCertificates) {
-            //let secu = ServerTrustManager(allHostsMustBeEvaluated: false, evaluators: <#[String : ServerTrustEvaluating]#>)
-            //alamofire = Alamofire.Session(configuration: cfg, serverTrustPolicyManager: secu)
-            alamofire = Alamofire.Session(configuration: cfg)
+            let secu = ServerTrustManager(evaluators: [c8o.endpointHost: DisabledTrustEvaluator()])
+            alamofire = Alamofire.Session(configuration: cfg, serverTrustManager: secu)
         } else {
             alamofire = Alamofire.Session(configuration: cfg)
         }
@@ -47,18 +46,16 @@ internal class C8oHttpInterface {
 	internal func handleRequest(_ url: String, parameters: Dictionary<String, Any>) -> (Data?, NSError?) {
 		var myResponse: (Data?, NSError?)
 		let data: Data? = setRequestEntity(url as NSObject, parameters: parameters)
-		let headers = [
-			"x-convertigo-sdk": C8o.getSdkVersion(),
-			"User-Agent": "Convertigo Client SDK " + C8o.getSdkVersion()
-		]
+        let headers: HTTPHeaders? = HTTPHeaders.init([
+            "x-convertigo-sdk": C8o.getSdkVersion(),
+            "User-Agent": "Convertigo Client SDK " + C8o.getSdkVersion()
+        ])
 		let semaphore = DispatchSemaphore(value: 0)
 		let queue = DispatchQueue(label: "com.convertigo.c8o.queues", attributes: DispatchQueue.Attributes.concurrent)
 		
 		firstCallMutex.lock()
 		if (firstCall) {
-			//let request = alamofire.upload(.POST, url, headers: headers, data: data!)
-            _ = alamofire.upload(data!, to: url, method: .post)
-                //alamofire.upload(data!, to: url, method: .post, headers: headers)
+            _ = alamofire.upload(data!, to: url, method: .post, headers: headers)
                 .response(queue:queue,
                           completionHandler:{ response in
                             myResponse = (response.data, response.error as NSError?)
@@ -73,8 +70,7 @@ internal class C8oHttpInterface {
 		}
 		firstCallMutex.unlock()
 		
-        _ = alamofire.upload(data!, to: url, method: .post)
-            //alamofire.upload(data!, to: url, method: .post, headers: headers)
+        _ = alamofire.upload(data!, to: url, method: .post, headers: headers)
             .response(queue:queue,
                       completionHandler:{ response in
                         myResponse = (response.data, response.error as NSError?)

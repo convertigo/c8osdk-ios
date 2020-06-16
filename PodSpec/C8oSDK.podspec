@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
     s.name         = 'C8oSDK'
     s.module_name  = 'C8o'
-    s.version      = '2.4.0-beta01'
+    s.version      = '2.4.0-beta02'
     
     s.author       = 'Convertigo'
     s.license      = 'Apache License 2.0'
@@ -19,12 +19,12 @@ Pod::Spec.new do |s|
     documentation_url = 'http://www.convertigo.com/document/convertigo-client-sdk/'
     social_media_url  = 'https://twitter.com/convertigo'
     
-    s.source           = { :git => 'https://github.com/convertigo/c8osdk-ios.git', :tag => '2.4.0-beta01'}
-    s.ios.deployment_target = '13.5'
+    s.source           = { :git => 'https://github.com/convertigo/c8osdk-ios.git', :tag => '2.4.0-beta02'}
+    s.ios.deployment_target = '10.0'
     s.source_files       = 'C8oSDKiOS/*.swift', 'C8oSDKiOS/Internal/*.swift'
     s.static_framework = true
     s.script_phase = { :name => 'Hello World', :script => 'echo "C8oSDK: Add umbrella header for CBL dependency" && [ ! -d "./couchbase-lite-ios/Couchbaselite.framework/Modules" ] && mkdir ./couchbase-lite-ios/Couchbaselite.framework/Modules || echo "path already exists" && touch ./couchbase-lite-ios/Couchbaselite.framework/Modules/module.modulemap && echo \'framework module CouchbaseLite { module All { umbrella header "../Headers/CouchbaseLite.h" export * module * { export * }} module JSView { umbrella header "../../Extras/CBLRegisterJSViewCompiler.h" export * module * { export * }}}\' > ./couchbase-lite-ios/Couchbaselite.framework/Modules/module.modulemap', :execution_position => :before_compile }
-    s.platform     = :ios, '13.5'
+    s.platform     = :ios, '10.0'
     s.swift_version = '5.0'
     s.dependency 'SwiftyJSON', '5.0.0'
     s.dependency 'Alamofire', '5.2.1'
